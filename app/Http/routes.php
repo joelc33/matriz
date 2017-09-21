@@ -71,6 +71,13 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::get('{id}/guia/sa', 'externoController@guiaSal');
 	});
 });
+//*Modulos de Tablas Auxiliares*/
+Route::group(['namespace' => 'Auxiliar'], function(){
+	//*Modulo de roles*/
+	Route::group(['prefix' => 'auxiliar'], function(){
+		Route::get('documento', 'documentoController@documento');
+	});
+});
 //*Modulos de Reportes*/
 Route::group(['namespace' => 'Reporte'], function(){
 	//*Modulo de roles*/

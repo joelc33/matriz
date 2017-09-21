@@ -137,6 +137,10 @@ class ejercicioController extends Controller
         $usuario_funcionario->tx_email = strtolower(Input::get("correo_funcionario"));
         $usuario_funcionario->save();
 
+        $usuario = tab_usuarios::find( Auth::user()->id );
+        $usuario->da_email = strtolower(Input::get("correo_funcionario"));
+        $usuario->save();
+
         Session::put('ejercicio', Input::get('ejercicio'));
 
         DB::commit();

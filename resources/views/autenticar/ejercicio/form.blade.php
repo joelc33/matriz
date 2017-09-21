@@ -84,7 +84,7 @@ this.co_documento = new Ext.form.ComboBox({
 	fieldLabel:'documento',
 	store: this.storeCO_DOCUMENTO,
 	typeAhead: true,
-	valueField: 'co_documento',
+	valueField: 'id',
 	displayField:'inicial',
 	hiddenName:'documenton',
 	forceSelection:true,
@@ -323,10 +323,10 @@ getStoreCO_EJERCICIO:function(){
 },
 getStoreCO_DOCUMENTO:function(){
     this.store = new Ext.data.JsonStore({
-        url:'formulacion/modulos/usuario/funcion.php?op=3',
+        url:'{{ URL::to('auxiliar/documento') }}',
         root:'data',
         fields:[
-            {name: 'co_documento'},{name: 'inicial'}
+            {name: 'id'},{name: 'inicial'}
 					],
 					listeners : {
 							exception : function(proxy, response, operation) {
