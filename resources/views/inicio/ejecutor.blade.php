@@ -209,7 +209,7 @@ function cambiaEf(){
   	displayField:'id',
   	hiddenName:'ejercicio',
   	forceSelection:true,
-  	resizable:true,
+  	resizable:false,
   	triggerAction: 'all',
   	emptyText:'Ejercicio Fiscal...',
     itemSelector: 'div.search-item',
