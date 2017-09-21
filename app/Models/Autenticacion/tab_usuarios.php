@@ -40,4 +40,11 @@ class tab_usuarios extends Model implements AuthenticatableContract,
 	 * @var array
 	 */
 	protected $hidden = ['password', 'remember_token'];
+
+  public static $validarContrasena = array(
+    "valido" => "required|in:1",
+    "contraseña_actual" => "required|alpha_dash|min:6|max:30",
+    "contraseña" => "required|alpha_dash|min:6|max:30|confirmed",
+    "contraseña_confirmation" => "required|alpha_dash|min:6|max:30"
+  );
 }
