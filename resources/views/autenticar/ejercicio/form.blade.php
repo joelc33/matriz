@@ -71,6 +71,113 @@ this.fielset1 = new Ext.form.FieldSet({
 });
 @if($data->in_verificado==false)
 
+this.OBJfuncionario = paqueteComunJS.funcion.doJSON({stringData:'{!! $funcionario !!}'});
+
+this.id_funcionario = new Ext.form.Hidden({
+	name:'id_funcionario',
+	value:this.OBJfuncionario.id_funcionario
+});
+
+this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
+
+this.co_documento = new Ext.form.ComboBox({
+	fieldLabel:'documento',
+	store: this.storeCO_DOCUMENTO,
+	typeAhead: true,
+	valueField: 'co_documento',
+	displayField:'inicial',
+	hiddenName:'documenton',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:40,
+	resizable:true,
+	allowBlank:false
+});
+
+this.storeCO_DOCUMENTO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_documento,
+	value:  this.OBJfuncionario.id_tab_documento,
+	objStore: this.storeCO_DOCUMENTO
+});
+
+this.nu_cedula = new Ext.form.NumberField({
+	fieldLabel:'Nu cedula',
+	name:'cedula',
+	value:this.OBJfuncionario.nu_cedula,
+	width:155,
+	allowBlank:false,
+	minLength : 5,
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
+});
+
+this.compositefieldCI = new Ext.form.CompositeField({
+fieldLabel: 'Cedula',
+items: [
+	this.co_documento,
+	this.nu_cedula,
+	]
+});
+
+this.nb_funcionario = new Ext.form.TextField({
+	fieldLabel:'Nombre',
+	name:'nombre',
+	value:this.OBJfuncionario.nb_funcionario,
+	allowBlank:false,
+	width:200,
+        listeners:{
+            change: function(){
+                this.setValue(String(this.getValue()).toUpperCase());
+            }
+        }
+});
+
+this.ap_funcionario = new Ext.form.TextField({
+	fieldLabel:'Apellido',
+	name:'apellido',
+	value:this.OBJfuncionario.ap_funcionario,
+	allowBlank:false,
+	width:200,
+        listeners:{
+            change: function(){
+                this.setValue(String(this.getValue()).toUpperCase());
+            }
+        }
+});
+
+this.tx_telefono = new Ext.form.TextField({
+	fieldLabel:'Telefono Contacto',
+	name:'telefono_funcionario',
+	value:this.OBJfuncionario.tx_telefono,
+	allowBlank:false,
+	width:200,
+        listeners:{
+            change: function(){
+                this.setValue(String(this.getValue()).toUpperCase());
+            }
+        }
+});
+
+this.tx_email = new Ext.form.TextField({
+	fieldLabel:'Correo Electrónico',
+	name:'correo_funcionario',
+	value:this.OBJfuncionario.tx_email,
+	allowBlank:false,
+	width:250,
+	regex:/^((([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z\s?]{2,5}){1,25})*(\s*?;\s*?)*)*$/,
+	regexText:'Este campo debe contener direcciones de correo electrónico válidas únicas o múltiples separadas por punto y coma (;)',
+	blankText : 'ingresar direccion de e-mail',
+        listeners:{
+            change: function(){
+                this.setValue(String(this.getValue()).toUpperCase());
+            }
+        }
+});
+
 this.de_correo = new Ext.form.TextField({
 	fieldLabel:'Correo Institucional',
 	name:'correo',
@@ -84,7 +191,7 @@ this.de_correo = new Ext.form.TextField({
 });
 
 this.de_telefono = new Ext.form.TextField({
-	fieldLabel:'Telefono',
+	fieldLabel:'Telefono Institucion',
 	name:'telefono',
 	value:this.OBJ.de_telefono,
 	allowBlank:false,
@@ -101,6 +208,12 @@ this.fielset2 = new Ext.form.FieldSet({
 	autoWidth:true,
 	labelWidth: 130,
 	items:[
+		this.id_funcionario,
+		this.compositefieldCI,
+		this.nb_funcionario,
+		this.ap_funcionario,
+		this.tx_telefono,
+		this.tx_email,
 		this.de_correo,
 		this.de_telefono
 	]
@@ -207,6 +320,21 @@ getStoreCO_EJERCICIO:function(){
               }
       });
       return this.store;
+},
+getStoreCO_DOCUMENTO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'formulacion/modulos/usuario/funcion.php?op=3',
+        root:'data',
+        fields:[
+            {name: 'co_documento'},{name: 'inicial'}
+					],
+					listeners : {
+							exception : function(proxy, response, operation) {
+									Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+							}
+					}
+    });
+    return this.store;
 }
 };
 Ext.onReady(seleccionEjercicio.main.init, seleccionEjercicio.main);

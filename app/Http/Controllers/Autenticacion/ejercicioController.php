@@ -4,6 +4,8 @@ namespace matriz\Http\Controllers\Autenticacion;
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_ejercicio_fiscal;
 use matriz\Models\Mantenimiento\tab_ejecutores;
+use matriz\Models\Autenticacion\tab_usuarios;
+use matriz\Models\Mantenimiento\tab_funcionario;
 use Session;
 use Response;
 use Validator;
@@ -11,6 +13,7 @@ use DB;
 use View;
 use URL;
 use Input;
+use Auth;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -35,7 +38,13 @@ class ejercicioController extends Controller
         ->where('id_ejecutor', '=', Session::get('ejecutor'))
         ->first();
 
-        return View::make('autenticar.ejercicio.form')->with('data',$data);
+        $funcionario = tab_usuarios::join('autenticacion.tab_usuario_rol as t01', 'autenticacion.tab_usuarios.id', '=', 't01.id_tab_usuarios')
+        ->join('mantenimiento.tab_funcionario as t02', 'autenticacion.tab_usuarios.id', '=', 't02.id_tab_usuarios')
+        ->select('t02.id as id_funcionario', 'id_tab_documento', 'nu_cedula', 'nb_funcionario', 'ap_funcionario', 'tx_email', 'tx_direccion', 'tx_telefono')
+        ->where('autenticacion.tab_usuarios.id', '=', Auth::user()->id)
+        ->first();
+
+        return View::make('autenticar.ejercicio.form')->with('data',$data)->with('funcionario',$funcionario);
     }
 
     /**
@@ -50,6 +59,17 @@ class ejercicioController extends Controller
       DB::raw('mantenimiento.sp_periodo_activo(id::integer) as de_estatus')
       )->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
+    }
+
+    function acomodar($string) {
+      $string =ucwords(strtolower($string));
+
+      foreach (array('-', '\'') as $delimiter) {
+        if (strpos($string, $delimiter)!==false) {
+          $string =implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+        }
+      }
+      return $string;
     }
 
     /**
@@ -107,6 +127,15 @@ class ejercicioController extends Controller
         $tabla->de_telefono = Input::get("telefono");
         $tabla->in_verificado = true;
         $tabla->save();
+
+        $usuario_funcionario = tab_funcionario::find(Input::get("id_funcionario"));
+        $usuario_funcionario->id_tab_documento = Input::get("documenton");
+        $usuario_funcionario->nu_cedula = Input::get("cedula");
+        $usuario_funcionario->nb_funcionario = self::acomodar(Input::get("nombre"));
+        $usuario_funcionario->ap_funcionario = self::acomodar(Input::get("apellido"));
+        $usuario_funcionario->tx_telefono = Input::get("telefono_funcionario");
+        $usuario_funcionario->tx_email = strtolower(Input::get("correo_funcionario"));
+        $usuario_funcionario->save();
 
         Session::put('ejercicio', Input::get('ejercicio'));
 

@@ -118,6 +118,9 @@ return [
         'telefono' => [
             'regex' => 'El formato del campo :attribute es inválido, debe ser 0000-0000000.',
         ],
+        'telefono_funcionario' => [
+            'regex' => 'El formato del campo :attribute es inválido, debe ser 0000-0000000.',
+        ],
     ],
 
     /*
