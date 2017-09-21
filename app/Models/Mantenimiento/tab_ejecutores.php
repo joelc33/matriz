@@ -17,10 +17,10 @@ class tab_ejecutores extends Model
 		"correo"    => "required|email",
 		"telefono" => "required|regex:/^([0-9]{4})([-]{1})([0-9]{7}$)/",
 		"documenton"    => "required|integer|in:1,2,3",
-		"cedula" => "required|integer|min:1000000|max:99999999|unique:tab_funcionario,nu_cedula",
+		"cedula" => "required|integer|min:1000000|max:99999999",
 		"nombre" => "required|min:2|max:50",
 		"apellido" => "required|min:2|max:50",
-		"correo_funcionario"    => "required|email|unique:tab_funcionario,tx_email",
+		"correo_funcionario"    => "required|email",
 		"telefono_funcionario"    => "required|regex:/^([0-9]{4})([-]{1})([0-9]{7}$)/"
 	);
 }
