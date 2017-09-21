@@ -1,0 +1,14 @@
+<div id="header">
+  <div style="background-color:white; padding-left:0px; padding-right:0px; padding-bottom:0px;">
+  <img height="58" src="{{ asset('/images/izquierda.png') }}">
+  <img height="58" align="right" src="{{ asset('/images/derecha.png') }}">
+  </div>
+</div>
+<div id="loading-mask" style=""></div>
+<div id="loading">
+  <div class="loading-indicator">
+  <img src="{{ asset('/images/32x32/blue-loading.gif') }}" width="32" height="32" style="margin-right:2px; padding-left:20px; float:left;vertical-align:top;"/>
+   ..::NUEVA ETAPA - ZULIA::..<br />
+  <span id="loading-msg">Cargando...</span>
+    </div>
+</div>

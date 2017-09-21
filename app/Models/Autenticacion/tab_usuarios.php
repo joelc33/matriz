@@ -1,0 +1,43 @@
+<?php
+
+namespace matriz\Models\Autenticacion;
+
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+
+class tab_usuarios extends Model implements AuthenticatableContract,
+                                    AuthorizableContract,
+                                    CanResetPasswordContract
+{
+
+	use Authenticatable, Authorizable, CanResetPassword;
+
+  //Nombre de la conexion que utitlizara este modelo
+	protected $connection= 'local';
+
+	public function getAuthPassword() {
+		return $this->da_password;
+	}
+
+	//Todos los modelos deben extender la clase Eloquent
+	protected $table = 'autenticacion.tab_usuarios';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['da_email', 'da_login', 'da_password'];
+
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['password', 'remember_token'];
+}
