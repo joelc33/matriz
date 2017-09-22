@@ -11,4 +11,12 @@ class tab_rol extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'autenticacion.tab_rol';
+
+	public static $validarCrear = array(
+		"nombre" => "required|min:2|max:50|unique:local.autenticacion.tab_rol,de_rol"
+	);
+
+	public static $validarEditar = array(
+		"nombre" => "required|min:2|max:50"
+	);
 }
