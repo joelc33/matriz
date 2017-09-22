@@ -11,4 +11,16 @@ class tab_funcionario extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_funcionario';
+
+	public static $validarEditar = array(
+		"documenton"    => "required|integer|in:1,2,3",
+		"cedula" => "required|integer|min:1000000|max:99999999",
+		"nombre" => "required|min:2|max:50",
+		"apellido" => "required|min:2|max:50",
+		"cargo"    => "required|integer",
+		"correo_funcionario"    => "required|email",
+		"telefono_funcionario"    => "required|regex:/^([0-9]{4})([-]{1})([0-9]{7}$)/",
+		"correo"    => "required|email",
+		"telefono"    => "required"
+	);
 }

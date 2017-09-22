@@ -8,6 +8,7 @@ use matriz\Models\Autenticacion\tab_rol;
 use matriz\Models\Mantenimiento\tab_cargo;
 use matriz\Models\Mantenimiento\tab_documento;
 use matriz\Models\Autenticacion\tab_usuario_rol;
+use matriz\Models\Mantenimiento\tab_ejecutores;
 use View;
 use Validator;
 use Input;
@@ -17,6 +18,7 @@ use Auth;
 use Crypt;
 use Mail;
 use Hash;
+use Session;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -140,4 +142,78 @@ class usuarioController extends Controller
   			));
   	      }
   	}
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function datos()
+    {
+      $data = tab_usuarios::join('autenticacion.tab_usuario_rol as t01', 'autenticacion.tab_usuarios.id', '=', 't01.id_tab_usuarios')
+      ->join('mantenimiento.tab_funcionario as t02', 'autenticacion.tab_usuarios.id', '=', 't02.id_tab_usuarios')
+      ->select('da_login', 'da_email', 'id_tab_rol','t02.id as id_funcionario', 'id_tab_documento', 'nu_cedula', 'nb_funcionario', 'ap_funcionario', 'id_tab_cargo', 'tx_direccion', 'tx_telefono')
+      ->where('autenticacion.tab_usuarios.id', '=', Auth::user()->id)
+      ->first();
+
+      $ejecutor = tab_ejecutores::select('id', 'de_correo', 'de_telefono', 'in_verificado')
+      ->where('id_ejecutor', '=', Session::get('ejecutor'))
+      ->first();
+
+      return View::make('autenticar.usuario.datos')->with('data', $data)->with('ejecutor', $ejecutor);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function cambios()
+    {
+    DB::beginTransaction();
+       try {
+      $validarFuncionario = Validator::make(Input::all(), tab_funcionario::$validarEditar);
+      if ($validarFuncionario->fails()) {
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validarFuncionario->getMessageBag()->toArray()
+        ));
+      }
+      $usuario = tab_usuarios::find(Auth::user()->id);
+      $usuario->da_email = Input::get("correo_funcionario");
+      $usuario->save();
+
+      $usuario_funcionario = tab_funcionario::find(Input::get("id_funcionario"));
+      $usuario_funcionario->id_tab_documento = Input::get("documenton");
+      $usuario_funcionario->nu_cedula = Input::get("cedula");
+      $usuario_funcionario->nb_funcionario = Input::get("nombre");
+      $usuario_funcionario->ap_funcionario = Input::get("apellido");
+      $usuario_funcionario->id_tab_cargo = Input::get("cargo");
+      $usuario_funcionario->tx_direccion = Input::get("direccion");
+      $usuario_funcionario->tx_telefono = Input::get("telefono_funcionario");
+      $usuario_funcionario->tx_email = Input::get("correo_funcionario");
+      $usuario_funcionario->save();
+
+      $tabla = tab_ejecutores::updateOrCreate(array('id_ejecutor' => Session::get('ejecutor')));
+      $tabla->de_correo = Input::get("correo");
+      $tabla->de_telefono = Input::get("telefono");
+      $tabla->in_verificado = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Datos Editados con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
 }

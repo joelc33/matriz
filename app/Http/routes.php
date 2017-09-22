@@ -76,6 +76,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 	//*Modulo de roles*/
 	Route::group(['prefix' => 'auxiliar'], function(){
 		Route::get('documento', 'documentoController@documento');
+		Route::get('cargo', 'documentoController@cargo');
 	});
 });
 //*Modulos de Reportes*/
