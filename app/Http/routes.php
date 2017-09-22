@@ -40,6 +40,10 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::post('guardar', 'rolController@guardar');
 		Route::post('privilegio', 'rolController@privilegio');
 		Route::post('guardarPrivilegio', 'rolController@guardarPrivilegio');
+		Route::post('opcion', 'rolController@opcion');
+		Route::post('opcion/storeLista', 'rolController@opcionStoreLista');
+		Route::post('opcion/si', 'rolController@opcionSi');
+		Route::post('opcion/no', 'rolController@opcionNo');
 	});
 	//*Modulo de usuarios*/
 	Route::group(['prefix' => 'usuario'], function(){

@@ -125,8 +125,8 @@ this.ver= new Ext.Button({
         this.msg = Ext.get('contenedoropcionLista');
         this.msg.load({
 	 method:'POST',
-	 params:{codigo:this.codigo},
-         url:"formulacion/modulos/autenticacion/opcion/lista.php",
+	 params:{codigo:this.codigo, _token:'{{ csrf_token() }}'},
+         url:"{{ URL::to('rol/opcion') }}",
          scripts: true,
          text: "Cargando.."
         });

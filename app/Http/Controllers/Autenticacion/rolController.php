@@ -5,6 +5,7 @@ namespace matriz\Http\Controllers\Autenticacion;
 use matriz\Models\Autenticacion\tab_rol;
 use matriz\Models\Autenticacion\tab_menu;
 use matriz\Models\Autenticacion\tab_rol_menu;
+use matriz\Models\Autenticacion\tab_privilegio_menu;
 use View;
 use Validator;
 use Input;
@@ -25,11 +26,13 @@ class rolController extends Controller
 	 */
 
 	protected $tab_rol;
+  protected $tab_privilegio_menu;
 
-	public function __construct(tab_rol $tab_rol)
+	public function __construct(tab_rol $tab_rol, tab_privilegio_menu $tab_privilegio_menu)
 	{
 		$this->middleware('auth');
 		$this->tab_rol = $tab_rol;
+    $this->tab_privilegio_menu = $tab_privilegio_menu;
 	}
 
   /**
@@ -259,5 +262,114 @@ class rolController extends Controller
 			'msg' => 'Accesos editados con Exito!'
 		));
 	}
-  
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function opcion()
+  {
+    $data = array("rol" => Input::get("codigo"));
+
+    return View::make('autenticar.rol.opcion')->with('data',$data);
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function opcionStoreLista()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 40);
+      $variable = Input::get('variable');
+
+      $tab_privilegio_menu = tab_privilegio_menu::join('autenticacion.tab_privilegio as t01','t01.id','=','autenticacion.tab_privilegio_menu.id_tab_privilegio')
+      ->join('autenticacion.tab_menu as t02','t02.id','=','t01.id_tab_menu')
+      ->join('autenticacion.tab_rol_menu as t03','t03.id','=','autenticacion.tab_privilegio_menu.id_tab_rol_menu')
+      ->select('autenticacion.tab_privilegio_menu.id', 'de_menu', 'de_privilegio', DB::raw("autenticacion.tab_privilegio_menu.in_estatus as in_habilitado"))
+      ->where('id_tab_rol', '=', Input::get('rol'));
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_privilegio_menu->where('de_privilegio', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_privilegio_menu->count();
+        $tab_privilegio_menu->skip($start)->take($limit);
+        $response['data']  = $tab_privilegio_menu->orderby('id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_privilegio_menu->count();
+        $tab_privilegio_menu->skip($start)->take($limit);
+        $response['data']  = $tab_privilegio_menu->orderby('id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function opcionSi()
+  {
+    DB::beginTransaction();
+    try {
+      $tabla = tab_privilegio_menu::find(Input::get("id"));
+      $tabla->in_estatus = 'TRUE';
+      $tabla->save();
+      DB::commit();
+
+      $response['success']  = 'true';
+      $response['msg']  = 'Registro Habilitado con Exito!';
+      return Response::json($response, 200);
+
+    }catch (\Illuminate\Database\QueryException $e)
+    {
+      DB::rollback();
+
+      $response['success']  = 'false';
+      $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+      return Response::json($response, 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function opcionNo()
+  {
+    DB::beginTransaction();
+    try {
+      $tabla = tab_privilegio_menu::find(Input::get("id"));
+      $tabla->in_estatus = 'FALSE';
+      $tabla->save();
+      DB::commit();
+
+      $response['success']  = 'true';
+      $response['msg']  = 'Registro Deshabilitado con Exito!';
+      return Response::json($response, 200);
+
+    }catch (\Illuminate\Database\QueryException $e)
+    {
+      DB::rollback();
+
+      $response['success']  = 'false';
+      $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+      return Response::json($response, 200);
+    }
+  }
+
 }
