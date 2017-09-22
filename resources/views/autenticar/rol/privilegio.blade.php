@@ -113,7 +113,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
@@ -150,7 +150,9 @@ this.winformPanel_ = new Ext.Window({
         this.formPanel_
     ],
     buttons:[
-        this.guardar,
+			@if( in_array( array( 'de_privilegio' => 'privilegios.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.guardar,
+			@endif
         this.salir
     ],
     buttonAlign:'center'

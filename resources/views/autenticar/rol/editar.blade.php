@@ -63,7 +63,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
@@ -78,7 +78,7 @@ this.salir = new Ext.Button({
 this.formPanel_ = new Ext.form.FormPanel({
     //frame:true,
     width:400,border:false,
-autoHeight:true,  
+autoHeight:true,
     autoScroll:true,
     bodyStyle:'padding:10px;',
     items:[
@@ -89,7 +89,7 @@ autoHeight:true,
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: rol',
+    title:'Formulario: Rol',
     modal:true,
     constrain:true,
 width:400,
@@ -100,7 +100,9 @@ width:400,
         this.formPanel_
     ],
     buttons:[
-        this.guardar,
+			@if( in_array( array( 'de_privilegio' => 'privilegios.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.guardar,
+			@endif
         this.salir
     ],
     buttonAlign:'center'

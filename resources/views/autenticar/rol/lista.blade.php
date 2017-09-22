@@ -145,9 +145,15 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-        this.nuevo,'-',
-        this.editar,'-',
-        this.ver,'-',
+        @if( in_array( array( 'de_privilegio' => 'privilegios.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
+          this.nuevo,'-',
+        @endif
+        @if( in_array( array( 'de_privilegio' => 'privilegios.privilegios', 'in_habilitado' => true), Session::get('credencial') ))
+          this.editar,'-',
+        @endif
+        @if( in_array( array( 'de_privilegio' => 'privilegios.opciones', 'in_habilitado' => true), Session::get('credencial') ))
+          this.ver,'-',
+        @endif
         this.buscador
     ],
     columns: [

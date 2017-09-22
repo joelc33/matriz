@@ -302,7 +302,9 @@ this.formPanel_ = new Ext.form.FormPanel({
 	],
     buttonAlign:'left',
     buttons:[
-        this.guardar,
+			@if( in_array( array( 'de_privilegio' => 'datospersonales.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.guardar,
+			@endif
 	this.salir
     ]
 });

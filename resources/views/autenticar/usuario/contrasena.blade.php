@@ -57,6 +57,7 @@ var form = new Ext.FormPanel({
               items:[form],
               buttonAlign:'center',
               buttons: [
+								@if( in_array( array( 'de_privilegio' => 'cambiarclave.guardar', 'in_habilitado' => true), Session::get('credencial') ))
                      {text: 'Guardar',iconCls: 'icon-login',
                         handler: function(){
                              if (form.form.isValid() ) {
@@ -100,7 +101,9 @@ var form = new Ext.FormPanel({
                                  });
                              }
                          }
-                 }],
+                 }
+								 @endif
+		],
 		listeners:{
 			'close':function(win){
 					this.panelCambio = Ext.getCmp('tabpanel');
