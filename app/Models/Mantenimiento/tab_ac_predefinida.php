@@ -11,4 +11,14 @@ class tab_ac_predefinida extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_ac_predefinida';
+
+	public static $validarCrear = array(
+		"nombre" => "required|min:1|max:1200",
+		"descripcion" => "required|min:1|max:1200"
+	);
+
+	public static $validarEditar = array(
+		"nombre" => "required|min:1|max:1200",
+		"descripcion" => "required|min:1|max:1200"
+	);
 }

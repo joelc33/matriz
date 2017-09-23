@@ -104,4 +104,14 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'unidadmedidaController@guardar');
 		Route::post('eliminar', 'unidadmedidaController@eliminar');
 	});
+	//*Modulo de tipo de accion*/
+	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
+		Route::get('lista', 'tipoaccionController@lista');
+		Route::post('storeLista', 'tipoaccionController@storeLista');
+		Route::get('nuevo', 'tipoaccionController@nuevo');
+		Route::get('editar/{id}', 'tipoaccionController@editar');
+		Route::post('guardar', 'tipoaccionController@guardar');
+		Route::post('guardar/{id}', 'tipoaccionController@guardar');
+		Route::post('eliminar', 'tipoaccionController@eliminar');
+	});
 });
