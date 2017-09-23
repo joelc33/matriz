@@ -4,6 +4,8 @@ namespace matriz\Http\Controllers\Auxiliar;
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_documento;
 use matriz\Models\Mantenimiento\tab_cargo;
+use matriz\Models\Autenticacion\tab_rol;
+use matriz\Models\Mantenimiento\tab_ejecutores;
 use Input;
 use Response;
 use DB;
@@ -39,7 +41,31 @@ class documentoController extends Controller
     public function cargo()
     {
       $response['success']  = 'true';
-      $response['data']  = tab_cargo::select('id','de_cargo')->orderby('id','ASC')->get()->toArray();
+      $response['data']  = tab_cargo::select('id','de_cargo')->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function rol()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_rol::select('id','de_rol')->where('in_estatus', '=', true)->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function ejecutor()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 

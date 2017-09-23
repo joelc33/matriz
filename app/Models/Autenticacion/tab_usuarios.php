@@ -47,4 +47,18 @@ class tab_usuarios extends Model implements AuthenticatableContract,
     "contraseña" => "required|alpha_dash|min:6|max:30|confirmed",
     "contraseña_confirmation" => "required|alpha_dash|min:6|max:30"
   );
+
+  public static $validarCrear = array(
+    "usuario"    => "required|alpha_dash|min:5|max:30|unique:local.autenticacion.tab_usuarios,da_login",
+    "correo_funcionario"    => "required|email|unique:local.autenticacion.tab_usuarios,da_email",
+    //"contraseña" => "required|alpha_dash|min:6|max:30",
+    "rol"    => "required|integer"
+  );
+
+  public static $validarEditar = array(
+    "usuario"    => "required|alpha_dash|min:5|max:30",
+    "correo_funcionario"    => "required|email",
+    //"contraseña" => "required|alpha_dash|min:6|max:30",
+    "rol"    => "required|integer"
+  );
 }
