@@ -115,7 +115,7 @@ class usuarioController extends Controller
   		/*try{
   			Mail::send('correo.cambioContrasena', ['usuario' => $cuentaUsr ], function ($message) use ($cuentaUsr) {
   				$message->to($cuentaUsr->da_email, $cuentaUsr->da_email)
-  				->subject('SEDATEZ - CAMBIO DE CONTRASEÑA');
+  				->subject('SPE - CAMBIO DE CONTRASEÑA');
   			});
 
   		}catch(\Exception $e){
@@ -417,7 +417,7 @@ class usuarioController extends Controller
         /*try{
           Mail::send('correo.usuarioAdministrativo', ['usuario' => $cuentaUsr ], function ($message) use ($cuentaUsr) {
             $message->to($cuentaUsr->da_email, $cuentaUsr->da_email)
-            ->subject('SEDATEZ - CREACION DE USUARIO ADMINISTRATIVO');
+            ->subject('SPE - CREACION DE USUARIO ADMINISTRATIVO');
           });
 
         }catch(\Exception $e){
@@ -524,7 +524,7 @@ class usuarioController extends Controller
         try{
           Mail::send('correo.usuario.contrasena', ['usuario' => $cuentaUsr ], function ($message) use ($cuentaUsr) {
             $message->to($cuentaUsr->da_email, $cuentaUsr->da_email)
-            ->subject('SEDATEZ - CAMBIO DE CONTRASEÑA');
+            ->subject('SPE - CAMBIO DE CONTRASEÑA');
           });
 
         }catch(\Exception $e){
