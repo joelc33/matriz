@@ -96,7 +96,7 @@ this.resetear= new Ext.Button({
             },
             success:function(result, request ) {
 							obj = Ext.util.JSON.decode(result.responseText);
-							if(obj.success=="true"){
+							if(obj.success==true){
 								usuarioLista.main.store_lista.load();
 								Ext.Msg.alert("Notificación",obj.msg);
 							}else{

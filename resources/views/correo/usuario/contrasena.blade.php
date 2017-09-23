@@ -1,5 +1,5 @@
 Estimado(a) ciudadano(a), usted acaba de actualizar su acceso en el Sistema de POA y Matriz de Seguimiento de la Secretaría de Planificación y Estadística. Sus datos de acceso son:
-<ul><li><strong>Usuario:</strong> {{ $usuario->da_usuario }}</li>
+<ul><li><strong>Usuario:</strong> {{ $usuario->da_login }}</li>
 <li><strong>Clave:</strong> {{ Crypt::decrypt($usuario->da_pass_recuperar) }}</li></ul>
 A partir de este momento, con la utilización de su usuario y contraseña usted tiene la posibilidad de acceder a nuestros Servicios en Línea.<br><br>
 La ruta de acceso al sistema es <a href="https://spe2.zulia.gob.ve:54210" target="_blank">https://spe2.zulia.gob.ve:54210</a>
