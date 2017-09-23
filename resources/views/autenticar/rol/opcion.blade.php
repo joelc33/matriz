@@ -37,7 +37,12 @@ this.si= new Ext.Button({
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=='true'){
-		    opcionLista.main.store_lista.load();
+		                //opcionLista.main.store_lista.load();
+                    this.pagina  = opcionLista.main.gridPanel_.getBottomToolbar().getPageData().activePage-1;
+                    this.talla  = opcionLista.main.gridPanel_.getBottomToolbar().pageSize;
+                    opcionLista.main.store_lista.load({
+                        params: {start:this.pagina*this.talla, _token: '{{ csrf_token() }}'}
+                    });
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
@@ -66,7 +71,12 @@ this.no= new Ext.Button({
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=='true'){
-		                opcionLista.main.store_lista.load();
+		                //opcionLista.main.store_lista.load();
+                    this.pagina  = opcionLista.main.gridPanel_.getBottomToolbar().getPageData().activePage-1;
+                    this.talla  = opcionLista.main.gridPanel_.getBottomToolbar().pageSize;
+                    opcionLista.main.store_lista.load({
+                        params: {start:this.pagina*this.talla, _token: '{{ csrf_token() }}'}
+                    });
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
