@@ -377,7 +377,9 @@ width:514,
         this.formPanel_
     ],
     buttons:[
-        this.guardar,
+			@if( in_array( array( 'de_privilegio' => 'usuarios.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.guardar,
+			@endif
         this.salir
     ],
     buttonAlign:'center'
