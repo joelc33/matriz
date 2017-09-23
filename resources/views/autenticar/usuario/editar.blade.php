@@ -434,7 +434,7 @@ getStoreCO_CARGO:function(){
 },
 getStoreCO_EJECUTOR:function(){
     this.store = new Ext.data.JsonStore({
-        url:'{{ URL::to('auxiliar/ejecutor') }}',
+        url:'{{ URL::to('auxiliar/ejecutor/todo') }}',
         root:'data',
         fields:[
             {name: 'id'},{name: 'tx_ejecutor'},

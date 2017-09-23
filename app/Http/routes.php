@@ -82,7 +82,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('documento', 'documentoController@documento');
 		Route::get('cargo', 'documentoController@cargo');
 		Route::get('rol', 'documentoController@rol');
-		Route::get('ejecutor', 'documentoController@ejecutor');
+		Route::get('ejecutor/todo', 'documentoController@ejecutorTodo');
 	});
 });
 //*Modulos de Reportes*/

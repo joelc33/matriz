@@ -62,10 +62,10 @@ class documentoController extends Controller
      *
      * @return Response
      */
-    public function ejecutor()
+    public function ejecutorTodo()
     {
       $response['success']  = 'true';
-      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
+      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')/*->where('in_activo', '=', true)*/->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
