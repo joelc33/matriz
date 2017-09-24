@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
 }
@@ -14,7 +14,7 @@ ini_set('max_execution_time', 600);
 
 class MYPDF extends TCPDF {
 	public $conexion;
-//=========================================== Datos del Reporte ====================================================/	
+//=========================================== Datos del Reporte ====================================================/
 
 	function formatoDinero($numero, $fractional=true){
 	    if ($fractional) {
@@ -29,22 +29,22 @@ class MYPDF extends TCPDF {
 		}
 	    }
 	    return "Bs. ".$numero;
-	} 
+	}
 
 	function getRegistro($id_ejecutor, $id_proy_ae){
 
 		$condicionPR.= " t26.id_ejecutor = '".$id_ejecutor."' AND ";
-		$condicionPRAE.= " t24a.id_ejecutor = '".$id_ejecutor."' AND ";	    
+		$condicionPRAE.= " t24a.id_ejecutor = '".$id_ejecutor."' AND ";
 
 		$comunes = new ConexionComun();
 
-		/*$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, t24.tx_ejecutor AS tx_eje_titulo, t24a.tx_ejecutor AS tx_eje_det, fecha_inicio, fecha_fin, monto, monto_cargado(t26.id_proyecto) as mo_registrado, '1' as co_tipo, 
-                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico, 
-                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae, 
-                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades, 
+		/*$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, t24.tx_ejecutor AS tx_eje_titulo, t24a.tx_ejecutor AS tx_eje_det, fecha_inicio, fecha_fin, monto, monto_cargado(t26.id_proyecto) as mo_registrado, '1' as co_tipo,
+                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico,
+                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae,
+                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades,
                     mo_total_ejecutor_pr(t26.id_ejecutor, t26.id_ejercicio) as mo_proyecto_ac, tx_objetivo_institucional,t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t32.co_nodo as tx_nodos, t24a.id_ejecutor as id_ejecutor_ae, tx_categoria_proyecto(t26.id_proyecto,t39.tx_codigo,t26.id_ejercicio)
 		FROM t26_proyectos as t26
-		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor 
+		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor
 		inner join t18_sectores as t18a on t26.clase_sector=t18a.co_sector and t18a.nu_nivel = 1
 		inner join t32_proyecto_vinculos as t32 on t26.id_proyecto=t32.id_proyecto
 		inner join t45_planes_zulia as t45 on t32.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
@@ -57,7 +57,7 @@ class MYPDF extends TCPDF {
 		inner join t39_proyecto_acc_espec as t39 on t26.id_proyecto=t39.id_proyecto
 		inner join mantenimiento.tab_ejecutores as t24a on t39.co_ejecutores=t24a.id
 		inner join vista_cn_actividad_proy as v1 on v1.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
-		where t26.edo_reg is true AND ".$condicionPR." t39.edo_reg is true AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' 
+		where t26.edo_reg is true AND ".$condicionPR." t39.edo_reg is true AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."'
 
 UNION
 
@@ -70,10 +70,10 @@ SELECT sum(mo_proy_ae_meta(co_proyecto_acc_espec))
 	inner join mantenimiento.tab_ejecutores as t24bs on t26s.id_ejecutor=t24bs.id_ejecutor
 WHERE t24s.id_ejecutor=t24a.id_ejecutor AND t26s.id_ejercicio = t26.id_ejercicio AND t39s.edo_reg is true AND t26s.edo_reg is true
  AND t26s.id_proyecto=t26.id_proyecto
-) as mo_registrado, '1' as co_tipo, 
-                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico, 
-                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae, 
-                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades, 
+) as mo_registrado, '1' as co_tipo,
+                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico,
+                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae,
+                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades,
                     (
 SELECT sum(mo_proy_ae_meta(co_proyecto_acc_espec))
 	FROM t39_proyecto_acc_espec as t39s
@@ -86,7 +86,7 @@ WHERE t24s.id_ejecutor=t24a.id_ejecutor AND t26s.id_ejercicio = t26.id_ejercicio
 
 ) as mo_proyecto_ac, tx_objetivo_institucional,t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t32.co_nodo as tx_nodos, t24a.id_ejecutor as id_ejecutor_ae, tx_categoria_proyecto(t26.id_proyecto,t39.tx_codigo,t26.id_ejercicio)
 		FROM t26_proyectos as t26
-		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor 
+		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor
 		inner join t18_sectores as t18a on t26.clase_sector=t18a.co_sector and t18a.nu_nivel = 1
 		inner join t32_proyecto_vinculos as t32 on t26.id_proyecto=t32.id_proyecto
 		inner join t45_planes_zulia as t45 on t32.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
@@ -112,10 +112,10 @@ SELECT sum(mo_proy_ae_meta(co_proyecto_acc_espec))
 	inner join mantenimiento.tab_ejecutores as t24bs on t26s.id_ejecutor=t24bs.id_ejecutor
 WHERE t24s.id_ejecutor=t24a.id_ejecutor AND t26s.id_ejercicio = t26.id_ejercicio AND t39s.edo_reg is true AND t26s.edo_reg is true
  AND t26s.id_proyecto=t26.id_proyecto
-) as mo_registrado, '1' as co_tipo, 
-                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico, 
-                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae, 
-                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades, 
+) as mo_registrado, '1' as co_tipo,
+                    t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico,
+                    t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae,
+                    t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades,
                     (
 SELECT sum(mo_proy_ae_meta(co_proyecto_acc_espec))
 	FROM t39_proyecto_acc_espec as t39s
@@ -128,7 +128,7 @@ WHERE t24s.id_ejecutor=t24a.id_ejecutor AND t26s.id_ejercicio = t26.id_ejercicio
 
 ) as mo_proyecto_ac, tx_objetivo_institucional,t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t32.co_nodo as tx_nodos, t24a.id_ejecutor as id_ejecutor_ae, tx_categoria_proyecto(t26.id_proyecto,t39.tx_codigo,t26.id_ejercicio)
 		FROM t26_proyectos as t26
-		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor 
+		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor
 		inner join t18_sectores as t18a on t26.clase_sector=t18a.co_sector and t18a.nu_nivel = 1
 		inner join t32_proyecto_vinculos as t32 on t26.id_proyecto=t32.id_proyecto
 		inner join t45_planes_zulia as t45 on t32.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
@@ -149,11 +149,11 @@ order by 1, 19 ASC";
 		$this->cantidadTotal = $comunes->getFilas($sql);
 	}
 
-	public function Footer()	
+	public function Footer()
 	{
 		pie($this,'h',1);
 	}
-	public function setHeader()	
+	public function setHeader()
 	{
 		encabezado($this,'h',1);
 	}
@@ -161,7 +161,7 @@ order by 1, 19 ASC";
         {
 
 	$id_ejecutor = decode($_GET['id_ejecutor']);
-		
+
 	$this->getRegistro($id_ejecutor, $id_proy_ae);
        	$comunes = new ConexionComun();
 	$this->SetFont('','',11);
@@ -180,11 +180,11 @@ order by 1, 19 ASC";
 
 		$sqlDetalleMonto= "SELECT SUM(mo_presupuesto) as subtotal_ac FROM t68_metas_detalle as t68
 		inner join t67_metas as t67 on t68.co_metas=t67.co_metas
-		WHERE co_proyecto_acc_espec='".$campo['co_ae']."' AND t68.edo_reg is true";   
-                
-                $sqlAlcance= "SELECT (benef_femeninos+benef_masculinos) as nu_beneficiarios, (emp_dir_feme+emp_dir_mascu+emp_new_feme+emp_new_mascu+emp_sos_feme+emp_sos_mascu) as nu_empleos FROM t38_proyecto_alcance 
+		WHERE co_proyecto_acc_espec='".$campo['co_ae']."' AND t68.edo_reg is true";
+
+                $sqlAlcance= "SELECT (benef_femeninos+benef_masculinos) as nu_beneficiarios, (emp_dir_feme+emp_dir_mascu+emp_new_feme+emp_new_mascu+emp_sos_feme+emp_sos_mascu) as nu_empleos FROM t38_proyecto_alcance
 		WHERE id_proyecto='".$campo['id_proy_ac']."' AND edo_reg is true";
-                	
+
 /******Portada*********/
 
 		if($portada==0){
@@ -220,9 +220,6 @@ $html1 = '
 <td style="width: 35%;">AREA ESTRATEGICA: '.$campo['tx_area_estrategica'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
-</tr>
-<tr style="font-size:9px">
 <td rowspan="2" style="width: 30%;" align="justify">OBJETIVO HISTORICO: '.$campo['tx_objetivo_historico'].'</td>
 <td colspan="2" style="width: 70%;" align="justify">OBJETIVO(s) NACIONAL(ES): '.$campo['tx_objetivo_nacional'].'</td>
 </tr>
@@ -243,16 +240,19 @@ $html1 = '
 <td colspan="3">OBJETIVO INSTITUCIONAL POA: '.$campo['tx_objetivo_institucional'].'</td>
 </tr>
 <tr style="font-size:9px">
+<td colspan="2">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
+</tr>
+<tr style="font-size:9px">
 <td style="width: 60%;">ACCION E.: '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
 <td style="width: 40%;">EJECUTOR: '.$campo['id_ejecutor_ae'].' - '.$campo['tx_eje_det'].' </td>
 </tr>
 </tbody>
 </table>
-';	
+';
 
-		$this->writeHTML($html1, true, false, false, false, '');	
+		$this->writeHTML($html1, true, false, false, false, '');
 		$this->Ln(-3);
-$html23=''; 
+$html23='';
 $html23.= '
 <!-- Tabla 2 -->
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
@@ -276,7 +276,7 @@ $html23.= '
 </tr>
 </thead>
 ';
- 
+
 $html23.='
 <tbody>';
 $this->datos_actividad = $comunes->ObtenerFilasBySqlSelect($sqlActividad);
@@ -379,10 +379,10 @@ $html3 = '
 </table>
 ';
 		$this->writeHTML($html3, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 
 		$acumulador_pr_a = $acumulador_pr_a+$this->actividad_monto[0]['subtotal_ac'];
-                
+
 $html4 = '
 <!-- Tabla 4 -->
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
@@ -399,7 +399,7 @@ $html4 = '
 </table>
 ';
 		$this->writeHTML($html4, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 $html5 = '
 <!-- Tabla 5 -->
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
@@ -412,7 +412,7 @@ $html5 = '
 </table>
 ';
 		$this->writeHTML($html5, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 $html6 = '
 <!-- Tabla 6 -->
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
@@ -475,34 +475,34 @@ $htmlFisicoDetalle = '
 <th align="center" bgcolor="#BDBDBD" style="width: 5%;"><b>Total '.$campo_distribucion['nu_anio'].'</b></th>
 </tr>
 </thead>
-';	
+';
 		$this->AddPage();
 
 		$variableFisico = "'Fisica'";
 		$variablePresupuestaria = "'Financiera (Bs.)'";
 
 		$sqlFisicoFinanciero= "SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec, 'Financiera (Bs)' AS tx_distribucion,
-	presup_01, presup_02, presup_03, presup_04, presup_05, presup_06, 
-	presup_07, presup_08, presup_09, presup_10, presup_11, presup_12, 
-	t40.fecha_creacion, t40.edo_reg, tx_codigo, 
-	CASE WHEN (id_padre IS NOT NULL) THEN 
+	presup_01, presup_02, presup_03, presup_04, presup_05, presup_06,
+	presup_07, presup_08, presup_09, presup_10, presup_11, presup_12,
+	t40.fecha_creacion, t40.edo_reg, tx_codigo,
+	CASE WHEN (id_padre IS NOT NULL) THEN
 	tx_padre(id_padre)
-	ELSE 
-	descripcion 
+	ELSE
+	descripcion
 	END AS descripcion, id_padre
 	FROM t40_proyecto_acc_espec_rec as t40
 	inner join t39_proyecto_acc_espec as t39 on t40.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
 	WHERE t40.id_proyecto='".$campo_distribucion['id_proyecto']."' AND t40.edo_reg is true and t39.edo_reg is true
 	UNION
-	SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec,'Fisica' AS tx_distribucion, 
-	fisico_01, fisico_02, fisico_03, fisico_04, fisico_05, fisico_06, 
+	SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec,'Fisica' AS tx_distribucion,
+	fisico_01, fisico_02, fisico_03, fisico_04, fisico_05, fisico_06,
 	fisico_07, fisico_08, fisico_09, fisico_10, fisico_11, fisico_12,
 	t40.fecha_actualizacion as fecha_creacion, t40.edo_reg, tx_codigo, descripcion, id_padre
 	FROM t40_proyecto_acc_espec_rec as t40
 	inner join t39_proyecto_acc_espec as t39 on t40.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
 	WHERE t40.id_proyecto='".$campo_distribucion['id_proyecto']."' AND t40.edo_reg is true and t39.edo_reg is true and id_padre is null
 	ORDER BY tx_codigo, co_proyecto_acc_espec_rec, tx_distribucion, fecha_creacion ASC
-;"; 
+;";
 
 		$this->datos_fisico = $comunes->ObtenerFilasBySqlSelect($sqlFisicoFinanciero);
 
@@ -575,17 +575,17 @@ $htmlPartidaDetalle = '
 		/*$this->writeHTML($htmlPartidas, true, false, false, false, '');
 		$this->Ln(-7);*/
 
-		$sqlPartidasDetalle= "SELECT t41.*, tx_codigo, 
-	CASE WHEN (id_padre IS NOT NULL) THEN 
+		$sqlPartidasDetalle= "SELECT t41.*, tx_codigo,
+	CASE WHEN (id_padre IS NOT NULL) THEN
 	tx_padre(id_padre)
-	ELSE 
-	descripcion 
-	END AS descripcion, id_padre 
+	ELSE
+	descripcion
+	END AS descripcion, id_padre
 	FROM t41_proyecto_acc_espec_dist as t41
 	inner join t39_proyecto_acc_espec as t39 on t41.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
 	WHERE t41.id_proyecto='".$campo_distribucion['id_proyecto']."' AND t39.edo_reg is true
 	ORDER BY tx_codigo, co_proyecto_acc_espec_dist ASC
-;"; 
+;";
 
 		$this->datos_partidas = $comunes->ObtenerFilasBySqlSelect($sqlPartidasDetalle);
 
