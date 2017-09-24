@@ -985,13 +985,16 @@
                                         fn: function() {
                                             //TODO cerrar?
                                             console.log('AC cerrada');
+                                            opcionPlanificador.main.store_acciones.reload();
+                                            this.panelCambio = Ext.getCmp('tabpanel');
+                                            this.panelCambio.remove(self.ac.codigo);
                                         }
                                     });
                                 } else {
-					var errores = '';
-					for(datos in r.msg){
-						errores += r.msg[datos] + '<br>';
-					}
+                          					var errores = '';
+                          					for(datos in r.msg){
+                          						errores += r.msg[datos] + '<br>';
+                          					}
                                     Ext.Msg.alert('Error', errores);
                                 }
                             } catch (e) {
