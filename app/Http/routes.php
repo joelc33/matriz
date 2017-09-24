@@ -85,6 +85,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('ejecutor/todo', 'documentoController@ejecutorTodo');
 		Route::get('ac/ae', 'documentoController@acAe');
 		Route::post('ac/ae/activo', 'documentoController@acAeActivo');
+		Route::post('partida/buscar', 'buscarController@partida');
 	});
 });
 //*Modulos de Reportes*/

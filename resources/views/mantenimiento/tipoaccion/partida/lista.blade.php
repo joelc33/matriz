@@ -162,8 +162,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
 		{header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-    {header: 'Codigo', width:80, sortable: true, menuDisabled:true,dataIndex: 'nu_numero'},
-		{header: 'Denominacion', width:400,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_nombre'},
+		{header: 'Accion Especifica', width:300,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'ae_nombre'},
+		{header: 'Codigo', width:80, sortable: true, menuDisabled:true,dataIndex: 'nu_partida'},
+		{header: 'Denominacion', width:200,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_partida'},
     {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
@@ -220,9 +221,16 @@ getLista: function(){
     root:'data',
     fields:[
     {name: 'id'},
-    {name: 'de_nombre'},
 		{name: 'nu_numero'},
+		{name: 'de_nombre'},
+    {name: 'nu_partida'},
+		{name: 'de_partida'},
     {name: 'in_activo'},
+		{name: 'ae_nombre',
+				convert: function(v, r) {
+						return r.nu_numero + ' - ' + r.de_nombre;
+				}
+		}
            ]
     });
     return this.store;

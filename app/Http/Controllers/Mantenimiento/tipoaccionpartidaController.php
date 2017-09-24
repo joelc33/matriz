@@ -120,8 +120,9 @@ class tipoaccionpartidaController extends Controller
         ));
       }
       $tabla = tab_ac_ae_partida::find($id);
-      $tabla->de_nombre = Input::get("nombre");
-      $tabla->nu_numero = Input::get("numero");
+      $tabla->id_tab_ac_ae_predefinida = Input::get("ae");
+      $tabla->nu_partida = Input::get("partida");
+      $tabla->de_partida = Input::get("denominacion");
       $tabla->save();
 
       DB::commit();
@@ -150,9 +151,10 @@ class tipoaccionpartidaController extends Controller
         ));
       }
       $tabla = new tab_ac_ae_partida;
-      $tabla->id_padre = Input::get("ac");
-      $tabla->de_nombre = Input::get("nombre");
-      $tabla->nu_numero = Input::get("numero");
+      $tabla->id_tab_ac_predefinida = Input::get("ac");
+      $tabla->id_tab_ac_ae_predefinida = Input::get("ae");
+      $tabla->nu_partida = Input::get("partida");
+      $tabla->de_partida = Input::get("denominacion");
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 

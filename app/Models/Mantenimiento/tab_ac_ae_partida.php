@@ -13,10 +13,16 @@ class tab_ac_ae_partida extends Model
 	protected $table = 'mantenimiento.tab_ac_ae_partida';
 
 	public static $validarCrear = array(
-		"descripcion" => "required|min:1|max:1200"
+		"ac" => "required|numeric",
+		"ae" => "required|numeric",
+		"partida" => "required|numeric",
+		"denominacion" => "required|min:1|max:1200"
 	);
 
 	public static $validarEditar = array(
-		"descripcion" => "required|min:1|max:1200"
+		"ac" => "required|numeric",
+		"ae" => "required|numeric",
+		"partida" => "required|numeric",
+		"denominacion" => "required|min:1|max:1200"
 	);
 }

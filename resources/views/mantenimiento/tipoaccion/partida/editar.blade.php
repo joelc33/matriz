@@ -62,16 +62,49 @@ this.nu_numero = new Ext.form.NumberField({
 	allowNegative: false,
 	// readOnly:true,
 	// style:'background:#c9c9c9;',
-	// msgTarget: 'under',
-	width:100
+	msgTarget: 'under',
+	width:100,
+	validator: function(){
+		return this.validFlag;
+	},
+	listeners:{
+		change: function(textfield, newValue, oldValue){
+			var me = this;
+			Ext.Ajax.request({
+				method:'POST',
+				url: 'auxiliar/partida/buscar',
+				params: {
+					partida: newValue,
+					_token: '{{ csrf_token() }}'
+				},
+				success : function(response) {
+					var errores = '';
+					for(datos in Ext.decode(response.responseText).msg){
+						errores += Ext.decode(response.responseText).msg[datos] + '<br>';
+					}
+					me.validFlag = Ext.decode(response.responseText).valido ? true : errores;
+					me.validate();
+
+					obj = Ext.util.JSON.decode(response.responseText);
+					if(!obj.data){
+						tipoaccionpartidaEditar.main.de_nombre.setValue("");
+					}else{
+						tipoaccionpartidaEditar.main.de_nombre.setValue(obj.data.tx_nombre);
+					}
+				}
+			});
+		}
+	}
 });
 
-this.de_nombre = new Ext.form.TextField({
+this.de_nombre = new Ext.form.TextArea({
 	fieldLabel:'Denominacion',
 	name:'denominacion',
 	value:this.OBJ.de_partida,
 	allowBlank:false,
-	width:400
+	width:400,
+	height: 100,
+	readOnly:true
 });
 
 this.guardar = new Ext.Button({

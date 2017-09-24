@@ -11,4 +11,15 @@ class tab_partidas extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_partidas';
+
+	public static $validarBusqueda = array(
+		'partida' => 'required|numeric|exists:tab_partidas,co_partida,id_tab_ejercicio_fiscal,2018'
+	);
+
+	public static function validarBusqueda($id=0, $merge=[]) {
+		return array_merge([
+			'partida' => 'required|numeric|exists:tab_partidas,co_partida,id_tab_ejercicio_fiscal,'.$id
+			], $merge);
+	}
+
 }
