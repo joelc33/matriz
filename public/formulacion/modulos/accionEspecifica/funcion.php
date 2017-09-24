@@ -1,8 +1,8 @@
 <?php
-session_start(); 
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-} 
+}
 include("../../configuracion/ConexionComun.php");
 
 $comunes = new ConexionComun();
@@ -20,7 +20,7 @@ function formatoDinero($numero, $fractional=true) {
         }
     }
     return "Bs. ".$numero;
-} 
+}
 
 if($_GET['op']==1){
 	$sql = "SELECT t39.*, de_unidad_medida, tx_ejecutor, monto_cargado_ae_proy(co_proyecto_acc_espec) as mo_cargado FROM t39_proyecto_acc_espec as t39
@@ -152,14 +152,14 @@ if($_GET['op']==1){
 		include("../../plugins/reader/Classes/PHPExcel/IOFactory.php");
 
 			//Funciones extras
-		
+
 			function get_cell($cell, $objPHPExcel){
 				//seleccionar una celda
 				$objCell = ($objPHPExcel->getActiveSheet()->getCell($cell));
 				//tomar valor de la celda
 				return $objCell->getvalue();
 			}
-		
+
 			function pp(&$var){
 				$var = chr(ord($var)+1);
 				return true;
@@ -168,7 +168,7 @@ if($_GET['op']==1){
 			$name	  = $_FILES['archivo']['name'];
 			$tname 	  = $_FILES['archivo']['tmp_name'];
 			$type 	  = $_FILES['archivo']['type'];
-			
+
 			if($type == 'application/vnd.ms-excel')
 			{
 				// Extension excel 97
@@ -183,21 +183,21 @@ if($_GET['op']==1){
 				echo -1;
 				exit();
 			}
-	
+
 			$xlsx = 'Excel2007';
 			$xls  = 'Excel5';
 
 			//creando el lector
 			$objReader = PHPExcel_IOFactory::createReader($$ext);
-		
+
 			//cargamos el archivo
 			$objPHPExcel = $objReader->load($tname);
-	
+
 			$dim = $objPHPExcel->getActiveSheet()->calculateWorksheetDimension();
-	
+
 			// list coloca en array $start y $end
 			list($start, $end) = explode(':', $dim);
-			
+
 			if(!preg_match('#([A-Z]+)([0-9]+)#', $start, $rslt)){
 				return false;
 			}
@@ -209,7 +209,7 @@ if($_GET['op']==1){
 
 			$sql = "DELETE FROM t43_acc_espec_partida_tmp WHERE id_proyecto = '$codigo';";
 			$comunes->EjecutarQuery($sql);
-			$sql2 = "UPDATE t42_proyecto_acc_espec_partida SET edo_reg=false 
+			$sql2 = "UPDATE t42_proyecto_acc_espec_partida SET edo_reg=false
 				FROM t39_proyecto_acc_espec
 				WHERE t42_proyecto_acc_espec_partida.co_proyecto_acc_espec = t39_proyecto_acc_espec.co_proyecto_acc_espec
 				AND id_proyecto = '$codigo';";
@@ -235,10 +235,10 @@ if($_GET['op']==1){
 			select tx_codigo from a_cursor where num_tabla='$tx_codigo';";*/
 			$sqlSecuencia = "
 			DROP TABLE IF EXISTS a_cursor;
-			SELECT tx_codigo, lpad((row_number() OVER (ORDER BY tx_codigo))::text, 4, '0') as num_tabla, 
+			SELECT tx_codigo, lpad((row_number() OVER (ORDER BY tx_codigo))::text, 4, '0') as num_tabla,
 			sp_verificar_hijo_ae(co_proyecto_acc_espec) as in_foraneo into temp a_cursor
 			FROM t39_proyecto_acc_espec
-			WHERE edo_reg is true and id_proyecto='$codigo' and 
+			WHERE edo_reg is true and id_proyecto='$codigo' and
 			sp_verificar_hijo_ae(co_proyecto_acc_espec) is false order by 1 asc;
 			select num_tabla,tx_codigo, in_foraneo from a_cursor where in_foraneo is false and num_tabla='$tx_codigo';";
 			$resultadoSecuencia = $comunes->ObtenerFilasBySqlSelect($sqlSecuencia);
@@ -335,14 +335,14 @@ if($_GET['op']==1){
 	$tquery="UPDATE";
 	$id = 'co_proyecto_acc_espec = '.$_POST['co_proyecto_acc_espec'];
 	$variable["fecha_actualizacion"] = date("Y-m-d H:i:s");
-	$variable["edo_reg"] = "false"; 
+	$variable["edo_reg"] = "false";
 	$query = $comunes->InsertUpdate($tabla,$variable,$tquery,$id);
 
 	$tabla2="t40_proyecto_acc_espec_rec";
 	$tquery2="UPDATE";
 	$id2 = 'co_proyecto_acc_espec = '.$_POST['co_proyecto_acc_espec'];
 	$variable2["fecha_actualizacion"] = date("Y-m-d H:i:s");
-	$variable2["edo_reg"] = "false"; 
+	$variable2["edo_reg"] = "false";
 	$query2 = $comunes->InsertUpdate($tabla2,$variable2,$tquery2,$id2);
 
 	echo json_encode(array(
@@ -351,15 +351,15 @@ if($_GET['op']==1){
 	));
 }elseif($_GET['op']==6){
 	$sql = "SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec, 'Financiera (Bs)' AS tx_distribucion,
-	presup_01, presup_02, presup_03, presup_04, presup_05, presup_06, 
-	presup_07, presup_08, presup_09, presup_10, presup_11, presup_12, 
+	presup_01, presup_02, presup_03, presup_04, presup_05, presup_06,
+	presup_07, presup_08, presup_09, presup_10, presup_11, presup_12,
 	t40.fecha_creacion, t40.edo_reg, tx_codigo, descripcion
 	FROM t40_proyecto_acc_espec_rec as t40
 	inner join t39_proyecto_acc_espec as t39 on t40.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
 	WHERE t40.id_proyecto='".$_POST['id_proyecto']."' AND t40.edo_reg is true and t39.edo_reg is true
 	UNION
-	SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec,'Fisica' AS tx_distribucion, 
-	fisico_01, fisico_02, fisico_03, fisico_04, fisico_05, fisico_06, 
+	SELECT co_proyecto_acc_espec_rec, t40.id_proyecto, t40.co_proyecto_acc_espec,'Fisica' AS tx_distribucion,
+	fisico_01, fisico_02, fisico_03, fisico_04, fisico_05, fisico_06,
 	fisico_07, fisico_08, fisico_09, fisico_10, fisico_11, fisico_12,
 	t40.fecha_actualizacion as fecha_creacion, t40.edo_reg, tx_codigo, descripcion
 	FROM t40_proyecto_acc_espec_rec as t40
@@ -438,7 +438,7 @@ if($_GET['op']==1){
 		    "trimestre_04"     => trim($trimestre_04),
 		    "mo_total"     => trim($mo_total),
 		);
-	}	
+	}
 	}
 	echo json_encode(array(
 		"success"   =>  true,
@@ -496,11 +496,11 @@ if($_GET['op']==1){
 		"data"      =>  $data
 	));
 }elseif($_GET['op']==8){
-	$sql = "SELECT t47.*, tx_unidades_medida, tx_ejecutor, ('AC' || t24.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t53.numero, t53.nombre, mo_ac_ae_meta(id_accion_centralizada, t47.id_accion) AS mo_cargado FROM t47_ac_accion_especifica as t47
+	$sql = "SELECT t47.*, tx_unidades_medida, tx_ejecutor, ('AC' || t24.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t53.nu_numero as numero, t53.de_nombre as nombre, mo_ac_ae_meta(id_accion_centralizada, t47.id_accion) AS mo_cargado FROM t47_ac_accion_especifica as t47
 	inner join t21_unidades_medida as t21 on t47.id_unidad_medida=t21.co_unidades_medida
 	inner join t24_ejecutores as t24 on t47.id_ejecutor=t24.id_ejecutor
 	inner join t46_acciones_centralizadas as t46 on t47.id_accion_centralizada=t46.id
-	inner join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
+	inner join mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
 	WHERE ('AC' || t24.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) = '".$_POST['id_proyecto']."' AND t47.edo_reg is true";
 
 	$cantidadTotal = $comunes->getFilas($sql);
@@ -545,10 +545,10 @@ if($_GET['op']==1){
 	";
 
 	if($_SESSION['co_rol']>2){
-		$sql.=" WHERE co_ejecutores='".$_SESSION['co_ejecutores']."' AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t39.edo_reg is true AND t26.edo_reg is true ";	 
+		$sql.=" WHERE co_ejecutores='".$_SESSION['co_ejecutores']."' AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t39.edo_reg is true AND t26.edo_reg is true ";
 	}else{
 		$sql.=" WHERE t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t39.edo_reg is true AND t26.edo_reg is true ";
-	}   
+	}
 
 	if($_POST['BuscarBy']=="true"){
 		if($_POST['variable']!=""){$sql.=" and t24b.tx_ejecutor ILIKE '%".$_POST['variable']."%'";}
@@ -590,20 +590,20 @@ if($_GET['op']==1){
 		"data"      =>  $data
 	));
 }elseif($_GET['op']==10){
-	$sql = "SELECT t47.*, t52.nombre as nb_ac, de_unidad_medida as tx_unidades_medida, t24.tx_ejecutor, ('AC' || t24b.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t53.numero, t53.nombre, mo_ac_ae_meta(id_accion_centralizada, t47.id_accion) AS mo_cargado, t24b.tx_ejecutor as ejecutor_resp FROM t47_ac_accion_especifica as t47
+	$sql = "SELECT t47.*, t52.nombre as nb_ac, de_unidad_medida as tx_unidades_medida, t24.tx_ejecutor, ('AC' || t24b.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t53.nu_numero as numero, t53.de_nombre as nombre, mo_ac_ae_meta(id_accion_centralizada, t47.id_accion) AS mo_cargado, t24b.tx_ejecutor as ejecutor_resp FROM t47_ac_accion_especifica as t47
 	inner join mantenimiento.tab_unidad_medida as t21 on t47.id_unidad_medida=t21.id
 	inner join mantenimiento.tab_ejecutores as t24 on t47.id_ejecutor=t24.id_ejecutor
 	inner join t46_acciones_centralizadas as t46 on t47.id_accion_centralizada=t46.id
 	inner join mantenimiento.tab_ejecutores as t24b on t46.id_ejecutor=t24b.id_ejecutor
 	inner join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
-	inner join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
+	inner join mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
 	";
 
 	if($_SESSION['co_rol']>2){
-		$sql.=" WHERE t46.id_ejecutor = '".$_SESSION['id_ejecutor']."' AND t46.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t47.edo_reg is true AND t46.edo_reg is true";	 
+		$sql.=" WHERE t46.id_ejecutor = '".$_SESSION['id_ejecutor']."' AND t46.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t47.edo_reg is true AND t46.edo_reg is true";
 	}else{
 		$sql.=" WHERE t46.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' AND t47.edo_reg is true AND t46.edo_reg is true";
-	}   
+	}
 
 	if($_POST['BuscarBy']=="true"){
 		if($_POST['variable']!=""){$sql.=" and t24b.tx_ejecutor ILIKE '%".$_POST['variable']."%'";}
@@ -653,9 +653,9 @@ SELECT co_metas, codigo as original, lpad((row_number() OVER (ORDER BY codigo)):
 FROM t69_metas_ac where id_accion_centralizada= ".$ac."  and co_ac_acc_espec = ".$ae." and edo_reg is true order by co_metas asc;
 --select co_metas, original, corregido from orden_cursor_ac;
 
-UPDATE t69_metas_ac t1 
-SET codigo = t2.corregido 
-FROM orden_cursor_ac t2 WHERE t1.co_metas = t2.co_metas; 
+UPDATE t69_metas_ac t1
+SET codigo = t2.corregido
+FROM orden_cursor_ac t2 WHERE t1.co_metas = t2.co_metas;
 
 DELETE FROM t69_metas_ac WHERE id_accion_centralizada= ".$ac."  and co_ac_acc_espec = ".$ae." and edo_reg is false;
 
@@ -684,8 +684,8 @@ SELECT co_metas, codigo as original, lpad((row_number() OVER (ORDER BY codigo)):
 FROM t67_metas where co_proyecto_acc_espec= ".$ae."  and edo_reg is true order by co_metas asc;
 --select co_metas, original, corregido from orden_cursor_pr;
 
-UPDATE t67_metas t1 
-SET codigo = t2.corregido 
+UPDATE t67_metas t1
+SET codigo = t2.corregido
 FROM orden_cursor_pr t2 WHERE t1.co_metas = t2.co_metas;
 
 DELETE FROM t67_metas WHERE co_proyecto_acc_espec= ".$ae." and edo_reg is false;
