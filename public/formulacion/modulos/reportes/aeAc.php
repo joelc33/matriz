@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
 }
@@ -14,7 +14,7 @@ ini_set('max_execution_time', 600);
 
 class MYPDF extends TCPDF {
 	public $conexion;
-//=========================================== Datos del Reporte ====================================================/	
+//=========================================== Datos del Reporte ====================================================/
 
 	function formatoDinero($numero, $fractional=true){
 	    if ($fractional) {
@@ -29,7 +29,7 @@ class MYPDF extends TCPDF {
 		}
 	    }
 	    return "Bs. ".$numero;
-	} 
+	}
 
 	function getRegistro($id_ejecutor, $id_proy_ae){
 
@@ -38,22 +38,22 @@ class MYPDF extends TCPDF {
 		if($id_ejecutor!= '')
 		{
 			$condicionPR.= " t26.id_ejecutor = '".$id_ejecutor."' AND ";
-			$condicionAC.= " t47.id_ejecutor = '".$id_ejecutor."' AND ";	    
+			$condicionAC.= " t47.id_ejecutor = '".$id_ejecutor."' AND ";
 		}
 
 		if($id_proy_ae!= '')
 		{
 			$condicionPR.= " t26.id_proyecto = '".$id_proy_ae."' AND ";
-			$condicionAC.= " ('AC' || t24.id_ejecutor || t46.id_ejercicio || lpad(t47.id_accion::text, 5, '0')) = '".$id_proy_ae."' AND ";	    
+			$condicionAC.= " ('AC' || t24.id_ejecutor || t46.id_ejercicio || lpad(t47.id_accion::text, 5, '0')) = '".$id_proy_ae."' AND ";
 		}
 
 		$comunes = new ConexionComun();
 
 		$sql = "select 'AC' || t24.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac, t52.nombre, tx_ejecutor, t46.fecha_inicio, t46.fecha_fin, t46.monto,
-	coalesce(t46.monto_calc, 0) as monto_calc, '2' as co_tipo, t46.id_ejecutor, t18b.tx_codigo as tx_sector, t46.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, 
-        t20.tx_descripcion as tx_objetivo_historico, t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, 
-        t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac, 
-        objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t49.co_nodos as tx_nodos, t47.id_ejecutor as id_ejecutor_ae, 
+	coalesce(t46.monto_calc, 0) as monto_calc, '2' as co_tipo, t46.id_ejecutor, t18b.tx_codigo as tx_sector, t46.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica,
+        t20.tx_descripcion as tx_objetivo_historico, t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general,
+        t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac,
+        objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t49.co_nodos as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
         tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac
 		from t46_acciones_centralizadas as t46
 		join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
@@ -77,30 +77,30 @@ class MYPDF extends TCPDF {
 		$this->cantidadTotal = $comunes->getFilas($sql);
 	}
 
-	public function Footer()	
+	public function Footer()
 	{
 		/*$this->getRegistro('PR130120150002','');
 		foreach($this->datos as $key => $campo){
 			$tipo = $campo["co_tipo"];
 		}*/
 		pie($this,'h',2);
-		//$this->Cell(0, 10, 'Pagina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');  
+		//$this->Cell(0, 10, 'Pagina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
 	}
-	public function setHeader()	
+	public function setHeader()
 	{
 		encabezado($this,'h',1);
 	}
         public function cuerpo()
         {
-		
+
 		if($_GET['id_ejecutor']!= '')
 		{
-			$id_ejecutor = decode($_GET['id_ejecutor']);	    
+			$id_ejecutor = decode($_GET['id_ejecutor']);
 		}
 
 		if($_GET['id_proy_ae']!= '')
 		{
-			$id_proy_ae = decode($_GET['id_proy_ae']);	    
+			$id_proy_ae = decode($_GET['id_proy_ae']);
 		}
 
 	$this->getRegistro($id_ejecutor, $id_proy_ae);
@@ -122,11 +122,11 @@ class MYPDF extends TCPDF {
 
 			$sqlDetalleMonto= "SELECT SUM(mo_presupuesto) as subtotal_ac FROM t68_metas_detalle as t68
 			inner join t67_metas as t67 on t68.co_metas=t67.co_metas
-			WHERE co_proyecto_acc_espec='".$campo['co_ae']."' AND t68.edo_reg is true";   
-                        
-                        $sqlAlcance= "SELECT (benef_femeninos+benef_masculinos) as nu_beneficiarios, (emp_dir_feme+emp_dir_mascu+emp_new_feme+emp_new_mascu+emp_sos_feme+emp_sos_mascu) as nu_empleos FROM t38_proyecto_alcance 
+			WHERE co_proyecto_acc_espec='".$campo['co_ae']."' AND t68.edo_reg is true";
+
+                        $sqlAlcance= "SELECT (benef_femeninos+benef_masculinos) as nu_beneficiarios, (emp_dir_feme+emp_dir_mascu+emp_new_feme+emp_new_mascu+emp_sos_feme+emp_sos_mascu) as nu_empleos FROM t38_proyecto_alcance
 			WHERE id_proyecto='".$campo['id_proy_ac']."' AND edo_reg is true";
-                        
+
 		}elseif($campo["co_tipo"]==2){
 			$datosEnunciado='ACCION C.';
 			$datosEnunciadoSUBTOTAL='ACCION CENTRALIZADA';
@@ -138,9 +138,9 @@ class MYPDF extends TCPDF {
 
 			$sqlDetalleMonto= "SELECT SUM(mo_presupuesto) as subtotal_ac FROM t70_metas_ac_detalle as t70
 			inner join t69_metas_ac as t69 on t70.co_metas=t69.co_metas
-			WHERE  id_accion_centralizada='".$campo['id_accion_centralizada']."' and co_ac_acc_espec='".$campo['co_ae']."' AND t69.edo_reg is true AND t70.edo_reg is true"; 
-                        
-                        $sqlAlcance= "SELECT '' as nu_beneficiarios, '' as nu_empleos FROM t47_ac_accion_especifica 
+			WHERE  id_accion_centralizada='".$campo['id_accion_centralizada']."' and co_ac_acc_espec='".$campo['co_ae']."' AND t69.edo_reg is true AND t70.edo_reg is true";
+
+                        $sqlAlcance= "SELECT '' as nu_beneficiarios, '' as nu_empleos FROM t47_ac_accion_especifica
 			WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' and id_accion='".$campo['co_ae']."' AND edo_reg is true";
 		}
 
@@ -154,9 +154,6 @@ $html1 = '
 <td style="width: 50%;">'.$campo['id_ejecutor'].' - '.$campo['tx_ejecutor'].'</td>
 <td style="width: 15%;">SECTOR: '.$campo['tx_sector'].'</td>
 <td style="width: 35%;">AREA ESTRATEGICA: '.$campo['tx_area_estrategica'].'</td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="3">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
 </tr>
 <tr style="font-size:9px">
 <td rowspan="2" style="width: 30%;">OBJETIVO HISTORICO: '.$campo['tx_objetivo_historico'].'</td>
@@ -179,15 +176,18 @@ $html1 = '
 <td colspan="3">OBJETIVO INSTITUCIONAL POA: '.$campo['tx_objetivo_institucional'].'</td>
 </tr>
 <tr style="font-size:9px">
+<td colspan="3">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
+</tr>
+<tr style="font-size:9px">
 <td style="width: 80%;">ACCION E.: '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
 <td style="width: 20%;">COD. EJECUTOR: '.$campo['id_ejecutor_ae'].' </td>
 </tr>
 </tbody>
 </table>
-';					    
-		$this->writeHTML($html1, true, false, false, false, '');	
+';
+		$this->writeHTML($html1, true, false, false, false, '');
 		$this->Ln(-3);
-$html23=''; 
+$html23='';
 $html23.= '
 <!-- Tabla 2 -->
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
@@ -211,7 +211,7 @@ $html23.= '
 </tr>
 </thead>
 ';
- 
+
 $html23.='
 <tbody>';
 $this->datos_actividad = $comunes->ObtenerFilasBySqlSelect($sqlActividad);
@@ -318,14 +318,14 @@ $html3 = '
 </table>
 ';
 		$this->writeHTML($html3, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 
 		if($campo["id_ejecutor"]!=$ejecutor_ant){ $acumulador_ac_a = 0; }
 
 		$acumulador_ac_a = $acumulador_ac_a+$this->actividad_monto[0]['subtotal_ac'];
 
 		$ejecutor_ant = $campo["id_ejecutor"];
-                
+
 $this->monto_alcance = $comunes->ObtenerFilasBySqlSelect($sqlAlcance);
 $html4 = '
 <!-- Tabla 4 -->
@@ -343,7 +343,7 @@ $html4 = '
 </table>
 ';
 		$this->writeHTML($html4, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 $html5 = '
 <!-- Tabla 5 -->
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
@@ -356,7 +356,7 @@ $html5 = '
 </table>
 ';
 		$this->writeHTML($html5, true, false, false, false, '');
-		$this->Ln(-3);	
+		$this->Ln(-3);
 $html6 = '
 <!-- Tabla 6 -->
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
