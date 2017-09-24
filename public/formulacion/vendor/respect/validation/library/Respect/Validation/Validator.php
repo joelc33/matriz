@@ -79,7 +79,7 @@ use Respect\Validation\Rules\AllOf;
  * @method \Respect\Validation\Validator slug()
  * @method \Respect\Validation\Validator space(string $additionalChars = null)
  * @method \Respect\Validation\Validator startsWith(mixed $startValue, bool $identical = false)
- * @method \Respect\Validation\Validator string()
+ * @method \Respect\Validation\Validator stringcadena()
  * @method \Respect\Validation\Validator symbolicLink()
  * @method \Respect\Validation\Validator tld()
  * @method \Respect\Validation\Validator uploaded()

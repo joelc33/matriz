@@ -124,11 +124,11 @@ EOT;
 			$actualiza = v::key( 'id_viejo', v::intero()->notEmpty() );
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
-			$validador = v::key( 'id_ejecutor', v::string()->length( 4, 4, true ) )
+			$validador = v::key( 'id_ejecutor', v::stringcadena()->length( 4, 4, true ) )
 				->key( 'id_unidad_medida', v::intero()->positive()->notEmpty() )
 				->key( 'monto', v::numeric()->positive()->notEmpty() )
 				->key( 'meta', v::intero()->positive()->notEmpty() )
-				->key( 'bien_servicio', v::string()->length( 3, 128 ) )
+				->key( 'bien_servicio', v::stringcadena()->length( 3, 128 ) )
 				->key( 'fecha_inicio',  $fechas )
 				->key( 'fecha_fin', $fechas );
 
@@ -546,12 +546,12 @@ EOT;
 
 			$tipos = array( 'realizador', 'registrador', 'autorizador' );
 			$datos = array(
-				'nombres' => v::string()->length( 4, 80)->notEmpty(),
+				'nombres' => v::stringcadena()->length( 4, 80)->notEmpty(),
 				'cedula' => v::regex( '/^[VvEe](\-)?(\d{4,8})$/' ),
-				'cargo' => v::string()->length( 4, 50)->notEmpty(),
+				'cargo' => v::stringcadena()->length( 4, 50)->notEmpty(),
 				'correo' => v::regex( '/^(\w+)([\-+.\'][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/' )->notEmpty(),
 				'telefono' => v::regex( '/^((((\+)(\d{2})|(\d{2}))(\-)?)(\d{4}(\-)?)|(\d{4}(\-)?))?(\d{7})$/' )->notEmpty(),
-				'unidad' => v::string()->length( 3, 50)->notEmpty()
+				'unidad' => v::stringcadena()->length( 3, 50)->notEmpty()
 			);
 
 			$campos = array();
@@ -974,24 +974,24 @@ EOT;
 				->key( 'id_estatus', v::intero()->notEmpty() )
 				->key( 'id_accion', v::intero()->notEmpty() )
 				->key( 'id_subsector', v::intero()->notEmpty() )
-				->key( 'descripcion', v::string() )
-				->key( 'inst_mision', v::string() )
-				->key( 'inst_vision', v::string() )
-				->key( 'inst_objetivos', v::string() )
+				->key( 'descripcion', v::stringcadena() )
+				->key( 'inst_mision', v::stringcadena() )
+				->key( 'inst_vision', v::stringcadena() )
+				->key( 'inst_objetivos', v::stringcadena() )
 				->key( 'fecha_inicio',  $fechas )
 				->key( 'fecha_fin', $fechas )
 				->key( 'sit_presupuesto', v::intero()->notEmpty() )
 				->key( 'nu_po_beneficiar', v::numeric() )
 				->key( 'nu_em_previsto', v::numeric() )
-				->key( 'tx_re_esperado', v::string() )
-				->key( 'tx_pr_objetivo', v::string() )
+				->key( 'tx_re_esperado', v::stringcadena() )
+				->key( 'tx_pr_objetivo', v::stringcadena() )
 				->key( 'monto', v::numeric()->notEmpty() );
 
 			if ( $usuario->co_rol > 2 ) { //es local
 				$params['id_ejecutor'] = $usuario->id_ejecutor;
 			} else {
 				$validador = $validador->key(
-					'id_ejecutor', v::string()->length( 4, 4, true )
+					'id_ejecutor', v::stringcadena()->length( 4, 4, true )
 				);
 			}
 
