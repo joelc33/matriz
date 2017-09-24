@@ -1,7 +1,14 @@
 <?php
 
 namespace matriz\Http\Controllers\Mantenimiento;
-
+//*******agregar esta linea******//
+use matriz\Models\Mantenimiento\tab_ac_ae_predefinida;
+use View;
+use Validator;
+use Input;
+use Response;
+use DB;
+//*******************************//
 use Illuminate\Http\Request;
 
 use matriz\Http\Requests;
