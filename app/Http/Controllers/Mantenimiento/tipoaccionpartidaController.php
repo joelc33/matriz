@@ -48,13 +48,15 @@ class tipoaccionpartidaController extends Controller
       $ac = Input::get('ac');
 
       $tab_ac_ae_partida = $this->tab_ac_ae_partida
-      ->select('id', 'id_padre', 'nu_numero', 'de_nombre', 'in_activo')
-      ->where('id_padre', '=', $ac);
+      ->join('mantenimiento.tab_ac_ae_predefinida as t01','t01.id','=','mantenimiento.tab_ac_ae_partida.id_tab_ac_ae_predefinida')
+      ->select('mantenimiento.tab_ac_ae_partida.id', 'id_tab_ac_predefinida', 'id_tab_ac_ae_predefinida',
+      'nu_partida', 'de_partida', 'mantenimiento.tab_ac_ae_partida.in_activo', 'nu_numero', 'de_nombre')
+      ->where('id_tab_ac_predefinida', '=', $ac);
 
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_ac_ae_partida->where('de_nombre', 'ILIKE', "%$variable%");
+          $tab_ac_ae_partida->where('de_partida', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
@@ -81,7 +83,7 @@ class tipoaccionpartidaController extends Controller
    */
   public function nuevo($id)
   {
-    $data = json_encode(array("ac" => $id));
+    $data = json_encode(array("id_tab_ac_predefinida" => $id));
     return View::make('mantenimiento.tipoaccion.partida.editar')->with('data',$data);
   }
 
@@ -92,7 +94,7 @@ class tipoaccionpartidaController extends Controller
    */
   public function editar($id)
   {
-    $data = tab_ac_ae_partida::select('id', 'de_nombre', 'nu_numero', 'in_activo')
+    $data = tab_ac_ae_partida::select('id', 'id_tab_ac_predefinida', 'id_tab_ac_ae_predefinida', 'nu_partida', 'de_partida', 'in_activo')
     ->where('id', '=', $id)
     ->first();
     return View::make('mantenimiento.tipoaccion.partida.editar')->with('data',$data);

@@ -3,6 +3,10 @@ Ext.ns("tipoaccionpartidaEditar");
 tipoaccionpartidaEditar.main = {
 init:function(){
 
+//<Stores de fk>
+this.storeCO_AE = this.getStoreCO_AE();
+//<Stores de fk>
+
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 //<token>
@@ -13,13 +17,43 @@ this._token = new Ext.form.Hidden({
 //</token>
 this.ac = new Ext.form.Hidden({
 	name:'ac',
-	value:this.OBJ.ac
+	value:this.OBJ.id_tab_ac_predefinida
+});
+
+this.id_tab_ac_ae_predefinida = new Ext.form.ComboBox({
+	fieldLabel:'Accion Especifica',
+	store: this.storeCO_AE,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'descripcion',
+	hiddenName:'ae',
+	//readOnly:(this.OBJ.id_tab_ac_ae_predefinida!='')?true:false,
+	//style:(this.main.OBJ.id_tab_ac_ae_predefinida!='')?'background:#c9c9c9;':'',
+	//forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Accion Especifica...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{descripcion}</div></div></tpl>'),
+	resizable:true,
+	allowBlank:false
+});
+this.storeCO_AE.load({
+		params: {id_accion:this.OBJ.id_tab_ac_predefinida, _token: '{{ csrf_token() }}'}
+});
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_ac_ae_predefinida,
+	value:  this.OBJ.id_tab_ac_ae_predefinida,
+	objStore: this.storeCO_AE
 });
 
 this.nu_numero = new Ext.form.NumberField({
-	fieldLabel:'Codigo',
-	name:'numero',
-	value:this.OBJ.nu_numero,
+	fieldLabel:'Partida',
+	name:'partida',
+	value:this.OBJ.nu_partida,
 	allowBlank:false,
 	minLength : 1,
 	maxLength: 12,
@@ -33,9 +67,9 @@ this.nu_numero = new Ext.form.NumberField({
 });
 
 this.de_nombre = new Ext.form.TextField({
-	fieldLabel:'Nombre',
-	name:'nombre',
-	value:this.OBJ.de_nombre,
+	fieldLabel:'Denominacion',
+	name:'denominacion',
+	value:this.OBJ.de_partida,
 	allowBlank:false,
 	width:400
 });
@@ -97,7 +131,7 @@ this.salir = new Ext.Button({
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	width:600,
-	labelWidth: 80,
+	labelWidth: 120,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
@@ -105,6 +139,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	items:[
 		this._token,
 		this.ac,
+		this.id_tab_ac_ae_predefinida,
 		this.nu_numero,
 		this.de_nombre
 	]
@@ -131,6 +166,26 @@ width:614,
 });
 this.winformPanel_.show();
 tipoaccionpartidaLista.main.mascara.hide();
+},
+getStoreCO_AE:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/ac/ae/activo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'nu_numero'},{name: 'de_nombre'},
+						{name: 'descripcion',
+								convert: function(v, r) {
+										return r.nu_numero + ' - ' + r.de_nombre;
+								}
+						}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
 }
 };
 Ext.onReady(tipoaccionpartidaEditar.main.init, tipoaccionpartidaEditar.main);

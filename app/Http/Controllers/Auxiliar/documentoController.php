@@ -82,4 +82,16 @@ class documentoController extends Controller
       return Response::json($response, 200);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function acAeActivo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ac_ae_predefinida::select('id','nu_numero', 'de_nombre')->where('id_padre', '=', Input::get('id_accion'))->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
 }
