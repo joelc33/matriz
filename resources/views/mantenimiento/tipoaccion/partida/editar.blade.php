@@ -69,6 +69,7 @@ this.nu_numero = new Ext.form.NumberField({
 	},
 	listeners:{
 		change: function(textfield, newValue, oldValue){
+			tipoaccionpartidaEditar.main.formPanel_.el.mask('Por Favor Espere...', 'x-mask-loading');
 			var me = this;
 			Ext.Ajax.request({
 				method:'POST',
@@ -77,7 +78,11 @@ this.nu_numero = new Ext.form.NumberField({
 					partida: newValue,
 					_token: '{{ csrf_token() }}'
 				},
+				failure: function(response){
+					tipoaccionpartidaEditar.main.formPanel_.el.unmask();
+				},
 				success : function(response) {
+					tipoaccionpartidaEditar.main.formPanel_.el.unmask();
 					var errores = '';
 					for(datos in Ext.decode(response.responseText).msg){
 						errores += Ext.decode(response.responseText).msg[datos] + '<br>';
