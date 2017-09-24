@@ -56,22 +56,22 @@ EOT;
 			$id_accion = intval($_REQUEST['id']);
 			if ( $id_accion > 0 ) {
 				$cuenta = <<<EOT
-SELECT count(*) as c 
+SELECT count(*) as c
 FROM t47_ac_accion_especifica as t47
 WHERE id_accion_centralizada = ? and t47.edo_reg
 EOT;
 				$sql = <<<EOT
-SELECT id_accion, t53.numero, t53.nombre, bien_servicio, t47.monto,
+SELECT id_accion, t53.nu_numero as numero, t53.de_nombre as nombre, bien_servicio, t47.monto,
 	t47.monto_calc, fecha_inicio, fecha_fin, t47.id_ejecutor, t24.tx_ejecutor,
 	id_unidad_medida, de_unidad_medida as tx_unidades_medida, meta, objetivo_institucional,
 	count(t54.id_accion) as npartidas
 FROM t47_ac_accion_especifica as t47
 	JOIN mantenimiento.tab_ejecutores as t24 on t47.id_ejecutor = t24.id_ejecutor
-	JOIN t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
+	JOIN mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
 	JOIN mantenimiento.tab_unidad_medida as t21 on t21.id = id_unidad_medida
 	LEFT JOIN t54_ac_ae_partidas as t54 using (id_accion_centralizada, id_accion)
 WHERE id_accion_centralizada = ? and t47.edo_reg
-GROUP BY id_accion, t53.numero, t53.nombre, bien_servicio, t47.monto,
+GROUP BY id_accion, t53.nu_numero, t53.de_nombre, bien_servicio, t47.monto,
 	t47.monto_calc, fecha_inicio, fecha_fin, t47.id_ejecutor, t24.tx_ejecutor,
 	id_unidad_medida, tx_unidades_medida, meta, objetivo_institucional
 ORDER BY id_accion LIMIT ? OFFSET ?;
@@ -94,7 +94,7 @@ EOT;
 				);
 			}
 			break;
-		
+
 		case 4: //crear / actualizar acción específica
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_accion_centralizada',
@@ -125,9 +125,9 @@ EOT;
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
 			$validador = v::key( 'id_ejecutor', v::string()->length( 4, 4, true ) )
-				->key( 'id_unidad_medida', v::int()->positive()->notEmpty() )
+				->key( 'id_unidad_medida', v::intero()->positive()->notEmpty() )
 				->key( 'monto', v::numeric()->positive()->notEmpty() )
-				->key( 'meta', v::int()->positive()->notEmpty() )
+				->key( 'meta', v::intero()->positive()->notEmpty() )
 				->key( 'bien_servicio', v::string()->length( 3, 128 ) )
 				->key( 'fecha_inicio',  $fechas )
 				->key( 'fecha_fin', $fechas );
@@ -140,8 +140,8 @@ EOT;
 			$fondos = json_decode( $fondos['fondos'] );
 
 			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_tipo_fondo', v::int()->positive()->notEmpty() )
-					->attribute( 'monto', v::int()->positive() )
+				v::object()->attribute( 'co_tipo_fondo', v::intero()->positive()->notEmpty() )
+					->attribute( 'monto', v::intero()->positive() )
 			);
 			$reglas->assert( $fondos );
 
@@ -389,23 +389,23 @@ EOT;
 			$existe->assert( $pk );
 			if ( $op == 8 ) {
 				$sql = <<<EOT
-SELECT t53.numero, mes, round(t51.monto)::bigint monto,
-min(mes) over (partition by numero) as min,
-max(mes) over (partition by numero) as max
+SELECT t53.nu_numero as numero, mes, round(t51.monto)::bigint monto,
+min(mes) over (partition by nu_numero) as min,
+max(mes) over (partition by nu_numero) as max
 FROM t51_ac_ae_distribucion_financiera as t51
-JOIN t53_ac_ae_predefinidas as t53 on t53.id = t51.id_ae
+JOIN mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t51.id_ae
 WHERE id_ac = ?
-ORDER BY numero, mes;
+ORDER BY nu_numero, mes;
 EOT;
 			} else {
 				$sql = <<<EOT
-SELECT t53.numero, mes, round(t55.monto)::bigint monto,
-min(mes) over (partition by numero) as min,
-max(mes) over (partition by numero) as max
+SELECT t53.nu_numero as numero, mes, round(t55.monto)::bigint monto,
+min(mes) over (partition by nu_numero) as min,
+max(mes) over (partition by nu_numero) as max
 FROM t55_ac_ae_distribucion_fisica as t55
-JOIN t53_ac_ae_predefinidas as t53 on t53.id = t55.id_ae
+JOIN mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t55.id_ae
 WHERE id_ac = ?
-ORDER BY numero, mes;
+ORDER BY nu_numero, mes;
 EOT;
 			}
 
@@ -663,8 +663,8 @@ EOT;
 				'id_accion_centralizada' => 'id'
 			) );
 
-			$clave = v::key( 'id', v::int()->positive()->notEmpty() );
-			$reglas = v::key( 'co_nodos', v::arr()->notEmpty()->each( v::int()->positive() ) );
+			$clave = v::key( 'id', v::intero()->positive()->notEmpty() );
+			$reglas = v::key( 'co_nodos', v::arr()->notEmpty()->each( v::intero()->positive() ) );
 			foreach( array(
 				'co_objetivo_historico',
 				'co_objetivo_nacional',
@@ -675,7 +675,7 @@ EOT;
 				'co_objetivo_estado',
 				'co_macroproblema'
 			) as $campo ) {
-				$reglas = $reglas->key( $campo, v::int()->positive()->notEmpty() );
+				$reglas = $reglas->key( $campo, v::intero()->positive()->notEmpty() );
 			}
 
 			$clave->assert( $pk );
@@ -734,7 +734,7 @@ EOT;
 				'id_accion_centralizada' => 'id'
 			) );
 
-			$clave = v::key( 'id', v::int()->positive()->notEmpty() );
+			$clave = v::key( 'id', v::intero()->positive()->notEmpty() );
 			$clave->assert( $pk );
 
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
@@ -745,8 +745,8 @@ EOT;
 			$localidades = json_decode( $params['localidades'] );
 
 			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_municipio', v::int()->positive()->notEmpty() )
-					->attribute( 'co_parroquia', v::int()->positive(), false )
+				v::object()->attribute( 'co_municipio', v::intero()->positive()->notEmpty() )
+					->attribute( 'co_parroquia', v::intero()->positive(), false )
 			);
 			$reglas->assert( $localidades );
 
@@ -771,13 +771,13 @@ EOT
 			break;
 
 		//actualizar distribucion
-		case 19: 
+		case 19:
 		case 20:
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_accion_centralizada' => 'id'
 			) );
 
-			$clave = v::key( 'id', v::int()->positive()->notEmpty() );
+			$clave = v::key( 'id', v::intero()->positive()->notEmpty() );
 			$clave->assert( $pk );
 
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
@@ -787,10 +787,10 @@ EOT
 			$json->assert( $params );
 			$acciones = json_decode( $params['data'] );
 
-			$contenido = v::object()->attribute( 'id', v::int()->positive()->notEmpty() );
+			$contenido = v::object()->attribute( 'id', v::intero()->positive()->notEmpty() );
 
 			foreach ( range(1,12) as $i ) {
-				$contenido = $contenido->attribute( "$i", v::int()->min( 0, true ), false );
+				$contenido = $contenido->attribute( "$i", v::intero()->min( 0, true ), false );
 			}
 			if ( !is_array( $acciones ) ) {
 				$acciones = array( $acciones );
@@ -803,17 +803,17 @@ EOT
 				$sql = <<<EOT
 update only t51_ac_ae_distribucion_financiera as t51
 set monto = ?
-from t53_ac_ae_predefinidas as t53
+from mantenimiento.tab_ac_ae_predefinida as t53
 where t51.id_ae = t53.id
-and t51.mes = ? and t51.id_ac = ? and t53.numero = ?;
+and t51.mes = ? and t51.id_ac = ? and t53.nu_numero = ?;
 EOT;
 			} else {
 				$sql = <<<EOT
 update only t55_ac_ae_distribucion_fisica as t55
 set monto = ?
-from t53_ac_ae_predefinidas as t53
+from mantenimiento.tab_ac_ae_predefinida as t53
 where t55.id_ae = t53.id
-and t55.mes = ? and t55.id_ac = ? and t53.numero = ?;
+and t55.mes = ? and t55.id_ac = ? and t53.nu_numero = ?;
 EOT;
 			}
 
@@ -1079,4 +1079,3 @@ EOT;
 }
 
 echo $respuesta;
-

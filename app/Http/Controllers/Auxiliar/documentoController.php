@@ -6,6 +6,7 @@ use matriz\Models\Mantenimiento\tab_documento;
 use matriz\Models\Mantenimiento\tab_cargo;
 use matriz\Models\Autenticacion\tab_rol;
 use matriz\Models\Mantenimiento\tab_ejecutores;
+use matriz\Models\Mantenimiento\tab_ac_ae_predefinida;
 use Input;
 use Response;
 use DB;
@@ -66,6 +67,18 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')/*->where('in_activo', '=', true)*/->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function acAe()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ac_ae_predefinida::select('id','nu_numero as numero', 'de_nombre as nombre')->where('id_padre', '=', Input::get('id_accion'))->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 

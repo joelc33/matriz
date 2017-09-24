@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns("tipoaccionEditar");
-tipoaccionEditar.main = {
+Ext.ns("tipoaccionaeEditar");
+tipoaccionaeEditar.main = {
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
@@ -11,6 +11,26 @@ this._token = new Ext.form.Hidden({
 	value:'{{ csrf_token() }}'
 });
 //</token>
+this.ac = new Ext.form.Hidden({
+	name:'ac',
+	value:this.OBJ.ac
+});
+
+this.nu_numero = new Ext.form.NumberField({
+	fieldLabel:'Codigo',
+	name:'numero',
+	value:this.OBJ.nu_numero,
+	allowBlank:false,
+	minLength : 1,
+	maxLength: 12,
+	allowDecimals: false,
+	decimalPrecision: 0,
+	allowNegative: false,
+	// readOnly:true,
+	// style:'background:#c9c9c9;',
+	// msgTarget: 'under',
+	width:100
+});
 
 this.de_nombre = new Ext.form.TextField({
 	fieldLabel:'Nombre',
@@ -20,30 +40,21 @@ this.de_nombre = new Ext.form.TextField({
 	width:400
 });
 
-this.de_accion = new Ext.form.TextArea({
-	fieldLabel:'Descripcion',
-	name:'descripcion',
-	value:this.OBJ.de_accion,
-	allowBlank:false,
-	width:400,
-	height: 150,
-});
-
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
 
-        if(!tipoaccionEditar.main.formPanel_.getForm().isValid()){
+        if(!tipoaccionaeEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
-        tipoaccionEditar.main.formPanel_.getForm().submit({
+        tipoaccionaeEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('mantenimiento/tipoaccion/guardar') }}',
+		url:'{{ URL::to('mantenimiento/tipoaccion/ae/guardar') }}',
 	@else
-		url:'{{ URL::to('mantenimiento/tipoaccion/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('mantenimiento/tipoaccion/ae/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',
@@ -66,8 +77,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 tipoaccionLista.main.store_lista.load();
-                 tipoaccionEditar.main.winformPanel_.close();
+                 tipoaccionaeLista.main.store_lista.load();
+                 tipoaccionaeEditar.main.winformPanel_.close();
              }
         });
 
@@ -79,7 +90,7 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        tipoaccionEditar.main.winformPanel_.close();
+        tipoaccionaeEditar.main.winformPanel_.close();
     }
 });
 
@@ -93,13 +104,14 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-		this.de_nombre,
-		this.de_accion
+		this.ac,
+		this.nu_numero,
+		this.de_nombre
 	]
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Tipo de Accion',
+    title:'Formulario: Accion Especifica',
     modal:true,
     constrain:true,
 width:614,
@@ -110,7 +122,7 @@ width:614,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'tipoac.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'tipoac.ae.guardar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.guardar,
 			@endif
         this.salir
@@ -118,8 +130,8 @@ width:614,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-tipoaccionLista.main.mascara.hide();
+tipoaccionaeLista.main.mascara.hide();
 }
 };
-Ext.onReady(tipoaccionEditar.main.init, tipoaccionEditar.main);
+Ext.onReady(tipoaccionaeEditar.main.init, tipoaccionaeEditar.main);
 </script>

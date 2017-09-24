@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("tipoaccionLista");
+Ext.ns("tipoaccionaeLista");
 function change(val){
 	if(val==true){
 	    return '<span style="color:green;">Activo</span>';
@@ -8,11 +8,12 @@ function change(val){
 	}
 return val;
 };
-tipoaccionLista.main = {
+tipoaccionaeLista.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
 init:function(){
+
 //Mascara general del modulo
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
@@ -24,10 +25,10 @@ this.nuevo = new Ext.Button({
     text:'Nuevo',
     iconCls: 'icon-nuevo',
     handler:function(){
-        tipoaccionLista.main.mascara.show();
-        this.msg = Ext.get('formulariotipoaccion');
+        tipoaccionaeLista.main.mascara.show();
+        this.msg = Ext.get('formulariotipoaccionae');
         this.msg.load({
-         url:"{{ URL::to('mantenimiento/tipoaccion/nuevo') }}",
+         url:"{{ URL::to('mantenimiento/tipoaccion/ae/nuevo') }}/{{ $data['id'] }}",
          scripts: true,
          text: "Cargando.."
         });
@@ -39,11 +40,11 @@ this.editar= new Ext.Button({
     text:'Editar',
     iconCls: 'icon-editar',
     handler:function(){
-	this.codigo  = tipoaccionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	tipoaccionLista.main.mascara.show();
-        this.msg = Ext.get('formulariotipoaccion');
+	this.codigo  = tipoaccionaeLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	tipoaccionaeLista.main.mascara.show();
+        this.msg = Ext.get('formulariotipoaccionae');
         this.msg.load({
-         url:"{{ URL::to('mantenimiento/tipoaccion/editar') }}/"+this.codigo,
+         url:"{{ URL::to('mantenimiento/tipoaccion/ae/editar') }}/"+this.codigo,
          scripts: true,
          text: "Cargando.."
         });
@@ -55,64 +56,32 @@ this.eliminar= new Ext.Button({
     text:'Eliminar',
     iconCls: 'icon-cancelar',
     handler:function(){
-	this.codigo  = tipoaccionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	this.codigo  = tipoaccionaeLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Eliminar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'{{ URL::to('mantenimiento/tipoaccion/eliminar') }}',
+            url:'{{ URL::to('mantenimiento/tipoaccion/ae/eliminar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: tipoaccionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                id: tipoaccionaeLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=="true"){
-		    tipoaccionLista.main.store_lista.load();
+		    tipoaccionaeLista.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
                 }
-                tipoaccionLista.main.mascara.hide();
+                tipoaccionaeLista.main.mascara.hide();
             }});
 	}});
     }
 });
 
-this.lista_ae= new Ext.Button({
-    text:'Acciones Especificas',
-    iconCls: 'icon-accion_especifica',
-    handler:function(){
-	this.codigo  = tipoaccionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	tipoaccionLista.main.mascara.show();
-        this.msg = Ext.get('formulariotipoaccion');
-        this.msg.load({
-         url:"{{ URL::to('mantenimiento/tipoaccion/ae/lista') }}/"+this.codigo,
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
-this.lista_partida= new Ext.Button({
-    text:'Partidas Admitidas',
-    iconCls: 'icon-accion_fisica',
-    handler:function(){
-	this.codigo  = tipoaccionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	tipoaccionLista.main.mascara.show();
-        this.msg = Ext.get('formulariotipoaccion');
-        this.msg.load({
-         url:"{{ URL::to('mantenimiento/tipoaccion/partida/lista') }}/"+this.codigo,
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
 this.editar.disable();
 this.eliminar.disable();
-this.lista_ae.disable();
-this.lista_partida.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -142,10 +111,11 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		tipoaccionLista.main.store_lista.baseParams={};
-		tipoaccionLista.main.store_lista.baseParams.paginar = 'si';
-		tipoaccionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		tipoaccionLista.main.store_lista.load();
+		tipoaccionaeLista.main.store_lista.baseParams={};
+		tipoaccionaeLista.main.store_lista.baseParams.paginar = 'si';
+		tipoaccionaeLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		tipoaccionaeLista.main.store_lista.baseParams.ac = {{ $data['id'] }};
+		tipoaccionaeLista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -157,12 +127,13 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			tipoaccionLista.main.store_lista.baseParams={}
-			tipoaccionLista.main.store_lista.baseParams.BuscarBy = true;
-			tipoaccionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			tipoaccionLista.main.store_lista.baseParams[this.paramName] = v;
-			tipoaccionLista.main.store_lista.baseParams.paginar = 'si';
-			tipoaccionLista.main.store_lista.load();
+			tipoaccionaeLista.main.store_lista.baseParams={}
+			tipoaccionaeLista.main.store_lista.baseParams.BuscarBy = true;
+			tipoaccionaeLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			tipoaccionaeLista.main.store_lista.baseParams.ac = {{ $data['id'] }};
+			tipoaccionaeLista.main.store_lista.baseParams[this.paramName] = v;
+			tipoaccionaeLista.main.store_lista.baseParams.paginar = 'si';
+			tipoaccionaeLista.main.store_lista.load();
 		}
 	}
 });
@@ -174,40 +145,33 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     border:false,
     loadMask:true,
     autoWidth: true,
-    autoHeight:true,
+    //autoHeight:true,
+		height:300,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'tipoac.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'tipoac.ae.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.nuevo,'-',
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'tipoac.editar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'tipoac.ae.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'tipoac.eliminar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'tipoac.ae.eliminar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.eliminar,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'tipoac.ae.lista', 'in_habilitado' => true), Session::get('credencial') ))
-				this.lista_ae,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'tipoac.partida.lista', 'in_habilitado' => true), Session::get('credencial') ))
-				this.lista_partida,'-',
 			@endif
 				this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-    {header: 'Codigo', width:80, sortable: true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Nombre', width:300,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_nombre'},
-    {header: 'Descripcion', width:300,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_accion'},
+		{header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'Codigo', width:80, sortable: true, menuDisabled:true,dataIndex: 'nu_numero'},
+		{header: 'Nombre', width:400,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_nombre'},
     {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			tipoaccionLista.main.editar.enable();
-			tipoaccionLista.main.eliminar.enable();
-			tipoaccionLista.main.lista_ae.enable();
-			tipoaccionLista.main.lista_partida.enable();
+			tipoaccionaeLista.main.editar.enable();
+			tipoaccionaeLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -218,17 +182,33 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })
 });
 
-this.gridPanel_.render("contenedortipoaccionLista");
+//this.gridPanel_.render("contenedortipoaccionaeLista");
+
+this.winformPanel_ = new Ext.Window({
+	title:'Formulario: Accion Especifica',
+	modal:true,
+	constrain:true,
+	width:714,
+	height:332,
+	frame:true,
+	closabled:true,
+	resizable: false,
+	//autoHeight:true,
+	items:[
+		this.gridPanel_
+	]
+});
+this.winformPanel_.show();
+tipoaccionLista.main.mascara.hide();
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
+this.store_lista.baseParams.ac = {{ $data['id'] }};
 this.store_lista.load();
 this.store_lista.on('load',function(){
-tipoaccionLista.main.editar.disable();
-tipoaccionLista.main.eliminar.disable();
-tipoaccionLista.main.lista_ae.disable();
-tipoaccionLista.main.lista_partida.disable();
+tipoaccionaeLista.main.editar.disable();
+tipoaccionaeLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -236,19 +216,19 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'{{ URL::to('mantenimiento/tipoaccion/storeLista') }}',
+    url:'{{ URL::to('mantenimiento/tipoaccion/ae/storeLista') }}',
     root:'data',
     fields:[
     {name: 'id'},
     {name: 'de_nombre'},
-		{name: 'de_accion'},
+		{name: 'nu_numero'},
     {name: 'in_activo'},
            ]
     });
     return this.store;
 }
 };
-Ext.onReady(tipoaccionLista.main.init, tipoaccionLista.main);
+Ext.onReady(tipoaccionaeLista.main.init, tipoaccionaeLista.main);
 </script>
-<div id="contenedortipoaccionLista"></div>
-<div id="formulariotipoaccion"></div>
+<div id="contenedortipoaccionaeLista"></div>
+<div id="formulariotipoaccionae"></div>

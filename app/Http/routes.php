@@ -83,6 +83,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('cargo', 'documentoController@cargo');
 		Route::get('rol', 'documentoController@rol');
 		Route::get('ejecutor/todo', 'documentoController@ejecutorTodo');
+		Route::get('ac/ae', 'documentoController@acAe');
 	});
 });
 //*Modulos de Reportes*/
@@ -113,5 +114,21 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar', 'tipoaccionController@guardar');
 		Route::post('guardar/{id}', 'tipoaccionController@guardar');
 		Route::post('eliminar', 'tipoaccionController@eliminar');
+		//*Modulo de tipo de accion especifica*/
+		Route::get('ae/lista/{id}', 'tipoaccionaeController@lista');
+		Route::post('ae/storeLista', 'tipoaccionaeController@storeLista');
+		Route::get('ae/nuevo/{id}', 'tipoaccionaeController@nuevo');
+		Route::get('ae/editar/{id}', 'tipoaccionaeController@editar');
+		Route::post('ae/guardar', 'tipoaccionaeController@guardar');
+		Route::post('ae/guardar/{id}', 'tipoaccionaeController@guardar');
+		Route::post('ae/eliminar', 'tipoaccionaeController@eliminar');
+		//*Modulo de tipo de accion partidas admitidas*/
+		Route::get('partida/lista/{id}', 'tipoaccionpartidaController@lista');
+		Route::post('partida/storeLista', 'tipoaccionpartidaController@storeLista');
+		Route::get('partida/nuevo/{id}', 'tipoaccionpartidaController@nuevo');
+		Route::get('partida/editar/{id}', 'tipoaccionpartidaController@editar');
+		Route::post('partida/guardar', 'tipoaccionpartidaController@guardar');
+		Route::post('partida/guardar/{id}', 'tipoaccionpartidaController@guardar');
+		Route::post('partida/eliminar', 'tipoaccionpartidaController@eliminar');
 	});
 });

@@ -290,7 +290,8 @@ class rolController extends Controller
       $tab_privilegio_menu = tab_privilegio_menu::join('autenticacion.tab_privilegio as t01','t01.id','=','autenticacion.tab_privilegio_menu.id_tab_privilegio')
       ->join('autenticacion.tab_menu as t02','t02.id','=','t01.id_tab_menu')
       ->join('autenticacion.tab_rol_menu as t03','t03.id','=','autenticacion.tab_privilegio_menu.id_tab_rol_menu')
-      ->select('autenticacion.tab_privilegio_menu.id', 'de_menu', 'de_privilegio', DB::raw("autenticacion.tab_privilegio_menu.in_estatus as in_habilitado"))
+      ->select('autenticacion.tab_privilegio_menu.id', 'de_menu', 'de_privilegio', 'nu_orden',
+      DB::raw("autenticacion.tab_privilegio_menu.in_estatus as in_habilitado"))
       ->where('id_tab_rol', '=', Input::get('rol'));
 
       if (Input::get("BuscarBy")=="true") {
@@ -302,12 +303,12 @@ class rolController extends Controller
         $response['success']  = 'true';
         $response['total'] = $tab_privilegio_menu->count();
         $tab_privilegio_menu->skip($start)->take($limit);
-        $response['data']  = $tab_privilegio_menu->orderby('id','ASC')->get()->toArray();
+        $response['data']  = $tab_privilegio_menu->orderby('nu_orden','ASC')->orderBy('de_privilegio', 'ASC')->get()->toArray();
       } else {
         $response['success']  = 'true';
         $response['total'] = $tab_privilegio_menu->count();
         $tab_privilegio_menu->skip($start)->take($limit);
-        $response['data']  = $tab_privilegio_menu->orderby('id','ASC')->get()->toArray();
+        $response['data']  = $tab_privilegio_menu->orderby('nu_orden','ASC')->orderBy('de_privilegio', 'ASC')->get()->toArray();
       }
 
       return Response::json($response, 200);

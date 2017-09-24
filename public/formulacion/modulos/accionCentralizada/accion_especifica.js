@@ -210,7 +210,7 @@
 
             this.store_accion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    url: 'formulacion/modulos/accionCentralizada/funcion.php',
+                    url: 'auxiliar/ac/ae',
                     method: 'GET'
                 }),
                 baseParams: {
