@@ -98,6 +98,9 @@ class ejercicioController extends Controller
 
         /*Uso para poa*/
         //ini_set('session.save_path',realpath(dirname(storage_path()) . '/formulacion'));
+        ini_set('session.gc_maxlifetime', 3600);
+        // each client should remember their session id for EXACTLY 1 hour
+        session_set_cookie_params(3600);
         session_start();
         $_SESSION['ejercicio_fiscal']=Input::get('ejercicio');
         session_write_close();

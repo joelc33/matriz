@@ -98,6 +98,10 @@ class autenticarController extends Controller
 
             /*Uso para poa*/
             //ini_set('session.save_path',realpath(dirname(storage_path()) . '/formulacion'));
+            // server should keep session data for AT LEAST 1 hour
+            ini_set('session.gc_maxlifetime', 3600);
+            // each client should remember their session id for EXACTLY 1 hour
+            session_set_cookie_params(3600);
             session_start();
             $_SESSION['estatus'] = 'OK';
             $_SESSION['co_usuario'] = $data->id;
