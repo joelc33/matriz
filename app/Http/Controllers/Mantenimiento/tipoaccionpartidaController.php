@@ -67,7 +67,10 @@ class tipoaccionpartidaController extends Controller
         $response['success']  = 'true';
         $response['total'] = $tab_ac_ae_partida->count();
         $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('id','DESC')->get()->toArray();
+        $response['data']  = $tab_ac_ae_partida
+        ->orderby('nu_numero','DESC')
+        ->orderby('nu_partida','DESC')
+        ->get()->toArray();
       }
 
       return Response::json($response, 200);
