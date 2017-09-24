@@ -240,7 +240,7 @@ $html1 = '
 <td colspan="3">OBJETIVO INSTITUCIONAL POA: '.$campo['tx_objetivo_institucional'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
+<td colspan="3">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
 </tr>
 <tr style="font-size:9px">
 <td style="width: 60%;">ACCION E.: '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
