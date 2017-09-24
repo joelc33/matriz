@@ -163,36 +163,36 @@ $html1 = '
 <td colspan="3"><b>PLAN OPERATIVO INSTITUCIONAL - PRESUPUESTO EJERCICIO FISCAL '.$campo['nu_anio'].'</b></td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 50%;">'.$campo['id_ejecutor'].' - '.$campo['tx_ejecutor'].'</td>
-<td style="width: 15%;">SECTOR: '.$campo['tx_sector'].'</td>
-<td style="width: 35%;">AREA ESTRATEGICA: '.$campo['tx_area_estrategica'].'</td>
+<td style="width: 50%;"><b>'.$campo['id_ejecutor'].'</b> - '.$campo['tx_ejecutor'].'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$campo['tx_sector'].'</td>
+<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$campo['tx_area_estrategica'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td rowspan="2" style="width: 30%;">OBJETIVO HISTORICO: '.$campo['tx_objetivo_historico'].'</td>
-<td colspan="2" style="width: 70%;">OBJETIVO(s) NACIONAL(ES): '.$campo['tx_objetivo_nacional'].'</td>
+<td rowspan="2" style="width: 30%;"><b>OBJETIVO HISTORICO:</b> '.$campo['tx_objetivo_historico'].'</td>
+<td colspan="2" style="width: 70%;"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$campo['tx_objetivo_nacional'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2" style="width: 70%;">OBJETIVO(S) ESTRATEGICO(S): '.$campo['tx_objetivo_estrategico'].'</td>
+<td colspan="2" style="width: 70%;"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$campo['tx_objetivo_estrategico'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3">OBJETIVO GENERAL: '.$campo['tx_objetivo_general'].'</td>
+<td colspan="3"><b>OBJETIVO GENERAL:</b> '.$campo['tx_objetivo_general'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td rowspan="2">AMBITO: '.$campo['tx_ambito_estado'].'</td>
-<td colspan="2">PDEZ/NOMBRE DEL PROBLEMA: '.$campo['tx_macroproblema'].'</td>
+<td rowspan="2"><b>AMBITO:</b> '.$campo['tx_ambito_estado'].'</td>
+<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$campo['tx_macroproblema'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2">PDEZ/NUDO CRITICO: '.$campo['tx_nodos'].'</td>
+<td colspan="2"><b>PDEZ/NUDO CRITICO:</b> '.$campo['tx_nodos'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3">OBJETIVO INSTITUCIONAL POA: '.$campo['tx_objetivo_institucional'].'</td>
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$campo['tx_objetivo_institucional'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3">'.$datosEnunciado.': '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
+<td colspan="3"><b>'.$datosEnunciado.':</b> '.$campo['id_proy_ac'].' - '.$campo['nombre'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 80%;">ACCION E.: '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
-<td style="width: 20%;">COD. EJECUTOR: '.$campo['id_ejecutor_ae'].' </td>
+<td style="width: 80%;"><b>ACCION E.:</b> '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$campo['id_ejecutor_ae'].' </td>
 </tr>
 </tbody>
 </table>
