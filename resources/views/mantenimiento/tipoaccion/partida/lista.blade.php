@@ -146,7 +146,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     loadMask:true,
     autoWidth: true,
     //autoHeight:true,
-		height:300,
+		height:400,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'tipoac.partida.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.nuevo,'-',
@@ -175,7 +175,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			tipoaccionpartidaLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
-        pageSize: 20,
+        pageSize: 15,
         store: this.store_lista,
         displayInfo: true,
         displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
@@ -190,7 +190,7 @@ this.winformPanel_ = new Ext.Window({
 	modal:true,
 	constrain:true,
 	width:714,
-	height:332,
+	height:432,
 	frame:true,
 	closabled:true,
 	resizable: false,

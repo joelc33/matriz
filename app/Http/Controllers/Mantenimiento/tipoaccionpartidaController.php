@@ -43,7 +43,7 @@ class tipoaccionpartidaController extends Controller
   {
     try {
       $start  = Input::get('start', 0);
-      $limit  = Input::get('limit', 20);
+      $limit  = Input::get('limit', 15);
       $variable = Input::get('variable');
       $ac = Input::get('ac');
 
@@ -62,12 +62,12 @@ class tipoaccionpartidaController extends Controller
         $response['success']  = 'true';
         $response['total'] = $tab_ac_ae_partida->count();
         $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('id','ASC')->get()->toArray();
+        $response['data']  = $tab_ac_ae_partida->orderby('id','DESC')->get()->toArray();
       } else {
         $response['success']  = 'true';
         $response['total'] = $tab_ac_ae_partida->count();
         $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('id','ASC')->get()->toArray();
+        $response['data']  = $tab_ac_ae_partida->orderby('id','DESC')->get()->toArray();
       }
 
       return Response::json($response, 200);
