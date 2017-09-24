@@ -163,7 +163,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
 		{header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
     {header: 'Codigo', width:80, sortable: true, menuDisabled:true,dataIndex: 'nu_numero'},
-		{header: 'Nombre', width:400,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_nombre'},
+		{header: 'Denominacion', width:400,  menuDisabled:true, sortable: true, /*renderer: textoLargo,*/ dataIndex: 'de_nombre'},
     {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
@@ -185,7 +185,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //this.gridPanel_.render("contenedortipoaccionpartidaLista");
 
 this.winformPanel_ = new Ext.Window({
-	title:'Formulario: Accion Especifica',
+	title:'Formulario: Partidas Admitidas',
 	modal:true,
 	constrain:true,
 	width:714,
