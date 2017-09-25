@@ -1,5 +1,8 @@
 <?php
 require_once '../../comun.php';
+require_once (__DIR__.'/../../plugins/eloquent/app.config.php');
+require_once (__DIR__.'/../../model/mantenimiento/tab_ac_ae_partida.php');
+require_once (__DIR__.'/../../model/mantenimiento/tab_ac_ae_predefinida.php');
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions as ve;
@@ -315,6 +318,26 @@ EOT;
 										die( $respuesta );
 									}
 									$ae = $acciones_especificas[ $i - $acciones ];
+
+									if (tab_ac_ae_partida::where('id_tab_ac_ae_predefinida', '=', $ae)
+									->where('nu_partida', '=', $partida)
+									->where('in_activo', '=', true)
+									->exists()) {
+
+									}else {
+
+										$validar_ae = tab_ac_ae_predefinida::select( 'id', 'nu_numero', 'de_nombre')
+										->where('id', '=', $ae)
+										->first();
+
+										header('Content-Type: text/html');
+										echo json_encode(array(
+											'success' => false,
+											'msg' => 'La Partida: '.$partida.', Monto: '.$val.', No se encuentra dentro de las partidas admitidas para: <br>'.$validar_ae->nu_numero.' - '.$validar_ae->de_nombre
+										));
+										exit();
+
+									}
 
 									//FIXME
 									$comunes->InsertUpdate(
