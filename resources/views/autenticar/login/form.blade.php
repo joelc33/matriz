@@ -193,6 +193,75 @@ Ext.onReady(function(){
   this.login.show();
 });
 
+function cambiar(){
+
+	this.correo = new Ext.form.TextField({
+			fieldLabel:'Correo Electronico',
+			name: 'correo',
+			allowBlank:false,
+			maxLength:250,
+			width:200
+	});
+
+	var formCorreo = new Ext.form.FormPanel({
+		baseCls: 'x-plain',
+		labelWidth: 120,
+		autoWidth:true,
+		autoHeight:true,
+		frame:true,
+		autoScroll:false,
+		bodyStyle:'padding:10px;',
+		url:'{{ URL::to('autenticar/correo') }}',
+		items: [
+			this.correo
+		]
+	});
+
+	this.recuperar = new Ext.Window({
+				title:'Nueva Etapa - Recuperar Contraseña',
+				layout:'fit',
+				iconCls: 'icon-bloqueado',
+				width:400,
+				autoHeight:true,
+				modal:true,
+				frame:true,
+				autoScroll: true,
+				maximizable:false,
+				closable:true,
+				draggable: false,
+				resizable: false,
+				constrain:true,
+				plain: true,
+				buttonAlign:'center',
+				items:[
+					formCorreo
+				],
+				buttons: [{
+						text:'Enviar',
+						align:'center',
+						iconCls: 'icon-enviarcorreo',
+						handler: function (){
+
+							if(!formCorreo.getForm().isValid()){
+									Ext.MessageBox.show({
+											title: 'Alerta',
+											msg: "Debe ingresar los campos en rojo",
+											closable: false,
+											icon: Ext.MessageBox.INFO,
+											resizable: false,
+											animEl: document.body,
+											buttons: Ext.MessageBox.OK
+									});
+									return false;
+							}
+
+						}
+				}]
+	});
+
+	this.recuperar.show();
+};
+
 </script>
 
 @endsection
