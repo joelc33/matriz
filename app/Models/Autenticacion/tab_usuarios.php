@@ -61,4 +61,9 @@ class tab_usuarios extends Model implements AuthenticatableContract,
     //"contraseña" => "required|alpha_dash|min:6|max:30",
     "rol"    => "required|integer"
   );
+
+  public static $validarCorreo = array(
+    'usuario' => 'required|alpha_dash|min:5|max:30|exists:local.autenticacion.tab_usuarios,da_login',
+    'correo' => 'required|email|exists:local.autenticacion.tab_usuarios,da_email'
+  );
 }

@@ -27,6 +27,7 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::post('autenticar', 'autenticarController@validar'); // Verificar datos
 		Route::get('autenticar', 'autenticarController@salir'); // Finalizar sesión
 		Route::get('autenticar/captcha', 'externoController@captcha'); // Captcha
+		Route::post('autenticar/recuperar', 'autenticarController@recuperar'); // Recuperar Password
 		Route::get('ejercicio', 'ejercicioController@lista'); // Ejercicio Fiscal
 		Route::post('ejercicio', 'ejercicioController@seleccionar'); // Ejercicio Fiscal
 		Route::get('ejercicio/lista', 'ejercicioController@ejercicio'); // Ejercicio Fiscal

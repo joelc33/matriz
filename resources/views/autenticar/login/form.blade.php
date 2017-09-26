@@ -195,10 +195,20 @@ Ext.onReady(function(){
 
 function cambiar(){
 
+	this.usuario_recuperar = new Ext.form.TextField({
+			fieldLabel:'Usuario',
+			name: 'usuario',
+			allowBlank:false,
+			maxLength:250,
+			width:200
+	});
+
 	this.correo = new Ext.form.TextField({
 			fieldLabel:'Correo Electronico',
 			name: 'correo',
 			allowBlank:false,
+			regex:/^((([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z\s?]{2,5}){1,25})*(\s*?;\s*?)*)*$/,
+			regexText:'Este campo debe contener direcciones de correo electrónico válidas únicas.',
 			maxLength:250,
 			width:200
 	});
@@ -211,8 +221,10 @@ function cambiar(){
 		frame:true,
 		autoScroll:false,
 		bodyStyle:'padding:10px;',
-		url:'{{ URL::to('autenticar/correo') }}',
+		url:'{{ URL::to('autenticar/recuperar') }}',
 		items: [
+			this._token,
+			this.usuario_recuperar,
 			this.correo
 		]
 	});
@@ -254,6 +266,30 @@ function cambiar(){
 									});
 									return false;
 							}
+
+							formCorreo.form.submit({
+								waitTitle: "Validando",
+								waitMsg : "Espere un momento por favor......",
+								failure: function(form,action){
+										try{
+											if(action.result.msg!=null){
+													var errores = '';
+													for(datos in action.result.msg){
+														errores += action.result.msg[datos] + '<br>';
+													}
+													Ext.utiles.msg('Error de Validaci&oacute;n', errores);
+											}else{
+													throw Exception();
+											}
+										}catch(Exception){
+											Ext.utiles.msg('Error durante el proceso','Consulta al administrador del Sistema');
+										}
+								},
+								success: function(form,action) {
+										this.recuperar.hide();
+										Ext.MessageBox.show({title: 'Envio de Correo', msg: '<br>Contraseña enviada con Exito!.',width:300,closable:true,icon:Ext.MessageBox.INFO});
+								}
+							});
 
 						}
 				}]

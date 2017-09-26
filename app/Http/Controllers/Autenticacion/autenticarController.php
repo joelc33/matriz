@@ -14,6 +14,9 @@ use Response;
 use Validator;
 use URL;
 use DB;
+use Input;
+use Crypt;
+use Mail;
 //*******************************//
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
@@ -147,6 +150,90 @@ class autenticarController extends Controller
       /*fin*/
       // redirect
       return Redirect::to('/');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    protected function genera_clave(){
+      $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+      $longitudCadena=strlen($cadena);
+      $pass = "";
+      $longitudPass=8;
+      for($i=1 ; $i<=$longitudPass ; $i++){
+        $pos=rand(0,$longitudCadena-1);
+        $pass .= substr($cadena,$pos,1);
+      }
+      return $pass;
+    }
+
+    public function recuperar()
+    {
+
+      $mensajes = array(
+          'usuario.exists'=>'El usuario que has introducido no coinciden con nuestros registros. Intente de nuevo!.',
+          'correo.exists'=>'El correo que has introducido no coinciden con nuestros registros. Intente de nuevo!.',
+      );
+
+      $validator = Validator::make(Input::all(), tab_usuarios::$validarCorreo, $mensajes);
+      if ($validator->fails()) {
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+
+      DB::beginTransaction();
+      try {
+        $clave = self::genera_clave();
+
+        $usuario = tab_usuarios::updateOrCreate(array('da_login' => Input::get("usuario"), 'da_email' => Input::get("correo")));
+        //$usuario = tab_usuarios::find(Input::get("id"));
+        $usuario->da_password = bcrypt($clave);
+        $usuario->da_pass_recuperar = Crypt::encrypt($clave);
+        $usuario->save();
+
+        //$cuentaUsr = tab_usuarios::findOrFail($usuario->id);
+
+        $cuentaUsr = tab_usuarios::select('da_login', 'da_email', 'da_pass_recuperar')
+        ->where('da_login', '=', Input::get("usuario"))
+        ->where('da_email', '=', Input::get("correo"))
+        ->first();
+
+        try{
+          Mail::send('correo.usuario.contrasena', ['usuario' => $cuentaUsr ], function ($message) use ($cuentaUsr) {
+            $message->to($cuentaUsr->da_email, $cuentaUsr->da_email)
+            ->subject('SPE - RECUPERAR CONTRASEÑA');
+          });
+
+        }catch(\Exception $e){
+
+          return Response::json(array(
+            'success' => false,
+            'msg' => 'Error al enviar Correo Electronico. Intente mas tarde.',
+            //'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+          ));
+        }
+
+          DB::commit();
+
+          return Response::json(array(
+            'success' => true,
+            'msg' => 'Correo enviado.'
+          ));
+
+      }catch (\Illuminate\Database\QueryException $e)
+      {
+        DB::rollback();
+
+        $response['success']  = 'false';
+        //$response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+        $response['msg']  = array('ERROR ('.$e->getCode().'):'=> 'Error en transaccion. Intente mas tarde.');
+        return Response::json($response, 200);
+      }
+
     }
 
 }
