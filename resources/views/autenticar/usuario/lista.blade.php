@@ -80,7 +80,7 @@ this.eliminar= new Ext.Button({
 });
 
 //Desabilitar un registro
-this.resetear= new Ext.Button({
+/*this.resetear= new Ext.Button({
   text:'Resetear Clave',
   iconCls: 'icon-cambio',
     handler:function(){
@@ -109,6 +109,22 @@ this.resetear= new Ext.Button({
               usuarioLista.main.mascara.hide();
             }});
 	}});
+    }
+});*/
+
+//Editar un registro
+this.resetear= new Ext.Button({
+    text:'Resetear Clave',
+    iconCls: 'icon-cambio',
+    handler:function(){
+	this.codigo  = usuarioLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	usuarioLista.main.mascara.show();
+        this.msg = Ext.get('formulariousuario');
+        this.msg.load({
+         url:"{{ URL::to('usuario/cambiar/clave') }}/"+this.codigo,
+         scripts: true,
+         text: "Cargando.."
+        });
     }
 });
 

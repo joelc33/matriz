@@ -63,6 +63,8 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::post('deshabilitar', 'usuarioController@deshabilitar');
 		Route::get('datos', 'usuarioController@datos');
 		Route::post('cambios', 'usuarioController@cambios');
+		Route::get('cambiar/clave/{id}', 'usuarioController@cambioClave');
+		Route::post('cambiar/clave', 'usuarioController@guardarCambioClave');
 	});
 	//*Modulo de validar*/
 	Route::group(['prefix' => 'validar'], function(){

@@ -552,4 +552,63 @@ class usuarioController extends Controller
         return Response::json($response, 200);
       }
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function cambioClave($id)
+    {
+      $data = tab_usuarios::select('id', 'da_login')
+      ->where('id', '=', $id)
+      ->first();
+      return View::make('autenticar.usuario.resetear')->with('data',$data);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function guardarCambioClave()
+    {
+    DB::beginTransaction();
+       try {
+
+      $datos = array(
+        "contraseña" => Input::get("contraseña"),
+        "contraseña_confirmation" => Input::get("contraseña_confirmation")
+      );
+
+      $validator = Validator::make($datos, tab_usuarios::$validarReseteo);
+      if ($validator->fails()) {
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+
+      $usuario = tab_usuarios::find(Input::get("codigo"));
+      $usuario->da_password = bcrypt(Input::get("contraseña"));
+      $usuario->da_pass_recuperar = Crypt::encrypt(Input::get("contraseña"));
+      $usuario->save();
+
+      DB::commit();
+
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'La Contraseña se cambio Satisfactoriamente!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
 }
