@@ -195,6 +195,11 @@ Ext.onReady(function(){
 
 function cambiar(){
 
+	this._token_recuperar = new Ext.form.Hidden({
+			name:'_token',
+			value:'{{ csrf_token() }}'
+	});
+
 	this.usuario_recuperar = new Ext.form.TextField({
 			fieldLabel:'Usuario',
 			name: 'usuario',
@@ -223,13 +228,13 @@ function cambiar(){
 		bodyStyle:'padding:10px;',
 		url:'{{ URL::to('autenticar/recuperar') }}',
 		items: [
-			this._token,
+			this._token_recuperar,
 			this.usuario_recuperar,
 			this.correo
 		]
 	});
 
-	this.recuperar = new Ext.Window({
+	var ventanaRecuperar = new Ext.Window({
 				title:'Nueva Etapa - Recuperar Contraseña',
 				layout:'fit',
 				iconCls: 'icon-bloqueado',
@@ -239,7 +244,7 @@ function cambiar(){
 				frame:true,
 				autoScroll: true,
 				maximizable:false,
-				closable:true,
+				closable:false,
 				draggable: false,
 				resizable: false,
 				constrain:true,
@@ -286,16 +291,23 @@ function cambiar(){
 										}
 								},
 								success: function(form,action) {
-										this.recuperar.hide();
+										ventanaRecuperar.hide();
 										Ext.MessageBox.show({title: 'Envio de Correo', msg: '<br>Contraseña enviada con Exito!.',width:300,closable:true,icon:Ext.MessageBox.INFO});
 								}
 							});
 
 						}
-				}]
+				},{
+						align:'center',
+						iconCls: 'icon-cancelar',
+	          text : 'Cancelar',
+	          handler : function(){
+	              ventanaRecuperar.hide();
+	          }
+	       }]
 	});
 
-	this.recuperar.show();
+	ventanaRecuperar.show();
 };
 
 </script>
