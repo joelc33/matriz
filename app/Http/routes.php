@@ -112,7 +112,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'unidadmedidaController@guardar');
 		Route::post('eliminar', 'unidadmedidaController@eliminar');
 	});
-	//*Modulo de roles*/
+	//*Modulo de Ejecutores*/
 	Route::group(['prefix' => 'mantenimiento/ejecutor'], function(){
 		Route::get('lista', 'ejecutorController@lista');
 		Route::post('storeLista', 'ejecutorController@storeLista');
@@ -122,6 +122,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'ejecutorController@guardar');
 		Route::post('eliminar', 'ejecutorController@eliminar');
 		Route::post('habilitar', 'ejecutorController@habilitar');
+	});
+	//*Modulo de Sectores*/
+	Route::group(['prefix' => 'mantenimiento/sector'], function(){
+		Route::get('lista', 'sectorController@lista');
+		Route::post('storeLista', 'sectorController@storeLista');
+		Route::get('nuevo', 'sectorController@nuevo');
+		Route::get('editar/{id}', 'sectorController@editar');
+		Route::post('guardar', 'sectorController@guardar');
+		Route::post('guardar/{id}', 'sectorController@guardar');
+		Route::post('eliminar', 'sectorController@eliminar');
+		Route::post('habilitar', 'sectorController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
