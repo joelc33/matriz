@@ -212,7 +212,7 @@ class autenticarController extends Controller
 
           return Response::json(array(
             'success' => false,
-            'msg' => 'Error al enviar Correo Electronico. Intente mas tarde.',
+            'msg' => array('msg' => 'Error al enviar Correo Electronico. Intente mas tarde.'),
             //'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
           ));
         }
