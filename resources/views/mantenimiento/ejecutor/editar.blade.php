@@ -185,7 +185,7 @@ this.de_correo = new Ext.form.TextField({
 	value:this.OBJ.de_correo,
 	width:200,
 	//allowBlank:false,
-	emptyText: 'correo@diminio.com',
+	//emptyText: 'correo@diminio.com',
 	regex:/^((([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z\s?]{2,5}){1,25})*(\s*?;\s*?)*)*$/,
 	regexText:'Este campo debe contener direcciones de correo electrónico válidas únicas o múltiples separadas por punto y coma (;)',
 	blankText : 'ingresar direccion de e-mail'
