@@ -84,7 +84,6 @@ Ext.onReady(function(){
 this.datosUsuario = '<p class="registro_detalle"><b><span style="color:red;font-size:13px;">Bienvenido, {!! $funcionario->nb_funcionario !!} {!! $funcionario->ap_funcionario !!} </span></b></p>';
 this.datosUsuario += '<p class="registro_detalle"><b>Fecha de Registro: </b>{!! trim(date_format(date_create($funcionario->fe_registro),'d/m/Y')) !!}</p>';
 this.datosUsuario += '<p class="registro_detalle"><b>Cédula: </b>{!! $funcionario->inicial !!}-{!! $funcionario->nu_cedula !!}</p>';
-this.datosUsuario +='<p class="registro_detalle"><b>Nombre: </b> {!! $funcionario->nb_funcionario !!} {!! $funcionario->ap_funcionario !!}</p>';
 this.datosUsuario +='<p class="registro_detalle"><b>Unidad Ejecutora: </b> {!! $funcionario->tx_ejecutor !!}</p>';
 this.datosUsuario +='<p class="registro_detalle"><b>Ejercicio Fiscal: </b> {!! Session::get('ejercicio') !!}</p>';
 this.datosUsuario += '<p class="registro_detalle"><b>Ultimo login: </b>{!! trim(date_format(date_create($ultimo_login->created_at),"d/m/Y - h:i A")) !!}</p>';
