@@ -134,6 +134,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'sectorController@eliminar');
 		Route::post('habilitar', 'sectorController@habilitar');
 	});
+	//*Modulo de Sectores*/
+	Route::group(['prefix' => 'mantenimiento/objetivo'], function(){
+		Route::get('lista', 'objetivoController@lista');
+		Route::post('storeLista', 'objetivoController@storeLista');
+		Route::get('nuevo', 'objetivoController@nuevo');
+		Route::get('editar/{id}', 'objetivoController@editar');
+		Route::post('guardar', 'objetivoController@guardar');
+		Route::post('guardar/{id}', 'objetivoController@guardar');
+		Route::post('eliminar', 'objetivoController@eliminar');
+		Route::post('habilitar', 'objetivoController@habilitar');
+	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
 		Route::get('lista', 'tipoaccionController@lista');
