@@ -64,7 +64,7 @@ this.eliminar= new Ext.Button({
     iconCls: 'icon-cancelar',
     handler:function(){
 	this.codigo  = ejecutorLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Eliminar Registro?', function(boton){
+	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',

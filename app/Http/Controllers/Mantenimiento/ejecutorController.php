@@ -237,7 +237,7 @@ class ejecutorController extends Controller
         DB::commit();
 
         $response['success']  = 'true';
-        $response['msg']  = 'Registro Deshabilitado con Exito!';
+        $response['msg']  = 'Registro Habilitado con Exito!';
         return Response::json($response, 200);
 
       }catch (\Illuminate\Database\QueryException $e)
