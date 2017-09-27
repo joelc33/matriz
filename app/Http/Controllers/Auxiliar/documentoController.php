@@ -7,6 +7,8 @@ use matriz\Models\Mantenimiento\tab_cargo;
 use matriz\Models\Autenticacion\tab_rol;
 use matriz\Models\Mantenimiento\tab_ejecutores;
 use matriz\Models\Mantenimiento\tab_ac_ae_predefinida;
+use matriz\Models\Mantenimiento\tab_tipo_ejecutor;
+use matriz\Models\Mantenimiento\tab_ambito_ejecutor;
 use Input;
 use Response;
 use DB;
@@ -91,6 +93,30 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_ac_ae_predefinida::select('id','nu_numero', 'de_nombre')->where('id_padre', '=', Input::get('id_accion'))->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function ejecutorAmbito()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ambito_ejecutor::select('id','de_ambito_ejecutor')->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function ejecutorTipo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_tipo_ejecutor::select('id','de_tipo_ejecutor')->where('in_activo', '=', true)->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 

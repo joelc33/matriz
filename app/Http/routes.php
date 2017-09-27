@@ -89,6 +89,8 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('ac/ae', 'documentoController@acAe');
 		Route::post('ac/ae/activo', 'documentoController@acAeActivo');
 		Route::post('partida/buscar', 'buscarController@partida');
+		Route::get('ejecutor/ambito', 'documentoController@ejecutorAmbito');
+		Route::get('ejecutor/tipo', 'documentoController@ejecutorTipo');
 	});
 });
 //*Modulos de Reportes*/
@@ -98,7 +100,7 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('prueba', 'jasperController@prueba');
 	});
 });
-//*Modulos de Reportes*/
+//*Modulos de Mantenimiento*/
 Route::group(['namespace' => 'Mantenimiento'], function(){
 	//*Modulo de roles*/
 	Route::group(['prefix' => 'mantenimiento/unidadmedida'], function(){
@@ -109,6 +111,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar', 'unidadmedidaController@guardar');
 		Route::post('guardar/{id}', 'unidadmedidaController@guardar');
 		Route::post('eliminar', 'unidadmedidaController@eliminar');
+	});
+	//*Modulo de roles*/
+	Route::group(['prefix' => 'mantenimiento/ejecutor'], function(){
+		Route::get('lista', 'ejecutorController@lista');
+		Route::post('storeLista', 'ejecutorController@storeLista');
+		Route::get('nuevo', 'ejecutorController@nuevo');
+		Route::get('editar/{id}', 'ejecutorController@editar');
+		Route::post('guardar', 'ejecutorController@guardar');
+		Route::post('guardar/{id}', 'ejecutorController@guardar');
+		Route::post('eliminar', 'ejecutorController@eliminar');
+		Route::post('habilitar', 'ejecutorController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
