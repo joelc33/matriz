@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("objetivoLista");
+Ext.ns("planzuliaLista");
 function change(val){
 	if(val==true){
 	    return '<span style="color:green;">Activo</span>';
@@ -16,7 +16,7 @@ function verificar(val){
 	}
 return val;
 };
-objetivoLista.main = {
+planzuliaLista.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -32,10 +32,10 @@ this.nuevo = new Ext.Button({
     text:'Nuevo',
     iconCls: 'icon-nuevo',
     handler:function(){
-        objetivoLista.main.mascara.show();
-        this.msg = Ext.get('formularioobjetivo');
+        planzuliaLista.main.mascara.show();
+        this.msg = Ext.get('formularioplanzulia');
         this.msg.load({
-         url:"{{ URL::to('mantenimiento/objetivo/nuevo') }}",
+         url:"{{ URL::to('mantenimiento/planzulia/nuevo') }}",
          scripts: true,
          text: "Cargando.."
         });
@@ -47,11 +47,11 @@ this.editar= new Ext.Button({
     text:'Editar',
     iconCls: 'icon-editar',
     handler:function(){
-	this.codigo  = objetivoLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	objetivoLista.main.mascara.show();
-        this.msg = Ext.get('formularioobjetivo');
+	this.codigo  = planzuliaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	planzuliaLista.main.mascara.show();
+        this.msg = Ext.get('formularioplanzulia');
         this.msg.load({
-         url:"{{ URL::to('mantenimiento/objetivo/editar') }}/"+this.codigo,
+         url:"{{ URL::to('mantenimiento/planzulia/editar') }}/"+this.codigo,
          scripts: true,
          text: "Cargando.."
         });
@@ -63,25 +63,25 @@ this.eliminar= new Ext.Button({
     text:'Deshabilitar',
     iconCls: 'icon-cancelar',
     handler:function(){
-	this.codigo  = objetivoLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	this.codigo  = planzuliaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'{{ URL::to('mantenimiento/objetivo/eliminar') }}',
+            url:'{{ URL::to('mantenimiento/planzulia/eliminar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: objetivoLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                id: planzuliaLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=="true"){
-		    objetivoLista.main.store_lista.load();
+		    planzuliaLista.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
                 }
-                objetivoLista.main.mascara.hide();
+                planzuliaLista.main.mascara.hide();
             }});
 	}});
     }
@@ -91,25 +91,25 @@ this.habilitar= new Ext.Button({
     text:'Habilitar',
     iconCls: 'icon-fin',
     handler:function(){
-	this.codigo  = objetivoLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	this.codigo  = planzuliaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'{{ URL::to('mantenimiento/objetivo/habilitar') }}',
+            url:'{{ URL::to('mantenimiento/planzulia/habilitar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: objetivoLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                id: planzuliaLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=="true"){
-		    objetivoLista.main.store_lista.load();
+		    planzuliaLista.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
                 }
-                objetivoLista.main.mascara.hide();
+                planzuliaLista.main.mascara.hide();
             }});
 	}});
     }
@@ -147,10 +147,10 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		objetivoLista.main.store_lista.baseParams={};
-		objetivoLista.main.store_lista.baseParams.paginar = 'si';
-		objetivoLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		objetivoLista.main.store_lista.load();
+		planzuliaLista.main.store_lista.baseParams={};
+		planzuliaLista.main.store_lista.baseParams.paginar = 'si';
+		planzuliaLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		planzuliaLista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -162,12 +162,12 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			objetivoLista.main.store_lista.baseParams={}
-			objetivoLista.main.store_lista.baseParams.BuscarBy = true;
-			objetivoLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			objetivoLista.main.store_lista.baseParams[this.paramName] = v;
-			objetivoLista.main.store_lista.baseParams.paginar = 'si';
-			objetivoLista.main.store_lista.load();
+			planzuliaLista.main.store_lista.baseParams={}
+			planzuliaLista.main.store_lista.baseParams.BuscarBy = true;
+			planzuliaLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			planzuliaLista.main.store_lista.baseParams[this.paramName] = v;
+			planzuliaLista.main.store_lista.baseParams.paginar = 'si';
+			planzuliaLista.main.store_lista.load();
 		}
 	}
 });
@@ -181,16 +181,16 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'objetivos.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'planes.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.nuevo,'-',
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'objetivos.editar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'planes.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'objetivos.habilitar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'planes.habilitar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.habilitar,'-',
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'objetivos.deshabilitar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'planes.deshabilitar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.eliminar,'-',
 			@endif
 				this.buscador
@@ -205,9 +205,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			objetivoLista.main.editar.enable();
-			objetivoLista.main.habilitar.enable();
-			objetivoLista.main.eliminar.enable();
+			planzuliaLista.main.editar.enable();
+			planzuliaLista.main.habilitar.enable();
+			planzuliaLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -218,16 +218,16 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })
 });
 
-this.gridPanel_.render("contenedorobjetivoLista");
+this.gridPanel_.render("contenedorplanzuliaLista");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-objetivoLista.main.editar.disable();
-objetivoLista.main.habilitar.disable();
-objetivoLista.main.eliminar.disable();
+planzuliaLista.main.editar.disable();
+planzuliaLista.main.habilitar.disable();
+planzuliaLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -235,7 +235,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'{{ URL::to('mantenimiento/objetivo/storeLista') }}',
+    url:'{{ URL::to('mantenimiento/planzulia/storeLista') }}',
     root:'data',
     fields:[
     {name: 'id'},
@@ -252,7 +252,7 @@ getLista: function(){
     return this.store;
 }
 };
-Ext.onReady(objetivoLista.main.init, objetivoLista.main);
+Ext.onReady(planzuliaLista.main.init, planzuliaLista.main);
 </script>
-<div id="contenedorobjetivoLista"></div>
-<div id="formularioobjetivo"></div>
+<div id="contenedorplanzuliaLista"></div>
+<div id="formularioplanzulia"></div>

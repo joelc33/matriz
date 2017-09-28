@@ -154,6 +154,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'objetivoController@eliminar');
 		Route::post('habilitar', 'objetivoController@habilitar');
 	});
+	//*Modulo de Planes del Zulia*/
+	Route::group(['prefix' => 'mantenimiento/planzulia'], function(){
+		Route::get('lista', 'planzuliaController@lista');
+		Route::post('storeLista', 'planzuliaController@storeLista');
+		Route::get('nuevo', 'planzuliaController@nuevo');
+		Route::get('editar/{id}', 'planzuliaController@editar');
+		Route::post('guardar', 'planzuliaController@guardar');
+		Route::post('guardar/{id}', 'planzuliaController@guardar');
+		Route::post('eliminar', 'planzuliaController@eliminar');
+		Route::post('habilitar', 'planzuliaController@habilitar');
+	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
 		Route::get('lista', 'tipoaccionController@lista');
