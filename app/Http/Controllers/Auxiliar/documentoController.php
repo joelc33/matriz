@@ -11,6 +11,7 @@ use matriz\Models\Mantenimiento\tab_tipo_ejecutor;
 use matriz\Models\Mantenimiento\tab_ambito_ejecutor;
 use matriz\Models\Mantenimiento\tab_planes;
 use matriz\Models\Mantenimiento\tab_planes_zulia;
+use matriz\Models\Mantenimiento\tab_ejercicio_fiscal;
 use Input;
 use Response;
 use DB;
@@ -264,6 +265,18 @@ class documentoController extends Controller
       ->where('nu_nivel', '=', 4)
       ->where('in_activo', '=', true)
       ->orderby('co_nodo','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function ejercicioFiscal()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ejercicio_fiscal::select('id')->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 

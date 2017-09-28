@@ -22,4 +22,18 @@ class tab_partidas extends Model
 			], $merge);
 	}
 
+	public static $validarCrear = array(
+		"ejercicio_fiscal" => "numeric|min:2015|max:3000",
+		"partida" => "numeric|min:0|max:9999999999999",
+		//"ace_mov" => "boolean",
+		"nombre" => "required|min:1|max:1200"
+	);
+
+	public static $validarEditar = array(
+		"ejercicio_fiscal" => "numeric|min:2015|max:3000",
+		"partida" => "numeric|min:0|max:9999999999999",
+		//"ace_mov" => "boolean",
+		"nombre" => "required|min:1|max:1200"
+	);
+
 }

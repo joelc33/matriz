@@ -100,6 +100,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::post('plan/objetivo', 'documentoController@planObjetivo');
 		Route::post('plan/macroproblema', 'documentoController@planMacroproblema');
 		Route::post('plan/nudo', 'documentoController@planNudo');
+		Route::get('ef', 'documentoController@ejercicioFiscal');
 	});
 });
 //*Modulos de Reportes*/
@@ -164,6 +165,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'planzuliaController@guardar');
 		Route::post('eliminar', 'planzuliaController@eliminar');
 		Route::post('habilitar', 'planzuliaController@habilitar');
+	});
+	//*Modulo de Planes del Zulia*/
+	Route::group(['prefix' => 'mantenimiento/partida'], function(){
+		Route::get('lista', 'partidaController@lista');
+		Route::post('storeLista', 'partidaController@storeLista');
+		Route::get('nuevo', 'partidaController@nuevo');
+		Route::get('editar/{id}', 'partidaController@editar');
+		Route::post('guardar', 'partidaController@guardar');
+		Route::post('guardar/{id}', 'partidaController@guardar');
+		Route::post('eliminar', 'partidaController@eliminar');
+		Route::post('habilitar', 'partidaController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
