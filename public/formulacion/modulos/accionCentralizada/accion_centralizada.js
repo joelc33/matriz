@@ -117,7 +117,7 @@
                     name: 'co_sistema',
                     readOnly: true,
                     style: 'background:#c9c9c9;'
-                }, 
+                },
 		this.accion_id
 		/*,{
                     xtype: 'combo',
@@ -139,7 +139,7 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 200
-                }*/,this.de_accion, 
+                }*/,this.de_accion,
 		{
                     xtype: 'combo',
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
@@ -773,10 +773,10 @@
 
             this.st_co_nodo = Ext.create({
                 xtype: 'jsonstore',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=25',
+                url: 'auxiliar/plan/nudo',
                 root: 'data',
                 fields: [
-                    'co_nodo', 'tx_nodo'
+                    'co_nodo', 'tx_descripcion'
                 ]
             });
 
@@ -787,7 +787,7 @@
                 typeAhead: true,
                 allowQueryAll : false,
                 valueField: 'co_nodo',
-                displayField: 'tx_nodo',
+                displayField: 'tx_descripcion',
                 hiddenName: 'co_nodo[]',
                 forceSelection: true,
                 resizable: true,
@@ -800,46 +800,46 @@
 
             var combos_n = [{
                 nombre: 'Objetivo Histórico',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=6',
+                url: 'auxiliar/objetivo/historico',
                 valor: 'co_objetivo_historico',
-                mostrar: 'tx_objetivo_historico'
+                mostrar: 'tx_descripcion'
             },{
                 nombre: 'Objetivo Nacional',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=7',
+                url: 'auxiliar/objetivo/nacional',
                 valor: 'co_objetivo_nacional',
-                mostrar:'tx_objetivo_nacional'
+                mostrar:'tx_descripcion'
             },{
                 nombre: 'Objetivo Estratégico',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=8',
+                url: 'auxiliar/objetivo/estrategico',
                 valor: 'co_objetivo_estrategico',
-                mostrar: 'tx_objetivo_estrategico'
+                mostrar: 'tx_descripcion'
             },{
                 nombre: 'Objetivo General',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=9',
+                url: 'auxiliar/objetivo/general',
                 valor: 'co_objetivo_general',
-                mostrar: 'tx_objetivo_general'
+                mostrar: 'tx_descripcion'
             }];
 
             var combos = [{
                 nombre: 'Área Estratégica',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=26',
+                url: 'auxiliar/plan/area',
                 valor: 'co_area_estrategica',
-                mostrar: 'tx_area_estrategica'
+                mostrar: 'tx_descripcion'
             }, {
                 nombre: 'Ámbito',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=22',
+                url: 'auxiliar/plan/ambito',
                 valor: 'co_ambito_zulia',
-                mostrar: 'tx_ambito_zulia',
+                mostrar: 'tx_descripcion',
             }, {
                 nombre: 'Objetivo',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=23',
+                url: 'auxiliar/plan/objetivo',
                 valor: 'co_objetivo_zulia',
-                mostrar: 'tx_objetivo_zulia'
+                mostrar: 'tx_descripcion'
             }, {
                 nombre: 'Macroproblema',
-                url: 'formulacion/modulos/proyecto/funcion.php?op=24',
+                url: 'auxiliar/plan/macroproblema',
                 valor: 'co_macroproblema',
-                mostrar: 'tx_macroproblema'
+                mostrar: 'tx_descripcion'
             }];
 
             var cbxs = [];

@@ -91,6 +91,15 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::post('partida/buscar', 'buscarController@partida');
 		Route::get('ejecutor/ambito', 'documentoController@ejecutorAmbito');
 		Route::get('ejecutor/tipo', 'documentoController@ejecutorTipo');
+		Route::get('objetivo/historico', 'documentoController@objetivoHistorico');
+		Route::post('objetivo/nacional', 'documentoController@objetivoNacional');
+		Route::post('objetivo/estrategico', 'documentoController@objetivoEstrategico');
+		Route::post('objetivo/general', 'documentoController@objetivoGeneral');
+		Route::get('plan/area', 'documentoController@planArea');
+		Route::post('plan/ambito', 'documentoController@planAmbito');
+		Route::post('plan/objetivo', 'documentoController@planObjetivo');
+		Route::post('plan/macroproblema', 'documentoController@planMacroproblema');
+		Route::post('plan/nudo', 'documentoController@planNudo');
 	});
 });
 //*Modulos de Reportes*/

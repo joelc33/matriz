@@ -12,6 +12,12 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        //
+        'auxiliar/objetivo/nacional',
+        'auxiliar/objetivo/estrategico',
+        'auxiliar/objetivo/general',
+        'auxiliar/plan/ambito',
+        'auxiliar/plan/objetivo',
+        'auxiliar/plan/macroproblema',
+        'auxiliar/plan/nudo',
     ];
 }
