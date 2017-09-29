@@ -177,7 +177,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'partidaController@eliminar');
 		Route::post('habilitar', 'partidaController@habilitar');
 	});
-	//*Modulo de Partidas*/
+	//*Modulo de Cargos*/
 	Route::group(['prefix' => 'mantenimiento/cargo'], function(){
 		Route::get('lista', 'cargoController@lista');
 		Route::post('storeLista', 'cargoController@storeLista');
@@ -187,6 +187,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'cargoController@guardar');
 		Route::post('eliminar', 'cargoController@eliminar');
 		Route::post('habilitar', 'cargoController@habilitar');
+	});
+	//*Modulo de Apicaciones*/
+	Route::group(['prefix' => 'mantenimiento/aplicacion'], function(){
+		Route::get('lista', 'aplicacionController@lista');
+		Route::post('storeLista', 'aplicacionController@storeLista');
+		Route::get('nuevo', 'aplicacionController@nuevo');
+		Route::get('editar/{id}', 'aplicacionController@editar');
+		Route::post('guardar', 'aplicacionController@guardar');
+		Route::post('guardar/{id}', 'aplicacionController@guardar');
+		Route::post('eliminar', 'aplicacionController@eliminar');
+		Route::post('habilitar', 'aplicacionController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
