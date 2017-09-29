@@ -17,7 +17,8 @@ this.co_aplicacion = new Ext.form.TextField({
 	name:'codigo',
 	value:this.OBJ.co_aplicacion,
 	width:100,
-	maxLength: 4
+	maxLength: 4,
+	allowBlank:false
 });
 
 this.de_aplicacion = new Ext.form.TextField({
@@ -25,7 +26,8 @@ this.de_aplicacion = new Ext.form.TextField({
 	name:'aplicacion',
 	value:this.OBJ.de_aplicacion,
 	width:400,
-	maxLength: 600
+	maxLength: 600,
+	allowBlank:false
 });
 
 this.guardar = new Ext.Button({
