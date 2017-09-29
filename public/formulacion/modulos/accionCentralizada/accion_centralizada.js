@@ -776,7 +776,13 @@
                 url: 'auxiliar/plan/nudo',
                 root: 'data',
                 fields: [
-                    'co_nodo', 'tx_descripcion'
+                    'co_nodo', 'tx_descripcion',
+                    {
+                        name: 'de_nodo',
+                        convert: function(v, r) {
+                            return r.co_nodo + ' - ' + r.tx_descripcion;
+                        }
+                    }
                 ]
             });
 
@@ -787,7 +793,7 @@
                 typeAhead: true,
                 allowQueryAll : false,
                 valueField: 'co_nodo',
-                displayField: 'tx_descripcion',
+                displayField: 'de_nodo',
                 hiddenName: 'co_nodo[]',
                 forceSelection: true,
                 resizable: true,

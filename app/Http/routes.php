@@ -166,7 +166,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'planzuliaController@eliminar');
 		Route::post('habilitar', 'planzuliaController@habilitar');
 	});
-	//*Modulo de Planes del Zulia*/
+	//*Modulo de Partidas*/
 	Route::group(['prefix' => 'mantenimiento/partida'], function(){
 		Route::get('lista', 'partidaController@lista');
 		Route::post('storeLista', 'partidaController@storeLista');
@@ -176,6 +176,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'partidaController@guardar');
 		Route::post('eliminar', 'partidaController@eliminar');
 		Route::post('habilitar', 'partidaController@habilitar');
+	});
+	//*Modulo de Partidas*/
+	Route::group(['prefix' => 'mantenimiento/cargo'], function(){
+		Route::get('lista', 'cargoController@lista');
+		Route::post('storeLista', 'cargoController@storeLista');
+		Route::get('nuevo', 'cargoController@nuevo');
+		Route::get('editar/{id}', 'cargoController@editar');
+		Route::post('guardar', 'cargoController@guardar');
+		Route::post('guardar/{id}', 'cargoController@guardar');
+		Route::post('eliminar', 'cargoController@eliminar');
+		Route::post('habilitar', 'cargoController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){

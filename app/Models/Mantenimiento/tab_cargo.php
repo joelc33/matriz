@@ -11,4 +11,12 @@ class tab_cargo extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_cargo';
+
+	public static $validarCrear = array(
+		"cargo" => "required|min:1|max:1200|unique:tab_cargo,de_cargo"
+	);
+
+	public static $validarEditar = array(
+		"cargo" => "required|min:1|max:1200"
+	);
 }
