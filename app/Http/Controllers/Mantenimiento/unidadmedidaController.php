@@ -48,8 +48,8 @@ class unidadmedidaController extends Controller
   			$variable = Input::get('variable');
 
   			$tab_unidad_medida = $this->tab_unidad_medida
-  			->select('id', 'de_unidad_medida', 'in_activo')
-  			->where('in_activo', '=', 'TRUE');
+  			->select('id', 'de_unidad_medida', 'in_activo');
+  			//->where('in_activo', '=', 'TRUE');
 
   			if (Input::get("BuscarBy")=="true") {
 
