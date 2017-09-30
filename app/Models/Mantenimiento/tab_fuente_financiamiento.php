@@ -11,4 +11,15 @@ class tab_fuente_financiamiento extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_fuente_financiamiento';
+
+	public static $validarCrear = array(
+		"fondo" => "required|numeric",
+		"fuente" => "required|min:1|max:1200"
+	);
+
+	public static $validarEditar = array(
+		"fondo" => "required|numeric",
+		"fuente" => "required|min:1|max:1200"
+	);
+
 }

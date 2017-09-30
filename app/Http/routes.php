@@ -101,6 +101,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::post('plan/macroproblema', 'documentoController@planMacroproblema');
 		Route::post('plan/nudo', 'documentoController@planNudo');
 		Route::get('ef', 'documentoController@ejercicioFiscal');
+		Route::get('fondo/tipo', 'documentoController@fondoTipo');
 	});
 });
 //*Modulos de Reportes*/
@@ -199,6 +200,17 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'aplicacionController@guardar');
 		Route::post('eliminar', 'aplicacionController@eliminar');
 		Route::post('habilitar', 'aplicacionController@habilitar');
+	});
+	//*Modulo de Fuente de Financiamiento*/
+	Route::group(['prefix' => 'mantenimiento/fuentefinanciamiento'], function(){
+		Route::get('lista', 'fuentefinanciamientoController@lista');
+		Route::post('storeLista', 'fuentefinanciamientoController@storeLista');
+		Route::get('nuevo', 'fuentefinanciamientoController@nuevo');
+		Route::get('editar/{id}', 'fuentefinanciamientoController@editar');
+		Route::post('guardar', 'fuentefinanciamientoController@guardar');
+		Route::post('guardar/{id}', 'fuentefinanciamientoController@guardar');
+		Route::post('eliminar', 'fuentefinanciamientoController@eliminar');
+		Route::post('habilitar', 'fuentefinanciamientoController@habilitar');
 	});
 	//*Modulo de tipo de accion*/
 	Route::group(['prefix' => 'mantenimiento/tipoaccion'], function(){
