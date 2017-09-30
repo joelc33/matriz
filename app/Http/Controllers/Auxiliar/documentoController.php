@@ -13,6 +13,7 @@ use matriz\Models\Mantenimiento\tab_planes;
 use matriz\Models\Mantenimiento\tab_planes_zulia;
 use matriz\Models\Mantenimiento\tab_ejercicio_fiscal;
 use matriz\Models\Mantenimiento\tab_tipo_fondo;
+use matriz\Models\Mantenimiento\tab_tipo_recurso;
 use Input;
 use Response;
 use DB;
@@ -290,6 +291,18 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_tipo_fondo::select('id', 'de_tipo_fondo')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function recursoTipo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_tipo_recurso::select('id', 'de_tipo_recurso')->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
