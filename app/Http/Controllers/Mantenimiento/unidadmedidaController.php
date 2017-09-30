@@ -195,4 +195,32 @@ class unidadmedidaController extends Controller
         return Response::json($response, 200);
       }
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function habilitar()
+    {
+      DB::beginTransaction();
+      try {
+        $tabla = tab_unidad_medida::find(Input::get("id"));
+        $tabla->in_activo = 'TRUE';
+        $tabla->save();
+        DB::commit();
+
+        $response['success']  = 'true';
+        $response['msg']  = 'Registro Habilitado con Exito!';
+        return Response::json($response, 200);
+
+      }catch (\Illuminate\Database\QueryException $e)
+      {
+        DB::rollback();
+
+        $response['success']  = 'false';
+        $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+        return Response::json($response, 200);
+      }
+    }
 }

@@ -79,8 +79,37 @@ this.eliminar= new Ext.Button({
     }
 });
 
+this.habilitar= new Ext.Button({
+    text:'Habilitar',
+    iconCls: 'icon-fin',
+    handler:function(){
+	this.codigo  = unidadmedidaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
+	if(boton=="yes"){
+        Ext.Ajax.request({
+            method:'POST',
+            url:'{{ URL::to('mantenimiento/unidadmedida/habilitar') }}',
+            params:{
+		_token: '{{ csrf_token() }}',
+                id: unidadmedidaLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+            },
+            success:function(result, request ) {
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success=="true"){
+		    unidadmedidaLista.main.store_lista.load();
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }else{
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }
+                unidadmedidaLista.main.mascara.hide();
+            }});
+	}});
+    }
+});
+
 this.editar.disable();
 this.eliminar.disable();
+this.habilitar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -150,6 +179,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			@if( in_array( array( 'de_privilegio' => 'unidades.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
 			@endif
+			@if( in_array( array( 'de_privilegio' => 'unidades.habilitar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.habilitar,'-',
+			@endif
 			@if( in_array( array( 'de_privilegio' => 'unidades.eliminar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.eliminar,'-',
 			@endif
@@ -164,7 +196,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stripeRows: true,
     autoScroll:true,
     stateful: true,
-    listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){unidadmedidaLista.main.editar.enable();unidadmedidaLista.main.eliminar.enable();}},
+    listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
+			unidadmedidaLista.main.editar.enable();
+			unidadmedidaLista.main.habilitar.enable();
+			unidadmedidaLista.main.eliminar.enable();
+		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
         store: this.store_lista,
@@ -183,6 +219,7 @@ this.store_lista.load();
 this.store_lista.on('load',function(){
 unidadmedidaLista.main.editar.disable();
 unidadmedidaLista.main.eliminar.disable();
+unidadmedidaLista.main.habilitar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

@@ -121,6 +121,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar', 'unidadmedidaController@guardar');
 		Route::post('guardar/{id}', 'unidadmedidaController@guardar');
 		Route::post('eliminar', 'unidadmedidaController@eliminar');
+		Route::post('habilitar', 'unidadmedidaController@habilitar');
 	});
 	//*Modulo de Ejecutores*/
 	Route::group(['prefix' => 'mantenimiento/ejecutor'], function(){
