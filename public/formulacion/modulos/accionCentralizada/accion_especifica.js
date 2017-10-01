@@ -677,7 +677,8 @@
                             }
                             forma.submit({
                                 method: 'POST',
-                                url: 'formulacion/modulos/accionCentralizada/funcion.php',
+                                /*url: 'formulacion/modulos/accionCentralizada/funcion.php',*/
+                                url: 'ac/ae/partida/masivo',
                                 params: {
                                     op: 6,
                                     up: self.actualizar
@@ -685,8 +686,13 @@
                                 waitMsg: 'Enviando datos, por favor espere..',
                                 waitTitle: 'Enviando',
                                 failure: function(form, action) {
-                                    Ext.MessageBox.alert('Error en transacción',
-                                        action.result.msg);
+                                  var errores = '';
+                                  for(datos in action.result.msg){
+                                    errores += action.result.msg[datos] + '<br>';
+                                  }
+                                    /*Ext.MessageBox.alert('Error en transacción',
+                                        action.result.msg);*/
+                                    Ext.MessageBox.alert('Error en transacción', errores);
                                 },
                                 success: function(form, action) {
                                     if (action.result.success) {
@@ -719,7 +725,8 @@
             tpagina = 30;
 
             this.store = new Ext.data.JsonStore({
-                url: 'formulacion/modulos/accionCentralizada/funcion.php',
+                /*url: 'formulacion/modulos/accionCentralizada/funcion.php',*/
+                url: 'ac/ae/partida/storeLista',
                 baseParams: {
                     op: 10,
                     id_accion_centralizada: config.ac.id,
@@ -750,11 +757,11 @@
                     columns: [{
                         id: 'partida',
                         header: 'PARTIDA',
-                        width: 80,
+                        width: 100,
                         dataIndex: 'co_partida'
                     }, {
                         header: 'DENOMINACIÓN',
-                        width: 350,
+                        width: 330,
                         dataIndex: 'tx_nombre'
                     }, {
                         header: 'MONTO (BS)',

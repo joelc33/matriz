@@ -112,6 +112,25 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('prueba', 'jasperController@prueba');
 	});
 });
+//*Modulos de Proyecto*/
+Route::group(['namespace' => 'Proyecto'], function(){
+	//*Modulo de proyecto*/
+	Route::group(['prefix' => 'proyecto'], function(){
+		Route::get('nuevo', 'proyectoController@nuevo');
+	});
+});
+//*Modulos de Accion Centralizada*/
+Route::group(['namespace' => 'Ac'], function(){
+	//*Modulo de Accion Centralizada*/
+	Route::group(['prefix' => 'ac'], function(){
+		Route::get('nuevo', 'acController@nuevo');
+	});
+	//*Modulo de proyecto*/
+	Route::group(['prefix' => 'ac/ae/partida'], function(){
+		Route::post('storeLista', 'acaepartidaController@storeLista');
+		Route::post('masivo', 'acaepartidaController@procesarMasivo');
+	});
+});
 //*Modulos de Mantenimiento*/
 Route::group(['namespace' => 'Mantenimiento'], function(){
 	//*Modulo de roles*/

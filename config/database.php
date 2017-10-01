@@ -63,7 +63,7 @@ return [
         'database' => env('DB_DATABASE', ''),
         'charset'  => 'utf8',
         'prefix'   => '',
-        'schema'   => array('mantenimiento'),
+        'schema'   => array('mantenimiento', 'public', 'proyecto_seguimiento', 'ac_seguimiento', 'autenticacion', 'auditoria'),
       ],
 
         /*'sqlite' => [

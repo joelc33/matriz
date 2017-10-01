@@ -19,5 +19,7 @@ class VerifyCsrfToken extends BaseVerifier
         'auxiliar/plan/objetivo',
         'auxiliar/plan/macroproblema',
         'auxiliar/plan/nudo',
+        'ac/ae/partida/storeLista',
+        'ac/ae/partida/masivo',
     ];
 }
