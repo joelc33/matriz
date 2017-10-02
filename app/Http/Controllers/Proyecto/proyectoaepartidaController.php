@@ -99,7 +99,7 @@ class proyectoaepartidaController extends Controller
     		list($end, $end_h, $end_v) = $rslt;
 
           $contador = 0;
-          $abecedario = range('H', 'Z');
+          $abecedario = range('F', 'Z');
 
           DB::beginTransaction();
           try {
@@ -139,8 +139,8 @@ class proyectoaepartidaController extends Controller
                   $cellValue3 = get_cell("C".$v, $objPHPExcel);
                   $cellValue4 = get_cell("D".$v, $objPHPExcel);
                   $cellValue5 = get_cell("E".$v, $objPHPExcel);
-                  $cellValue6 = get_cell("F".$v, $objPHPExcel);
-                  $cellValue7 = get_cell("G".$v, $objPHPExcel);
+                  //$cellValue6 = get_cell("F".$v, $objPHPExcel);
+                  //$cellValue7 = get_cell("G".$v, $objPHPExcel);
                   $cellValue8 = get_cell($abc.$v, $objPHPExcel);
                 }
 
@@ -148,17 +148,18 @@ class proyectoaepartidaController extends Controller
 
                   $mensajes = array(
                     'monto.regex'=>'En la celda: '.$abc.$v.' el monto no debe poseer decimales.',
-                    'aplicacion.required'=>'Para la celda: '.$abc.$v.' el campo Aplicacion es requerido.',
-                    'aplicacion.exists'=>'Para la celda: '.$abc.$v.' el codigo de aplicacion no existe por favor verificar.',
+                    //'aplicacion.required'=>'Para la celda: '.$abc.$v.' el campo Aplicacion es requerido.',
+                    //'aplicacion.exists'=>'Para la celda: '.$abc.$v.' el codigo de aplicacion no existe por favor verificar.',
                     'partida.exists'=>'Para la celda: '.$abc.$v.' el codigo de partida no existe por favor verificar.'
                   );
 
-                  $partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4.$cellValue5;
+                  //$partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4.$cellValue5;
+                  $partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4;
 
                   $datos = array(
                     'proyecto' => Input::get('id_proyecto'),
                     'partida' => $partidaCrear,
-                    'aplicacion' => $cellValue6,
+                    //'aplicacion' => $cellValue6,
                     'monto' => floatval($cellValue8)
                   );
 
@@ -179,9 +180,9 @@ class proyectoaepartidaController extends Controller
                     $partida->tx_ge = $cellValue2;
                     $partida->tx_es = $cellValue3;
                     $partida->tx_se = $cellValue4;
-                    $partida->tx_sse = $cellValue5;
-                    $partida->nu_aplicacion = $cellValue6;
-                    $partida->tx_denominacion = $cellValue7;
+                    //$partida->tx_sse = $cellValue5;
+                    //$partida->nu_aplicacion = $cellValue6;
+                    $partida->tx_denominacion = $cellValue5;
                     $partida->nu_monto = floatval($cellValue8);
                     $partida->edo_reg = TRUE;
                     $partida->save();
