@@ -1,12 +1,11 @@
 <?php
 
-namespace matriz\Http\Controllers\Ac;
+namespace matriz\Http\Controllers\Proyecto;
 //*******agregar esta linea******//
-use matriz\Models\Ac\tab_ac_ae_partida;
-use matriz\Models\Mantenimiento\tab_ac_ae_partida as mmt_ac_ae_partida;
-use matriz\Models\Mantenimiento\tab_ac_ae_predefinida;
-use matriz\Models\Ac\tab_ac_ae;
-use matriz\Models\Ac\tab_ac;
+use matriz\Models\Proyecto\tab_proyecto_ae_partida;
+use matriz\Models\Proyecto\tab_proyecto_ae;
+use matriz\Models\Proyecto\tab_proyecto;
+use matriz\Models\Proyecto\tmp_proyecto_ae_partida;
 use View;
 use Validator;
 use Input;
@@ -20,61 +19,14 @@ use Illuminate\Http\Request;
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
 
-class acaepartidaController extends Controller
+class proyectoaepartidaController extends Controller
 {
-  protected $tab_ac_ae_partida;
+  protected $tab_proyecto_ae_partida;
 
-  public function __construct(tab_ac_ae_partida $tab_ac_ae_partida)
+  public function __construct(tab_proyecto_ae_partida $tab_proyecto_ae_partida)
   {
     $this->middleware('auth');
-    $this->tab_ac_ae_partida = $tab_ac_ae_partida;
-  }
-
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function storeLista()
-  {
-    try {
-      $start  = Input::get('start', 0);
-      $limit  = Input::get('limit', 30);
-      $variable = Input::get('variable');
-      $ac = Input::get('id_accion_centralizada');
-      $ae = Input::get('id_accion_especifica');
-
-      $tab_ac_ae_partida = $this->tab_ac_ae_partida
-      //->join('mantenimiento.tab_partidas as t01','t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
-      ->join('mantenimiento.tab_partidas as t01', function ($j) {
-        $j->on('t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
-          ->on('t01.id_tab_ejercicio_fiscal','=','public.t54_ac_ae_partidas.id_tab_ejercicio_fiscal');
-      })
-      ->select( 'public.t54_ac_ae_partidas.co_partida', 'tx_nombre', 'monto' )
-      ->where('id_accion_centralizada', '=', $ac)
-      ->where('id_accion', '=', $ae);
-
-      if (Input::get("BuscarBy")=="true") {
-
-        if($variable!=""){
-          $tab_ac_ae_partida->where('public.t54_ac_ae_partidas.co_partida', 'ILIKE', "%$variable%");
-        }
-
-        $response['success']  = 'true';
-        $response['total'] = $tab_ac_ae_partida->count();
-        $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('public.t54_ac_ae_partidas.co_partida','ASC')->get()->toArray();
-      } else {
-        $response['success']  = 'true';
-        $response['total'] = $tab_ac_ae_partida->count();
-        $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('public.t54_ac_ae_partidas.co_partida','ASC')->get()->toArray();
-      }
-
-      return Response::json($response, 200);
-    } catch (\Illuminate\Database\QueryException $e) {
-      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
-    }
+    $this->tab_proyecto_ae_partida = $tab_proyecto_ae_partida;
   }
 
   /**
@@ -152,12 +104,28 @@ class acaepartidaController extends Controller
           DB::beginTransaction();
           try {
 
-          $borrar_ac_ae_partida = tab_ac_ae_partida::where('id_accion_centralizada' , '=', Input::get('accion_centralizada'))->delete();
+          $borrar_pr_ae_partida = tmp_proyecto_ae_partida::where('id_proyecto' , '=', Input::get('id_proyecto'))->delete();
+
+          $update_ae_partida = DB::select( DB::raw("UPDATE t42_proyecto_acc_espec_partida SET edo_reg=false
+      				FROM t39_proyecto_acc_espec
+      				WHERE t42_proyecto_acc_espec_partida.co_proyecto_acc_espec = t39_proyecto_acc_espec.co_proyecto_acc_espec
+      				AND id_proyecto = :proyecto;"), array( 'proyecto' => Input::get('id_proyecto')));
 
           foreach($abecedario as $abc){
             $contenido = get_cell($abc.'9', $objPHPExcel);
               if($contenido!=''||$contenido!=null){
                 $contador = $contador+1;
+                $tx_codigo = str_pad($contador, 4, '0', STR_PAD_LEFT);
+
+                $delete_cursor = DB::select( DB::raw("DROP TABLE IF EXISTS a_cursor;"));
+
+                $sql_secuencia = DB::select( DB::raw("SELECT tx_codigo, lpad((row_number() OVER (ORDER BY tx_codigo))::text, 4, '0') as num_tabla,
+            sp_verificar_hijo_ae(co_proyecto_acc_espec) as in_foraneo into temp a_cursor
+            FROM t39_proyecto_acc_espec
+            WHERE edo_reg is true and id_proyecto = :proyecto and
+            sp_verificar_hijo_ae(co_proyecto_acc_espec) is false order by 1 asc;"), array( 'proyecto' => Input::get('id_proyecto')));
+
+            $select_cursor = DB::select( DB::raw("select num_tabla,tx_codigo, in_foraneo from a_cursor where in_foraneo is false and num_tabla = :codigo;"), array( 'codigo' => $tx_codigo));
 
               //empieza  lectura vertical
               $start_v=10;
@@ -188,14 +156,13 @@ class acaepartidaController extends Controller
                   $partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4.$cellValue5;
 
                   $datos = array(
-                    'accion_centralizada' => Input::get('accion_centralizada'),
-                    'accion_especifica' => $contador,
+                    'proyecto' => Input::get('id_proyecto'),
                     'partida' => $partidaCrear,
                     'aplicacion' => $cellValue6,
                     'monto' => floatval($cellValue8)
                   );
 
-                  $validador = Validator::make($datos, tab_ac_ae_partida::$validar_campo, $mensajes);
+                  $validador = Validator::make($datos, tab_proyecto_ae_partida::$validar_campo, $mensajes);
 
                   if ($validador->fails()) {
                     $data = json_encode(array('success' => false, 'msg' => $validador->getMessageBag()->toArray()));
@@ -204,55 +171,25 @@ class acaepartidaController extends Controller
                     return $response;
                   }
 
-                    if (mmt_ac_ae_partida::where('id_tab_ac_ae_predefinida', '=', $contador)
-                    ->where('nu_partida', '=', $partidaCrear)
-                    ->where('in_activo', '=', true)
-                    ->exists()) {
-
-                    }else {
-
-                      $validar_ae = tab_ac_ae_predefinida::select( 'id', 'nu_numero', 'de_nombre')
-                      ->where('id', '=', $contador)
-                      ->first();
-
-                      $data = json_encode(array('success' => false, 'msg' => array('ERROR:'=> 'Para la celda: '.$abc.$v.' la Partida: '.$partidaCrear.', Monto: '.$cellValue8.', No se encuentra dentro de las partidas admitidas para: <br>'.$validar_ae->nu_numero.' - '.$validar_ae->de_nombre)));
-                      $response = Response::make($data);
-                      $response->header('Content-Type', 'text/html');
-                      return $response;
-
-                    }
-
-                    $partida = new tab_ac_ae_partida;
-                    $partida->id_accion_centralizada = Input::get('accion_centralizada');
-                    $partida->id_accion = $contador;
+                    $partida = new tmp_proyecto_ae_partida;
+                    $partida->id_proyecto = Input::get('id_proyecto');
                     $partida->id_tab_ejercicio_fiscal = Session::get('ejercicio');
+                    $partida->tx_codigo = $select_cursor[0]->tx_codigo;
+                    $partida->tx_pa = $cellValue1;
+                    $partida->tx_ge = $cellValue2;
+                    $partida->tx_es = $cellValue3;
+                    $partida->tx_se = $cellValue4;
+                    $partida->tx_sse = $cellValue5;
                     $partida->nu_aplicacion = $cellValue6;
-                    $partida->co_partida = $partidaCrear;
-                    $partida->monto = floatval($cellValue8);
+                    $partida->tx_denominacion = $cellValue7;
+                    $partida->nu_monto = floatval($cellValue8);
                     $partida->edo_reg = TRUE;
                     $partida->save();
-
-                    $calculo_ac_ae = tab_ac_ae::select(DB::raw("calcular_monto(id_accion_centralizada, id_accion) as nu_monto"))
-                    ->where('id_accion_centralizada', '=', Input::get('accion_centralizada'))
-                    ->where('id_accion', '=', $contador)
-                    ->first();
-
-                    $ac_ae = tab_ac_ae::updateOrCreate(array('id_accion_centralizada' => Input::get('accion_centralizada'), 'id_accion' => $contador));
-                    $ac_ae->monto_calc = $calculo_ac_ae->nu_monto;
-                    $ac_ae->save();
 
                 }
               }
             }
           }
-
-          $calculo_ac_ae = tab_ac::select(DB::raw("calcular_monto(id) as nu_monto"))
-          ->where('id', '=', Input::get('accion_centralizada'))
-          ->first();
-
-          $ac_ae = tab_ac::find(Input::get('accion_centralizada'));
-          $ac_ae->monto_calc = $calculo_ac_ae->nu_monto;
-          $ac_ae->save();
 
           DB::commit();
 
@@ -279,4 +216,5 @@ class acaepartidaController extends Controller
       }
     }
   }
+
 }

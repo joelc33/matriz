@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}   
+}
 include("../../configuracion/ConexionComun.php");
 $comunes = new ConexionComun();
 
@@ -91,7 +91,8 @@ this.guardar = new Ext.Button({
         }
         cargarPartida.main.formPanel_.getForm().submit({
             method:'POST',
-            url:'formulacion/modulos/accionEspecifica/orm.php',
+            /*url:'formulacion/modulos/accionEspecifica/orm.php',*/
+						url:'proyecto/ae/partida/masivo',
             //url:'formulacion/modulos/accionEspecifica/funcion.php?op=3',
             waitMsg: 'Enviando datos, por favor espere..',
             waitTitle:'Enviando',
@@ -122,7 +123,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
@@ -139,7 +140,7 @@ this.formPanel_ = new Ext.form.FormPanel({
     fileUpload: true,
 	border:false,
     width:500,
-autoHeight:true,  
+autoHeight:true,
     autoScroll:true,
     bodyStyle:'padding:10px;',
     items:[

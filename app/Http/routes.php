@@ -118,6 +118,11 @@ Route::group(['namespace' => 'Proyecto'], function(){
 	Route::group(['prefix' => 'proyecto'], function(){
 		Route::get('nuevo', 'proyectoController@nuevo');
 	});
+	//*Modulo de Accion Centralizada Partidas*/
+	Route::group(['prefix' => 'proyecto/ae/partida'], function(){
+		Route::post('storeLista', 'proyectoaepartidaController@storeLista');
+		Route::post('masivo', 'proyectoaepartidaController@procesarMasivo');
+	});
 });
 //*Modulos de Accion Centralizada*/
 Route::group(['namespace' => 'Ac'], function(){
@@ -125,7 +130,7 @@ Route::group(['namespace' => 'Ac'], function(){
 	Route::group(['prefix' => 'ac'], function(){
 		Route::get('nuevo', 'acController@nuevo');
 	});
-	//*Modulo de proyecto*/
+	//*Modulo de Accion Centralizada Partidas*/
 	Route::group(['prefix' => 'ac/ae/partida'], function(){
 		Route::post('storeLista', 'acaepartidaController@storeLista');
 		Route::post('masivo', 'acaepartidaController@procesarMasivo');

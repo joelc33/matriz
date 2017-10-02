@@ -300,7 +300,8 @@ if($_GET['op']==1){
 			));
 		}
 }if($_GET['op']==4){
-	$sql = "SELECT co_partida_acc_espec, co_proyecto_acc_espec, tx_pa, tx_ge, tx_es, tx_se, tx_denominacion, nu_monto, t42.edo_reg,
+	$sql = "SELECT co_partida_acc_espec, co_proyecto_acc_espec, tx_pa, tx_ge, tx_es, tx_se,
+	tx_sse, tx_denominacion, nu_monto, t42.edo_reg,
 	t44.co_partida, tx_nombre
 	FROM t42_proyecto_acc_espec_partida as t42
 	inner join mantenimiento.tab_partidas as t44 on t42.tx_pa||tx_ge=t44.co_partida
@@ -318,7 +319,7 @@ if($_GET['op']==1){
 	foreach($result as $key => $row){
 		$data[] = array(
 		    "co_partida_acc_espec"     => trim($row["co_partida_acc_espec"]),
-		    "tx_partida"     => trim($row["tx_pa"].'.'.$row["tx_ge"].'.'.$row["tx_es"].'.'.$row["tx_se"]),
+		    "tx_partida"     => trim($row["tx_pa"].'.'.$row["tx_ge"].'.'.$row["tx_es"].'.'.$row["tx_se"].'.'.$row["tx_sse"]),
 		    "tx_denominacion"     => trim($row["tx_denominacion"]),
 		    "nu_monto"     => trim($row["nu_monto"]),
 		    "tx_partida_madre"     => $row["co_partida"].':'.$row["tx_nombre"],
