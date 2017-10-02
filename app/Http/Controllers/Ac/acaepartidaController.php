@@ -147,7 +147,7 @@ class acaepartidaController extends Controller
     		list($end, $end_h, $end_v) = $rslt;
 
           $contador = 0;
-          $abecedario = range('H', 'Z');
+          $abecedario = range('F', 'Z');
 
           DB::beginTransaction();
           try {
@@ -171,8 +171,8 @@ class acaepartidaController extends Controller
                   $cellValue3 = get_cell("C".$v, $objPHPExcel);
                   $cellValue4 = get_cell("D".$v, $objPHPExcel);
                   $cellValue5 = get_cell("E".$v, $objPHPExcel);
-                  $cellValue6 = get_cell("F".$v, $objPHPExcel);
-                  $cellValue7 = get_cell("G".$v, $objPHPExcel);
+                  //$cellValue6 = get_cell("F".$v, $objPHPExcel);
+                  //$cellValue7 = get_cell("G".$v, $objPHPExcel);
                   $cellValue8 = get_cell($abc.$v, $objPHPExcel);
                 }
 
@@ -180,18 +180,19 @@ class acaepartidaController extends Controller
 
                   $mensajes = array(
                     'monto.regex'=>'En la celda: '.$abc.$v.' el monto no debe poseer decimales.',
-                    'aplicacion.required'=>'Para la celda: '.$abc.$v.' el campo Aplicacion es requerido.',
-                    'aplicacion.exists'=>'Para la celda: '.$abc.$v.' el codigo de aplicacion no existe por favor verificar.',
+                    //'aplicacion.required'=>'Para la celda: '.$abc.$v.' el campo Aplicacion es requerido.',
+                    //'aplicacion.exists'=>'Para la celda: '.$abc.$v.' el codigo de aplicacion no existe por favor verificar.',
                     'partida.exists'=>'Para la celda: '.$abc.$v.' el codigo de partida no existe por favor verificar.'
                   );
 
-                  $partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4.$cellValue5;
+                  //$partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4.$cellValue5;
+                  $partidaCrear = $cellValue1.$cellValue2.$cellValue3.$cellValue4;
 
                   $datos = array(
                     'accion_centralizada' => Input::get('accion_centralizada'),
                     'accion_especifica' => $contador,
                     'partida' => $partidaCrear,
-                    'aplicacion' => $cellValue6,
+                    //'aplicacion' => $cellValue6,
                     'monto' => floatval($cellValue8)
                   );
 
@@ -226,7 +227,7 @@ class acaepartidaController extends Controller
                     $partida->id_accion_centralizada = Input::get('accion_centralizada');
                     $partida->id_accion = $contador;
                     $partida->id_tab_ejercicio_fiscal = Session::get('ejercicio');
-                    $partida->nu_aplicacion = $cellValue6;
+                    //$partida->nu_aplicacion = $cellValue6;
                     $partida->co_partida = $partidaCrear;
                     $partida->monto = floatval($cellValue8);
                     $partida->edo_reg = TRUE;
