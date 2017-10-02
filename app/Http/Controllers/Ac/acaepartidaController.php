@@ -159,6 +159,12 @@ class acaepartidaController extends Controller
               if($contenido!=''||$contenido!=null){
                 $contador = $contador+1;
 
+                $consulta_ae = tab_ac_ae::select( 'id_accion')
+                ->join('mantenimiento.tab_ac_ae_predefinida as t01','t01.id','=','public.t47_ac_accion_especifica.id_accion')
+                ->where('id_accion_centralizada', '=', Input::get('accion_centralizada'))
+                ->where('nu_numero', '=', $contador)
+                ->first();
+
               //empieza  lectura vertical
               $start_v=10;
               $end_v=1923;
@@ -190,7 +196,7 @@ class acaepartidaController extends Controller
 
                   $datos = array(
                     'accion_centralizada' => Input::get('accion_centralizada'),
-                    'accion_especifica' => $contador,
+                    'accion_especifica' => $consulta_ae->id_accion,
                     'partida' => $partidaCrear,
                     //'aplicacion' => $cellValue6,
                     'monto' => floatval($cellValue8)
@@ -205,7 +211,7 @@ class acaepartidaController extends Controller
                     return $response;
                   }
 
-                    if (mmt_ac_ae_partida::where('id_tab_ac_ae_predefinida', '=', $contador)
+                    if (mmt_ac_ae_partida::where('id_tab_ac_ae_predefinida', '=', $consulta_ae->id_accion)
                     ->where('nu_partida', '=', $partidaCrear)
                     ->where('in_activo', '=', true)
                     ->exists()) {
@@ -213,7 +219,7 @@ class acaepartidaController extends Controller
                     }else {
 
                       $validar_ae = tab_ac_ae_predefinida::select( 'id', 'nu_numero', 'de_nombre')
-                      ->where('id', '=', $contador)
+                      ->where('id', '=', $consulta_ae->id_accion)
                       ->first();
 
                       $data = json_encode(array('success' => false, 'msg' => array('ERROR:'=> 'Para la celda: '.$abc.$v.' la Partida: '.$partidaCrear.', Monto: '.$cellValue8.', No se encuentra dentro de las partidas admitidas para: <br>'.$validar_ae->nu_numero.' - '.$validar_ae->de_nombre)));
@@ -225,7 +231,7 @@ class acaepartidaController extends Controller
 
                     $partida = new tab_ac_ae_partida;
                     $partida->id_accion_centralizada = Input::get('accion_centralizada');
-                    $partida->id_accion = $contador;
+                    $partida->id_accion = $consulta_ae->id_accion;
                     $partida->id_tab_ejercicio_fiscal = Session::get('ejercicio');
                     //$partida->nu_aplicacion = $cellValue6;
                     $partida->co_partida = $partidaCrear;
@@ -235,10 +241,10 @@ class acaepartidaController extends Controller
 
                     $calculo_ac_ae = tab_ac_ae::select(DB::raw("calcular_monto(id_accion_centralizada, id_accion) as nu_monto"))
                     ->where('id_accion_centralizada', '=', Input::get('accion_centralizada'))
-                    ->where('id_accion', '=', $contador)
+                    ->where('id_accion', '=', $consulta_ae->id_accion)
                     ->first();
 
-                    $ac_ae = tab_ac_ae::updateOrCreate(array('id_accion_centralizada' => Input::get('accion_centralizada'), 'id_accion' => $contador));
+                    $ac_ae = tab_ac_ae::updateOrCreate(array('id_accion_centralizada' => Input::get('accion_centralizada'), 'id_accion' => $consulta_ae->id_accion));
                     $ac_ae->monto_calc = $calculo_ac_ae->nu_monto;
                     $ac_ae->save();
 
