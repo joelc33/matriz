@@ -130,6 +130,10 @@ Route::group(['namespace' => 'Ac'], function(){
 	Route::group(['prefix' => 'ac'], function(){
 		Route::get('nuevo', 'acController@nuevo');
 	});
+	//*Modulo de Accion Centralizada*/
+	Route::group(['prefix' => 'ac/ae'], function(){
+		Route::post('storeLista', 'acaeController@storeLista');
+	});
 	//*Modulo de Accion Centralizada Partidas*/
 	Route::group(['prefix' => 'ac/ae/partida'], function(){
 		Route::post('storeLista', 'acaepartidaController@storeLista');

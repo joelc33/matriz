@@ -253,13 +253,13 @@ class acaepartidaController extends Controller
             }
           }
 
-          $calculo_ac_ae = tab_ac::select(DB::raw("calcular_monto(id) as nu_monto"))
+          $calculo_ac = tab_ac::select(DB::raw("calcular_monto(id) as nu_monto"))
           ->where('id', '=', Input::get('accion_centralizada'))
           ->first();
 
-          $ac_ae = tab_ac::find(Input::get('accion_centralizada'));
-          $ac_ae->monto_calc = $calculo_ac_ae->nu_monto;
-          $ac_ae->save();
+          $ac = tab_ac::find(Input::get('accion_centralizada'));
+          $ac->monto_calc = $calculo_ac_ae->nu_monto;
+          $ac->save();
 
           DB::commit();
 
