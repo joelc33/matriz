@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}   
+}
 include("../../configuracion/ConexionComun.php");
 $comunes = new ConexionComun();
 
@@ -91,7 +91,7 @@ this.nb_accion = new Ext.form.TextField({
 	value:this.OBJ.nb_accion,
 <?php if( $usuario->co_rol < 3 ){ ?>
 
-<?php }else{ 
+<?php }else{
 	if($id_pac==""){ ?>
 	readOnly:(this.OBJ.id_padre!='')?true:false,
 	style:(this.OBJ.id_padre!='')?'background:#c9c9c9;':'',
@@ -119,7 +119,7 @@ this.co_unidades_medida = new Ext.form.ComboBox({
 	hiddenName:'co_unidades_medida',
 <?php if( $usuario->co_rol < 3 ){ ?>
 
-<?php }else{ 
+<?php }else{
 	if($id_pac==""){ ?>
 
 	<?php }else{ ?>
@@ -186,7 +186,7 @@ this.mo_total_general = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	minLength : 1,
-	maxLength: 12,
+	maxLength: 20,
 	decimalPrecision: 0,
 	allowDecimals: false,
 	allowNegative: false,
@@ -244,7 +244,7 @@ this.co_ejecutores = new Ext.form.ComboBox({
 	hiddenName:'co_ejecutores',
 <?php if( $usuario->co_rol < 3 ){ ?>
 
-<?php }else{ 
+<?php }else{
 	if($id_pac==""){ ?>
 	readOnly:(this.OBJ.id_padre!='')?true:false,
 	style:(this.OBJ.id_padre!='')?'background:#c9c9c9;':'',
@@ -294,14 +294,14 @@ this.fielset1 = new Ext.form.FieldSet({
               title:'Datos del Registro',width:670,
               items:[
 		this.nb_accion,
-		this.co_unidades_medida,  
-		this.nu_meta, 
+		this.co_unidades_medida,
+		this.nu_meta,
 		this.nu_ponderacion,
 		this.op_bien_servicio,
-		this.mo_total_general,  
-		this.comFechaInCul,   
-		this.co_ejecutores,  
-		this.tx_objetivo_institucional 
+		this.mo_total_general,
+		this.comFechaInCul,
+		this.co_ejecutores,
+		this.tx_objetivo_institucional
 ]});
 
 this.guardar = new Ext.Button({
@@ -341,7 +341,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
@@ -357,7 +357,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	//fileUpload: true,
 	width:700,
-	autoHeight:true,  
+	autoHeight:true,
 	autoScroll:true,
 	labelWidth: 180,
 	border:false,
