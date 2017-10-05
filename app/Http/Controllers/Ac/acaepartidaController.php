@@ -257,7 +257,7 @@ class acaepartidaController extends Controller
                     ->first();
 
                     $ac = tab_ac::find(Input::get('accion_centralizada'));
-                    $ac->monto_calc = $calculo_ac_ae->nu_monto;
+                    $ac->monto_calc = $calculo_ac->nu_monto;
                     $ac->save();
 
                 }
