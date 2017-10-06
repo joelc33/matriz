@@ -1,4 +1,4 @@
-<?php        
+<?php
 	$data = json_encode(array(
 		"id_proyecto"     => $_GET['id_proyecto'],
 		"co_estado"     => 23,
@@ -200,7 +200,7 @@ this.mo_presupuesto = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	minLength : 1,
-	maxLength: 12,
+	maxLength: 20,
 	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 12},
 	blankText: '0.00',
 	//decimalPrecision: 2,
@@ -256,8 +256,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 	frame:false,
 	border:false,
 	width:600,
-	autoHeight:true,  
-	autoScroll:true,	
+	autoHeight:true,
+	autoScroll:true,
 	labelWidth: 180,
 	bodyStyle:'padding:10px;',
 	items:[
