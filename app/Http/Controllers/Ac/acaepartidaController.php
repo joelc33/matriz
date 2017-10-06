@@ -19,6 +19,7 @@ use PHPExcel_Writer_Excel2007;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Style_Fill;
+use PHPExcel_Cell_DataType;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -332,8 +333,14 @@ class acaepartidaController extends Controller
       $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
       $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
       $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
+      //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
       $objPHPExcel->getActiveSheet()->setTitle($descripcion->id_ac.'_'.$descripcion->nu_ae.'_PARTIDAS');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray(
       		array(
       			'font'    => array(
       				'bold'      => true
@@ -358,7 +365,7 @@ class acaepartidaController extends Controller
       	 		)
       		)
       );
-      $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
       		array(
       			'alignment' => array(
       				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -371,7 +378,7 @@ class acaepartidaController extends Controller
       		)
       );
 
-      $objPHPExcel->getActiveSheet()->getStyle('B1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
       		array(
       			'alignment' => array(
       				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -379,7 +386,7 @@ class acaepartidaController extends Controller
       		)
       );
 
-      $objPHPExcel->getActiveSheet()->getStyle('C1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('H1')->applyFromArray(
       		array(
       			'borders' => array(
       				'right'     => array(
@@ -394,12 +401,44 @@ class acaepartidaController extends Controller
       // We fetch each database result row into $row in turn
 
       $objPHPExcel->setActiveSheetIndex(0)
-      ->setCellValue('A1', 'CODIGO PARTIDA')
-      ->setCellValue('B1', 'DESCRIPCION PARTIDA')
-      ->setCellValue('C1', 'MONTO PARTIDA');
+      ->setCellValue('A1', 'PA')
+      ->setCellValue('B1', 'GE')
+      ->setCellValue('C1', 'ES')
+      ->setCellValue('D1', 'SE')
+      ->setCellValue('E1', 'SSE')
+      ->setCellValue('F1', 'APLICACION')
+      ->setCellValue('G1', 'DENOMINACIÓN')
+      ->setCellValue('H1', 'MONTO');
 
       // Make bold cells
-      $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
+      $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+
+      $tab_ac_ae_partida = $this->tab_ac_ae_partida
+      //->join('mantenimiento.tab_partidas as t01','t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
+      ->join('mantenimiento.tab_partidas as t01', function ($j) {
+        $j->on('t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
+          ->on('t01.id_tab_ejercicio_fiscal','=','public.t54_ac_ae_partidas.id_tab_ejercicio_fiscal');
+      })
+      ->select( 'public.t54_ac_ae_partidas.co_partida', 'tx_nombre', 'monto', 'nu_aplicacion' )
+      ->where('id_accion_centralizada', '=', $ac)
+      ->where('id_accion', '=', $ae)
+      ->orderBy('co_partida', 'ASC')
+  		->get();
+
+      foreach ($tab_ac_ae_partida as $key => $value) {
+          // Set cell An to the "name" column from the database (assuming you have a column called name)
+          //    where n is the Excel row number (ie cell A1 in the first row)
+          $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, substr($value->co_partida, 0, 3));
+          $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, substr(substr($value->co_partida, 0, 5), 3), PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, substr(substr($value->co_partida, 0, 7), 5), PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, substr(substr($value->co_partida, 0, 9), 7), PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, substr(substr($value->co_partida, 0, 12), 9), PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_aplicacion, PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->tx_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+          $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->monto);
+          // Increment the Excel row counter
+          $rowCount++;
+      }
 
       // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
       $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
