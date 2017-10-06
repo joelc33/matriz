@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}   
+}
 include("../../configuracion/ConexionComun.php");
 $comunes = new ConexionComun();
 
@@ -58,7 +58,7 @@ this.formPanel_ = new Ext.form.FormPanel({
     fileUpload: true,
 	border:false,
     width:500,
-autoHeight:true,  
+autoHeight:true,
     autoScroll:true,
     bodyStyle:'padding:10px;',
     items:[
@@ -168,7 +168,8 @@ this.guardar = new Ext.Button({
         cargarPartidaActividad.main.formPanel_.getForm().submit({
             method:'POST',
             //url:'formulacion/modulos/accionFisica/funcion.php?op=8',
-            url:'formulacion/modulos/accionFisica/orm.php/partida/proyecto/ae',
+            /*url:'formulacion/modulos/accionFisica/orm.php/partida/proyecto/ae',*/
+						url:'proyecto/ae/partida/individual',
             waitMsg: 'Enviando datos, por favor espere..',
             waitTitle:'Enviando',
             failure: function(form, action) {
@@ -195,7 +196,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
@@ -212,7 +213,7 @@ this.formPanel_ = new Ext.form.FormPanel({
     fileUpload: true,
 	border:false,
     width:500,
-autoHeight:true,  
+autoHeight:true,
     autoScroll:true,
     bodyStyle:'padding:10px;',
     items:[

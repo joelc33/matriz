@@ -123,10 +123,11 @@ Route::group(['namespace' => 'Proyecto'], function(){
 	Route::group(['prefix' => 'proyecto'], function(){
 		Route::get('nuevo', 'proyectoController@nuevo');
 	});
-	//*Modulo de Accion Centralizada Partidas*/
+	//*Modulo de Proyecto Partidas*/
 	Route::group(['prefix' => 'proyecto/ae/partida'], function(){
 		Route::post('storeLista', 'proyectoaepartidaController@storeLista');
 		Route::post('masivo', 'proyectoaepartidaController@procesarMasivo');
+		Route::post('individual', 'proyectoaepartidaController@procesarIndividual');
 	});
 });
 //*Modulos de Accion Centralizada*/

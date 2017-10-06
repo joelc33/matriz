@@ -22,6 +22,7 @@ class VerifyCsrfToken extends BaseVerifier
         'ac/ae/partida/storeLista',
         'ac/ae/partida/masivo',
         'proyecto/ae/partida/masivo',
+        'proyecto/ae/partida/individual',
         'ac/ae/storeLista',
         'auxiliar/poa/subsector',
         'ac/guardar',
