@@ -103,6 +103,11 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('ef', 'documentoController@ejercicioFiscal');
 		Route::get('fondo/tipo', 'documentoController@fondoTipo');
 		Route::get('recurso/tipo', 'documentoController@recursoTipo');
+		Route::get('accion/tipo', 'documentoController@accionTipo');
+		Route::get('ejecutor/activo', 'documentoController@ejecutorActivo');
+		Route::get('poa/sector', 'documentoController@poaSector');
+		Route::post('poa/subsector', 'documentoController@poaSubsector');
+		Route::get('poa/situacion', 'documentoController@poaSituacion');
 	});
 });
 //*Modulos de Reportes*/
@@ -129,6 +134,8 @@ Route::group(['namespace' => 'Ac'], function(){
 	//*Modulo de Accion Centralizada*/
 	Route::group(['prefix' => 'ac'], function(){
 		Route::get('nuevo', 'acController@nuevo');
+		Route::post('guardar', 'acController@guardar');
+		Route::post('guardar/{id}', 'acController@guardar');
 	});
 	//*Modulo de Accion Centralizada*/
 	Route::group(['prefix' => 'ac/ae'], function(){

@@ -135,14 +135,16 @@ return [
     */
 
     'attributes' => [
-	'documenton' => 'Tipo de Documento',
-	'documentoj' => 'Tipo de Documento',
-	'tipo_documento' => 'Tipo de Documento',
-	'cedula' => 'Cedula de Identidad',
-	'rif' => 'RIF',
-	'rif_completo' => 'RIF',
-	'cuenta' => 'Cuenta Bancaria',
-	'ritez' => 'RITEZ'
+    	'documenton' => 'Tipo de Documento',
+    	'documentoj' => 'Tipo de Documento',
+    	'tipo_documento' => 'Tipo de Documento',
+    	'cedula' => 'Cedula de Identidad',
+    	'rif' => 'RIF',
+    	'rif_completo' => 'RIF',
+    	'cuenta' => 'Cuenta Bancaria',
+    	'ritez' => 'RITEZ',
+      /*Acciones centralizadas*/
+      'id_accion' => '1.2. TIPO DE ACCIÓN',
     ],
 
 ];

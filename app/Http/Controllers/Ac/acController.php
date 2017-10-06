@@ -1,7 +1,15 @@
 <?php
 
 namespace matriz\Http\Controllers\Ac;
-
+//*******agregar esta linea******//
+use matriz\Models\Ac\tab_ac;
+use View;
+use Validator;
+use Input;
+use Response;
+use DB;
+use Session;
+//*******************************//
 use Illuminate\Http\Request;
 
 use matriz\Http\Requests;
@@ -9,79 +17,144 @@ use matriz\Http\Controllers\Controller;
 
 class acController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    protected $tab_ac;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function __construct(tab_ac $tab_ac)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+      $this->middleware('auth');
+      $this->tab_ac = $tab_ac;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function update(Request $request, $id)
+    public function guardar($id = NULL)
     {
-        //
+    $id = Input::get("id");
+    DB::beginTransaction();
+      if($id!=''||$id!=null){
+
+         try {
+        $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
+        if ($validator->fails()){
+          return Response::json(array(
+            'success' => false,
+            'msg' => $validator->getMessageBag()->toArray()
+          ));
+        }
+
+        $tabla = tab_ac::find($id);
+        $tabla->id_accion = Input::get("id_accion");
+        $tabla->id_subsector = Input::get("id_subsector");
+        $tabla->id_estatus = 1;
+        $tabla->sit_presupuesto = Input::get("co_situacion_presupuestaria");
+        $tabla->descripcion = Input::get("descripcion");
+        $tabla->monto = Input::get("monto");
+        $tabla->monto_calc = 0;
+        $tabla->fecha_inicio = Input::get("fecha_inicio");
+        $tabla->fecha_fin = Input::get("fecha_fin");
+        $tabla->inst_mision = Input::get("inst_mision");
+        $tabla->inst_vision = Input::get("inst_vision");
+        $tabla->inst_objetivos = Input::get("inst_objetivos");
+        $tabla->nu_po_beneficiar = Input::get("nu_po_beneficiar");
+        $tabla->nu_em_previsto = Input::get("nu_em_previsto");
+        $tabla->tx_re_esperado = Input::get("tx_re_esperado");
+        $tabla->tx_pr_objetivo = Input::get("tx_pr_objetivo");
+        $tabla->edo_reg = 'TRUE';
+        $tabla->save();
+
+        DB::commit();
+        return Response::json(array(
+          'success' => true,
+          'msg' => 'Accion Centralizada Editada con Exito!'
+        ));
+
+            }catch (\Illuminate\Database\QueryException $e)
+            {
+          DB::rollback();
+          return Response::json(array(
+            'success' => false,
+            'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+          ));
+            }
+
+      }else{
+
+         try {
+
+           // 5.1 or newer
+           Validator::extend('composite_unique', function($attribute, $value, $parameters, $validator) {
+             // remove first parameter and assume it is the table name
+             $table = array_shift( $parameters );
+             // start building the conditions
+             $fields = [ $attribute => $value ]; // current field, company_code in your case
+             // iterates over the other parameters and build the conditions for all the required fields
+             while ( $field = array_shift( $parameters ) ) {
+                 $fields[ $field ] = \Request::get( $field );
+             }
+             // query the table with all the conditions
+             $result = DB::table( $table )->select( DB::raw( 1 ) )->where( $fields )->first();
+
+             return empty( $result ); // edited here
+           }, ':attribute ya esta siendo Utilizada por este Ejecutor.' );
+
+          $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+          if ($validator->fails()){
+            return Response::json(array(
+              'success' => false,
+              'msg' => $validator->getMessageBag()->toArray()
+            ));
+          }
+          $tabla = new tab_ac;
+          if ( Session::get('rol') > 2 ) { //es local
+            $tabla->id_ejecutor = Session::get('ejecutor');
+          } else {
+            $tabla->id_ejecutor = Input::get("id_ejecutor");
+          }
+          $tabla->id_ejercicio = Session::get('ejercicio');
+          $tabla->id_accion = Input::get("id_accion");
+          $tabla->id_subsector = Input::get("id_subsector");
+          $tabla->id_estatus = 1;
+          $tabla->sit_presupuesto = Input::get("co_situacion_presupuestaria");
+          $tabla->descripcion = Input::get("descripcion");
+          $tabla->monto = Input::get("monto");
+          $tabla->monto_calc = 0;
+          $tabla->fecha_inicio = Input::get("fecha_inicio");
+          $tabla->fecha_fin = Input::get("fecha_fin");
+          $tabla->inst_mision = Input::get("inst_mision");
+          $tabla->inst_vision = Input::get("inst_vision");
+          $tabla->inst_objetivos = Input::get("inst_objetivos");
+          $tabla->nu_po_beneficiar = Input::get("nu_po_beneficiar");
+          $tabla->nu_em_previsto = Input::get("nu_em_previsto");
+          $tabla->tx_re_esperado = Input::get("tx_re_esperado");
+          $tabla->tx_pr_objetivo = Input::get("tx_pr_objetivo");
+          $tabla->edo_reg = 'TRUE';
+          $tabla->save();
+
+          DB::commit();
+
+          $consulta_ac = tab_ac::select( DB::raw("'AC' || id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo"))
+          ->where('id', '=', $tabla->id)
+          ->first();
+
+          return Response::json(array(
+            'success' => true,
+            'msg' => 'Accion Centralizada ha sido almacenado con el Código:'.$consulta_ac->codigo,
+            'data' => array('id' => $tabla->id, 'codigo' => $consulta_ac->codigo)
+          ));
+
+            }catch (\Illuminate\Database\QueryException $e)
+            {
+          DB::rollback();
+          return Response::json(array(
+            'success' => false,
+            'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+          ));
+            }
+      }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -40,21 +40,22 @@
 
             this.store_accion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    url: 'formulacion/modulos/accionCentralizada/orm.php/tipo/accion',
-                    method: 'POST'
+                    /*url: 'formulacion/modulos/accionCentralizada/orm.php/tipo/accion',*/
+                    url: 'auxiliar/accion/tipo',
+                    /*method: 'POST'*/
                 }),
-                baseParams: {
+                /*baseParams: {
                     op: 1
-                },
+                },*/
                 root: 'data',
                 fields: [
                     'id', {
                         name: 'nombre',
                         convert: function(v, r) {
-                            return r.id + ' - ' + r.nombre;
+                            return r.id + ' - ' + r.de_nombre;
                         }
                     },
-		    'de_accion'
+		                'de_accion'
                 ]
             });
 
@@ -90,9 +91,16 @@
 	    });
 
             this.store_ejecutor = new Ext.data.JsonStore({
-                url: 'formulacion/modulos/usuario/funcion.php?op=5',
+                /*url: 'formulacion/modulos/usuario/funcion.php?op=5',*/
+                url: 'auxiliar/ejecutor/activo',
                 root: 'data',
-                fields: ['id_ejecutor', 'tx_ejecutor']
+                fields: ['id_ejecutor', 'tx_ejecutor',
+                {
+                    name: 'nombre',
+                    convert: function(v, r) {
+                        return r.id_ejecutor + ' - ' + r.tx_ejecutor;
+                    }
+                }]
             });
 
             this.fieldset1 = new Ext.form.FieldSet({
@@ -145,7 +153,7 @@
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
                     store: this.store_ejecutor,
                     valueField: 'id_ejecutor',
-                    displayField: 'tx_ejecutor',
+                    displayField: 'nombre',
                     hiddenName: 'id_ejecutor',
                     emptyText: 'Seleccione Unidad Ejecutora',
                     allowBlank: false,
@@ -182,14 +190,15 @@
 
             this.store_sector = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    url: 'formulacion/modulos/proyecto/funcion.php',
+                    /*url: 'formulacion/modulos/proyecto/funcion.php',*/
+                    url: 'auxiliar/poa/sector',
                     method: 'GET'
                 }),
-                baseParams: {
+                /*baseParams: {
                     op: 3
-                },
+                },*/
                 root: 'data',
-                fields: ['co_sector', 'tx_descripcion']
+                fields: ['co_sector', 'nu_descripcion']
             });
 
             this.co_sector = new Ext.form.ComboBox({
@@ -197,7 +206,7 @@
                 store: this.store_sector,
                 typeAhead: true,
                 valueField: 'co_sector',
-                displayField: 'tx_descripcion',
+                displayField: 'nu_descripcion',
                 hiddenName: 'co_sector',
                 forceSelection: true,
                 resizable: true,
@@ -220,17 +229,18 @@
             });
 
             this.store_subsector = new Ext.data.JsonStore({
-                url: 'formulacion/modulos/proyecto/funcion.php?op=4',
+                /*url: 'formulacion/modulos/proyecto/funcion.php?op=4',*/
+                url: 'auxiliar/poa/subsector',
                 root: 'data',
-                fields: ['co_sectores', 'co_sub_sector', 'tx_sub_sector']
+                fields: ['id', 'co_sub_sector', 'nu_descripcion']
             });
 
             this.co_sub_sector = new Ext.form.ComboBox({
                 fieldLabel: '1.5.2. SUB-SECTOR',
                 store: this.store_subsector,
                 typeAhead: true,
-                valueField: 'co_sectores',
-                displayField: 'tx_sub_sector',
+                valueField: 'id',
+                displayField: 'nu_descripcion',
                 hiddenName: 'id_subsector',
                 forceSelection: true,
                 resizable: true,
@@ -291,16 +301,17 @@
 
             this.store_situacion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    url: 'formulacion/modulos/proyecto/funcion.php',
+                    /*url: 'formulacion/modulos/proyecto/funcion.php',*/
+                    url: 'auxiliar/poa/situacion',
                     method: 'GET'
                 }),
-                baseParams: {
+                /*baseParams: {
                     op: 2
-                },
+                },*/
                 root: 'data',
                 fields: [
-                    'co_situacion_presupuestaria',
-                    'tx_situacion_presupuestaria'
+                    'id',
+                    'de_situacion_presupuestaria'
                 ]
             });
 
@@ -316,8 +327,8 @@
                         fieldLabel: '1.8. SITUACIÓN PRESUPUESTARIA',
                         store: this.store_situacion,
                         typeAhead: true,
-                        valueField: 'co_situacion_presupuestaria',
-                        displayField: 'tx_situacion_presupuestaria',
+                        valueField: 'id',
+                        displayField: 'de_situacion_presupuestaria',
                         hiddenName: 'co_situacion_presupuestaria',
                         forceSelection: true,
                         resizable: true,
@@ -333,7 +344,7 @@
                         allowBlank: false,
                         allowDecimals: false,
                         minLength: 1,
-                        maxLength: 12,
+                        maxLength: 20,
                         allowNegative: false,
                         emptyText: '0',
                     }, {
@@ -405,15 +416,22 @@
                             var enviarCambios = function() {
                                 forma.submit({
                                     method: 'POST',
-                                    url: 'formulacion/modulos/accionCentralizada/funcion.php',
+                                    /*url: 'formulacion/modulos/accionCentralizada/funcion.php',
                                     params: {
                                         op: 99
-                                    },
+                                    },*/
+                                    url: 'ac/guardar',
                                     waitMsg: 'Enviando datos, por favor espere..',
                                     waitTitle: 'Enviando',
                                     failure: function(form, action) {
-                                        Ext.MessageBox.alert('Error en transacción',
-                                            action.result.msg);
+                                        /*Ext.MessageBox.alert('Error en transacción',
+                                            action.result.msg);*/
+
+                                            var errores = '';
+                                            for(datos in action.result.msg){
+                                              errores += action.result.msg[datos] + '<br>';
+                                            }
+                                            Ext.MessageBox.alert('Error en transacción', errores);
                                     },
                                     success: function(form, action) {
                                         if (action.result.success) {

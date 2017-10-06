@@ -14,6 +14,9 @@ use matriz\Models\Mantenimiento\tab_planes_zulia;
 use matriz\Models\Mantenimiento\tab_ejercicio_fiscal;
 use matriz\Models\Mantenimiento\tab_tipo_fondo;
 use matriz\Models\Mantenimiento\tab_tipo_recurso;
+use matriz\Models\Mantenimiento\tab_ac_predefinida;
+use matriz\Models\Mantenimiento\tab_sectores;
+use matriz\Models\Mantenimiento\tab_situacion_presupuestaria;
 use Input;
 use Response;
 use DB;
@@ -303,6 +306,75 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_tipo_recurso::select('id', 'de_tipo_recurso')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function accionTipo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ac_predefinida::select('id', 'de_nombre', 'de_accion')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function ejecutorActivo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')->where('in_activo', '=', true)->orderby('id_ejecutor','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function poaSector()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_sectores::select('id','co_sector','nu_descripcion')
+      ->where('nu_nivel', '=', 1)
+      ->where('in_activo', '=', true)
+      ->orderby('co_sector','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function poaSubsector()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_sectores::select('id','co_sub_sector','nu_descripcion')
+      ->where('co_sector', '=', Input::get('co_sector'))
+      ->where('nu_nivel', '=', 2)
+      ->where('in_activo', '=', true)
+      ->orderby('co_sub_sector','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function poaSituacion()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_situacion_presupuestaria::select('id','de_situacion_presupuestaria')
+      ->where('in_activo', '=', true)
+      ->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
