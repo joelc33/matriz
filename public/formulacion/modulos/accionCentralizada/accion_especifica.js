@@ -785,7 +785,7 @@
                     iconCls: 'icon-excel',
                     handler: function(){
                       bajar.load({
-                          url: 'ac/ae/partida/'+config.ac.id+'/'+config.ac.id_accion+'/bajar'
+                          url: 'ac/ae/partida/'+config.ac.id+'/'+config.ae.id_accion+'/bajar'
                       });
                     }
                 },'-',{
