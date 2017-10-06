@@ -201,7 +201,7 @@ this.mo_presupuesto = new Ext.form.NumberField({
 	width:200,
 	minLength : 1,
 	maxLength: 20,
-	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 12},
+	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 20},
 	blankText: '0.00',
 	//decimalPrecision: 2,
 	allowNegative: false,
