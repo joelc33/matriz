@@ -22,5 +22,6 @@ class VerifyCsrfToken extends BaseVerifier
         'ac/ae/partida/storeLista',
         'ac/ae/partida/masivo',
         'proyecto/ae/partida/masivo',
+        'ac/ae/storeLista',
     ];
 }

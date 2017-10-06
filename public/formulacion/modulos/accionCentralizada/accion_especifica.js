@@ -749,6 +749,7 @@
             this.grid = Ext.create({
                 xtype: 'grid',
                 store: self.store,
+                border: false,
                 colModel: new Ext.grid.ColumnModel({
                     defaults: {
                         menuDisabled: true,
@@ -777,7 +778,21 @@
                     displayInfo: true,
                     displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
                     emptyMsg: "<span style=\"color:black\">No se encontraron registros</span>"
-                })
+                }),
+                tbar: [{
+                    xtype: 'button',
+                    text: 'Descargar',
+                    iconCls: 'icon-excel',
+                    handler: function(){
+                      bajar.load({
+                          url: 'ac/ae/partida/'+config.ac.id+'/'+config.ac.id_accion+'/bajar'
+                      });
+                    }
+                },'-',{
+                    xtype: 'button',
+                    text: 'Subir Partidas',
+                    iconCls: 'icon-generar'
+                }]
             });
 
             config = Ext.apply({
@@ -808,7 +823,8 @@
         tpagina = 20;
 
     this.store = new Ext.data.JsonStore({
-        url: 'formulacion/modulos/accionCentralizada/funcion.php',
+        /*url: 'formulacion/modulos/accionCentralizada/funcion.php',*/
+        url: 'ac/ae/storeLista',
         baseParams: {
             op: 3,
         id: config.ac.id,
@@ -1090,7 +1106,7 @@
                     dataIndex: 'monto_calc'
                 }, {
                     header: 'UNIDAD EJECUTORA RESPONSABLE',
-                    width: 250,
+                    width: 200,
                     menuDisabled: true,
                     sortable: true,
                     renderer: Reingsys.util.textoLargo,

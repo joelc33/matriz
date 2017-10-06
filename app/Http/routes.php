@@ -138,6 +138,7 @@ Route::group(['namespace' => 'Ac'], function(){
 	Route::group(['prefix' => 'ac/ae/partida'], function(){
 		Route::post('storeLista', 'acaepartidaController@storeLista');
 		Route::post('masivo', 'acaepartidaController@procesarMasivo');
+		Route::get('{ac}/{ae}/bajar', 'acaepartidaController@bajar');
 	});
 });
 //*Modulos de Mantenimiento*/
