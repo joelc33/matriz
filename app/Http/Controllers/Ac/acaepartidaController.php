@@ -337,7 +337,7 @@ class acaepartidaController extends Controller
       $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
       $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
       //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
       $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
       $objPHPExcel->getActiveSheet()->setTitle($descripcion->id_ac.'_'.$descripcion->nu_ae.'_PARTIDAS');
       $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray(
