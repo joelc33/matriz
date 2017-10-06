@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}  
+}
 include("../../configuracion/ConexionComun.php");
 
 $comunes = new ConexionComun();
@@ -386,7 +386,7 @@ this.mo_total = new Ext.form.NumberField({
 	width:200,
 	readOnly:<?php echo $deshabilitado ?>,
 	minLength : 1,
-	maxLength: 12,
+	maxLength: 20,
 	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 12},
 	blankText: '0.00',
 	decimalPrecision: 0,
@@ -602,7 +602,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 

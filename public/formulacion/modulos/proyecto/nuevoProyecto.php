@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}  
+}
 include("../../configuracion/ConexionComun.php");
 
 $comunes = new ConexionComun();
@@ -151,9 +151,9 @@ this.id_ejecutor = new Ext.form.ComboBox({
 	valueField: 'id_ejecutor',
 	displayField:'tx_ejecutor',
 	hiddenName:'id_ejecutor',
-	<?php 
+	<?php
 	if($_SESSION['co_rol']==3){
-	echo "readOnly:true,style:'background:#c9c9c9;',";		 
+	echo "readOnly:true,style:'background:#c9c9c9;',";
 	}else{}?>
 	forceSelection:true,
 	resizable:true,
@@ -320,7 +320,7 @@ this.mo_total = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	minLength : 1,
-	maxLength: 12,
+	maxLength: 20,
 	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 12},
 	blankText: '0.00',
 	decimalPrecision: 0,
@@ -522,7 +522,7 @@ this.guardar = new Ext.Button({
              }
         });
 
-   
+
     }
 });
 
