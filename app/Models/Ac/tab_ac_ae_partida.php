@@ -29,6 +29,6 @@ class tab_ac_ae_partida extends Model
 		"accion_especifica" => "required|integer",
 		//"aplicacion" => "required|exists:tab_aplicacion,co_aplicacion",
 		"partida" => "required|numeric|exists:tab_partidas,co_partida",
-		"monto" => "numeric|min:0"
+		"monto" => "numeric|min:1"
 	);
 }

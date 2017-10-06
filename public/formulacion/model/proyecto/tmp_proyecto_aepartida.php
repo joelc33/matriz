@@ -1,7 +1,7 @@
 <?php
 //*****Modelo en Base al ORM eloquent********//
 class tmp_proyecto_aepartida extends Illuminate\Database\Eloquent\Model {
-	
+
 	protected $table = 't43_acc_espec_partida_tmp';
 	protected $primaryKey = 'co_partida_tmp';
 	public $incrementing = true;
@@ -10,7 +10,7 @@ class tmp_proyecto_aepartida extends Illuminate\Database\Eloquent\Model {
 	 * The name of the "created at" column.
 	 */
 	const CREATED_AT = 'fecha_creacion';
-	 
+
 	/**
 	 * The name of the "updated at" column.
 	 */
@@ -29,7 +29,7 @@ class tmp_proyecto_aepartida extends Illuminate\Database\Eloquent\Model {
 	);
 
 	public static $validar_campo = array(
-		"monto" => "numeric|min:0|regex:/^[0-9]{1,10}$/"
+		"monto" => "numeric|min:1"
 	);
 }
 ?>

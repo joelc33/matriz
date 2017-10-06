@@ -31,6 +31,6 @@ class tab_proyecto_ae_partida extends Model
 		"proyecto" => "required",
 		//"aplicacion" => "required|exists:tab_aplicacion,co_aplicacion",
 		"partida" => "required|numeric|exists:tab_partidas,co_partida",
-		"monto" => "numeric|min:0"
+		"monto" => "numeric|min:1"
 	);
 }
