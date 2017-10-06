@@ -29,7 +29,7 @@ class tmp_proyecto_aepartida extends Illuminate\Database\Eloquent\Model {
 	);
 
 	public static $validar_campo = array(
-		"monto" => "numeric|min:1"
+		"monto" => "numeric|min:0"
 	);
 }
 ?>
