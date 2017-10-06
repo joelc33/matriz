@@ -87,7 +87,7 @@
 		name: 'descripcion',
 		allowBlank: false,
 		height: 100,
-		maxLength: 600
+		maxLength: 1200
 	    });
 
             this.store_ejecutor = new Ext.data.JsonStore({
@@ -170,14 +170,14 @@
                     name: 'inst_mision',
                     allowBlank: false,
                     height: 60,
-                    maxLength: 600
+                    maxLength: 3000
                 }, {
                     xtype: 'textarea',
                     fieldLabel: '1.4.2. VISION',
                     name: 'inst_vision',
                     allowBlank: false,
                     height: 60,
-                    maxLength: 600
+                    maxLength: 3000
                 }, {
                     xtype: 'textarea',
                     fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
