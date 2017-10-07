@@ -298,4 +298,15 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('partida/guardar/{id}', 'tipoaccionpartidaController@guardar');
 		Route::post('partida/eliminar', 'tipoaccionpartidaController@eliminar');
 	});
+	//*Modulo de roles*/
+	Route::group(['prefix' => 'mantenimiento/presupuestoingreso'], function(){
+		Route::get('lista', 'presupuestoingresoController@lista');
+		Route::post('storeLista', 'presupuestoingresoController@storeLista');
+		Route::get('nuevo', 'presupuestoingresoController@nuevo');
+		Route::get('editar/{id}', 'presupuestoingresoController@editar');
+		Route::post('guardar', 'presupuestoingresoController@guardar');
+		Route::post('guardar/{id}', 'presupuestoingresoController@guardar');
+		Route::post('eliminar', 'presupuestoingresoController@eliminar');
+		Route::post('habilitar', 'presupuestoingresoController@habilitar');
+	});
 });
