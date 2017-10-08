@@ -2,6 +2,7 @@
 
 namespace matriz\Http\Controllers\Reporte;
 //*******agregar esta linea******//
+use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
 use View;
 use Input;
 use Response;
@@ -130,6 +131,7 @@ class leyController extends Controller
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(19);
+      $pdf->SetFont('','',8);
       //$pdf->MultiCell(195, 220, '', 1, 'C', 0, 0, '', '', true);
 
       $tabla_presupuesto_ingreso = '
@@ -143,7 +145,7 @@ class leyController extends Controller
       <th style="text-align: center;width:20%;font-size: 10px;" rowspan="3"><strong><br>MONTO</strong></th>
       </tr>
       <tr style="font-size: 6px">
-      <th style="text-align: center;width:5%" rowspan="2"><strong>RAMO</strong></th>
+      <th style="text-align: center;width:5%" rowspan="2"><strong><br>RAMO</strong></th>
       <th style="text-align: center;width:15%" colspan="3"><strong>SUB-RAMOS</strong></th>
       </tr>
       <tr style="font-size: 6px">
@@ -154,15 +156,26 @@ class leyController extends Controller
       </thead>
       <tbody>';
 
-      $tabla_presupuesto_ingreso.='
-      <tr>
-      <td style="text-align: center;width:5%">asdas</td>
-      <td style="text-align: center;width:5%">asdas</td>
-      <td style="text-align: center;width:5%">asdas</td>
-      <td style="text-align: center;width:5%">asdas</td>
-      <td style="text-align: left;width:60%">asdas</td>
-      <td style="text-align: rigth;width:20%">asdas</td>
-      </tr>';
+      $tab_presupuesto_ingreso = tab_presupuesto_ingreso::select( 'id', 'id_tab_ejercicio_fiscal',
+      'nu_partida', 'de_partida', 'mo_partida','in_activo' )
+      ->where('in_activo', '=', TRUE)
+      ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->orderBy('nu_partida','ASC')
+      ->get();
+
+      foreach ($tab_presupuesto_ingreso as $key => $value) {
+
+        $tabla_presupuesto_ingreso.='
+        <tr>
+        <td style="text-align: center;width:5%">'.substr($value->nu_partida, 0, 3).'</td>
+        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 5), 3).'</td>
+        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 7), 5).'</td>
+        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 9), 7).'</td>
+        <td style="text-align: left;width:60%">'.$value->de_partida.'</td>
+        <td style="text-align: rigth;width:20%">'.number_format($value->mo_partida, 2, ',', '.').'</td>
+        </tr>';
+
+      }
 
       $tabla_presupuesto_ingreso.='
       </tbody>
