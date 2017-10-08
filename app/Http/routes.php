@@ -110,6 +110,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('poa/situacion', 'documentoController@poaSituacion');
 		Route::get('personal/tipo', 'documentoController@personalTipo');
 		Route::get('personal/hijo', 'documentoController@personalHijo');
+		Route::get('empleado/tipo', 'documentoController@empleadoTipo');
 	});
 });
 //*Modulos de Reportes*/
@@ -332,5 +333,16 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'clasificadortipoController@guardar');
 		Route::post('eliminar', 'clasificadortipoController@eliminar');
 		Route::post('habilitar', 'clasificadortipoController@habilitar');
+	});
+	//*Modulo de Clasificados por Tipo*/
+	Route::group(['prefix' => 'mantenimiento/escalasalarial'], function(){
+		Route::get('lista', 'escalasalarialController@lista');
+		Route::post('storeLista', 'escalasalarialController@storeLista');
+		Route::get('nuevo', 'escalasalarialController@nuevo');
+		Route::get('editar/{id}', 'escalasalarialController@editar');
+		Route::post('guardar', 'escalasalarialController@guardar');
+		Route::post('guardar/{id}', 'escalasalarialController@guardar');
+		Route::post('eliminar', 'escalasalarialController@eliminar');
+		Route::post('habilitar', 'escalasalarialController@habilitar');
 	});
 });

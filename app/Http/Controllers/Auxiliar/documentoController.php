@@ -18,6 +18,7 @@ use matriz\Models\Mantenimiento\tab_ac_predefinida;
 use matriz\Models\Mantenimiento\tab_sectores;
 use matriz\Models\Mantenimiento\tab_situacion_presupuestaria;
 use matriz\Models\Mantenimiento\tab_tipo_personal;
+use matriz\Models\Mantenimiento\tab_tipo_empleado;
 use Input;
 use Response;
 use DB;
@@ -405,8 +406,22 @@ class documentoController extends Controller
       $response['data']  = tab_tipo_personal::select('id','nu_codigo', 'de_tipo_personal')
       ->where('in_activo', '=', true)
       ->where('id_padre', '>', 0)
-      ->orderby('id','ASC')->get()->toBase();
+      ->orderby('id','ASC')->get()->toArray();
       /*$response['data']->push(array('id' => 0, 'nu_codigo' => 'N/A', 'de_tipo_personal' => 'Sin Padre' ));*/
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function empleadoTipo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_tipo_empleado::select('id','de_tipo_empleado')
+      ->where('in_activo', '=', true)
+      ->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
