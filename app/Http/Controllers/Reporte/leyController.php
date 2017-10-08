@@ -114,12 +114,61 @@ class leyController extends Controller
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
 
       $pdf->AddPage();
 
+      $pdf->SetFont('','B',8);
+  		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',11);
+      $pdf->MultiCell(90, 5, 'PRESUPUESTO DE INGRESOS', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '(EN BOLÍVARES) ', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      //$pdf->MultiCell(195, 220, '', 1, 'C', 0, 0, '', '', true);
 
+      $tabla_presupuesto_ingreso = '
+      <table border="0.5" style="width:100%" cellpadding="2" cellspacing="0">
+      <thead>
+      <tr style="font-size: 9px;">
+      <th style="text-align: center;width:20%" colspan="4">
+      <strong>CODIGO <br>(Recursos)</strong>
+      </th>
+      <th style="text-align: center;width:60%;font-size: 10px;" rowspan="3"><strong><br>DENOMINACION</strong></th>
+      <th style="text-align: center;width:20%;font-size: 10px;" rowspan="3"><strong><br>MONTO</strong></th>
+      </tr>
+      <tr style="font-size: 6px">
+      <th style="text-align: center;width:5%" rowspan="2"><strong>RAMO</strong></th>
+      <th style="text-align: center;width:15%" colspan="3"><strong>SUB-RAMOS</strong></th>
+      </tr>
+      <tr style="font-size: 6px">
+      <th style="text-align: center;width:5%"><strong>GEN.</strong></th>
+      <th style="text-align: center;width:5%"><strong>ESP.</strong></th>
+      <th style="text-align: center;width:5%"><strong>SUB-ESP.</strong></th>
+      </tr>
+      </thead>
+      <tbody>';
 
+      $tabla_presupuesto_ingreso.='
+      <tr>
+      <td style="text-align: center;width:5%">asdas</td>
+      <td style="text-align: center;width:5%">asdas</td>
+      <td style="text-align: center;width:5%">asdas</td>
+      <td style="text-align: center;width:5%">asdas</td>
+      <td style="text-align: left;width:60%">asdas</td>
+      <td style="text-align: rigth;width:20%">asdas</td>
+      </tr>';
 
+      $tabla_presupuesto_ingreso.='
+      </tbody>
+      </table>';
+
+      $pdf->writeHTML($tabla_presupuesto_ingreso, true, false, false, false, '');
 
       //Cierre de Reporte
       $pdf->lastPage();
