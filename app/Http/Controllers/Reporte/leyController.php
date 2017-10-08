@@ -1,87 +1,52 @@
 <?php
 
 namespace matriz\Http\Controllers\Reporte;
-
+//*******agregar esta linea******//
+use View;
+use Input;
+use Response;
+use DB;
+use Auth;
+use TCPDF;
+use Crypt;
+use File;
+use Blade;
+use Session;
+//*******************************//
 use Illuminate\Http\Request;
 
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
 
+
 class leyController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function libro()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+      $pdf = new TCPDF("P", PDF_UNIT, 'Letter', true, 'UTF-8', false);
+      $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+      $pdf->SetAuthor('Yoser Perez');
+      $pdf->SetTitle('Ley de Presupuesto');
+      $pdf->SetSubject('Ley de Presupuesto');
+      $pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+      $pdf->SetMargins(10,10,10);
+      $pdf->SetTopMargin(32);
+      $pdf->SetPrintHeader(true);
+      $pdf->SetPrintFooter(true);
+      // set auto page breaks
+      $pdf->SetAutoPageBreak(TRUE, 15);
+      $pdf->AddPage();
+      //Cuerpo de la planilla
+      $pdf->lastPage();
+      $pdf->output('LEY_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
     }
 }
