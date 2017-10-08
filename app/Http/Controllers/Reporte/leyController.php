@@ -45,7 +45,7 @@ class leyController extends Controller
       $pdf->SetAutoPageBreak(TRUE, 10);
       $pdf->AddPage();
 
-      /******Portada*********/
+      /******Portada Titulo I*********/
       $pdf->SetAlpha(0.3);
   		$pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
   		$pdf->ln(30);
@@ -78,8 +78,50 @@ class leyController extends Controller
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
+
+      $pdf->AddPage();
+
+      /******Portada Titulo II*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
       //
-      //Cuerpo de la planilla
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(230);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>TITULO II<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(7);
+      $pdf->MultiCell(195, 5, 'PRESUPUESTO DE INGRESOS', 0, 'R', 0, 0, '', '', true);
+      $pdf->ln(7);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+
+      $pdf->AddPage();
+
+
+
+
+
+      //Cierre de Reporte
       $pdf->lastPage();
       $pdf->output('LEY_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
     }
