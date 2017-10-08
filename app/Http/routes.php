@@ -108,6 +108,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('poa/sector', 'documentoController@poaSector');
 		Route::post('poa/subsector', 'documentoController@poaSubsector');
 		Route::get('poa/situacion', 'documentoController@poaSituacion');
+		Route::get('personal/tipo', 'documentoController@personalTipo');
 	});
 });
 //*Modulos de Reportes*/
@@ -298,7 +299,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('partida/guardar/{id}', 'tipoaccionpartidaController@guardar');
 		Route::post('partida/eliminar', 'tipoaccionpartidaController@eliminar');
 	});
-	//*Modulo de roles*/
+	//*Modulo de Presupuesto de Ingreso*/
 	Route::group(['prefix' => 'mantenimiento/presupuestoingreso'], function(){
 		Route::get('lista', 'presupuestoingresoController@lista');
 		Route::post('storeLista', 'presupuestoingresoController@storeLista');
@@ -308,5 +309,16 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'presupuestoingresoController@guardar');
 		Route::post('eliminar', 'presupuestoingresoController@eliminar');
 		Route::post('habilitar', 'presupuestoingresoController@habilitar');
+	});
+	//*Modulo de Tipo de Personal*/
+	Route::group(['prefix' => 'mantenimiento/tipopersonal'], function(){
+		Route::get('lista', 'tipopersonalController@lista');
+		Route::post('storeLista', 'tipopersonalController@storeLista');
+		Route::get('nuevo', 'tipopersonalController@nuevo');
+		Route::get('editar/{id}', 'tipopersonalController@editar');
+		Route::post('guardar', 'tipopersonalController@guardar');
+		Route::post('guardar/{id}', 'tipopersonalController@guardar');
+		Route::post('eliminar', 'tipopersonalController@eliminar');
+		Route::post('habilitar', 'tipopersonalController@habilitar');
 	});
 });
