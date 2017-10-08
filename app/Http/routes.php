@@ -119,6 +119,10 @@ Route::group(['namespace' => 'Reporte'], function(){
 	Route::group(['prefix' => 'jasper'], function(){
 		Route::get('prueba', 'jasperController@prueba');
 	});
+	//*Modulo de roles*/
+	Route::group(['prefix' => 'reporte'], function(){
+		Route::get('libro/lista', 'libroController@lista');
+	});
 });
 //*Modulos de Proyecto*/
 Route::group(['namespace' => 'Proyecto'], function(){
