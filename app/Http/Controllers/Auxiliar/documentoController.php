@@ -394,4 +394,20 @@ class documentoController extends Controller
       return Response::json($response, 200);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function personalHijo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_tipo_personal::select('id','nu_codigo', 'de_tipo_personal')
+      ->where('in_activo', '=', true)
+      ->where('id_padre', '>', 0)
+      ->orderby('id','ASC')->get()->toBase();
+      /*$response['data']->push(array('id' => 0, 'nu_codigo' => 'N/A', 'de_tipo_personal' => 'Sin Padre' ));*/
+      return Response::json($response, 200);
+    }
+
 }
