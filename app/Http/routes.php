@@ -121,7 +121,9 @@ Route::group(['namespace' => 'Reporte'], function(){
 	});
 	//*Modulo de roles*/
 	Route::group(['prefix' => 'reporte'], function(){
-		Route::get('libro/lista', 'libroController@lista');
+		Route::get('libro/lista', 'reporteController@lista');
+		Route::get('libro/ley', 'leyController@libro');
+		Route::get('libro/distribucion', 'distribucionController@libro');
 	});
 });
 //*Modulos de Proyecto*/
