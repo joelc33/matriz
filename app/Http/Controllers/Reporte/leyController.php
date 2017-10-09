@@ -3,6 +3,7 @@
 namespace matriz\Http\Controllers\Reporte;
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
+use matriz\Models\Mantenimiento\tab_partidas;
 use View;
 use Input;
 use Response;
@@ -163,17 +164,70 @@ class leyController extends Controller
       ->orderBy('nu_partida','ASC')
       ->get();
 
+      $filtro = array();
+
       foreach ($tab_presupuesto_ingreso as $key => $value) {
 
-        $tabla_presupuesto_ingreso.='
-        <tr>
-        <td style="text-align: center;width:5%">'.substr($value->nu_partida, 0, 3).'</td>
-        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 5), 3).'</td>
-        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 7), 5).'</td>
-        <td style="text-align: center;width:5%">'.substr(substr($value->nu_partida, 0, 9), 7).'</td>
-        <td style="text-align: left;width:60%">'.$value->de_partida.'</td>
-        <td style="text-align: rigth;width:20%">'.number_format($value->mo_partida, 2, ',', '.').'</td>
-        </tr>';
+        $data = DB::select( DB::raw("
+            WITH partidas (co_partida) AS (
+                    SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 1 as nivel
+                  	FROM mantenimiento.tab_partidas
+                  	WHERE co_partida = left(:partida, 3)
+                  	UNION ALL
+                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 2 as nivel
+                  	FROM mantenimiento.tab_partidas
+                  	WHERE co_partida = left(:partida, 5)
+                  	UNION ALL
+                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 3 as nivel
+                  	FROM mantenimiento.tab_partidas
+                  	WHERE co_partida = left(:partida, 7)
+                  	UNION ALL
+                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 4 as nivel
+                  	FROM mantenimiento.tab_partidas
+                  	WHERE co_partida = left(:partida, 9)
+                 )
+            SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, nivel
+            FROM partidas
+            WHERE
+            id_tab_ejercicio_fiscal = :ejercicio;
+  				"), array( 'partida' => $value->nu_partida , 'ejercicio' => Session::get('ejercicio')));
+
+          foreach ($data as $key => $values) {
+
+          if (in_array($values->co_partida, $filtro)) {
+
+          }else{
+
+            $filtro[] = $values->co_partida;
+
+
+            $tabla_presupuesto_ingreso.='
+            <tr>
+              <td style="text-align: center;width:5%">'.substr($values->co_partida, 0, 3).'</td>
+              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 5), 3).'</td>
+              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 7), 5).'</td>
+              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 9), 7).'</td>
+              <td style="text-align: left;width:60%">'.$values->tx_nombre.'</td>';
+
+              if ($values->nivel==4) {
+                $tabla_presupuesto_ingreso.='
+                  <td style="text-align: rigth;width:20%"><strong>'.number_format($value->mo_partida, 2, ',', '.').'</strong></td>';
+              }elseif($values->nivel==1){
+                $tabla_presupuesto_ingreso.='
+                  <td style="text-align: rigth;width:20%"></td>';
+              }elseif($values->nivel==2){
+                $tabla_presupuesto_ingreso.='
+                  <td style="text-align: rigth;width:20%"></td>';
+              }elseif($values->nivel==3){
+                $tabla_presupuesto_ingreso.='
+                  <td style="text-align: rigth;width:20%"></td>';
+              }
+
+            $tabla_presupuesto_ingreso.='</tr>';
+
+          }
+
+        }
 
       }
 
@@ -183,8 +237,92 @@ class leyController extends Controller
 
       $pdf->writeHTML($tabla_presupuesto_ingreso, true, false, false, false, '');
 
-      //Cierre de Reporte
-      $pdf->lastPage();
-      $pdf->output('LEY_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+
+      $pdf->AddPage();
+
+      /******Portada Titulo III*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(230);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>TITULO III<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(0);
+      $pdf->MultiCell(195, 5, 'PRESUPUESTO DE GASTOS', 0, 'R', 0, 0, '', '', true);
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+
+
+            /******Portada Titulo III*********/
+            $pdf->SetAlpha(0.3);
+            $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+            $pdf->ln(30);
+            $pdf->setAlpha(1);
+            $pdf->SetFont('','',8);
+
+            // reset font stretching  reset font spacing
+            $pdf->setFontStretching(100);
+            $pdf->setFontSpacing(1);
+            //
+            $pdf->SetY(15);
+            $pdf->SetFont('','B',14);
+            $pdf->SetTextColor(0,0,0);
+            $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->ln(230);
+            $pdf->SetFont('','B',12);
+            //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+            $pdf->writeHTML('<b><u>SECTOR: NN<u/></b>', true, false, true, false, 'R');
+            $pdf->ln(0);
+            $pdf->MultiCell(195, 5, 'XXXXXXXXXX', 0, 'R', 0, 0, '', '', true);
+            $pdf->ln(10);
+            // set border width
+            $pdf->SetLineWidth(0.508);
+            $pdf->SetDrawColor(0,0,0);
+            $pdf->SetFillColor(0,0,0);
+            $pdf->setCellHeightRatio(0);
+            $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+            $pdf->ln(2);
+            $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+            // reset font stretching  reset font spacing
+            $pdf->setFontStretching(100);
+            $pdf->setFontSpacing(0);
+            $pdf->SetLineWidth(0.150);
+            $pdf->setCellHeightRatio(2);
+
+            //$pdf->AddPage();
+
+            //Cierre de Reporte
+            $pdf->lastPage();
+            $pdf->output('LEY_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
     }
 }
