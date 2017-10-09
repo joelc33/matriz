@@ -99,7 +99,7 @@ this.nu_femenino = new Ext.form.NumberField({
 this.mo_sueldo = new Ext.form.NumberField({
 	fieldLabel:'Total Sueldo',
 	name:'sueldo',
-	value:this.OBJ.mo_sueldo,
+	value:this.OBJ.mo_escala_salarial,
 	allowBlank:false,
 	width:200,
 	minLength : 0,
