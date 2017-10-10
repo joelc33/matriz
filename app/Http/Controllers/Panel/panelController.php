@@ -153,4 +153,20 @@ class panelController extends Controller
         }
         return  $submenu;
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function bandeja()
+    {
+
+      $bandeja = tab_rol::select('de_bandeja', 'de_url_bandeja', 'de_vista')
+      ->where('id', '=', Session::get('rol'))
+      ->first();
+
+      return View::make($bandeja->de_vista);
+
+    }
 }

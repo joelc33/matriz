@@ -26,6 +26,60 @@ class acController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function storeLista()
+    {
+      try {
+        $start  = Input::get('start', 0);
+        $limit  = Input::get('limit', 20);
+        $variable = Input::get('variable');
+
+        $tab_ac = $this->tab_ac
+        ->join('mantenimiento.tab_ejecutores as t01', 'public.t46_acciones_centralizadas.id_ejecutor', '=', 't01.id_ejecutor')
+        ->join('mantenimiento.tab_estatus as t02', 'public.t46_acciones_centralizadas.id_estatus', '=', 't02.id')
+        ->join('mantenimiento.tab_ac_predefinida as t03', 'public.t46_acciones_centralizadas.id_accion', '=', 't03.id')
+        ->select( 'public.t46_acciones_centralizadas.id', 'de_nombre as nombre', 'monto',
+        'tx_ejecutor', 'de_estatus as tx_estatus',
+        DB::raw("'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo"),
+        DB::raw("coalesce(monto_calc, 0) as monto_calc"),
+        DB::raw("coalesce(null, id_estatus = 3) as reabrir"),
+        DB::raw("coalesce(null, id_estatus = 1) as eliminar"))
+        ->where('edo_reg', '=', TRUE)
+        ->where('id_ejercicio', '=', Session::get('ejercicio'));
+
+        $rol_planificador = array(3, 8);
+        if (in_array(Session::get('rol'), $rol_planificador)) {
+            $tab_ac->where('public.t46_acciones_centralizadas.id_ejecutor', '=', Session::get('ejecutor'));
+        }
+
+        if (Input::get("BuscarBy")=="true") {
+
+          if($variable!=""){
+            //$tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+            $tab_ac->whereRaw("tx_ejecutor||de_nombre||'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') ILIKE '%".$variable."%'");
+          }
+
+          $response['success']  = 'true';
+          $response['total'] = $tab_ac->count();
+          $tab_ac->skip($start)->take($limit);
+          $response['data']  = $tab_ac->orderby('public.t46_acciones_centralizadas.id_ejecutor','ASC')->get()->toArray();
+        } else {
+          $response['success']  = 'true';
+          $response['total'] = $tab_ac->count();
+          $tab_ac->skip($start)->take($limit);
+          $response['data']  = $tab_ac->orderby('public.t46_acciones_centralizadas.id_ejecutor','ASC')->get()->toArray();
+        }
+
+        return Response::json($response, 200);
+      } catch (\Illuminate\Database\QueryException $e) {
+        return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+      }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  int  $id

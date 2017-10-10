@@ -26,5 +26,7 @@ class VerifyCsrfToken extends BaseVerifier
         'ac/ae/storeLista',
         'auxiliar/poa/subsector',
         'ac/guardar',
+        'proyecto/storeLista',
+        'ac/storeLista',
     ];
 }

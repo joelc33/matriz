@@ -17,6 +17,7 @@
 
 Route::group(['namespace' => 'Panel'], function(){
 	Route::get('inicio', 'panelController@inicio');
+	Route::get('inicio/bandeja', 'panelController@bandeja');
 });
 
 //*Modulos de Autenticacion*/
@@ -131,6 +132,7 @@ Route::group(['namespace' => 'Proyecto'], function(){
 	//*Modulo de proyecto*/
 	Route::group(['prefix' => 'proyecto'], function(){
 		Route::get('nuevo', 'proyectoController@nuevo');
+		Route::post('storeLista', 'proyectoController@storeLista');
 	});
 	//*Modulo de Proyecto Partidas*/
 	Route::group(['prefix' => 'proyecto/ae/partida'], function(){
@@ -144,6 +146,7 @@ Route::group(['namespace' => 'Ac'], function(){
 	//*Modulo de Accion Centralizada*/
 	Route::group(['prefix' => 'ac'], function(){
 		Route::get('nuevo', 'acController@nuevo');
+		Route::post('storeLista', 'acController@storeLista');
 		Route::post('guardar', 'acController@guardar');
 		Route::post('guardar/{id}', 'acController@guardar');
 	});
