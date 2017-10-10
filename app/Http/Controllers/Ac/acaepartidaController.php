@@ -262,6 +262,9 @@ class acaepartidaController extends Controller
                     ->where('id', '=', Input::get('accion_centralizada'))
                     ->first();
 
+                    /*$ac = tab_ac::where('id', '=', Input::get('accion_centralizada'))
+            				->update(array('monto_calc' => $calculo_ac->nu_monto));*/
+
                     $ac = tab_ac::find(Input::get('accion_centralizada'));
                     $ac->monto_calc = $calculo_ac->nu_monto;
                     $ac->save();
