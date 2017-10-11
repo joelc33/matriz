@@ -1,6 +1,6 @@
 @extends('home')
 
-@section('htmlheader_title') @endsection
+@section('htmlheader_title') {{ Session::get('ejercicio') }} @endsection
 
 @section('main-content')
 
@@ -132,7 +132,7 @@ items: [{
         },{
           region: 'west',
           id: 'navegador', /*see Ext.getCmp() below*/
-          title: '.::NUEVA ETAPA::.',
+          title: '.::NUEVA ETAPA - {{ Session::get('ejercicio') }}::.',
           iconCls: 'icon-navegacion',
           split: true,
           width: 240,
