@@ -145,6 +145,7 @@ return [
     	'ritez' => 'RITEZ',
       /*Acciones centralizadas*/
       'id_accion' => '1.2. TIPO DE ACCIÓN',
+      'id_tab_sectores' => 'sector',
     ],
 
 ];

@@ -343,7 +343,7 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'clasificadortipoController@eliminar');
 		Route::post('habilitar', 'clasificadortipoController@habilitar');
 	});
-	//*Modulo de Clasificados por Tipo*/
+	//*Modulo de Escala Salarial*/
 	Route::group(['prefix' => 'mantenimiento/escalasalarial'], function(){
 		Route::get('lista', 'escalasalarialController@lista');
 		Route::post('storeLista', 'escalasalarialController@storeLista');
@@ -353,5 +353,16 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'escalasalarialController@guardar');
 		Route::post('eliminar', 'escalasalarialController@eliminar');
 		Route::post('habilitar', 'escalasalarialController@habilitar');
+	});
+	//*Modulo de Objetivo Sectorial*/
+	Route::group(['prefix' => 'mantenimiento/objetivosectorial'], function(){
+		Route::get('lista', 'objetivosectorialController@lista');
+		Route::post('storeLista', 'objetivosectorialController@storeLista');
+		Route::get('nuevo', 'objetivosectorialController@nuevo');
+		Route::get('editar/{id}', 'objetivosectorialController@editar');
+		Route::post('guardar', 'objetivosectorialController@guardar');
+		Route::post('guardar/{id}', 'objetivosectorialController@guardar');
+		Route::post('eliminar', 'objetivosectorialController@eliminar');
+		Route::post('habilitar', 'objetivosectorialController@habilitar');
 	});
 });
