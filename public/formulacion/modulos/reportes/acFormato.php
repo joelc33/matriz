@@ -56,7 +56,7 @@ class MYPDF extends TCPDF {
         t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac,
         objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t49.co_nodos as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
         tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac,
-		inst_mision, inst_vision, inst_objetivos, tx_pr_objetivo, tx_re_esperado, nu_po_beneficiar, nu_em_previsto
+		inst_mision, inst_vision, inst_objetivos, tx_pr_objetivo, tx_re_esperado, nu_po_beneficiar, nu_em_previsto, EXTRACT(month FROM t46.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t46.fecha_actualizacion::DATE) as nu_anio_poa
 		from t46_acciones_centralizadas as t46
 		join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
 		join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
@@ -141,7 +141,7 @@ class MYPDF extends TCPDF {
 		$this->Write(0, $campo['tx_ejecutor'], '', 0, 'C', true, 0, false, false, 0);
 		$this->SetY(190);
 		$this->SetFont('','',11);
-		$this->Write(0, 'Maracaibo, '.mes(date("m")).' del '.date("Y"), '', 0, 'C', true, 0, false, false, 0);
+		$this->Write(0, 'Maracaibo, '.mes($campo['nu_mes_poa']).' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
 		$this->AddPage();
 /******Objetivos*********/
 

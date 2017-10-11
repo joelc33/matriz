@@ -103,7 +103,7 @@ WHERE t24s.id_ejecutor=t24a.id_ejecutor AND t26s.id_ejercicio = t26.id_ejercicio
 
 order by 1, 19 ASC";*/
 
-		$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, t24a.tx_ejecutor AS tx_eje_titulo, t24a.tx_ejecutor AS tx_eje_det, fecha_inicio, fecha_fin, monto, (
+		$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, t24a.tx_ejecutor AS tx_eje_titulo, t24a.tx_ejecutor AS tx_eje_det, fecha_inicio, fecha_fin, EXTRACT(month FROM t26.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t26.fecha_actualizacion::DATE) as nu_anio_poa, monto, (
 SELECT sum(mo_proy_ae_meta(co_proyecto_acc_espec))
 	FROM t39_proyecto_acc_espec as t39s
 	inner join mantenimiento.tab_unidad_medida as t21s on t39s.co_unidades_medida=t21s.id
@@ -201,7 +201,7 @@ order by 1, 19 ASC";
 		$this->Write(0, $campo['tx_eje_titulo'], '', 0, 'C', true, 0, false, false, 0);
 		$this->SetY(190);
 		$this->SetFont('','',11);
-		$this->Write(0, 'Maracaibo, '.mes(date("m")).' del '.date("Y"), '', 0, 'C', true, 0, false, false, 0);
+		$this->Write(0, 'Maracaibo, '.mes($campo['nu_mes_poa']).' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
 		$this->AddPage();
 
 		}
