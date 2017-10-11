@@ -34,7 +34,7 @@ class proyectoController extends Controller
   {
     try {
       $start  = Input::get('start', 0);
-      $limit  = Input::get('limit', 20);
+      $limit  = Input::get('limit', 10);
       $variable = Input::get('variable');
 
       $tab_proyecto = $this->tab_proyecto

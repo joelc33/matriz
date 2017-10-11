@@ -34,7 +34,7 @@ class acController extends Controller
     {
       try {
         $start  = Input::get('start', 0);
-        $limit  = Input::get('limit', 20);
+        $limit  = Input::get('limit', 10);
         $variable = Input::get('variable');
 
         $tab_ac = $this->tab_ac
