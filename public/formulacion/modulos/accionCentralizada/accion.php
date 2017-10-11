@@ -8,7 +8,11 @@ if ( array_key_exists( 'id', $_POST ) ) {
 $accion = null;
 $local = $usuario->co_rol > 2; //es planificador local?
 
-if( in_array( array( 'de_privilegio' => 'ac.guardar', 'in_habilitado' => true), $_SESSION['spe_session'][0][0] )){ $ac_guardar = true;}else{ $ac_guardar = false; }
+if( in_array( array( 'de_privilegio' => 'ac.guardar', 'in_habilitado' => true), $_SESSION['spe_session'][0][0] )){
+  $ac_guardar = true;
+}else{
+  $ac_guardar = false;
+}
 
 
 if ( $id_accion > 0 ) {
@@ -18,7 +22,7 @@ SELECT t46.id, id_ejercicio, t46.id_ejecutor, t24.tx_ejecutor as ejecutor,
 'AC' || t24.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo,
 codigo_new_etapa as co_sistema, t46.id_accion, descripcion,
 id_estatus, id_subsector, sit_presupuesto as co_situacion_presupuestaria,
-monto, t18.co_sector, fecha_inicio, fecha_fin, t52.nombre, 
+monto, t18.co_sector, fecha_inicio, fecha_fin, t52.nombre,
 inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, tx_pr_objetivo,
 (t46.id_estatus = 3) as bloqueado
 FROM t46_acciones_centralizadas as t46
@@ -29,10 +33,10 @@ EOT;
 	$where = ' WHERE t46.id = ?';
 	$params[] = $id_accion;
 
-	if ( $local ) { //planificador local sólo ve los de su ejecutor
+	/*if ( $local ) { //planificador local sólo ve los de su ejecutor
 		$params[] = $usuario->id_ejecutor;
 		$where .= ' AND t46.id_ejecutor = ?';
-	}
+	}*/
 
 	$res = $comunes->ObtenerFilasBySqlSelect( $sql.$where, $params );
 	if ( count( $res ) > 0 ) {
@@ -40,7 +44,14 @@ EOT;
 		$id_ejercicio = $res['id_ejercicio'];
 		$contenedor = "contenedorAccionCentralizada_{$id_accion}";
 		$accion['es_local'] = $local;
-		$accion['bloqueado'] = $accion['bloqueado'] === 't';
+
+    $rol_planificador = array(1, 2, 3, 8);
+    if (in_array($usuario->co_rol, $rol_planificador)) {
+		  $accion['bloqueado'] = $accion['bloqueado'] === 't';
+    }else{
+      $accion['bloqueado'] = 'f';
+    }
+
 		$credencial = array('ac_guardar' => $ac_guardar);
 		$accion = array_merge($accion, $credencial);
 		//var_dump($accion); exit();
