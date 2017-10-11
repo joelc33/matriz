@@ -107,7 +107,7 @@ class acController extends Controller
         $tabla->sit_presupuesto = Input::get("co_situacion_presupuestaria");
         $tabla->descripcion = Input::get("descripcion");
         $tabla->monto = Input::get("monto");
-        $tabla->monto_calc = 0;
+        //$tabla->monto_calc = 0;
         $tabla->fecha_inicio = Input::get("fecha_inicio");
         $tabla->fecha_fin = Input::get("fecha_fin");
         $tabla->inst_mision = Input::get("inst_mision");
