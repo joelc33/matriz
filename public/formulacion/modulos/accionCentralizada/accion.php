@@ -49,7 +49,12 @@ EOT;
     if (in_array($usuario->co_rol, $rol_planificador)) {
 		  $accion['bloqueado'] = $accion['bloqueado'] === 't';
     }else{
-      $accion['bloqueado'] = 'f';
+      //$accion['bloqueado'] = 'f';
+      if($accion['id_ejecutor']==$usuario->id_ejecutor){
+        $accion['bloqueado'] = false;
+      }else{
+        $accion['bloqueado'] = true;
+      }
     }
 
 		$credencial = array('ac_guardar' => $ac_guardar);
