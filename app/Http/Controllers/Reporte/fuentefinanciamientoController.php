@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
 
-class proyectoController extends Controller
+class fuentefinanciamientoController extends Controller
 {
   public function __construct()
   {
@@ -28,6 +28,6 @@ class proyectoController extends Controller
   public function lista()
   {
     $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
-    return View::make('reporte.poa.proyecto')->with('data',$data);
+    return View::make('reporte.poa.fuentefinanciamiento')->with('data',$data);
   }
 }

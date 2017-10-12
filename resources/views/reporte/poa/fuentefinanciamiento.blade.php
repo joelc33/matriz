@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns('parametroPR');
-parametroPR.main = {
+Ext.ns('parametroRESUMEN');
+parametroRESUMEN.main = {
 init: function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
@@ -82,39 +82,18 @@ this.botones = new this.GrupoBotones({
 								iconAlign:'top'
 						},
 						items: [
-							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'ff.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
 								{
-									text:'POA por Ejecutor',  // Generar la impresión en pdf
+									text:'REPORTE por Ejecutor',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
-									handler: this.onImprimirFormato
+									handler: this.onImprimir
 								},
 							@endif
-							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.partida', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'ff.todos', 'in_habilitado' => true), Session::get('credencial') ))
 								{
-									text:'Resumen Partidas',  // Generar la impresión en pdf
-									iconCls:'icon-pdf',
-									handler: this.onImprimir2
-								},
-							@endif
-							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.todos', 'in_habilitado' => true), Session::get('credencial') ))
-								{
-									text:'POA Todos',  // Generar la impresión en pdf
+									text:'REPORTE Todos',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir1
-								},
-							@endif
-							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.exportar.partida', 'in_habilitado' => true), Session::get('credencial') ))
-								{
-									text:'Exportar Partidas',  // Generar la impresión en pdf
-									iconCls:'icon-excel',
-									handler: this.onExportar1
-								},
-							@endif
-							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
-								{
-									text:'Exportar Todo',  // Generar la impresión en pdf
-									iconCls:'icon-excel',
-									handler: this.onExportar2
 								},
 							@endif
 							{
@@ -134,57 +113,32 @@ this.formpanel = new Ext.form.FormPanel({
 	id: 'forma',
 	labelWidth: 160,
 	iconCls:'icon-reporteest',
-	title: 'PLAN OPERATIVO ANUAL - PROYECTOS',
+	title: 'RESUMEN - PROYECTOS',
 	items:[
 		this.botones
 	]
 });
 
-this.formpanel.render('parametroPR');
+this.formpanel.render('parametroRESUMEN');
 },
 onImprimir : function() {
-if(!parametroPR.main.formpanel.getForm().isValid()){
+if(!parametroRESUMEN.main.formpanel.getForm().isValid()){
     Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
     return false;
 }
-   	window.open('formulacion/modulos/reportes/aeProyecto.php?'+parametroPR.main.formpanel.getForm().getValues(true));
+   //window.open('formulacion/modulos/reportes/proyResumen.php?'+parametroRESUMEN.main.formpanel.getForm().getValues(true));
+	bajar.load({
+		url: 'formulacion/modulos/reportes/proyResumen.php?'+parametroRESUMEN.main.formpanel.getForm().getValues(true)
+	});
 },
 onImprimir1 : function() {
-   	//window.open('formulacion/modulos/reportes/aeProyecto.php');
+   //window.open('formulacion/modulos/reportes/proyResumen.php');
 	bajar.load({
-		url: 'formulacion/modulos/reportes/aeProyecto.php'
-	});
-},
-onExportar1 : function() {
-	bajar.load({
-		url: 'formulacion/modulos/reportes/orm.php/exportar/partida/pr?'+parametroPR.main.formpanel.getForm().getValues(true)
-	});
-},
-onExportar2 : function() {
-	bajar.load({
-		url: 'formulacion/modulos/reportes/orm.php/exportar/partida/pr/todo'
-	});
-},
-onImprimirFormato : function() {
-	if(!parametroPR.main.formpanel.getForm().isValid()){
-	    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
-	    return false;
-	}
-	bajar.load({
-		url: 'formulacion/modulos/reportes/proyectoFormato.php?'+parametroPR.main.formpanel.getForm().getValues(true)
-	});
-},
-onImprimir2 : function() {
-	if(!parametroPR.main.formpanel.getForm().isValid()){
-	    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
-	    return false;
-	}
-	bajar.load({
-		url: 'formulacion/modulos/reportes/resumenPartidaPR.php?'+parametroPR.main.formpanel.getForm().getValues(true)
+		url: 'formulacion/modulos/reportes/proyResumen.php'
 	});
 },
 onLimpiar: function(){
-    parametroPR.main.formpanel.getForm().reset();
+    parametroRESUMEN.main.formpanel.getForm().reset();
 },
 getStoreID_EJECUTOR:function(){
     this.store = new Ext.data.JsonStore({
@@ -215,6 +169,6 @@ getStoreID_EJECUTOR:function(){
     return this.store;
 }
 };
-Ext.onReady(parametroPR.main.init, parametroPR.main);
+Ext.onReady(parametroRESUMEN.main.init, parametroRESUMEN.main);
 </script>
-<div id="parametroPR"></div>
+<div id="parametroRESUMEN"></div>
