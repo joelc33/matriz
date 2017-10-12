@@ -19,6 +19,8 @@ use matriz\Models\Mantenimiento\tab_sectores;
 use matriz\Models\Mantenimiento\tab_situacion_presupuestaria;
 use matriz\Models\Mantenimiento\tab_tipo_personal;
 use matriz\Models\Mantenimiento\tab_tipo_empleado;
+use matriz\Models\Mantenimiento\tab_municipio_detalle;
+use matriz\Models\Mantenimiento\tab_parroquia_detalle;
 use Input;
 use Response;
 use DB;
@@ -425,6 +427,36 @@ class documentoController extends Controller
       $response['success']  = 'true';
       $response['data']  = tab_tipo_empleado::select('id','de_tipo_empleado')
       ->where('in_activo', '=', true)
+      ->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function municipioTodo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_municipio_detalle::select('id','de_municipio')
+      //->where('in_activo', '=', true)
+      ->where('id_tab_estado', '=', 23)
+      ->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function parroquiaTodo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_parroquia_detalle::select('id','de_parroquia')
+      //->where('in_activo', '=', true)
+      ->where('id_tab_municipio_detalle', '=', Input::get('id_tab_municipio'))
       ->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }

@@ -30,4 +30,15 @@ class proyectoController extends Controller
     $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
     return View::make('reporte.poa.proyecto')->with('data',$data);
   }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function ubica()
+  {
+    $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
+    return View::make('reporte.poa.ubicaproyecto')->with('data',$data);
+  }
 }

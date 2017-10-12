@@ -112,6 +112,8 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('personal/tipo', 'documentoController@personalTipo');
 		Route::get('personal/hijo', 'documentoController@personalHijo');
 		Route::get('empleado/tipo', 'documentoController@empleadoTipo');
+		Route::get('municipio/todo', 'documentoController@municipioTodo');
+		Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
 	});
 });
 //*Modulos de Reportes*/
@@ -126,6 +128,7 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('libro/ley', 'leyController@libro');
 		Route::get('libro/distribucion', 'distribucionController@libro');
 		Route::get('poa/proyecto', 'proyectoController@lista');
+		Route::get('poa/proyecto/ubica', 'proyectoController@ubica');
 		Route::get('poa/ac', 'acController@lista');
 		Route::get('poa/fuentefinanciamiento', 'fuentefinanciamientoController@lista');
 	});
