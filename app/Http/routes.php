@@ -125,6 +125,8 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('libro/lista', 'reporteController@lista');
 		Route::get('libro/ley', 'leyController@libro');
 		Route::get('libro/distribucion', 'distribucionController@libro');
+		Route::get('poa/proyecto', 'proyectoController@lista');
+		Route::get('poa/ac', 'acController@lista');
 	});
 });
 //*Modulos de Proyecto*/

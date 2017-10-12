@@ -238,7 +238,7 @@ body {
 .icon-transito{background: url('../images/16x16/carro.png') 0px 0px no-repeat !important;}
 .icon-atendido{background: url('../images/16x16/group_go.png') 0px 0px no-repeat !important;}
 .icon-doble{background: url('../images/16x16/app_2.png') 0px 0px no-repeat !important;}
-.icon-excel{background: url('../images/16x16/excel.png') 0px 0px no-repeat !important;}
+.icon-excel{background-image: url('../images/16x16/excel.png') !important;}
 .icon-bloqueado{background: url('../images/16x16/locked.png') 0px 0px no-repeat !important;}
 .icon-calendario{background: url('../images/16x16/calendar.png') 0px 0px no-repeat !important;}
 .icon-editarcalendario{background: url('../images/16x16/calendar_edit.png') 0px 0px no-repeat !important;}

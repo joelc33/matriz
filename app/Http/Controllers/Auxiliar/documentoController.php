@@ -22,6 +22,7 @@ use matriz\Models\Mantenimiento\tab_tipo_empleado;
 use Input;
 use Response;
 use DB;
+use Session;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -331,7 +332,10 @@ class documentoController extends Controller
     public function ejecutorActivo()
     {
       $response['success']  = 'true';
-      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')->where('in_activo', '=', true)->orderby('id_ejecutor','ASC')->get()->toArray();
+      $response['data']  = tab_ejecutores::select('id','id_ejecutor','tx_ejecutor')
+      //->where('in_activo', '=', true)
+      ->whereRaw("mantenimiento.sp_in_ejecutor( id, ".Session::get('ejercicio').") is true")
+      ->orderby('id_ejecutor','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
