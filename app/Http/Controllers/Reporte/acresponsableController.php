@@ -92,7 +92,7 @@ class acresponsableController extends Controller
 		<tbody>';
 
 		$htmlReporte.='
-		<tr>
+		<tr style="font-size:7px">
 			<td rowspan="6" style="width: 25%;">&nbsp;</td>
 			<td style="width: 10%;">Cédula</td>
 			<td style="width: 15%;">xx</td>
@@ -101,44 +101,44 @@ class acresponsableController extends Controller
 			<td style="width: 10%;">Cédula</td>
 			<td style="width: 15%;">&nbsp;</td>
 		</tr>
-		<tr>
+		<tr style="font-size:7px">
+			<td>Nombre</td>
 			<td>&nbsp;</td>
+			<td>Nombre</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td>Nombre</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr>
+		<tr style="font-size:7px">
+			<td>Cargo</td>
 			<td>&nbsp;</td>
+			<td>Cargo</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td>Cargo</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr>
+		<tr style="font-size:7px">
+			<td>Unidad de Adscripción</td>
 			<td>&nbsp;</td>
+			<td>Unidad de Adscripción</td>
 			<td>&nbsp;</td>
+			<td>Unidad de Adscripción</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:7px">
+			<td>Correo electrónico</td>
 			<td>&nbsp;</td>
+			<td>Correo electrónico</td>
 			<td>&nbsp;</td>
+			<td>Correo electrónico</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:7px">
+			<td>Teléfono</td>
+			<td>&nbsp;</td>
+			<td>Teléfono</td>
+			<td>&nbsp;</td>
+			<td>Teléfono</td>
 			<td>&nbsp;</td>
 		</tr>
 		';
