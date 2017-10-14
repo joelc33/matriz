@@ -76,7 +76,7 @@ this.botones = new this.GrupoBotones({
 				bbar: [{
 						xtype: 'buttongroup',
 						title: 'Formatos',
-						columns: 6,
+						columns: 5,
 						defaults: {
 								scale: 'medium',
 								iconAlign:'top'
@@ -103,6 +103,20 @@ this.botones = new this.GrupoBotones({
 									handler: this.onImprimir1
 								},
 							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.todos', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables por AC',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onResponsable
+								},
+							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.todos', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables Todos',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onResponsableTodo
+								},
+							@endif
 							@if( in_array( array( 'de_privilegio' => 'ac.poa.exportar.partida', 'in_habilitado' => true), Session::get('credencial') ))
 								{
 									text:'Exportar Partidas',  // Generar la impresión en pdf
@@ -117,11 +131,25 @@ this.botones = new this.GrupoBotones({
 									handler: this.onExportar2
 								},
 							@endif
-							{
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.exportar.partida', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables por AC',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportarResponsable
+								},
+							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables Todo',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportarResponsableTodo
+								},
+							@endif
+							/*{
 								text:'Limpiar',  // Limpiar campos del formulario
 								iconCls:'icon-limpiar',
 								handler: this.onLimpiar
-							}
+							}*/
 						]
 				}]
 });
@@ -185,6 +213,34 @@ if(!parametroAC.main.formpanel.getForm().isValid()){
    //window.open('formulacion/modulos/reportes/aeAc.php?'+parametroAC.main.formpanel.getForm().getValues(true));
 	bajar.load({
 		url: 'formulacion/modulos/reportes/resumenPartidaAC.php?'+parametroAC.main.formpanel.getForm().getValues(true)
+	});
+},
+onResponsable : function() {
+	if(!parametroAC.main.formpanel.getForm().isValid()){
+	    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+	    return false;
+	}
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/responsable') }}?'+parametroAC.main.formpanel.getForm().getValues(true)
+	});
+},
+onResponsableTodo : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/responsable/todo') }}'
+	});
+},
+onExportarResponsable : function() {
+	if(!parametroAC.main.formpanel.getForm().isValid()){
+	    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+	    return false;
+	}
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/responsable/exportar') }}?'+parametroAC.main.formpanel.getForm().getValues(true)
+	});
+},
+onExportarResponsableTodo : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/responsable/todo/exportar') }}'
 	});
 },
 onLimpiar: function(){
