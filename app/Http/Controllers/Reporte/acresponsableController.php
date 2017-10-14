@@ -197,7 +197,7 @@ class acresponsableController extends Controller
 		<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 		<thead>
 		<tr align="left" bgcolor="#E6E6E6">
-		<th colspan="5" style="width: 100%;"><b>LISTADO DE RESPONSABLES </b></th>
+		<th colspan="5" style="width: 100%;"><b>LISTADO DE RESPONSABLES POR ACCIONES CENTRALIZADAS</b></th>
 		</tr>
 		<tr style="font-size:8px">
 		<th align="center" bgcolor="#E6E6E6" style="width: 10%;"><b>EJECUTOR</b></th>
