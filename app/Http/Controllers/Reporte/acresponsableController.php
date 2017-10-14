@@ -12,6 +12,13 @@ use DB;
 use Session;
 use TCPDF;
 use Helper;
+use PHPExcel_IOFactory;
+use PHPExcel;
+use PHPExcel_Writer_Excel2007;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Border;
+use PHPExcel_Style_Fill;
+use PHPExcel_Cell_DataType;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -303,5 +310,164 @@ class acresponsableController extends Controller
 		$pdf->writeHTML($htmlReporte, true, false, false, false, '');
 		$pdf->lastPage();
 		$pdf->output('LISTADO_RESPONSABLES_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function responsableExportar()
+	{
+
+		DB::beginTransaction();
+
+		try {
+
+			$responsable = tab_ac_responsable::join('public.t46_acciones_centralizadas as t01', 'public.t48_ac_responsables.id_accion_centralizada', '=', 't01.id')
+			->join('mantenimiento.tab_ac_predefinida as t02', 't01.id_accion', '=', 't02.id')
+			->join('mantenimiento.tab_ejecutores as t03', 't01.id_ejecutor', '=', 't03.id_ejecutor')
+			->select( 'id_accion_centralizada', 'realizador_nombres', 'realizador_cedula',
+				 'realizador_cargo', 'realizador_correo', 'realizador_telefono', 'realizador_unidad',
+				 'registrador_nombres', 'registrador_cedula', 'registrador_cargo', 'registrador_correo',
+				 'registrador_telefono', 'registrador_unidad', 'autorizador_nombres',
+				 'autorizador_cedula', 'autorizador_cargo', 'autorizador_correo', 'autorizador_telefono',
+				 'autorizador_unidad', 'de_nombre', 't01.id_ejecutor', 'tx_ejecutor',
+				 DB::raw("'AC' || t01.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo") )
+			->where('t01.id_ejecutor', '=', Input::get('id_ejecutor'))
+			->where('id_ejercicio', '=', Session::get('ejercicio'))
+			->orderBy('t01.id_ejecutor','ASC')
+			->get();
+
+			// Instantiate a new PHPExcel object
+			$objPHPExcel = new PHPExcel();
+			// Set properties
+			$objPHPExcel->getProperties()->setCreator("Yoser Perez");
+			$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
+			$objPHPExcel->getProperties()->setTitle("Listado de Responsables");
+			$objPHPExcel->getProperties()->setSubject("Reporte");
+			$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+			// Set the active Excel worksheet to sheet 0
+			$objPHPExcel->setActiveSheetIndex(0);
+			// Rename sheet
+			$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->setTitle(Input::get('id_ejecutor').'_RESPONSABLES');
+			$objPHPExcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray(
+					array(
+						'font'    => array(
+							'bold'      => true
+						),
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+						),
+						'borders' => array(
+							'top'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						),
+						'fill' => array(
+							'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+								'rotation'   => 90,
+							'startcolor' => array(
+								'argb' => 'FFA0A0A0'
+							),
+							'endcolor'   => array(
+								'argb' => 'FFFFFFFF'
+							)
+						)
+					)
+			);
+			$objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
+					array(
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+						),
+						'borders' => array(
+							'left'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						)
+					)
+			);
+
+			$objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
+					array(
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+						)
+					)
+			);
+
+			$objPHPExcel->getActiveSheet()->getStyle('H1')->applyFromArray(
+					array(
+						'borders' => array(
+							'right'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						)
+					)
+			);
+			// Initialise the Excel row number
+			$rowCount = 2;
+			// Iterate through each result from the SQL query in turn
+			// We fetch each database result row into $row in turn
+
+			$objPHPExcel->setActiveSheetIndex(0)
+			->setCellValue('A1', 'XX')
+			->setCellValue('B1', 'XX')
+			->setCellValue('C1', 'XX')
+			->setCellValue('D1', 'XX')
+			->setCellValue('E1', 'XX')
+			->setCellValue('F1', 'XX')
+			->setCellValue('G1', 'XX')
+			->setCellValue('H1', 'XX');
+
+			// Make bold cells
+			$objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+
+			foreach ($responsable as $key => $value) {
+					// Set cell An to the "name" column from the database (assuming you have a column called name)
+					//    where n is the Excel row number (ie cell A1 in the first row)
+					$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->codigo);
+					$objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->codigo);
+					// Increment the Excel row counter
+					$rowCount++;
+			}
+
+			// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			// We'll be outputting an excel file
+			header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			// It will be called file.xls
+			header('Content-Disposition: attachment; filename="RESPONSABLES_'.Input::get('id_ejecutor').'_'.Session::get('ejercicio').'_'.date("H:i:s").'.xlsx"');
+			$objWriter->save('php://output');
+
+			DB::commit();
+
+		}catch (\Illuminate\Database\QueryException $e)
+		{
+			DB::rollback();
+			header('Content-Type: text/html');
+			echo json_encode(array(
+				'success' => false,
+				'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+				//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
+			));
+		}
+
 	}
 }
