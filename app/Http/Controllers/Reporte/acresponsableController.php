@@ -35,7 +35,8 @@ class PDFresponsable extends TCPDF {
 		$pdf->setXY(10,-10);
 		$pdf->SetFont('','',7);
 		$pdf->SetTextColor(0,0,0);
-		$pdf->writeHTMLCell(195,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela' , 0, 0, 0, true, 'C', true);
+		$pdf->writeHTMLCell(180,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela' , 0, 0, 0, true, 'C', true);
+    $pdf->writeHTMLCell(15,0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages() , 0, 0, 0, true, 'C', true);
 
 		return $pdf;
 	}
@@ -65,21 +66,45 @@ class acresponsableController extends Controller
   */
   public function responsable()
   {
-    $pdf = new PDFresponsable('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
-    $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
-    $pdf->SetAuthor('Yoser Perez');
-    $pdf->SetTitle('Ley de Presupuesto');
-    $pdf->SetSubject('Ley de Presupuesto');
-    $pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-    $pdf->SetMargins(10,10,10);
-    $pdf->SetTopMargin(10);
-    $pdf->SetPrintHeader(true);
-    $pdf->SetPrintFooter(true);
-    // set auto page breaks
-    $pdf->SetAutoPageBreak(TRUE, 10);
-    $pdf->AddPage();
+		$htmlReporte = '
+		<!-- Tabla 1 -->
+		<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+		<thead>
+		<tr align="left" bgcolor="#E6E6E6">
+		<th colspan="5" style="width: 100%;"><b>LISTADO DE RESPONSABLES EJECUTOR: </b></th>
+		</tr>
+		<tr style="font-size:8px">
+		<th align="center" bgcolor="#E6E6E6" style="width: 5%;"><b>XX</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 55%;"><b>XX</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 20%;"><b>XX</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 20%;"><b>XX</b></th>
+		</tr>
+		</thead>
+		';
 
+		$htmlReporte.='
+		<tbody>
+		';
+
+		$htmlReporte.='
+		</tbody>
+		</table>';
+
+		$pdf = new PDFresponsable('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+		$pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+		$pdf->SetAuthor('Yoser Perez');
+		$pdf->SetTitle('Ley de Presupuesto');
+		$pdf->SetSubject('Ley de Presupuesto');
+		$pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+		$pdf->SetMargins(10,10,10);
+		$pdf->SetTopMargin(30);
+		$pdf->SetPrintHeader(true);
+		$pdf->SetPrintFooter(true);
+		// set auto page breaks
+		$pdf->SetAutoPageBreak(TRUE, 10);
+    $pdf->AddPage();
     //Cierre de Reporte
+		$pdf->writeHTML($htmlReporte, true, false, false, false, '');
     $pdf->lastPage();
     $pdf->output('LISTADO_RESPONSABLES_'.Input::get('id_ejecutor').'_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
   }
