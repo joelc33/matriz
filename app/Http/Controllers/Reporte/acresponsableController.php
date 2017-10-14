@@ -91,57 +91,74 @@ class acresponsableController extends Controller
 		$htmlReporte.='
 		<tbody>';
 
+		$responsable = tab_ac_responsable::join('public.t46_acciones_centralizadas as t01', 'public.t48_ac_responsables.id_accion_centralizada', '=', 't01.id')
+		->join('mantenimiento.tab_ac_predefinida as t02', 't01.id_accion', '=', 't02.id')
+		->select( 'id_accion_centralizada', 'realizador_nombres', 'realizador_cedula',
+       'realizador_cargo', 'realizador_correo', 'realizador_telefono', 'realizador_unidad',
+       'registrador_nombres', 'registrador_cedula', 'registrador_cargo', 'registrador_correo',
+       'registrador_telefono', 'registrador_unidad', 'autorizador_nombres',
+       'autorizador_cedula', 'autorizador_cargo', 'autorizador_correo', 'autorizador_telefono',
+       'autorizador_unidad', 'de_nombre',
+			 DB::raw("'AC' || t01.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo") )
+		->where('id_ejecutor', '=', Input::get('id_ejecutor'))
+		->where('id_ejercicio', '=', Session::get('ejercicio'))
+		->orderBy('id_accion','ASC')
+		->get();
+
+		foreach ($responsable as $key => $value) {
+
 		$htmlReporte.='
-		<tr style="font-size:7px">
-			<td rowspan="6" style="width: 25%;">&nbsp;</td>
-			<td style="width: 10%;">Cédula</td>
-			<td style="width: 15%;">xx</td>
-			<td style="width: 10%;">Cédula</td>
-			<td style="width: 15%;">&nbsp;</td>
-			<td style="width: 10%;">Cédula</td>
-			<td style="width: 15%;">&nbsp;</td>
+		<tr style="font-size:7px" nobr="true">
+			<td rowspan="6" style="width: 25%;">'.$value->codigo.' - '.$value->de_nombre.'</td>
+			<td style="width: 8%;">Cédula</td>
+			<td style="width: 17%;">'.$value->autorizador_cedula.'</td>
+			<td style="width: 8%;">Cédula</td>
+			<td style="width: 17%;">'.$value->realizador_cedula.'</td>
+			<td style="width: 8%;">Cédula</td>
+			<td style="width: 17%;">'.$value->registrador_cedula.'</td>
 		</tr>
 		<tr style="font-size:7px">
 			<td>Nombre</td>
-			<td>&nbsp;</td>
+			<td>'.$value->autorizador_nombres.'</td>
 			<td>Nombre</td>
-			<td>&nbsp;</td>
+			<td>'.$value->realizador_nombres.'</td>
 			<td>Nombre</td>
-			<td>&nbsp;</td>
+			<td>'.$value->registrador_nombres.'</td>
 		</tr>
 		<tr style="font-size:7px">
 			<td>Cargo</td>
-			<td>&nbsp;</td>
+			<td>'.$value->autorizador_cargo.'</td>
 			<td>Cargo</td>
-			<td>&nbsp;</td>
+			<td>'.$value->realizador_cargo.'</td>
 			<td>Cargo</td>
-			<td>&nbsp;</td>
+			<td>'.$value->registrador_cargo.'</td>
 		</tr>
 		<tr style="font-size:7px">
 			<td>Unidad de Adscripción</td>
-			<td>&nbsp;</td>
+			<td>'.$value->autorizador_unidad.'</td>
 			<td>Unidad de Adscripción</td>
-			<td>&nbsp;</td>
+			<td>'.$value->realizador_unidad.'</td>
 			<td>Unidad de Adscripción</td>
-			<td>&nbsp;</td>
+			<td>'.$value->registrador_unidad.'</td>
 		</tr>
 		<tr style="font-size:7px">
 			<td>Correo electrónico</td>
-			<td>&nbsp;</td>
+			<td>'.$value->autorizador_correo.'</td>
 			<td>Correo electrónico</td>
-			<td>&nbsp;</td>
+			<td>'.$value->realizador_correo.'</td>
 			<td>Correo electrónico</td>
-			<td>&nbsp;</td>
+			<td>'.$value->registrador_correo.'</td>
 		</tr>
 		<tr style="font-size:7px">
 			<td>Teléfono</td>
-			<td>&nbsp;</td>
+			<td>'.$value->autorizador_telefono.'</td>
 			<td>Teléfono</td>
-			<td>&nbsp;</td>
+			<td>'.$value->realizador_telefono.'</td>
 			<td>Teléfono</td>
-			<td>&nbsp;</td>
+			<td>'.$value->registrador_telefono.'</td>
 		</tr>
 		';
+		}
 
 		$htmlReporte.='
 		</tbody>
