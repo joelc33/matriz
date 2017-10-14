@@ -218,7 +218,7 @@ return [
         /*
          * Funciones Personalizadas...
          */
-        'Helper' => etrib\Helpers\Helpers::class,
+        'Helper' => matriz\Helpers\Helpers::class,
 
     ],
 
