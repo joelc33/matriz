@@ -131,10 +131,10 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('poa/proyecto/ubica', 'proyectoController@ubica');
 		Route::get('poa/ac', 'acController@lista');
 		Route::get('poa/fuentefinanciamiento', 'fuentefinanciamientoController@lista');
-		Route::get('ac/responsable', 'acController@responsable');
-		Route::get('ac/responsable/todo', 'acController@responsableTodo');
-		Route::get('ac/responsable/exportar', 'acController@responsableExportar');
-		Route::get('ac/responsable/todo/exportar', 'acController@responsableTodoExportar');
+		Route::get('ac/responsable', 'acresponsableController@responsable');
+		Route::get('ac/responsable/todo', 'acresponsableController@responsableTodo');
+		Route::get('ac/responsable/exportar', 'acresponsableController@responsableExportar');
+		Route::get('ac/responsable/todo/exportar', 'acresponsableController@responsableTodoExportar');
 	});
 });
 //*Modulos de Proyecto*/
