@@ -3,6 +3,7 @@
 namespace matriz\Http\Controllers\Reporte;
 //*******agregar esta linea******//
 use matriz\Models\Ac\tab_ac_responsable;
+use matriz\Models\Mantenimiento\tab_ejecutores;
 use View;
 use Validator;
 use Input;
@@ -66,24 +67,80 @@ class acresponsableController extends Controller
   */
   public function responsable()
   {
+
+		$ejecutor = tab_ejecutores::select('id', 'id_ejecutor', 'tx_ejecutor')
+		->where('id_ejecutor', '=', Input::get('id_ejecutor'))
+		->first();
+
 		$htmlReporte = '
 		<!-- Tabla 1 -->
 		<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 		<thead>
 		<tr align="left" bgcolor="#E6E6E6">
-		<th colspan="5" style="width: 100%;"><b>LISTADO DE RESPONSABLES EJECUTOR: </b></th>
+		<th colspan="5" style="width: 100%;"><b>LISTADO DE RESPONSABLES EJECUTOR: '.$ejecutor->id_ejecutor.' - '.$ejecutor->tx_ejecutor.' </b></th>
 		</tr>
 		<tr style="font-size:8px">
-		<th align="center" bgcolor="#E6E6E6" style="width: 5%;"><b>XX</b></th>
-		<th align="center" bgcolor="#E6E6E6" style="width: 55%;"><b>XX</b></th>
-		<th align="center" bgcolor="#E6E6E6" style="width: 20%;"><b>XX</b></th>
-		<th align="center" bgcolor="#E6E6E6" style="width: 20%;"><b>XX</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 25%;"><b>ACCION CENTRALIZADA</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 25%;"><b>TITULAR</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 25%;"><b>PLANIFICADOR</b></th>
+		<th align="center" bgcolor="#E6E6E6" style="width: 25%;"><b>ADMINISTRADOR</b></th>
 		</tr>
 		</thead>
 		';
 
 		$htmlReporte.='
-		<tbody>
+		<tbody>';
+
+		$htmlReporte.='
+		<tr>
+			<td rowspan="6" style="width: 25%;">&nbsp;</td>
+			<td style="width: 10%;">Cédula</td>
+			<td style="width: 15%;">xx</td>
+			<td style="width: 10%;">Cédula</td>
+			<td style="width: 15%;">&nbsp;</td>
+			<td style="width: 10%;">Cédula</td>
+			<td style="width: 15%;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
 		';
 
 		$htmlReporte.='
