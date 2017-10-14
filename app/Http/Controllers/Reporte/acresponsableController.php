@@ -118,51 +118,51 @@ class acresponsableController extends Controller
 		$htmlReporte.='
 		<tr style="font-size:7px" nobr="true">
 			<td rowspan="6" style="width: 25%;">'.$value->codigo.' - '.$value->de_nombre.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->autorizador_cedula.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->realizador_cedula.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->registrador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->autorizador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->realizador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->registrador_cedula.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->autorizador_nombres.'</td>
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->realizador_nombres.'</td>
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->registrador_nombres.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->autorizador_cargo.'</td>
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->realizador_cargo.'</td>
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->registrador_cargo.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->autorizador_unidad.'</td>
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->realizador_unidad.'</td>
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->registrador_unidad.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->autorizador_correo.'</td>
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->realizador_correo.'</td>
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->registrador_correo.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->autorizador_telefono.'</td>
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->realizador_telefono.'</td>
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->registrador_telefono.'</td>
 		</tr>
 		';
@@ -239,51 +239,51 @@ class acresponsableController extends Controller
 		<tr style="font-size:7px" nobr="true">
 			<td rowspan="6" style="width: 10%;">'.$value->id_ejecutor.' -  '.$value->tx_ejecutor.'</td>
 			<td rowspan="6" style="width: 15%;">'.$value->codigo.' - '.$value->de_nombre.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->autorizador_cedula.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->realizador_cedula.'</td>
-			<td style="width: 8%;">Cédula</td>
-			<td style="width: 17%;">'.$value->registrador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->autorizador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->realizador_cedula.'</td>
+			<td style="width: 9%;"><b>Cédula</b></td>
+			<td style="width: 16%;">'.$value->registrador_cedula.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->autorizador_nombres.'</td>
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->realizador_nombres.'</td>
-			<td>Nombre</td>
+			<td><b>Nombre</b></td>
 			<td>'.$value->registrador_nombres.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->autorizador_cargo.'</td>
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->realizador_cargo.'</td>
-			<td>Cargo</td>
+			<td><b>Cargo</b></td>
 			<td>'.$value->registrador_cargo.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->autorizador_unidad.'</td>
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->realizador_unidad.'</td>
-			<td>Unidad de Adscripción</td>
+			<td><b>Unidad de Adscripción</b></td>
 			<td>'.$value->registrador_unidad.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->autorizador_correo.'</td>
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->realizador_correo.'</td>
-			<td>Correo electrónico</td>
+			<td><b>Correo electrónico</b></td>
 			<td>'.$value->registrador_correo.'</td>
 		</tr>
 		<tr style="font-size:7px">
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->autorizador_telefono.'</td>
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->realizador_telefono.'</td>
-			<td>Teléfono</td>
+			<td><b>Teléfono</b></td>
 			<td>'.$value->registrador_telefono.'</td>
 		</tr>
 		';
