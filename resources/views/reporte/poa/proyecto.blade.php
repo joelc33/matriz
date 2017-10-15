@@ -131,6 +131,20 @@ this.botones = new this.GrupoBotones({
 									handler: this.onExportar2
 								},
 							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.exportar.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables por Proyecto',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportarResponsable
+								},
+							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Responsables Todo',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportarResponsableTodo
+								},
+							@endif
 							/*{
 								text:'Limpiar',  // Limpiar campos del formulario
 								iconCls:'icon-limpiar',
@@ -209,6 +223,20 @@ onResponsable : function() {
 onResponsableTodo : function() {
 	bajar.load({
 		url: '{{ URL::to('reporte/proyecto/responsable/todo') }}'
+	});
+},
+onExportarResponsable : function() {
+	if(!parametroPR.main.formpanel.getForm().isValid()){
+	    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+	    return false;
+	}
+	bajar.load({
+		url: '{{ URL::to('reporte/proyecto/responsable/exportar') }}?'+parametroPR.main.formpanel.getForm().getValues(true)
+	});
+},
+onExportarResponsableTodo : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/proyecto/responsable/todo/exportar') }}'
 	});
 },
 onLimpiar: function(){
