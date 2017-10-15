@@ -188,7 +188,7 @@ class acresponsableController extends Controller
     //Cierre de Reporte
 		$pdf->writeHTML(Helper::htmlComprimir($htmlReporte), true, false, false, false, '');
     $pdf->lastPage();
-    $pdf->output('LISTADO_RESPONSABLES_'.Input::get('id_ejecutor').'_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+    $pdf->output('LISTADO_RESPONSABLES_AC_'.Input::get('id_ejecutor').'_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
   }
 
 	/**
@@ -307,9 +307,9 @@ class acresponsableController extends Controller
 		$pdf->SetAutoPageBreak(TRUE, 15);
 		$pdf->AddPage();
 		//Cierre de Reporte
-		$pdf->writeHTML($htmlReporte, true, false, false, false, '');
+		$pdf->writeHTML(Helper::htmlComprimir($htmlReporte), true, false, false, false, '');
 		$pdf->lastPage();
-		$pdf->output('LISTADO_RESPONSABLES_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+		$pdf->output('LISTADO_RESPONSABLES_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
 	}
 
 	/**
