@@ -350,8 +350,10 @@ class acresponsableController extends Controller
 			// Set the active Excel worksheet to sheet 0
 			$objPHPExcel->setActiveSheetIndex(0);
 			// Rename sheet
-			$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
-			$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(30);
 			$objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
 			$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
 			$objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
@@ -366,7 +368,7 @@ class acresponsableController extends Controller
 							'bold'      => true
 						),
 						'alignment' => array(
-							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
 						),
 						'borders' => array(
 							'top'     => array(
@@ -421,29 +423,61 @@ class acresponsableController extends Controller
 			// We fetch each database result row into $row in turn
 
 			$objPHPExcel->setActiveSheetIndex(0)
-			->setCellValue('A1', 'XX')
-			->setCellValue('B1', 'XX')
-			->setCellValue('C1', 'XX')
-			->setCellValue('D1', 'XX')
-			->setCellValue('E1', 'XX')
-			->setCellValue('F1', 'XX')
-			->setCellValue('G1', 'XX')
-			->setCellValue('H1', 'XX');
+			->setCellValue('A1', 'EJECUTOR')
+			->setCellValue('B1', 'ACCION CENTRALIZADA')
+			->setCellValue('C1', 'CEDULA')
+			->setCellValue('D1', 'NOMBRE')
+			->setCellValue('E1', 'CARGO')
+			->setCellValue('F1', 'UNIDAD')
+			->setCellValue('G1', 'CORREO')
+			->setCellValue('H1', 'TELEFONO');
 
 			// Make bold cells
 			$objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
 
 			foreach ($responsable as $key => $value) {
+					$final = $rowCount+2;
+					$objPHPExcel->getActiveSheet()->mergeCells('A'.$rowCount.':A'.$final);
+					$objPHPExcel->getActiveSheet()->mergeCells('B'.$rowCount.':B'.$final);
+					$objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':A'.$final)->getAlignment()->setWrapText(true);
+					$objPHPExcel->getActiveSheet()->getStyle('B'.$rowCount.':B'.$final)->getAlignment()->setWrapText(true);
+					// Set thin black border outline around column
+					$styleThinBlackBorderOutline = array(
+						'borders' => array(
+							'outline' => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN,
+								'color' => array('argb' => 'FF000000'),
+							),
+						),
+					);
+					$objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':H'.$final)->applyFromArray($styleThinBlackBorderOutline);
 					// Set cell An to the "name" column from the database (assuming you have a column called name)
 					//    where n is the Excel row number (ie cell A1 in the first row)
-					$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->codigo);
-					$objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->codigo, PHPExcel_Cell_DataType::TYPE_STRING);
-					$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->codigo);
+					$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejecutor.' - '.$value->tx_ejecutor);
+					$objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->codigo.' - '.$value->de_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+					/**Datos del Titular**/
+					$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->autorizador_cedula, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->autorizador_nombres, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->autorizador_cargo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->autorizador_unidad, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->autorizador_correo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->autorizador_telefono);
+					$rowCount=$rowCount+1;
+					/**Datos del Planificador**/
+					$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->realizador_cedula, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->realizador_nombres, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->realizador_cargo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->realizador_unidad, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->realizador_correo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->realizador_telefono);
+					$rowCount=$rowCount+1;
+					/**Datos del Administrador**/
+					$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->registrador_cedula, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->registrador_nombres, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->registrador_cargo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->registrador_unidad, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->registrador_correo, PHPExcel_Cell_DataType::TYPE_STRING);
+					$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->registrador_telefono);
 					// Increment the Excel row counter
 					$rowCount++;
 			}
