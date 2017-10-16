@@ -103,14 +103,14 @@ this.botones = new this.GrupoBotones({
 									handler: this.onImprimir1
 								},
 							@endif
-							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.responsable.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
 								{
 									text:'Responsables por Proyecto',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onResponsable
 								},
 							@endif
-							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.todos', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.responsable.todos', 'in_habilitado' => true), Session::get('credencial') ))
 								{
 									text:'Responsables Todos',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
@@ -131,14 +131,14 @@ this.botones = new this.GrupoBotones({
 									handler: this.onExportar2
 								},
 							@endif
-							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.exportar.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.responsable.exportar.ejecutor', 'in_habilitado' => true), Session::get('credencial') ))
 								{
 									text:'Responsables por Proyecto',  // Generar la impresión en pdf
 									iconCls:'icon-excel',
 									handler: this.onExportarResponsable
 								},
 							@endif
-							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
+							@if( in_array( array( 'de_privilegio' => 'proyecto.poa.responsable.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
 								{
 									text:'Responsables Todo',  // Generar la impresión en pdf
 									iconCls:'icon-excel',

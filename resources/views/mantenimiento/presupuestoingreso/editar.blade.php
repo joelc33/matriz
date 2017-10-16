@@ -71,7 +71,7 @@ this.de_nombre = new Ext.form.TextArea({
 	allowBlank:false,
 	width:400,
 	height: 100,
-	readOnly:true
+	//readOnly:true
 });
 
 this.mo_partida = new Ext.form.NumberField({
