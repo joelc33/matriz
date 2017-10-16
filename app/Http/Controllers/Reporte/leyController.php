@@ -14,6 +14,7 @@ use Crypt;
 use File;
 use Blade;
 use Session;
+use Helper;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -165,6 +166,7 @@ class leyController extends Controller
       ->get();
 
       $filtro = array();
+      $total = 0;
 
       foreach ($tab_presupuesto_ingreso as $key => $value) {
 
@@ -227,15 +229,21 @@ class leyController extends Controller
 
           }
 
+          $total = $total + $value->mo_partida;
+
         }
 
       }
 
       $tabla_presupuesto_ingreso.='
+      <tr>
+      <td style="text-align: left;width:80%" colspan="5"><b>TOTAL</b></td>
+      <td style="text-align: rigth;width:20%"><b>'.number_format($total, 2, ',', '.').'</b></td>
+      </tr>
       </tbody>
       </table>';
 
-      $pdf->writeHTML($tabla_presupuesto_ingreso, true, false, false, false, '');
+      $pdf->writeHTML(Helper::htmlComprimir($tabla_presupuesto_ingreso), true, false, false, false, '');
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
