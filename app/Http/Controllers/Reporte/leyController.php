@@ -184,7 +184,7 @@ class leyController extends Controller
                   	UNION ALL
                   	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 4 as nivel
                   	FROM mantenimiento.tab_partidas
-                  	WHERE co_partida = left(:partida, 9)
+                  	WHERE co_partida = left(:partida, 12)
                  )
             SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, nivel
             FROM partidas

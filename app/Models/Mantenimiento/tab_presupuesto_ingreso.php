@@ -13,13 +13,13 @@ class tab_presupuesto_ingreso extends Model
 	protected $table = 'mantenimiento.tab_presupuesto_ingreso';
 
   public static $validarCrear = array(
-		"partida" => "required|numeric",
+		"partida" => "required|min:1|max:12",
 		"denominacion" => "required|min:1|max:1200",
     "monto" => "required|numeric",
 	);
 
 	public static $validarEditar = array(
-    "partida" => "required|numeric",
+    "partida" => "required|min:1|max:12",
 		"denominacion" => "required|min:1|max:1200",
     "monto" => "required|numeric",
 	);

@@ -24,14 +24,16 @@ class tab_partidas extends Model
 
 	public static $validarCrear = array(
 		"ejercicio_fiscal" => "numeric|min:2015|max:3000",
-		"partida" => "numeric|min:0|max:9999999999999",
+		//"partida" => "numeric|min:0|max:999999999999",
+		"partida" => "required|min:1|max:12",
 		//"ace_mov" => "boolean",
 		"nombre" => "required|min:1|max:1200"
 	);
 
 	public static $validarEditar = array(
 		"ejercicio_fiscal" => "numeric|min:2015|max:3000",
-		"partida" => "numeric|min:0|max:9999999999999",
+		//"partida" => "numeric|min:0|max:999999999999",
+		"partida" => "required|min:1|max:12",
 		//"ace_mov" => "boolean",
 		"nombre" => "required|min:1|max:1200"
 	);
