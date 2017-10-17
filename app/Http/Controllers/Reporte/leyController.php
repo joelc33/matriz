@@ -368,7 +368,7 @@ class leyController extends Controller
           <td colspan="3" style="text-align: center;width:100%"><strong>DESCRIPCIÓN</strong></td>
         </tr>
         <tr style="font-size: 7px;">
-          <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 300%;">'.nl2br($value->de_objetivo_sectorial).'</td>
+          <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 200%;">'.nl2br($value->de_objetivo_sectorial).'</td>
         </tr>
         </tbody>
         </table>';
