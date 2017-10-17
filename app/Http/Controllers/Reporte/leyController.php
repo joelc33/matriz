@@ -4,6 +4,7 @@ namespace matriz\Http\Controllers\Reporte;
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
 use matriz\Models\Mantenimiento\tab_partidas;
+use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
 use View;
 use Input;
 use Response;
@@ -288,43 +289,97 @@ class leyController extends Controller
       $pdf->SetLineWidth(0.150);
       $pdf->setCellHeightRatio(2);
 
-      $pdf->AddPage();
+      $objetivos = tab_objetivo_sectorial::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'mantenimiento.tab_objetivo_sectorial.id_tab_sectores')
+  		->select( 'mantenimiento.tab_objetivo_sectorial.id', 'id_tab_ejercicio_fiscal',
+      'id_tab_sectores', 'de_objetivo_sectorial', 'tx_codigo', 'tx_descripcion' )
+  		->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+  		->orderBy('tx_codigo','ASC')
+  		->get();
 
-      /******Portada Titulo III*********/
-      $pdf->SetAlpha(0.3);
-      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
-      $pdf->ln(30);
-      $pdf->setAlpha(1);
-      $pdf->SetFont('','',8);
+      foreach ($objetivos as $key => $value) {
 
-      // reset font stretching  reset font spacing
-      $pdf->setFontStretching(100);
-      $pdf->setFontSpacing(1);
-      //
-      $pdf->SetY(15);
-      $pdf->SetFont('','B',14);
-      $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
-      $pdf->ln(230);
-      $pdf->SetFont('','B',12);
-      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
-      $pdf->writeHTML('<b><u>SECTOR: NN<u/></b>', true, false, true, false, 'R');
-      $pdf->ln(0);
-      $pdf->MultiCell(195, 5, 'XXXXXXXXXX', 0, 'R', 0, 0, '', '', true);
-      $pdf->ln(10);
-      // set border width
-      $pdf->SetLineWidth(0.508);
-      $pdf->SetDrawColor(0,0,0);
-      $pdf->SetFillColor(0,0,0);
-      $pdf->setCellHeightRatio(0);
-      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
-      $pdf->ln(2);
-      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
-      // reset font stretching  reset font spacing
-      $pdf->setFontStretching(100);
-      $pdf->setFontSpacing(0);
-      $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
+        $pdf->AddPage();
+
+        /******Portada Titulo Sectores*********/
+        $pdf->SetAlpha(0.3);
+        $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+        $pdf->ln(30);
+        $pdf->setAlpha(1);
+        $pdf->SetFont('','',8);
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(1);
+        //
+        $pdf->SetY(15);
+        $pdf->SetFont('','B',14);
+        $pdf->SetTextColor(0,0,0);
+        $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(230);
+        $pdf->SetFont('','B',12);
+        //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+        $pdf->writeHTML('<b><u>SECTOR: '.$value->tx_codigo.'<u/></b>', true, false, true, false, 'R');
+        $pdf->ln(0);
+        $pdf->MultiCell(195, 5, mb_strtoupper($value->tx_descripcion, 'UTF-8'), 0, 'R', 0, 0, '', '', true);
+        $pdf->ln(10);
+        // set border width
+        $pdf->SetLineWidth(0.508);
+        $pdf->SetDrawColor(0,0,0);
+        $pdf->SetFillColor(0,0,0);
+        $pdf->setCellHeightRatio(0);
+        $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+        $pdf->ln(2);
+        $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
+        $pdf->AddPage();
+
+        $pdf->SetFont('','B',8);
+        $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+        $pdf->SetFont('','B',11);
+        $pdf->MultiCell(90, 5, 'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(8);
+        $pdf->SetFont('','B',8);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-10);
+        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(19);
+        $pdf->SetFont('','',8);
+
+        $tabla_objetivo_sectorial = '
+        <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
+        <thead>
+        <tr style="font-size: 8px;">
+          <th style="text-align: center;width:20%" rowspan="2"><strong><br>SECTOR</strong></th>
+          <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
+          <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
+        </tr>
+        <tr style="font-size: 8px;">
+          <th style="text-align: center;width:20%">'.$value->tx_codigo.'</th>
+          <th style="text-align: left;width:60%">'.mb_strtoupper($value->tx_descripcion, 'UTF-8').'</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="font-size: 9px;">
+          <td colspan="3" style="text-align: center;width:100%"><strong>DESCRIPCIÓN</strong></td>
+        </tr>
+        <tr style="font-size: 7px;">
+          <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 300%;">'.nl2br($value->de_objetivo_sectorial).'</td>
+        </tr>
+        </tbody>
+        </table>';
+
+        $pdf->writeHTML(Helper::htmlComprimir($tabla_objetivo_sectorial), true, false, false, false, '');
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+
+      }
 
       //$pdf->AddPage();
 
