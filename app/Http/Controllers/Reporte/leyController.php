@@ -6,6 +6,7 @@ use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
 use matriz\Models\Mantenimiento\tab_partidas;
 use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
 use matriz\Models\Ac\tab_ac;
+use matriz\Models\Ac\tab_ac_ae_partida;
 use View;
 use Input;
 use Response;
@@ -471,11 +472,42 @@ class leyController extends Controller
             <th style="text-align: center;width:60%"><strong>DENOMINACION</strong></th>
           </tr>
           </thead>
-          <tbody>
+          <tbody>';
+
+          $ac_lista_partida = tab_ac_ae_partida::join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+          ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+          ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+          //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
+          ->select( 'co_sector', 't01.id_accion', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 'tx_nombre', DB::raw('sum(t01.monto) as mo_partida') )
+          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+          ->where('t01.id_accion', '=', $value_ac->id_accion)
+          ->where('t02.co_sector', '=', $value_ac->co_sector)
+          ->groupBy('co_sector')
+          ->groupBy('t01.id_accion')
+          ->groupBy('partida')
+          ->groupBy('tx_nombre')
+          ->orderBy('partida','ASC')
+          ->get();
+
+          $total_partida = 0;
+
+          foreach ($ac_lista_partida as $key => $value_ac_partida) {
+
+            $tabla_ac_lista.='
+            <tr>
+              <td style="text-align: center;width:20%">'.$value_ac_partida->partida.'</td>
+              <td style="text-align: left;width:60%">'.mb_strtoupper($value_ac_partida->tx_nombre, 'UTF-8').'</td>
+              <td style="text-align: right;width:20%">'.number_format($value_ac_partida->mo_partida, 2, ',', '.').'</td>
+            </tr>';
+
+            $total_partida = $total_partida + $value_ac_partida->mo_partida;
+
+          }
+
+          $tabla_ac_lista.='
           <tr>
-            <td style="text-align: center;width:20%">&nbsp;</td>
-            <td style="text-align: left;width:60%">&nbsp;</td>
-            <td style="text-align: right;width:20%">&nbsp;</td>
+            <td style="text-align: rigth;width:80%" colspan="5"><b>TOTAL</b></td>
+            <td style="text-align: rigth;width:20%"><b>'.number_format($total_partida, 2, ',', '.').'</b></td>
           </tr>
           </tbody>
           </table>';
