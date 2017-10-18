@@ -7,6 +7,7 @@ use matriz\Models\Mantenimiento\tab_partidas;
 use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
 use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
+use matriz\Models\Proyecto\tab_proyecto;
 use View;
 use Input;
 use Response;
@@ -377,17 +378,209 @@ class leyController extends Controller
 
         $pdf->writeHTML(Helper::htmlComprimir($tabla_objetivo_sectorial), true, false, false, false, '');
 
+        /*Listado de Proyectos*/
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+
+        $pr_lista = tab_proyecto::join('mantenimiento.tab_sectores as t01', 't01.tx_codigo', '=', 'public.t26_proyectos.clase_sector')
+        ->join('mantenimiento.tab_ejecutores as t02', 't02.id_ejecutor', '=', 'public.t26_proyectos.id_ejecutor')
+        ->select( 'id_proyecto', 'nombre', 'clase_sector', 'tx_descripcion',
+        'public.t26_proyectos.id_ejecutor', 'tx_ejecutor' ,'public.t26_proyectos.descripcion')
+        ->where('id_ejercicio', '=', Session::get('ejercicio'))
+        ->where('clase_sector', '=', $value->tx_codigo)
+        ->where('edo_reg', '=', TRUE)
+        ->orderBy('id_proyecto','ASC')
+        ->get();
+
+        foreach ($pr_lista as $key => $value_pr) {
+
+          $pdf->AddPage();
+          /******Portada Titulo Sectores*********/
+          $pdf->SetAlpha(0.3);
+          $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+          $pdf->ln(30);
+          $pdf->setAlpha(1);
+          $pdf->SetFont('','',8);
+
+          // reset font stretching  reset font spacing
+          $pdf->setFontStretching(100);
+          $pdf->setFontSpacing(1);
+          //
+          $pdf->SetY(15);
+          $pdf->SetFont('','B',14);
+          $pdf->SetTextColor(0,0,0);
+          $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->ln(200);
+          $pdf->SetFont('','B',12);
+          //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+          $pdf->writeHTML('<b><u>SECTOR: '.$value_pr->clase_sector.'<u/></b>', true, false, true, false, 'L');
+          $pdf->ln(0);
+          $pdf->writeHTML('<b><u>PROYECTO Y/O ACCIÓN CENTRALIZADA: '.substr($value_pr->id_proyecto, -3).'<u/></b>', true, false, true, false, 'L');
+          $pdf->ln(0);
+          $pdf->MultiCell(195, 5, mb_strtoupper($value_pr->nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+          $pdf->ln(30);
+          // set border width
+          $pdf->SetLineWidth(0.508);
+          $pdf->SetDrawColor(0,0,0);
+          $pdf->SetFillColor(0,0,0);
+          $pdf->setCellHeightRatio(0);
+          $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+          $pdf->ln(2);
+          $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+          // reset font stretching  reset font spacing
+          $pdf->setFontStretching(100);
+          $pdf->setFontSpacing(0);
+          $pdf->SetLineWidth(0.150);
+          $pdf->setCellHeightRatio(2);
+
+          $pdf->AddPage();
+
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->SetFont('','B',10);
+          $pdf->setCellHeightRatio(1);
+          $pdf->MultiCell(70, 5, 'DESCRIPCIÓN DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
+          $pdf->ln(8);
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          //$pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->ln(-10);
+          $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(19);
+          $pdf->SetFont('','',8);
+
+          $tabla_objetivo_proyecto = '
+          <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
+          <thead>
+          <tr style="font-size: 8px;">
+            <th style="text-align: center;width:20%"></th>
+            <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
+            <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
+          </tr>
+          <tr style="font-size: 8px;">
+            <th style="text-align: left;width:20%"><strong>SECTOR:</strong></th>
+            <th style="text-align: center;width:20%">'.$value_pr->clase_sector.'</th>
+            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->tx_descripcion, 'UTF-8').'</th>
+          </tr>
+          <tr style="font-size: 8px;">
+            <th style="text-align: left;width:20%"><strong>PROYECTO Y/O ACCIÓN CENTRALIZADA:</strong></th>
+            <th style="text-align: center;width:20%">'.substr($value_pr->id_proyecto, -3).'</th>
+            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->nombre, 'UTF-8').'</th>
+          </tr>
+          <tr style="font-size: 8px;">
+            <th style="text-align: left;width:20%"><strong>UNIDAD EJECUTORA:</strong></th>
+            <th style="text-align: center;width:20%">'.$value_pr->id_ejecutor.'</th>
+            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->tx_ejecutor, 'UTF-8').'</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr style="font-size: 9px;">
+            <td colspan="3" style="text-align: center;width:100%"><strong>DESCRIPCIÓN</strong></td>
+          </tr>
+          <tr style="font-size: 7px;">
+            <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 200%;">'.nl2br($value_pr->descripcion).'</td>
+          </tr>
+          </tbody>
+          </table>';
+
+          $pdf->writeHTML(Helper::htmlComprimir($tabla_objetivo_proyecto), true, false, false, false, '');
+
+          $pdf->AddPage();
+
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->SetFont('','B',10);
+          $pdf->setCellHeightRatio(1);
+          $pdf->MultiCell(90, 5, 'CREDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
+          $pdf->ln(8);
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(90, 5, '(EN BOLÍVARES) ', 0, 'C', 0, 0, '', '', true);
+          $pdf->ln(-10);
+          $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(19);
+          $pdf->SetFont('','',8);
+
+          $tabla_ac_lista = '
+          <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
+          <thead>
+          <tr style="font-size: 8px;">
+            <th style="text-align: center;width:20%" rowspan="2"><strong><br>SECTOR / PROYECTO Y/O A. CENTRALIZADA</strong></th>
+            <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
+            <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
+          </tr>
+          <tr style="font-size: 8px;">
+            <th style="text-align: center;width:20%">'.$value_pr->clase_sector.'.'.substr($value_pr->id_proyecto, -3).'</th>
+            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->nombre, 'UTF-8').'</th>
+          </tr>
+          <tr>
+            <th colspan="2" style="text-align: center;width:80%"><strong>PARTIDA</strong></th>
+            <th rowspan="2" style="text-align: center;width:20%"><strong>ASIGNACION PRESUPUESTARIA</strong></th>
+          </tr>
+          <tr>
+            <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
+            <th style="text-align: center;width:60%"><strong>DENOMINACION</strong></th>
+          </tr>
+          </thead>
+          <tbody>';
+
+          $pr_lista_partida = tab_ac_ae_partida::join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+          ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+          ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+          //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
+          ->select( 'co_sector', 't01.id_accion', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 'tx_nombre', DB::raw('sum(t01.monto) as mo_partida') )
+          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+          ->where('t01.id_accion', '=', $value_pr->clase_sector)
+          ->where('t02.co_sector', '=', $value_pr->clase_sector)
+          ->groupBy('co_sector')
+          ->groupBy('t01.id_accion')
+          ->groupBy('partida')
+          ->groupBy('tx_nombre')
+          ->orderBy('partida','ASC')
+          ->get();
+
+          $total_partida = 0;
+
+          foreach ($pr_lista_partida as $key => $value_ac_partida) {
+
+            $tabla_ac_lista.='
+            <tr>
+              <td style="text-align: center;width:20%">'.$value_ac_partida->partida.'</td>
+              <td style="text-align: left;width:60%">'.mb_strtoupper($value_ac_partida->tx_nombre, 'UTF-8').'</td>
+              <td style="text-align: right;width:20%">'.number_format($value_ac_partida->mo_partida, 2, ',', '.').'</td>
+            </tr>';
+
+            $total_partida = $total_partida + $value_ac_partida->mo_partida;
+
+          }
+
+          $tabla_ac_lista.='
+          <tr>
+            <td style="text-align: rigth;width:80%" colspan="5"><b>TOTAL</b></td>
+            <td style="text-align: rigth;width:20%"><b>'.number_format($total_partida, 2, ',', '.').'</b></td>
+          </tr>
+          </tbody>
+          </table>';
+
+          $pdf->writeHTML(Helper::htmlComprimir($tabla_ac_lista), true, false, false, false, '');
+
+        }
+
         // reset font stretching  reset font spacing
         $pdf->setFontStretching(100);
         $pdf->setFontSpacing(0);
 
         $ac_lista = tab_ac::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'public.t46_acciones_centralizadas.id_subsector')
         ->join('mantenimiento.tab_ac_predefinida as t02', 't02.id', '=', 'public.t46_acciones_centralizadas.id_accion')
-        ->select( 'id_accion', 'de_nombre', 'co_sector' )
+        ->select( 'id_accion', 'de_nombre', 'nu_original', 'co_sector' )
         ->where('id_ejercicio', '=', Session::get('ejercicio'))
         ->where('co_sector', '=', $value->tx_codigo)
         ->groupBy('id_accion')
         ->groupBy('de_nombre')
+        ->groupBy('nu_original')
         ->groupBy('co_sector')
         ->orderBy('co_sector','ASC')
         ->orderBy('id_accion','ASC')
@@ -416,7 +609,7 @@ class leyController extends Controller
           //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
           $pdf->writeHTML('<b><u>SECTOR: '.$value_ac->co_sector.'<u/></b>', true, false, true, false, 'L');
           $pdf->ln(0);
-          $pdf->writeHTML('<b><u>PROYECTO Y/O ACCIÓN CENTRALIZADA: '.$value_ac->id_accion.'<u/></b>', true, false, true, false, 'L');
+          $pdf->writeHTML('<b><u>PROYECTO Y/O ACCIÓN CENTRALIZADA: '.$value_ac->nu_original.'<u/></b>', true, false, true, false, 'L');
           $pdf->ln(0);
           $pdf->MultiCell(195, 5, mb_strtoupper($value_ac->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
           $pdf->ln(20);
@@ -460,7 +653,7 @@ class leyController extends Controller
             <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
           </tr>
           <tr style="font-size: 8px;">
-            <th style="text-align: center;width:20%">'.$value_ac->co_sector.'.'.$value_ac->id_accion.'</th>
+            <th style="text-align: center;width:20%">'.$value_ac->co_sector.'.'.$value_ac->nu_original.'</th>
             <th style="text-align: left;width:60%">'.mb_strtoupper($value_ac->de_nombre, 'UTF-8').'</th>
           </tr>
           <tr>
