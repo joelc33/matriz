@@ -90,7 +90,7 @@ class tipoaccionController extends Controller
      */
     public function editar($id)
     {
-      $data = tab_ac_predefinida::select('id', 'de_nombre', 'de_accion', 'in_activo')
+      $data = tab_ac_predefinida::select('id', 'de_nombre', 'de_accion', 'in_activo', 'nu_original')
       ->where('id', '=', $id)
       ->first();
       return View::make('mantenimiento.tipoaccion.editar')->with('data',$data);
@@ -118,6 +118,7 @@ class tipoaccionController extends Controller
         $tabla = tab_ac_predefinida::find($id);
         $tabla->de_nombre = Input::get("nombre");
         $tabla->de_accion = Input::get("descripcion");
+        $tabla->nu_original = Input::get("numero");
         $tabla->save();
 
         DB::commit();
@@ -148,6 +149,7 @@ class tipoaccionController extends Controller
         $tabla = new tab_ac_predefinida;
         $tabla->de_nombre = Input::get("nombre");
         $tabla->de_accion = Input::get("descripcion");
+        $tabla->nu_original = Input::get("numero");
         $tabla->in_activo = 'TRUE';
         $tabla->save();
 

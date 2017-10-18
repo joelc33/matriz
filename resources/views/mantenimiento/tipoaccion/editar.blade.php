@@ -12,6 +12,14 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
+this.nu_original = new Ext.form.TextField({
+	fieldLabel:'Numero',
+	name:'numero',
+	value:this.OBJ.nu_original,
+	allowBlank:false,
+	width:400
+});
+
 this.de_nombre = new Ext.form.TextField({
 	fieldLabel:'Nombre',
 	name:'nombre',
@@ -93,6 +101,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+		this.nu_original,
 		this.de_nombre,
 		this.de_accion
 	]

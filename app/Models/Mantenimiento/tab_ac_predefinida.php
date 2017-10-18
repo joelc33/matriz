@@ -13,11 +13,13 @@ class tab_ac_predefinida extends Model
 	protected $table = 'mantenimiento.tab_ac_predefinida';
 
 	public static $validarCrear = array(
+		"numero" => "required|min:1|max:2",
 		"nombre" => "required|min:1|max:1200",
 		"descripcion" => "required|min:1|max:1200"
 	);
 
 	public static $validarEditar = array(
+		"numero" => "required|min:1|max:2",
 		"nombre" => "required|min:1|max:1200",
 		"descripcion" => "required|min:1|max:1200"
 	);
