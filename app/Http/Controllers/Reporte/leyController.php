@@ -8,6 +8,7 @@ use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
 use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
 use matriz\Models\Proyecto\tab_proyecto;
+use matriz\Models\Proyecto\tab_proyecto_ae_partida;
 use View;
 use Input;
 use Response;
@@ -504,7 +505,7 @@ class leyController extends Controller
           $pdf->ln(19);
           $pdf->SetFont('','',8);
 
-          $tabla_ac_lista = '
+          $tabla_pr_lista = '
           <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
           <thead>
           <tr style="font-size: 8px;">
@@ -527,45 +528,43 @@ class leyController extends Controller
           </thead>
           <tbody>';
 
-          $pr_lista_partida = tab_ac_ae_partida::join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
-          ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
-          ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
-          //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
-          ->select( 'co_sector', 't01.id_accion', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 'tx_nombre', DB::raw('sum(t01.monto) as mo_partida') )
-          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-          ->where('t01.id_accion', '=', $value_pr->clase_sector)
-          ->where('t02.co_sector', '=', $value_pr->clase_sector)
-          ->groupBy('co_sector')
-          ->groupBy('t01.id_accion')
+          $pr_lista_partida = tab_proyecto_ae_partida::join('public.t39_proyecto_acc_espec as t01', 't01.co_proyecto_acc_espec', '=', 'public.t42_proyecto_acc_espec_partida.co_proyecto_acc_espec')
+          ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.t42_proyecto_acc_espec_partida.co_partida, 3)'))
+          ->select( DB::raw('t02.co_partida as partida'), 'tx_nombre',
+          DB::raw('sum(public.t42_proyecto_acc_espec_partida.nu_monto) as mo_partida'))
+          ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t01.id_proyecto', '=', $value_pr->id_proyecto)
+          ->where('public.t42_proyecto_acc_espec_partida.edo_reg', '=', TRUE)
+          ->where('t01.edo_reg', '=', TRUE)
           ->groupBy('partida')
           ->groupBy('tx_nombre')
           ->orderBy('partida','ASC')
           ->get();
 
-          $total_partida = 0;
+          $total_partida_pr = 0;
 
-          foreach ($pr_lista_partida as $key => $value_ac_partida) {
+          foreach ($pr_lista_partida as $key => $value_pr_partida) {
 
-            $tabla_ac_lista.='
+            $tabla_pr_lista.='
             <tr>
-              <td style="text-align: center;width:20%">'.$value_ac_partida->partida.'</td>
-              <td style="text-align: left;width:60%">'.mb_strtoupper($value_ac_partida->tx_nombre, 'UTF-8').'</td>
-              <td style="text-align: right;width:20%">'.number_format($value_ac_partida->mo_partida, 2, ',', '.').'</td>
+              <td style="text-align: center;width:20%">'.$value_pr_partida->partida.'</td>
+              <td style="text-align: left;width:60%">'.mb_strtoupper($value_pr_partida->tx_nombre, 'UTF-8').'</td>
+              <td style="text-align: right;width:20%">'.number_format($value_pr_partida->mo_partida, 2, ',', '.').'</td>
             </tr>';
 
-            $total_partida = $total_partida + $value_ac_partida->mo_partida;
+            $total_partida_pr = $total_partida_pr + $value_pr_partida->mo_partida;
 
           }
 
-          $tabla_ac_lista.='
+          $tabla_pr_lista.='
           <tr>
             <td style="text-align: rigth;width:80%" colspan="5"><b>TOTAL</b></td>
-            <td style="text-align: rigth;width:20%"><b>'.number_format($total_partida, 2, ',', '.').'</b></td>
+            <td style="text-align: rigth;width:20%"><b>'.number_format($total_partida_pr, 2, ',', '.').'</b></td>
           </tr>
           </tbody>
           </table>';
 
-          $pdf->writeHTML(Helper::htmlComprimir($tabla_ac_lista), true, false, false, false, '');
+          $pdf->writeHTML(Helper::htmlComprimir($tabla_pr_lista), true, false, false, false, '');
 
         }
 
