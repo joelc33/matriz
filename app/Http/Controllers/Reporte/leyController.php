@@ -1259,6 +1259,8 @@ class leyController extends Controller
 
                 $start_y = $pdf->GetY();
 
+                $culminado = false;
+
                 if ($start_y >= 245) {
 
                   $pdf->SetFont('','B',8);
@@ -1345,6 +1347,19 @@ class leyController extends Controller
 
         }
 
+      }
+
+      $culminado = true;
+
+      if($culminado ==true){
+        $pdf->SetFont('','B',8);
+        $pdf->setCellHeightRatio(1.5);
+        $pdf->SetY(262);
+        $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
+        $pdf->SetFont('','B',7);
+        $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);  
       }
 
       //Cierre de Reporte
