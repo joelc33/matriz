@@ -990,6 +990,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->AddPage();
+      $movimiento = 0;
 
       $pdf->SetFont('','B',8);
       $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
