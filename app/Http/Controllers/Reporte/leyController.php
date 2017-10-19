@@ -1003,7 +1003,7 @@ class leyController extends Controller
       $pdf->ln(19);
       $pdf->SetFont('','',8);
 
-      $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(196, 240, '', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(0);
       $pdf->SetFont('','B',7);
       $pdf->ln(30);
@@ -1030,15 +1030,27 @@ class leyController extends Controller
       $pdf->MultiCell(25, 30, 'MONTO', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(30);
       $pdf->setCellHeightRatio(1);
-      $pdf->MultiCell(10, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(71, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(71, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(2);
+      $pdf->SetFont('','',7);
+      $pdf->setCellHeightRatio(0.8);
+      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(71, 5, 'xx', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
       $pdf->ln(5);
 
       //Cierre de Reporte
