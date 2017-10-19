@@ -1024,10 +1024,10 @@ class leyController extends Controller
       $pdf->SetFont('','B',8);
       $pdf->setCellHeightRatio(10);
       $pdf->MultiCell(50, 30, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(71, 30, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(71, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(25, 30, 'CORRIENTES', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(25, 30, 'CAPITAL', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 30, 'MONTO', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 30, 'MONTO TOTAL', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(30);
       $pdf->setCellHeightRatio(1);
       $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
