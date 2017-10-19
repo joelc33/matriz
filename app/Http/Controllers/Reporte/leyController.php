@@ -1042,16 +1042,226 @@ class leyController extends Controller
       $pdf->ln(2);
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(0.8);
-      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(10, 5, 'xx', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(71, 5, 'xx', 0, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, 'xx', 0, 'R', 0, 0, '', '', true);
-      $pdf->ln(5);
+
+      $ac_transferencia_uno = tab_ac_ae_partida::
+      join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+      ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+      ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
+      ->join('mantenimiento.tab_sectores as t04', 't04.tx_codigo', '=', 't02.co_sector')
+      ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+      ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
+      ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
+      ->select( 't02.co_sector', 't04.tx_descripcion', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
+      ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+      ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
+      ->groupBy('t02.co_sector')
+      ->groupBy('t04.tx_descripcion')
+      ->orderBy('t02.co_sector','ASC')
+      ->get();
+
+      foreach ($ac_transferencia_uno as $key => $value_transferencia) {
+
+        $pdf->SetFont('','B',7);
+
+        $pdf->MultiCell(10, 5, $value_transferencia->co_sector, 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(71, 5, mb_strtoupper($value_transferencia->tx_descripcion, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_transferencia->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_transferencia->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->ln(5);
+
+        $pdf->SetFont('','',7);
+
+        $ac_transferencia_dos = tab_ac_ae_partida::
+        join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+        ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+        ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
+        ->join('mantenimiento.tab_sectores as t04', 't04.tx_codigo', '=', 't02.co_sector')
+        ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+        ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
+        ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
+        ->select( 't03.nu_original', 't03.de_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
+        ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+        ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
+        ->where('t02.co_sector', '=', $value_transferencia->co_sector)
+        ->groupBy('t03.nu_original')
+        ->groupBy('t03.de_nombre')
+        ->orderBy('nu_original','ASC')
+        ->get();
+
+        foreach ($ac_transferencia_dos as $key => $value_transferencia_dos) {
+
+          $pdf->SetFont('','',7);
+
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, $value_transferencia_dos->nu_original, 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(2, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(69, 5, mb_strtoupper($value_transferencia_dos->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, number_format($value_transferencia_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, number_format($value_transferencia_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->ln(5);
+
+          $pdf->SetFont('','',7);
+
+          $ac_transferencia_tres = tab_ac_ae_partida::
+          join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+          ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+          ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
+          ->join('mantenimiento.tab_sectores as t04', 't04.tx_codigo', '=', 't02.co_sector')
+          ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+          ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
+          ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
+          ->select( 't05.co_partida', 't05.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
+          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+          ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
+          ->where('t02.co_sector', '=', $value_transferencia->co_sector)
+          ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
+          ->groupBy('t05.co_partida')
+          ->groupBy('t05.tx_nombre')
+          ->orderBy('t05.co_partida','ASC')
+          ->get();
+
+          foreach ($ac_transferencia_tres as $key => $value_transferencia_tres) {
+
+            $pdf->SetFont('','',7);
+
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, trim($value_transferencia_tres->co_partida), 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(4, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(67, 5, $value_transferencia_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->ln(5);
+
+            $pdf->SetFont('','',7);
+
+            $ac_transferencia_cuatro = tab_ac_ae_partida::
+            join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+            ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+            ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
+            ->join('mantenimiento.tab_sectores as t04', 't04.tx_codigo', '=', 't02.co_sector')
+            ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+            ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
+            ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
+            ->select( 't06.co_partida', 't06.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
+            ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+            ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
+            ->where('t02.co_sector', '=', $value_transferencia->co_sector)
+            ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
+            ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+            ->groupBy('t06.co_partida')
+            ->groupBy('t06.tx_nombre')
+            ->orderBy('t06.co_partida','ASC')
+            ->get();
+
+            foreach ($ac_transferencia_cuatro as $key => $value_transferencia_cuatro) {
+
+              $pdf->SetFont('','',7);
+              $pdf->setCellHeightRatio(1);
+
+              $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(65, 5, $value_transferencia_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              $condicionPartida = strlen($value_transferencia_cuatro->tx_nombre);
+              if ($condicionPartida >= 30) {
+                $pdf->ln(10);
+              }else {
+                $pdf->ln(5);
+              }
+
+              $pdf->SetFont('','',7);
+              $pdf->setCellHeightRatio(0.8);
+
+              $ac_transferencia_cinco = tab_ac_ae_partida::
+              join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
+              ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
+              ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
+              ->join('mantenimiento.tab_sectores as t04', 't04.tx_codigo', '=', 't02.co_sector')
+              ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+              ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
+              ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
+              ->select( 't07.co_partida', 't07.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
+              ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+              ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
+              ->where('t02.co_sector', '=', $value_transferencia->co_sector)
+              ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
+              ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+              ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
+              ->groupBy('t07.co_partida')
+              ->groupBy('t07.tx_nombre')
+              ->orderBy('t07.co_partida','ASC')
+              ->get();
+
+              foreach ($ac_transferencia_cinco as $key => $value_transferencia_cinco) {
+
+                $pdf->SetFont('','',7);
+                $pdf->setCellHeightRatio(1);
+
+                $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 5, substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(65, 5, $value_transferencia_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                $condicionPartida = strlen($value_transferencia_cinco->tx_nombre);
+                if ($condicionPartida >= 30) {
+                  $pdf->ln(10);
+                }else {
+                  $pdf->ln(5);
+                }
+
+                $pdf->SetFont('','',7);
+                $pdf->setCellHeightRatio(0.8);
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
 
       //Cierre de Reporte
       $pdf->lastPage();
