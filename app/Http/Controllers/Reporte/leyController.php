@@ -505,6 +505,7 @@ class leyController extends Controller
           $pdf->ln(19);
           $pdf->SetFont('','',8);
           $start_y = 0;
+          $movimiento = 0;
 
           $tabla_pr_lista = '
           <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
@@ -1251,12 +1252,25 @@ class leyController extends Controller
                   $pdf->ln(5);
                 }
 
+                $movimiento = $movimiento + $value_transferencia_cinco->mo_partida;
+
                 $pdf->SetFont('','',7);
                 $pdf->setCellHeightRatio(0.8);
 
                 $start_y = $pdf->GetY();
 
                 if ($start_y >= 245) {
+
+                  $pdf->SetFont('','B',8);
+                  $pdf->setCellHeightRatio(1.5);
+                  $pdf->SetY(262);
+                  $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
+                  $pdf->SetFont('','B',7);
+                  $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+
+                  $pdf->SetFont('','',7);
 
                   // reset font stretching  reset font spacing
                   $pdf->setFontStretching(100);
