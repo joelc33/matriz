@@ -9,6 +9,7 @@ use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
 use matriz\Models\Proyecto\tab_proyecto;
 use matriz\Models\Proyecto\tab_proyecto_ae_partida;
+use matriz\Models\Proyecto\vista_relacion_transferencia;
 use View;
 use Input;
 use Response;
@@ -1045,7 +1046,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(0.8);
 
-      $ac_transferencia_uno = tab_ac_ae_partida::
+      /*$ac_transferencia_uno = tab_ac_ae_partida::
       join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
       ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
       ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
@@ -1062,6 +1063,17 @@ class leyController extends Controller
       ->groupBy('t02.co_sector')
       ->groupBy('t04.tx_descripcion')
       ->orderBy('t02.co_sector','ASC')
+      ->get();*/
+
+      $ac_transferencia_uno = vista_relacion_transferencia::
+      select( 'co_sector', 'tx_descripcion', DB::raw('sum(monto) as mo_partida') )
+      ->where('ef_uno', '=', Session::get('ejercicio'))
+      ->where('ef_dos', '=', Session::get('ejercicio'))
+      ->where('ef_tres', '=', Session::get('ejercicio'))
+      ->where('ef_cuatro', '=', Session::get('ejercicio'))
+      ->groupBy('co_sector')
+      ->groupBy('tx_descripcion')
+      ->orderBy('co_sector','ASC')
       ->get();
 
       foreach ($ac_transferencia_uno as $key => $value_transferencia) {
@@ -1081,7 +1093,7 @@ class leyController extends Controller
 
         $pdf->SetFont('','',7);
 
-        $ac_transferencia_dos = tab_ac_ae_partida::
+        /*$ac_transferencia_dos = tab_ac_ae_partida::
         join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
         ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
         ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
@@ -1099,14 +1111,28 @@ class leyController extends Controller
         ->groupBy('t03.nu_original')
         ->groupBy('t03.de_nombre')
         ->orderBy('nu_original','ASC')
+        ->get();*/
+
+        $ac_transferencia_dos = vista_relacion_transferencia::
+        select( 'nu_original', 'de_nombre', DB::raw('sum(monto) as mo_partida') )
+        ->where('ef_uno', '=', Session::get('ejercicio'))
+        ->where('ef_dos', '=', Session::get('ejercicio'))
+        ->where('ef_tres', '=', Session::get('ejercicio'))
+        ->where('ef_cuatro', '=', Session::get('ejercicio'))
+        ->where('co_sector', '=', $value_transferencia->co_sector)
+        ->groupBy('nu_original')
+        ->groupBy('de_nombre')
+        ->orderBy('nu_original','ASC')
         ->get();
 
         foreach ($ac_transferencia_dos as $key => $value_transferencia_dos) {
 
           $pdf->SetFont('','',7);
+          $pdf->setCellHeightRatio(1.2);
 
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(10, 5, $value_transferencia_dos->nu_original, 0, 'C', 0, 0, '', '', true);
+          //$pdf->MultiCell(10, 5, $value_transferencia_dos->nu_original, 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, substr($value_transferencia_dos->nu_original, -2), 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1115,11 +1141,107 @@ class leyController extends Controller
           $pdf->MultiCell(25, 5, number_format($value_transferencia_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
           $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
           $pdf->MultiCell(25, 5, number_format($value_transferencia_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-          $pdf->ln(5);
+          //$pdf->ln(5);
+
+          $condicionAcPr = strlen($value_transferencia_dos->de_nombre);
+          if ($condicionAcPr >= 30) {
+            $pdf->ln(10);
+          }else {
+            $pdf->ln(5);
+          }
+          if ($condicionAcPr >= 100) {
+            $pdf->ln(5);
+          }
+
+          $pdf->SetFont('','',7);
+          $pdf->setCellHeightRatio(0.8);
+
+          $start_y = $pdf->GetY();
+
+          $culminado = false;
+
+          if ($start_y >= 245) {
+
+            $pdf->SetFont('','B',8);
+            $pdf->setCellHeightRatio(1.5);
+            $pdf->SetY(262);
+            $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
+            $pdf->SetFont('','B',7);
+            $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+
+            $pdf->SetFont('','',7);
+
+            // reset font stretching  reset font spacing
+            $pdf->setFontStretching(100);
+            $pdf->setFontSpacing(0);
+            $pdf->SetLineWidth(0.150);
+            $pdf->setCellHeightRatio(2);
+
+            $pdf->AddPage();
+
+            $pdf->SetFont('','B',8);
+            $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+            $pdf->SetFont('','B',10);
+            $pdf->setCellHeightRatio(1);
+            $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(2);
+            $pdf->ln(8);
+            $pdf->SetFont('','B',8);
+            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+            $pdf->ln(-10);
+            $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(19);
+            $pdf->SetFont('','',8);
+
+            $pdf->MultiCell(196, 240, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(0);
+            $pdf->SetFont('','B',7);
+            $pdf->ln(30);
+            $pdf->StartTransform();
+            $pdf->Rotate(90);
+            $pdf->MultiCell(30, 10, 'SECTOR', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(30, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(30, 10, 'PARTIDA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(30, 10, 'SUB - PARTIDA GENERICA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(30, 10, 'SUB - PARTIDA ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->StopTransform();
+            $pdf->ln(-80);
+            $pdf->SetFont('','B',8);
+            $pdf->setCellHeightRatio(10);
+            $pdf->MultiCell(50, 30, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(71, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 30, 'CORRIENTES', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 30, 'CAPITAL', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 30, 'MONTO TOTAL', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(30);
+            $pdf->setCellHeightRatio(1);
+            $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(71, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(2);
+            $pdf->SetFont('','',7);
+            $pdf->setCellHeightRatio(0.8);
+
+          }
+
 
           $pdf->SetFont('','',7);
 
-          $ac_transferencia_tres = tab_ac_ae_partida::
+          /*$ac_transferencia_tres = tab_ac_ae_partida::
           join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
           ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
           ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
@@ -1138,6 +1260,21 @@ class leyController extends Controller
           ->groupBy('t05.co_partida')
           ->groupBy('t05.tx_nombre')
           ->orderBy('t05.co_partida','ASC')
+          ->get();*/
+
+          $ac_transferencia_tres = vista_relacion_transferencia::
+          join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
+          ->select( 't05.co_partida', 'np_uno as tx_nombre', DB::raw('sum(monto) as mo_partida') )
+          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('ef_dos', '=', Session::get('ejercicio'))
+          ->where('ef_tres', '=', Session::get('ejercicio'))
+          ->where('ef_cuatro', '=', Session::get('ejercicio'))
+          ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('co_sector', '=', $value_transferencia->co_sector)
+          ->where('nu_original', '=', $value_transferencia_dos->nu_original)
+          ->groupBy('t05.co_partida')
+          ->groupBy('np_uno')
+          ->orderBy('co_partida','ASC')
           ->get();
 
           foreach ($ac_transferencia_tres as $key => $value_transferencia_tres) {
@@ -1158,7 +1295,89 @@ class leyController extends Controller
 
             $pdf->SetFont('','',7);
 
-            $ac_transferencia_cuatro = tab_ac_ae_partida::
+            $start_y = $pdf->GetY();
+
+            $culminado = false;
+
+            if ($start_y >= 245) {
+
+              $pdf->SetFont('','B',8);
+              $pdf->setCellHeightRatio(1.5);
+              $pdf->SetY(262);
+              $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
+              $pdf->SetFont('','B',7);
+              $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
+
+              $pdf->SetFont('','',7);
+
+              // reset font stretching  reset font spacing
+              $pdf->setFontStretching(100);
+              $pdf->setFontSpacing(0);
+              $pdf->SetLineWidth(0.150);
+              $pdf->setCellHeightRatio(2);
+
+              $pdf->AddPage();
+
+              $pdf->SetFont('','B',8);
+              $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+              $pdf->SetFont('','B',10);
+              $pdf->setCellHeightRatio(1);
+              $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(2);
+              $pdf->ln(8);
+              $pdf->SetFont('','B',8);
+              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+              $pdf->ln(-10);
+              $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(19);
+              $pdf->SetFont('','',8);
+
+              $pdf->MultiCell(196, 240, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(0);
+              $pdf->SetFont('','B',7);
+              $pdf->ln(30);
+              $pdf->StartTransform();
+              $pdf->Rotate(90);
+              $pdf->MultiCell(30, 10, 'SECTOR', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(30, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(30, 10, 'PARTIDA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(30, 10, 'SUB - PARTIDA GENERICA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(30, 10, 'SUB - PARTIDA ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->StopTransform();
+              $pdf->ln(-80);
+              $pdf->SetFont('','B',8);
+              $pdf->setCellHeightRatio(10);
+              $pdf->MultiCell(50, 30, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(71, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 30, 'CORRIENTES', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 30, 'CAPITAL', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 30, 'MONTO TOTAL', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(30);
+              $pdf->setCellHeightRatio(1);
+              $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(71, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(2);
+              $pdf->SetFont('','',7);
+              $pdf->setCellHeightRatio(0.8);
+
+            }
+
+            /*$ac_transferencia_cuatro = tab_ac_ae_partida::
             join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
             ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
             ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
@@ -1177,6 +1396,24 @@ class leyController extends Controller
             ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
             ->groupBy('t06.co_partida')
             ->groupBy('t06.tx_nombre')
+            ->orderBy('t06.co_partida','ASC')
+            ->get();*/
+
+            $ac_transferencia_cuatro = vista_relacion_transferencia::
+            join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
+            ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 5)'))
+            ->select( 't06.co_partida', 'np_dos as tx_nombre', DB::raw('sum(monto) as mo_partida') )
+            ->where('ef_uno', '=', Session::get('ejercicio'))
+            ->where('ef_dos', '=', Session::get('ejercicio'))
+            ->where('ef_tres', '=', Session::get('ejercicio'))
+            ->where('ef_cuatro', '=', Session::get('ejercicio'))
+            ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('co_sector', '=', $value_transferencia->co_sector)
+            ->where('nu_original', '=', $value_transferencia_dos->nu_original)
+            ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+            ->groupBy('t06.co_partida')
+            ->groupBy('np_dos')
             ->orderBy('t06.co_partida','ASC')
             ->get();
 
@@ -1206,7 +1443,7 @@ class leyController extends Controller
               $pdf->SetFont('','',7);
               $pdf->setCellHeightRatio(0.8);
 
-              $ac_transferencia_cinco = tab_ac_ae_partida::
+              /*$ac_transferencia_cinco = tab_ac_ae_partida::
               join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
               ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
               ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
@@ -1226,6 +1463,27 @@ class leyController extends Controller
               ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
               ->groupBy('t07.co_partida')
               ->groupBy('t07.tx_nombre')
+              ->orderBy('t07.co_partida','ASC')
+              ->get();*/
+
+              $ac_transferencia_cinco = vista_relacion_transferencia::
+              join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
+              ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 5)'))
+              ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 7)'))
+              ->select( 't07.co_partida', 'np_tres as tx_nombre', DB::raw('sum(monto) as mo_partida') )
+              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('ef_dos', '=', Session::get('ejercicio'))
+              ->where('ef_tres', '=', Session::get('ejercicio'))
+              ->where('ef_cuatro', '=', Session::get('ejercicio'))
+              ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('co_sector', '=', $value_transferencia->co_sector)
+              ->where('nu_original', '=', $value_transferencia_dos->nu_original)
+              ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+              ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
+              ->groupBy('t07.co_partida')
+              ->groupBy('np_tres')
               ->orderBy('t07.co_partida','ASC')
               ->get();
 
@@ -1359,7 +1617,7 @@ class leyController extends Controller
         $pdf->SetFont('','B',7);
         $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);  
+        $pdf->MultiCell(25, 5, number_format($movimiento, 2, ',', '.'), 1, 'C', 0, 0, '', '', true);
       }
 
       //Cierre de Reporte
