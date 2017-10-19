@@ -710,7 +710,310 @@ class leyController extends Controller
 
       }
 
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+
+      $pdf->AddPage();
+      /******Portada Titulo Sectores*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(220);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>ANEXOS<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(0);
+      $pdf->writeHTML('<b>RELACIÓN DE OBRAS</b>', true, false, true, false, 'R');
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(90, 5, 'RELACIÓN DE OBRAS', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->SetFont('','',8);
+
+      $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(0);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(40, 2, 'CODIGO', 1, 'C', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->MultiCell(116, 15, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 15, 'MONTO', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
+
+      /*$tabla_obra_lista = '
+      <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
+      <thead>
+      <tr style="font-size: 8px;" nobr="true">
+        <th style="text-align: center;width:20%" colspan="2"><strong>CODIGO</strong></th>
+        <th style="text-align: center;width:60%" rowspan="2"><strong><br>DENOMINACION</strong></th>
+        <th style="text-align: center;width:20%" rowspan="2"><strong><br>MONTO</strong></th>
+      </tr>
+      <tr style="font-size: 8px;" nobr="true">
+        <th style="text-align: center;width:10%"><strong>SECTOR</strong></th>
+        <th style="text-align: center;width:10%"><strong>PROY. Y/O A.CENTRAL</strong></th>
+      </tr>
+      </thead>
+      <tbody>';
+
+      $tabla_obra_lista.='
+      <tr nobr="true">
+        <td style="text-align: rigth;width:80%" colspan="3"><b>TOTAL GENERAL</b></td>
+        <td style="text-align: rigth;width:20%"><b>'.number_format($total_partida, 2, ',', '.').'</b></td>
+      </tr>
+      </tbody>
+      </table>';
+
+      $pdf->writeHTML(Helper::htmlComprimir($tabla_obra_lista), true, false, false, false, '');*/
+
       //$pdf->AddPage();
+
+      $pdf->AddPage();
+      /******Portada Titulo Sectores*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(220);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>ANEXOS<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(0);
+      $pdf->writeHTML('<b>FONDO DE COMPENSACION INTERTERRITORIAL (FCI)</b>', true, false, true, false, 'R');
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(90, 5, 'RELACIÓN DE PROYECTOS DE INVERSIÓN A SER FINANCIADOS A TRAVÉS DEL FONDO DE COMPENSACION INTERTERRITORIAL', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->SetFont('','',8);
+
+      $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(0);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(40, 2, 'CODIGO', 1, 'C', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->MultiCell(116, 15, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 15, 'MONTO', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
+
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+
+      $pdf->AddPage();
+      /******Portada Titulo Sectores*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(220);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>ANEXOS<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(0);
+      $pdf->writeHTML('<b>DISTRIBUCIÓN DE SITUADOS</b>', true, false, true, false, 'R');
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(90, 5, 'DISTRIBUCIÓN DE SITUADOS A NIVEL DE MUNICIPIOS', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->SetFont('','',8);
+
+      $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(0);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(40, 2, 'CODIGO', 1, 'C', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->MultiCell(116, 15, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 15, 'MONTO', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
+
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+
+      $pdf->AddPage();
+      /******Portada Titulo Sectores*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(220);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>ANEXOS<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(0);
+      $pdf->writeHTML('<b>RELACIÓN DE TRANSFERENCIAS</b>', true, false, true, false, 'R');
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->SetFont('','',8);
+
+      $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(0);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(40, 2, 'CODIGO', 1, 'C', 0, 0, '', '', true);
+      $pdf->SetFont('','B',10);
+      $pdf->MultiCell(116, 15, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 15, 'MONTO', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
 
       //Cierre de Reporte
       $pdf->lastPage();
