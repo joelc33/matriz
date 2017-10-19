@@ -504,6 +504,7 @@ class leyController extends Controller
           $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
           $pdf->ln(19);
           $pdf->SetFont('','',8);
+          $start_y = 0;
 
           $tabla_pr_lista = '
           <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
@@ -1252,6 +1253,75 @@ class leyController extends Controller
 
                 $pdf->SetFont('','',7);
                 $pdf->setCellHeightRatio(0.8);
+
+                $start_y = $pdf->GetY();
+
+                if ($start_y >= 245) {
+
+                  // reset font stretching  reset font spacing
+                  $pdf->setFontStretching(100);
+                  $pdf->setFontSpacing(0);
+                  $pdf->SetLineWidth(0.150);
+                  $pdf->setCellHeightRatio(2);
+
+                  $pdf->AddPage();
+
+                  $pdf->SetFont('','B',8);
+                  $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                  $pdf->SetFont('','B',10);
+                  $pdf->setCellHeightRatio(1);
+                  $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
+                  $pdf->setCellHeightRatio(2);
+                  $pdf->ln(8);
+                  $pdf->SetFont('','B',8);
+                  $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+                  $pdf->ln(-10);
+                  $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->ln(19);
+                  $pdf->SetFont('','',8);
+
+                  $pdf->MultiCell(196, 240, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->ln(0);
+                  $pdf->SetFont('','B',7);
+                  $pdf->ln(30);
+                  $pdf->StartTransform();
+                  $pdf->Rotate(90);
+                  $pdf->MultiCell(30, 10, 'SECTOR', 1, 'L', 0, 0, '', '', true);
+                  $pdf->ln(10);
+                  $pdf->MultiCell(30, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+                  $pdf->ln(10);
+                  $pdf->MultiCell(30, 10, 'PARTIDA', 1, 'L', 0, 0, '', '', true);
+                  $pdf->ln(10);
+                  $pdf->MultiCell(30, 10, 'SUB - PARTIDA GENERICA', 1, 'L', 0, 0, '', '', true);
+                  $pdf->ln(10);
+                  $pdf->MultiCell(30, 10, 'SUB - PARTIDA ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+                  $pdf->ln(10);
+                  $pdf->StopTransform();
+                  $pdf->ln(-80);
+                  $pdf->SetFont('','B',8);
+                  $pdf->setCellHeightRatio(10);
+                  $pdf->MultiCell(50, 30, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(71, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 30, 'CORRIENTES', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 30, 'CAPITAL', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 30, 'MONTO TOTAL', 1, 'C', 0, 0, '', '', true);
+                  $pdf->ln(30);
+                  $pdf->setCellHeightRatio(1);
+                  $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(71, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->ln(2);
+                  $pdf->SetFont('','',7);
+                  $pdf->setCellHeightRatio(0.8);
+
+                }
 
               }
 
