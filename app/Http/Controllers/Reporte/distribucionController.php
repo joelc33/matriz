@@ -232,7 +232,7 @@ class distribucionController extends Controller
           $pdf->MultiCell(25, 5, 'ESPECIFICA', 1, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
           $pdf->ln(5);
-          $pdf->MultiCell(25, 5, 'SUB - ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, 'SUB ESPECIFICA', 1, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
           $pdf->ln(5);
           $pdf->MultiCell(25, 5, 'SUB SUB ESPECIFICA', 1, 'L', 0, 0, '', '', true);
