@@ -210,6 +210,12 @@ class distribucionController extends Controller
         $pdf->SetFont('','',7);
         $pdf->setCellHeightRatio(0.8);
 
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
       }
 
     }
