@@ -1,7 +1,27 @@
 <?php
 
 namespace matriz\Http\Controllers\Reporte;
-
+//*******agregar esta linea******//
+use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
+use matriz\Models\Mantenimiento\tab_partidas;
+use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
+use matriz\Models\Ac\tab_ac;
+use matriz\Models\Ac\tab_ac_ae_partida;
+use matriz\Models\Proyecto\tab_proyecto;
+use matriz\Models\Proyecto\tab_proyecto_ae_partida;
+use matriz\Models\Proyecto\vista_distribucion_presupuesto;
+use View;
+use Input;
+use Response;
+use DB;
+use Auth;
+use TCPDF;
+use Crypt;
+use File;
+use Blade;
+use Session;
+use Helper;
+//*******************************//
 use Illuminate\Http\Request;
 
 use matriz\Http\Requests;
@@ -9,79 +29,171 @@ use matriz\Http\Controllers\Controller;
 
 class distribucionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function libro()
+  {
+    $pdf = new TCPDF('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+    $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+    $pdf->SetAuthor('Yoser Perez');
+    $pdf->SetTitle('Distribución de Presupuesto');
+    $pdf->SetSubject('Distribución de Presupuesto');
+    $pdf->SetKeywords('Distribución de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+    $pdf->SetMargins(10,10,10);
+    $pdf->SetTopMargin(10);
+    $pdf->SetPrintHeader(false);
+    $pdf->SetPrintFooter(false);
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, 10);
+    //$pdf->AddPage();
+
+    $distribucion_uno = vista_distribucion_presupuesto::
+    select( 'co_sector', 'tx_descripcion' )
+    ->where('ef_uno', '=', Session::get('ejercicio'))
+    ->groupBy('co_sector')
+    ->groupBy('tx_descripcion')
+    ->orderBy('co_sector','ASC')
+    ->get();
+
+    foreach ($distribucion_uno as $key => $value_distribucion_uno) {
+
+      $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      /******Portada Titulo I*********/
+      $pdf->SetAlpha(0.3);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(1);
+      //
+      $pdf->SetY(15);
+      $pdf->SetFont('','B',14);
+      $pdf->SetTextColor(0,0,0);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(230);
+      $pdf->SetFont('','B',12);
+      //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
+      $pdf->writeHTML('<b><u>SECTOR: '.$value_distribucion_uno->co_sector.'<u/></b>', true, false, true, false, 'R');
+      $pdf->ln(1);
+      $pdf->MultiCell(195, 5, mb_strtoupper($value_distribucion_uno->tx_descripcion, 'UTF-8'), 0, 'R', 0, 0, '', '', true);
+      $pdf->ln(10);
+      // set border width
+      $pdf->SetLineWidth(0.508);
+      $pdf->SetDrawColor(0,0,0);
+      $pdf->SetFillColor(0,0,0);
+      $pdf->setCellHeightRatio(0);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      $pdf->ln(2);
+      $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+
+
+
+      $pdf->AddPage();
+      $movimiento = 0;
+
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',8);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->SetFont('','B',5);
+
+      $pdf->MultiCell(25, 10, 'SECTOR', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(95, 10, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 20, 'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(56, 20, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->MultiCell(25, 10, 'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(95, 10, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(0);
+      $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 5, 'SUB - PARTIDA', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(30);
+      $pdf->SetFont('','B',6);
+      $pdf->StartTransform();
+      $pdf->Rotate(90);
+      $pdf->MultiCell(30, 5, 'PARTIDA', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->MultiCell(25, 5, 'GENERICA', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->MultiCell(25, 5, 'ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->MultiCell(25, 5, 'SUB - ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(5);
+      $pdf->MultiCell(25, 5, 'SUB SUB ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(30);
+      $pdf->StopTransform();
+      $pdf->ln(-80);
+      $pdf->SetFont('','B',8);
+      $pdf->setCellHeightRatio(10);
+      $pdf->MultiCell(25, 30, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(95, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+      $pdf->SetFont('','B',6);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(20, 30, 'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 30, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 30, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 30, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(30);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(5, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(95, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 180, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(2);
+      $pdf->SetFont('','',7);
+      $pdf->setCellHeightRatio(0.8);
+
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    //Cierre de Reporte
+    $pdf->lastPage();
+    $pdf->output('DISTRIBUCION_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+  }
 }
