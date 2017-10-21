@@ -34,7 +34,7 @@ class reporteController extends Controller
           text: 'Ley de Presupuesto.',
           url: 'reporte/libro/ley',
           icon: 'zulia_escudo.png',
-          desc: 'Libro de Ley de Presupuesto para el Ejericio Fiscal ".Session::get('ejercicio')."',
+          desc: 'Libro de Ley de Presupuesto para el Ejercicio Fiscal ".Session::get('ejercicio')."',
           estatus: 'nuevo',
           iconCls: 'icon-pdf'
         },
@@ -43,7 +43,7 @@ class reporteController extends Controller
           text: 'Distribucion General de Presupuestos y Gastos.',
           url: 'reporte/libro/distribucion',
           icon: 'distribucion_presupuesto.jpg',
-          desc: 'Libro de Distribucion General de Presupuestos y Gastos para el Ejericio Fiscal ".Session::get('ejercicio')."',
+          desc: 'Libro de Distribucion General de Presupuestos y Gastos para el Ejercicio Fiscal ".Session::get('ejercicio')."',
           estatus: 'nuevo',
           iconCls: 'icon-pdf'
         },
