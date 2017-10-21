@@ -698,7 +698,7 @@ class distribucionController extends Controller
                 ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
                 ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
                 ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
-                ->where('t03.co_partida', '=', $value_distribucion_cinco->co_partida)
+                ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
                 ->groupBy('t04.co_partida')
                 ->groupBy('t04.tx_nombre')
                 ->orderBy('co_partida','ASC')
