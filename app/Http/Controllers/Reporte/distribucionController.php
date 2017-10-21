@@ -825,7 +825,7 @@ class distribucionController extends Controller
 
                   }
 
-                  $distribucion_ocho = vista_distribucion_presupuesto::
+                  /*$distribucion_ocho = vista_distribucion_presupuesto::
                   join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
                   ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
                   ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
@@ -847,6 +847,18 @@ class distribucionController extends Controller
                   ->where('t04.co_partida', '=', $value_distribucion_siete->co_partida)
                   ->groupBy('t05.co_partida')
                   ->groupBy('t05.tx_nombre')
+                  ->orderBy('co_partida','ASC')
+                  ->get();*/
+
+                  $distribucion_ocho = vista_distribucion_presupuesto::
+                  join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 12)'))
+                  ->select( 'public.vista_distribucion_presupuesto.co_partida', 't01.tx_nombre',  DB::raw('monto as mo_partida') )
+                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                  ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                  ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'), '=', $value_distribucion_siete->co_partida)
                   ->orderBy('co_partida','ASC')
                   ->get();
 
