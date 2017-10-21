@@ -308,7 +308,7 @@ class distribucionController extends Controller
 
             $start_y = $pdf->GetY();
 
-            if ($start_y >= 250) {
+            if ($start_y >= 260) {
 
               // reset font stretching  reset font spacing
               $pdf->setFontStretching(100);
@@ -445,7 +445,7 @@ class distribucionController extends Controller
 
               $start_y = $pdf->GetY();
 
-              if ($start_y >= 250) {
+              if ($start_y >= 260) {
 
                 // reset font stretching  reset font spacing
                 $pdf->setFontStretching(100);
@@ -585,7 +585,7 @@ class distribucionController extends Controller
 
                 $start_y = $pdf->GetY();
 
-                if ($start_y >= 250) {
+                if ($start_y >= 260) {
 
                   // reset font stretching  reset font spacing
                   $pdf->setFontStretching(100);
