@@ -47,12 +47,12 @@ class distribucionController extends Controller
     $pdf->SetTitle('Distribución de Presupuesto');
     $pdf->SetSubject('Distribución de Presupuesto');
     $pdf->SetKeywords('Distribución de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-    $pdf->SetMargins(10,10,10);
+    $pdf->SetMargins(15,10,10);
     $pdf->SetTopMargin(10);
     $pdf->SetPrintHeader(false);
     $pdf->SetPrintFooter(false);
     // set auto page breaks
-    $pdf->SetAutoPageBreak(TRUE, 10);
+    $pdf->SetAutoPageBreak(TRUE, 5);
     //$pdf->AddPage();
 
     $distribucion_uno = vista_distribucion_presupuesto::
@@ -184,7 +184,6 @@ class distribucionController extends Controller
         foreach ($distribucion_tres as $key => $value_distribucion_tres) {
 
           $pdf->AddPage();
-          $movimiento = 0;
 
           $pdf->SetFont('','B',8);
           $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
@@ -204,16 +203,16 @@ class distribucionController extends Controller
 
           $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','',6);
-          $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','B',7);
           $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-          $pdf->SetFont('','',6);
-          $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+          $pdf->SetFont('','',7);
+          $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
           $pdf->ln(10);
           $pdf->SetFont('','B',6);
           $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','',6);
-          $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
           $pdf->ln(10);
           $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
           $pdf->ln(0);
@@ -243,18 +242,39 @@ class distribucionController extends Controller
           $pdf->SetFont('','B',8);
           $pdf->setCellHeightRatio(10);
           $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
           $pdf->SetFont('','B',6);
           $pdf->setCellHeightRatio(1.2);
           $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(0);
-          $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(5);
-          $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+          $distribucion_ae = vista_distribucion_presupuesto::
+          select( 'nu_ae', 'de_ae' )
+          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+          ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+          ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+          ->groupBy('nu_ae')
+          ->groupBy('de_ae')
+          ->orderBy('nu_ae','ASC')
+          ->get();
+
+          $a = 4; $b = 0;
+          foreach($distribucion_ae as $key => $value_distribucion_ae){
+            $b++;
+            $pdf->SetFont('','',5);
+            $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+            $pdf->SetFont('','B',6);
+            $c = $a - $b;
+          }
+          for ($n=0; $n<$c; $n++){
+            $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+          }
+
           $pdf->ln(25);
           $pdf->setCellHeightRatio(1);
           $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -262,11 +282,18 @@ class distribucionController extends Controller
           $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(192);
+          $pdf->SetFont('','',7);
+          $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+          $pdf->ln(-192);
           $pdf->ln(2);
           $pdf->SetFont('','',7);
           $pdf->setCellHeightRatio(1);
@@ -284,20 +311,30 @@ class distribucionController extends Controller
           ->orderBy('co_partida','ASC')
           ->get();
 
+          $movimiento = 0;
+
           foreach ($distribucion_cuatro as $key => $value_distribucion_cuatro) {
 
             $pdf->SetFont('','',6);
-            $pdf->MultiCell(7, 5, $value_distribucion_cuatro->co_partida, 0, 'L', 0, 0, '', '', true);
+            //$pdf->MultiCell(7, 5, $value_distribucion_cuatro->co_partida, 0, 'L', 0, 0, '', '', true);
+            $pdf->writeHTMLCell(7,5, '', '', '<u><b>'.$value_distribucion_cuatro->co_partida.'</b></u>', 0, 0, 0, true, 'L', true);
             $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(91, 5, $value_distribucion_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            //$pdf->MultiCell(83, 5, $value_distribucion_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            $pdf->writeHTMLCell(83,5, '', '', '<u><b>'.$value_distribucion_cuatro->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
+            $pdf->SetFont('','B',6);
             $pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-            $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->SetFont('','',6);
+            //$pdf->writeHTMLCell(20,5, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
+            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
             //$pdf->ln(4);
+
+            $movimiento = $movimiento + $value_distribucion_cuatro->mo_partida;
 
             $condicionPartida = strlen($value_distribucion_cuatro->tx_nombre);
             if ($condicionPartida >= 70) {
@@ -336,16 +373,16 @@ class distribucionController extends Controller
 
               $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
               $pdf->SetFont('','',6);
-              $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
               $pdf->SetFont('','B',7);
               $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-              $pdf->SetFont('','',6);
-              $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+              $pdf->SetFont('','',7);
+              $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
               $pdf->ln(10);
               $pdf->SetFont('','B',6);
               $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
               $pdf->SetFont('','',6);
-              $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
               $pdf->ln(10);
               $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
               $pdf->ln(0);
@@ -375,18 +412,39 @@ class distribucionController extends Controller
               $pdf->SetFont('','B',8);
               $pdf->setCellHeightRatio(10);
               $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
               $pdf->SetFont('','B',6);
               $pdf->setCellHeightRatio(1.2);
               $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(0);
-              $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(5);
-              $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+              $distribucion_ae = vista_distribucion_presupuesto::
+              select( 'nu_ae', 'de_ae' )
+              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+              ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+              ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+              ->groupBy('nu_ae')
+              ->groupBy('de_ae')
+              ->orderBy('nu_ae','ASC')
+              ->get();
+
+              $a = 4; $b = 0;
+              foreach($distribucion_ae as $key => $value_distribucion_ae){
+                $b++;
+                $pdf->SetFont('','',5);
+                $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                $pdf->SetFont('','B',6);
+                $c = $a - $b;
+              }
+              for ($n=0; $n<$c; $n++){
+                $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+              }
+
               $pdf->ln(25);
               $pdf->setCellHeightRatio(1);
               $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -394,11 +452,18 @@ class distribucionController extends Controller
               $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(192);
+              $pdf->SetFont('','',7);
+              $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+              $pdf->ln(-192);
               $pdf->ln(2);
               $pdf->SetFont('','',7);
               $pdf->setCellHeightRatio(1);
@@ -429,10 +494,11 @@ class distribucionController extends Controller
               $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(91, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
               //$pdf->ln(4);
 
@@ -473,16 +539,16 @@ class distribucionController extends Controller
 
                 $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                 $pdf->SetFont('','',6);
-                $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                 $pdf->SetFont('','B',7);
                 $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-                $pdf->SetFont('','',6);
-                $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                $pdf->SetFont('','',7);
+                $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                 $pdf->ln(10);
                 $pdf->SetFont('','B',6);
                 $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
                 $pdf->SetFont('','',6);
-                $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                 $pdf->ln(10);
                 $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
                 $pdf->ln(0);
@@ -512,18 +578,39 @@ class distribucionController extends Controller
                 $pdf->SetFont('','B',8);
                 $pdf->setCellHeightRatio(10);
                 $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
                 $pdf->SetFont('','B',6);
                 $pdf->setCellHeightRatio(1.2);
                 $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
                 $pdf->ln(0);
-                $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->ln(5);
-                $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+                $distribucion_ae = vista_distribucion_presupuesto::
+                select( 'nu_ae', 'de_ae' )
+                ->where('ef_uno', '=', Session::get('ejercicio'))
+                ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                ->groupBy('nu_ae')
+                ->groupBy('de_ae')
+                ->orderBy('nu_ae','ASC')
+                ->get();
+
+                $a = 4; $b = 0;
+                foreach($distribucion_ae as $key => $value_distribucion_ae){
+                  $b++;
+                  $pdf->SetFont('','',5);
+                  $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                  $pdf->SetFont('','B',6);
+                  $c = $a - $b;
+                }
+                for ($n=0; $n<$c; $n++){
+                  $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                }
+
                 $pdf->ln(25);
                 $pdf->setCellHeightRatio(1);
                 $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -531,11 +618,18 @@ class distribucionController extends Controller
                 $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->ln(192);
+                $pdf->SetFont('','',7);
+                $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                $pdf->ln(-192);
                 $pdf->ln(2);
                 $pdf->SetFont('','',7);
                 $pdf->setCellHeightRatio(1);
@@ -569,10 +663,11 @@ class distribucionController extends Controller
                 $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_seis->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(91, 5, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 5, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(20, 5, number_format($value_distribucion_seis->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                 //$pdf->ln(4);
 
@@ -613,16 +708,16 @@ class distribucionController extends Controller
 
                   $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                   $pdf->SetFont('','',6);
-                  $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                   $pdf->SetFont('','B',7);
                   $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-                  $pdf->SetFont('','',6);
-                  $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                  $pdf->SetFont('','',7);
+                  $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                   $pdf->ln(10);
                   $pdf->SetFont('','B',6);
                   $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
                   $pdf->SetFont('','',6);
-                  $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                   $pdf->ln(10);
                   $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
                   $pdf->ln(0);
@@ -652,18 +747,39 @@ class distribucionController extends Controller
                   $pdf->SetFont('','B',8);
                   $pdf->setCellHeightRatio(10);
                   $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
                   $pdf->SetFont('','B',6);
                   $pdf->setCellHeightRatio(1.2);
                   $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
                   $pdf->ln(0);
-                  $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->ln(5);
-                  $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+                  $distribucion_ae = vista_distribucion_presupuesto::
+                  select( 'nu_ae', 'de_ae' )
+                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                  ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                  ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->groupBy('nu_ae')
+                  ->groupBy('de_ae')
+                  ->orderBy('nu_ae','ASC')
+                  ->get();
+
+                  $a = 4; $b = 0;
+                  foreach($distribucion_ae as $key => $value_distribucion_ae){
+                    $b++;
+                    $pdf->SetFont('','',5);
+                    $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                    $pdf->SetFont('','B',6);
+                    $c = $a - $b;
+                  }
+                  for ($n=0; $n<$c; $n++){
+                    $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                  }
+
                   $pdf->ln(25);
                   $pdf->setCellHeightRatio(1);
                   $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -671,11 +787,18 @@ class distribucionController extends Controller
                   $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                  $pdf->ln(192);
+                  $pdf->SetFont('','',7);
+                  $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                  $pdf->ln(-192);
                   $pdf->ln(2);
                   $pdf->SetFont('','',7);
                   $pdf->setCellHeightRatio(1);
@@ -712,10 +835,11 @@ class distribucionController extends Controller
                   $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_siete->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_siete->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(91, 5, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(83, 5, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(20, 5, number_format($value_distribucion_siete->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                   //$pdf->ln(4);
 
@@ -756,16 +880,16 @@ class distribucionController extends Controller
 
                     $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('','',6);
-                    $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('','B',7);
                     $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-                    $pdf->SetFont('','',6);
-                    $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                    $pdf->SetFont('','',7);
+                    $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->ln(10);
                     $pdf->SetFont('','B',6);
                     $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('','',6);
-                    $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->ln(10);
                     $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
                     $pdf->ln(0);
@@ -795,18 +919,39 @@ class distribucionController extends Controller
                     $pdf->SetFont('','B',8);
                     $pdf->setCellHeightRatio(10);
                     $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
                     $pdf->SetFont('','B',6);
                     $pdf->setCellHeightRatio(1.2);
                     $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
                     $pdf->ln(0);
-                    $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
                     $pdf->ln(5);
-                    $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+                    $distribucion_ae = vista_distribucion_presupuesto::
+                    select( 'nu_ae', 'de_ae' )
+                    ->where('ef_uno', '=', Session::get('ejercicio'))
+                    ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                    ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                    ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                    ->groupBy('nu_ae')
+                    ->groupBy('de_ae')
+                    ->orderBy('nu_ae','ASC')
+                    ->get();
+
+                    $a = 4; $b = 0;
+                    foreach($distribucion_ae as $key => $value_distribucion_ae){
+                      $b++;
+                      $pdf->SetFont('','',5);
+                      $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                      $pdf->SetFont('','B',6);
+                      $c = $a - $b;
+                    }
+                    for ($n=0; $n<$c; $n++){
+                      $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                    }
+
                     $pdf->ln(25);
                     $pdf->setCellHeightRatio(1);
                     $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -814,11 +959,18 @@ class distribucionController extends Controller
                     $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->ln(192);
+                    $pdf->SetFont('','',7);
+                    $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                    $pdf->ln(-192);
                     $pdf->ln(2);
                     $pdf->SetFont('','',7);
                     $pdf->setCellHeightRatio(1);
@@ -870,10 +1022,11 @@ class distribucionController extends Controller
                     $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(7, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(91, 5, $value_distribucion_ocho->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(83, 5, $value_distribucion_ocho->tx_nombre, 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(20, 5, number_format($value_distribucion_ocho->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                     //$pdf->ln(4);
 
@@ -914,16 +1067,16 @@ class distribucionController extends Controller
 
                       $pdf->MultiCell(29, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                       $pdf->SetFont('','',6);
-                      $pdf->MultiCell(91, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(83, 10, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                       $pdf->SetFont('','B',7);
                       $pdf->MultiCell(20, 20, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-                      $pdf->SetFont('','',6);
-                      $pdf->MultiCell(56, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                      $pdf->SetFont('','',7);
+                      $pdf->MultiCell(64, 20, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                       $pdf->ln(10);
                       $pdf->SetFont('','B',6);
                       $pdf->MultiCell(29, 10, chr(10).'PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
                       $pdf->SetFont('','',6);
-                      $pdf->MultiCell(91, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(83, 10, substr($value_distribucion_tres->nu_original, -2).' - '.mb_strtoupper($value_distribucion_tres->de_nombre, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                       $pdf->ln(10);
                       $pdf->MultiCell(196, 220, '', 1, 'C', 0, 0, '', '', true);
                       $pdf->ln(0);
@@ -953,18 +1106,39 @@ class distribucionController extends Controller
                       $pdf->SetFont('','B',8);
                       $pdf->setCellHeightRatio(10);
                       $pdf->MultiCell(29, 30, '', 0, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(91, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(83, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
                       $pdf->SetFont('','B',6);
                       $pdf->setCellHeightRatio(1.2);
                       $pdf->MultiCell(20, 30, chr(10).chr(10).chr(10).'TOTAL PROYECTO Y/O ACCIÓN CENTRALIZADA', 1, 'C', 0, 0, '', '', true);
                       $pdf->MultiCell(56, 5, chr(10).'ACCIÓNES ESPECIFICAS', 0, 'C', 0, 0, '', '', true);
                       $pdf->ln(0);
-                      $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
                       $pdf->ln(5);
-                      $pdf->MultiCell(140, 30, '', 0, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(20, 25, '', 1, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(132, 30, '', 0, 'C', 0, 0, '', '', true);
+
+                      $distribucion_ae = vista_distribucion_presupuesto::
+                      select( 'nu_ae', 'de_ae' )
+                      ->where('ef_uno', '=', Session::get('ejercicio'))
+                      ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                      ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                      ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                      ->groupBy('nu_ae')
+                      ->groupBy('de_ae')
+                      ->orderBy('nu_ae','ASC')
+                      ->get();
+
+                      $a = 4; $b = 0;
+                      foreach($distribucion_ae as $key => $value_distribucion_ae){
+                        $b++;
+                        $pdf->SetFont('','',5);
+                        $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+                        $pdf->SetFont('','B',6);
+                        $c = $a - $b;
+                      }
+                      for ($n=0; $n<$c; $n++){
+                        $pdf->MultiCell(16, 25, '', 1, 'C', 0, 0, '', '', true);
+                      }
+
                       $pdf->ln(25);
                       $pdf->setCellHeightRatio(1);
                       $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
@@ -972,11 +1146,18 @@ class distribucionController extends Controller
                       $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                       $pdf->MultiCell(5, 190, '', 1, 'C', 0, 0, '', '', true);
                       $pdf->MultiCell(7, 190, '', 1, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(91, 190, '', 1, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(83, 190, '', 1, 'C', 0, 0, '', '', true);
                       $pdf->MultiCell(20, 190, '', 1, 'C', 0, 0, '', '', true);
                       $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(16, 190, '', 1, 'C', 0, 0, '', '', true);
+                      $pdf->ln(192);
+                      $pdf->SetFont('','',7);
+                      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                      $pdf->ln(-192);
                       $pdf->ln(2);
                       $pdf->SetFont('','',7);
                       $pdf->setCellHeightRatio(1);
@@ -992,6 +1173,23 @@ class distribucionController extends Controller
             }
 
           }
+
+          $pdf->ln(2);
+
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(7, 5, '', 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(5, 5, '', 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 5, 'TOTAL', 0, 'C', 0, 0, '', '', true);
+          $pdf->SetFont('','B',6);
+          $pdf->MultiCell(20, 5, number_format($movimiento, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
 
           // reset font stretching  reset font spacing
           $pdf->setFontStretching(100);
