@@ -20,6 +20,7 @@ use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Style_Fill;
 use PHPExcel_Cell_DataType;
+use Maatwebsite\Excel\Facades\Excel;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -464,5 +465,127 @@ class acaepartidaController extends Controller
       ));
     }
 
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function procesarDesagregado($ac, $ae)
+  {
+
+    $file = Input::file('archivo');
+
+    $validator = Validator::make(
+      ['file'      => $file, 'extension' => strtolower($file->getClientOriginalExtension()),],
+      ['file'=> 'required', 'extension' => 'required|in:xls,xlsx', ]
+    );
+
+    if ($validator->fails()){
+      $data = json_encode(array('success' => false, 'msg' => $validator->getMessageBag()->toArray()));
+      $response = Response::make($data);
+      $response->header('Content-Type', 'text/html');
+      return $response;
+    }else{
+      try {
+        //*************Inicio de Carga Masiva*************//
+        $path = Input::file('archivo')->getRealPath();
+
+        $data = Excel::load($path, function($reader) { })->get();
+
+        //dd($data);
+
+				if(!empty($data) && $data->count()){
+					foreach ($data as $key => $value) {
+
+						$insert[] = [
+							'ac' => $ac,
+              'ae' => $ae,
+							'pa' => $value->pa,
+							'ge' => $value->ge,
+							'es' => $value->es,
+							'se' => $value->se,
+							'sse' => $value->sse,
+							'aplicacion' => $value->aplicacion,
+							'denominacion' => $value->denominacion,
+              'monto' => $value->monto
+							 ];
+					}
+
+					//dd($insert);
+
+					if(!empty($insert)){
+						DB::beginTransaction();
+
+            //Actualizar todos los registros a false
+            $borrar_ac_ae_partida = tab_ac_ae_partida::where('id_accion_centralizada' , '=', $ac)
+            ->where('id_accion' , '=', $ae)
+            ->delete();
+
+						try {
+						$i=0;
+						foreach ($insert as $key => $valor) {
+							$i++;
+							$validarDetalle = Validator::make($valor, tab_ac_ae_partida::$validarDesagregado);
+							if ($validarDetalle->fails()){
+
+                DB::rollback();
+
+								$mensaje_error = array_merge_recursive($validarDetalle->getMessageBag()->toArray(), array('linea' => 'Ubicado en linea N°: '.$i ));
+								$data = json_encode(array('success' => false, 'msg' => $mensaje_error));
+								$response = Response::make($data);
+								$response->header('Content-Type', 'text/html');
+								return $response;
+
+							}else{
+
+              $partidaCrear = $valor['pa'].$valor['ge'].$valor['es'].$valor['se'].$valor['sse'];
+
+              $partida = new tab_ac_ae_partida;
+              $partida->id_accion_centralizada = $valor['ac'];
+              $partida->id_accion = $valor['ae'];
+              $partida->id_tab_ejercicio_fiscal = Session::get('ejercicio');
+              $partida->nu_aplicacion = $valor['aplicacion'];
+              $partida->co_partida = $partidaCrear;
+              $partida->monto = floatval($valor['monto']);
+              $partida->edo_reg = TRUE;
+              $partida->save();
+
+							}
+						}
+						DB::commit();
+
+						$data = json_encode(array('success' => true, 'msg' => 'Archivo procesado exitosamente!'));
+						$response = Response::make($data);
+						$response->header('Content-Type', 'text/html');
+						return $response;
+
+						}catch (\Illuminate\Database\QueryException $e)
+						{
+							DB::rollback();
+
+							$data = json_encode(array('success' => false, 'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())));
+							$response = Response::make($data);
+							$response->header('Content-Type', 'text/html');
+							return $response;
+						}
+					}
+				}else{
+
+					$data = json_encode(array('success' => false, 'msg' => array('ERROR (error):'=> 'El Archivo no contiene registros')));
+					$response = Response::make($data);
+					$response->header('Content-Type', 'text/html');
+					return $response;
+
+				}
+
+      } catch (\Exception $e) {
+        $data = json_encode(array('success' => false, 'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())));
+        $response = Response::make($data);
+        $response->header('Content-Type', 'text/html');
+        return $response;
+      }
+    }
   }
 }

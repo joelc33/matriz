@@ -31,4 +31,17 @@ class tab_ac_ae_partida extends Model
 		"partida" => "required|numeric|exists:tab_partidas,co_partida",
 		"monto" => "numeric|min:1"
 	);
+
+	public static $validarDesagregado = array(
+		"ac" => "required",
+		"ae" => "required",
+		"pa" => "required",
+		"ge" => "required",
+		"es" => "required",
+		"se" => "required",
+		"sse" => "required",
+		"aplicacion" => "required|exists:tab_aplicacion,co_aplicacion",
+		"descripcion" => "required",
+		"monto" => "numeric|min:1"
+	);
 }
