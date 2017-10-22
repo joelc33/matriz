@@ -170,6 +170,7 @@ class distribucionController extends Controller
         ->where('ef_uno', '=', Session::get('ejercicio'))
         ->where('co_sector', '=', $value_distribucion_uno->co_sector)
         ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+        //->where('id_ejecutor', '=', '0002')
         ->groupBy('co_sector')
         ->groupBy('tx_descripcion')
         ->groupBy('id_ejecutor')
@@ -328,10 +329,50 @@ class distribucionController extends Controller
             $pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->SetFont('','',6);
             //$pdf->writeHTMLCell(20,5, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
+
+            $distribucion_ae = vista_distribucion_presupuesto::
+            select( 'nu_ae', 'de_ae' )
+            ->where('ef_uno', '=', Session::get('ejercicio'))
+            ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+            ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+            ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+            ->groupBy('nu_ae')
+            ->groupBy('de_ae')
+            ->orderBy('nu_ae','ASC')
+            ->get();
+
+            foreach($distribucion_ae as $key => $value_distribucion_ae){
+
+              $distribucion_ae_partida = vista_distribucion_presupuesto::
+              join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+              ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
+              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+              ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+              ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+              ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
+              ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+              ->groupBy('nu_ae')
+              ->orderBy('nu_ae','ASC')
+              ->get();
+
+              $i = 0;
+              foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
+                $i++;
+                $pdf->SetFont('','B',5);
+                $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->SetFont('','B',6);
+              }
+              if ($i == 0){
+                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+              }
+            }
+
+            /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
             //$pdf->ln(4);
 
             $movimiento = $movimiento + $value_distribucion_cuatro->mo_partida;
@@ -496,10 +537,53 @@ class distribucionController extends Controller
               $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(83, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              $distribucion_ae = vista_distribucion_presupuesto::
+              select( 'nu_ae', 'de_ae' )
+              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+              ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+              ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+              ->groupBy('nu_ae')
+              ->groupBy('de_ae')
+              ->orderBy('nu_ae','ASC')
+              ->get();
+
+              foreach($distribucion_ae as $key => $value_distribucion_ae){
+
+                $distribucion_ae_partida = vista_distribucion_presupuesto::
+                join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+                ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
+                ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
+                ->where('ef_uno', '=', Session::get('ejercicio'))
+                ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
+                ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+                ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+                ->groupBy('nu_ae')
+                ->orderBy('nu_ae','ASC')
+                ->get();
+
+                $i = 0;
+                foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
+                  $i++;
+                  $pdf->SetFont('','',5);
+                  $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->SetFont('','B',6);
+                }
+                if ($i == 0){
+                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                }
+              }
+
+              /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
               //$pdf->ln(4);
 
               $condicionPartida = strlen($value_distribucion_cinco->tx_nombre);
@@ -665,10 +749,56 @@ class distribucionController extends Controller
                 $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(83, 5, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(20, 5, number_format($value_distribucion_seis->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                $distribucion_ae = vista_distribucion_presupuesto::
+                select( 'nu_ae', 'de_ae' )
+                ->where('ef_uno', '=', Session::get('ejercicio'))
+                ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                ->groupBy('nu_ae')
+                ->groupBy('de_ae')
+                ->orderBy('nu_ae','ASC')
+                ->get();
+
+                foreach($distribucion_ae as $key => $value_distribucion_ae){
+
+                  $distribucion_ae_partida = vista_distribucion_presupuesto::
+                  join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+                  ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
+                  ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
+                  ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
+                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                  ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                  ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
+                  ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+                  ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+                  ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
+                  ->groupBy('nu_ae')
+                  ->orderBy('nu_ae','ASC')
+                  ->get();
+
+                  $i = 0;
+                  foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
+                    $i++;
+                    $pdf->SetFont('','',5);
+                    $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                    $pdf->SetFont('','B',6);
+                  }
+                  if ($i == 0){
+                    $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                  }
+                }
+
+                /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
                 //$pdf->ln(4);
 
                 $condicionPartida = strlen($value_distribucion_seis->tx_nombre);
@@ -837,10 +967,59 @@ class distribucionController extends Controller
                   $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(83, 5, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(20, 5, number_format($value_distribucion_siete->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                  $distribucion_ae = vista_distribucion_presupuesto::
+                  select( 'nu_ae', 'de_ae' )
+                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                  ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                  ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->groupBy('nu_ae')
+                  ->groupBy('de_ae')
+                  ->orderBy('nu_ae','ASC')
+                  ->get();
+
+                  foreach($distribucion_ae as $key => $value_distribucion_ae){
+
+                    $distribucion_ae_partida = vista_distribucion_presupuesto::
+                    join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+                    ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
+                    ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
+                    ->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'))
+                    ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
+                    ->where('ef_uno', '=', Session::get('ejercicio'))
+                    ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                    ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                    ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                    ->where('t04.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                    ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+                    ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+                    ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                    ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
+                    ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+                    ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+                    ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
+                    ->where('t04.co_partida', '=', $value_distribucion_siete->co_partida)
+                    ->groupBy('nu_ae')
+                    ->orderBy('nu_ae','ASC')
+                    ->get();
+
+                    $i = 0;
+                    foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
+                      $i++;
+                      $pdf->SetFont('','',5);
+                      $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                      $pdf->SetFont('','B',6);
+                    }
+                    if ($i == 0){
+                      $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                    }
+                  }
+
+                  /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
                   //$pdf->ln(4);
 
                   $condicionPartida = strlen($value_distribucion_siete->tx_nombre);
@@ -1186,10 +1365,32 @@ class distribucionController extends Controller
           $pdf->SetFont('','B',6);
           $pdf->MultiCell(20, 5, number_format($movimiento, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
           $pdf->SetFont('','B',8);
+
+          $distribucion_ae_partida = vista_distribucion_presupuesto::
+          select('nu_ae', DB::raw('sum(monto) as mo_partida') )
+          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+          ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+          ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+          ->groupBy('nu_ae')
+          ->orderBy('nu_ae','ASC')
+          ->get();
+
+          $i = 0;
+          foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
+            $i++;
+            $pdf->SetFont('','B',5);
+            $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->SetFont('','B',8);
+          }
+          if ($i == 0){
+            $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+          }
+
+          /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
 
           // reset font stretching  reset font spacing
           $pdf->setFontStretching(100);
