@@ -53,7 +53,8 @@ class partidaController extends Controller
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_partidas->where('tx_nombre', 'ILIKE', "%$variable%");
+          //$tab_partidas->where('tx_nombre', 'ILIKE', "%$variable%");
+          $tab_ac->whereRaw("co_partida||tx_nombre  ILIKE '%".$variable."%'");
         }
 
         $response['success']  = 'true';
