@@ -173,7 +173,7 @@ Route::group(['namespace' => 'Ac'], function(){
 		Route::post('storeLista', 'acaepartidaController@storeLista');
 		Route::post('masivo', 'acaepartidaController@procesarMasivo');
 		Route::get('{ac}/{ae}/bajar', 'acaepartidaController@bajar');
-		Route::get('{ac}/{ae}/cargar', 'acaepartidaController@procesarDesagregado');
+		Route::post('cargar', 'acaepartidaController@procesarDesagregado');
 	});
 });
 //*Modulos de Mantenimiento*/
