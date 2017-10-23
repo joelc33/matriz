@@ -551,6 +551,7 @@ class acaepartidaController extends Controller
               $partida->id_accion = $valor['ae'];
               $partida->id_tab_ejercicio_fiscal = Session::get('ejercicio');
               $partida->nu_aplicacion = $valor['aplicacion'];
+              $partida->de_denominacion = $valor['denominacion'];
               $partida->co_partida = $partidaCrear;
               $partida->monto = floatval($valor['monto']);
               $partida->edo_reg = TRUE;
