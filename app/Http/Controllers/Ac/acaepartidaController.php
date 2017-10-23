@@ -472,8 +472,11 @@ class acaepartidaController extends Controller
    *
    * @return Response
    */
-  public function procesarDesagregado($ac, $ae)
+  public function procesarDesagregado()
   {
+
+    $ac = Input::get('ac');
+    $ae = Input::get('ae');
 
     $file = Input::file('archivo');
 
@@ -507,6 +510,7 @@ class acaepartidaController extends Controller
 							'es' => $value->es,
 							'se' => $value->se,
 							'sse' => $value->sse,
+              'partida' => $value->pa.$value->ge.$value->es.$value->se.$value->sse,
 							'aplicacion' => $value->aplicacion,
 							'denominacion' => $value->denominacion,
               'monto' => $value->monto

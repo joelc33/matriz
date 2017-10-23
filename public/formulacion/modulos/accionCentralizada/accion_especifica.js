@@ -717,6 +717,106 @@
         }
     });
 
+    Ext.define('AccionCentralizada.CargarPartidas.App', {
+        extend: 'Ext.Window',
+        xtype: 'ac_ae_partidas_app',
+        constructor: function(config) {
+            var self = this;
+            config = Ext.apply({
+                title: 'Cargar Partidas de Acción Especifica',
+                modal: true,
+                width: 400,
+                items: [{
+                    xtype: 'form',
+                    fileUpload: true,
+                    labelAlign: 'right',
+                    border:false,
+                    items: [{
+                            xtype: 'hidden',
+                            name: 'accion_centralizada',
+                            value: config.ac.id
+                        }, {
+                            xtype: 'displayfield',
+                            fieldLabel: 'Código AC',
+                            value: config.ac.codigo
+                        }, {
+                            xtype: 'displayfield',
+                            fieldLabel: 'Código AE',
+                            value: config.ae.numero
+                        },
+                        new Ext.ux.form.FileUploadField({
+                            emptyText: 'Seleccione un Archivo',
+                            fieldLabel: 'Archivo',
+                            name: 'archivo',
+                            buttonText: '',
+                            width: 200,
+                            buttonCfg: {
+                                iconCls: 'icon-excel'
+                            },
+                            allowBlank: false
+                        }), {
+                            xtype: 'displayfield',
+                            fieldLabel: '',
+                            labelSeparator: '',
+                            padding: '',
+                            value: '* Recuerde verificar que el archivo contenga '
+                                + config.cuenta + ' columnas contigüas de datos, '
+                                + 'correspondientes a las acciones específicas'
+                        }
+                    ],
+                    buttonAlign: 'right',
+                    bbar: [{
+                        text: 'Procesar',
+                        iconCls: 'icon-guardar',
+                        handler: function(btn) {
+                            var forma = btn.findParentByType('form').getForm();
+                            if (!forma.isValid()) {
+                                Ext.Msg.alert('Alerta',
+                                    'Debe seleccionar un Archivo');
+                                return false;
+                            }
+                            forma.submit({
+                                method: 'POST',
+                                url: 'ac/ae/partida/cargar',
+                                params: {
+                                    ac: config.ac.id,
+                                    ae: config.ae.id_accion,
+                                    up: self.actualizar
+                                },
+                                waitMsg: 'Enviando datos, por favor espere..',
+                                waitTitle: 'Enviando',
+                                failure: function(form, action) {
+                                  var errores = '';
+                                  for(datos in action.result.msg){
+                                    errores += action.result.msg[datos] + '<br>';
+                                  }
+                                    /*Ext.MessageBox.alert('Error en transacción',
+                                        action.result.msg);*/
+                                    Ext.MessageBox.alert('Error en transacción', errores);
+                                },
+                                success: function(form, action) {
+                                    if (action.result.success) {
+                                        Ext.MessageBox.show({
+                                            title: 'Mensaje',
+                                            msg: action.result.msg,
+                                            closable: false,
+                                            icon: Ext.MessageBox.INFO,
+                                            resizable: false,
+                                            animEl: document.body,
+                                            buttons: Ext.MessageBox.OK
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }]
+                }]
+            }, config);
+
+            this.callParent(arguments);
+        }
+    });
+
     Ext.define('AccionCentralizada.AccionEspecifica_Partidas', {
         extend: 'Ext.Window',
         xtype: 'accion_especifica_partidas',
@@ -791,7 +891,19 @@
                 },'-',{
                     xtype: 'button',
                     text: 'Subir Partidas',
-                    iconCls: 'icon-generar'
+                    iconCls: 'icon-generar',
+                    handler: function() {
+                        var v = Ext.create({
+                            xtype: 'ac_ae_partidas_app',
+                            ac: self.ac,
+                            ae: self.ae,
+                            cuenta: self.store.getCount()
+                        });
+                        v.show();
+                        v.on('close', function() {
+                            self.store.reload();
+                        });
+                    }
                 }]
             });
 

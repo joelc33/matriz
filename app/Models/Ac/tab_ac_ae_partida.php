@@ -40,8 +40,9 @@ class tab_ac_ae_partida extends Model
 		"es" => "required",
 		"se" => "required",
 		"sse" => "required",
+		"partida" => "required",
 		"aplicacion" => "required|exists:tab_aplicacion,co_aplicacion",
-		"descripcion" => "required",
+		"denominacion" => "required",
 		"monto" => "numeric|min:1"
 	);
 }
