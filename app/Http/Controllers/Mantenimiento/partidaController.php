@@ -54,7 +54,7 @@ class partidaController extends Controller
 
         if($variable!=""){
           //$tab_partidas->where('tx_nombre', 'ILIKE', "%$variable%");
-          $tab_ac->whereRaw("co_partida||tx_nombre  ILIKE '%".$variable."%'");
+          $tab_partidas->whereRaw("co_partida||tx_nombre  ILIKE '%".$variable."%'");
         }
 
         $response['success']  = 'true';
