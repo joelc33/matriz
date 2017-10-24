@@ -70,6 +70,7 @@ this.tx_descripcion = new Ext.form.TextArea({
 	width:400,
 	maxLength: 600,
 	height:100,
+	allowBlank:false
 });
 
 this.guardar = new Ext.Button({

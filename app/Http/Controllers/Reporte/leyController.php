@@ -46,20 +46,28 @@ class leyController extends Controller
       $pdf->SetTitle('Ley de Presupuesto');
       $pdf->SetSubject('Ley de Presupuesto');
       $pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-      $pdf->SetMargins(10,10,10);
+      $pdf->SetMargins(15,10,10);
       $pdf->SetTopMargin(10);
       $pdf->SetPrintHeader(false);
       $pdf->SetPrintFooter(false);
       // set auto page breaks
-      $pdf->SetAutoPageBreak(TRUE, 10);
+      $pdf->SetAutoPageBreak(TRUE, 5);
+      //$pdf->AddPage();
+
       $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
 
       /******Portada Titulo I*********/
       $pdf->SetAlpha(0.3);
-  		$pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
-  		$pdf->ln(30);
-  		$pdf->setAlpha(1);
-  		$pdf->SetFont('','',8);
+      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->ln(30);
+      $pdf->setAlpha(1);
+      $pdf->SetFont('','',8);
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
@@ -87,8 +95,16 @@ class leyController extends Controller
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
 
       $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
 
       /******Portada Titulo II*********/
       $pdf->SetAlpha(0.3);
@@ -109,9 +125,9 @@ class leyController extends Controller
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
       $pdf->writeHTML('<b><u>TITULO II<u/></b>', true, false, true, false, 'R');
-      $pdf->ln(7);
+      $pdf->ln(1);
       $pdf->MultiCell(195, 5, 'PRESUPUESTO DE INGRESOS', 0, 'R', 0, 0, '', '', true);
-      $pdf->ln(7);
+      $pdf->ln(10);
       // set border width
       $pdf->SetLineWidth(0.508);
       $pdf->SetDrawColor(0,0,0);
@@ -128,6 +144,12 @@ class leyController extends Controller
 
       $pdf->AddPage();
 
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
       $pdf->SetFont('','B',8);
   		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
       $pdf->SetFont('','B',11);
@@ -140,120 +162,176 @@ class leyController extends Controller
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(19);
       $pdf->SetFont('','',8);
-      //$pdf->MultiCell(195, 220, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
 
-      $tabla_presupuesto_ingreso = '
-      <table border="0.5" style="width:100%" cellpadding="2" cellspacing="0">
-      <thead>
-      <tr style="font-size: 9px;">
-      <th style="text-align: center;width:20%" colspan="4">
-      <strong>CODIGO <br>(Recursos)</strong>
-      </th>
-      <th style="text-align: center;width:60%;font-size: 10px;" rowspan="3"><strong><br>DENOMINACION</strong></th>
-      <th style="text-align: center;width:20%;font-size: 10px;" rowspan="3"><strong><br>MONTO</strong></th>
-      </tr>
-      <tr style="font-size: 6px">
-      <th style="text-align: center;width:5%" rowspan="2"><strong><br>RAMO</strong></th>
-      <th style="text-align: center;width:15%" colspan="3"><strong>SUB-RAMOS</strong></th>
-      </tr>
-      <tr style="font-size: 6px">
-      <th style="text-align: center;width:5%"><strong>GEN.</strong></th>
-      <th style="text-align: center;width:5%"><strong>ESP.</strong></th>
-      <th style="text-align: center;width:5%"><strong>SUB-ESP.</strong></th>
-      </tr>
-      </thead>
-      <tbody>';
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(40, 10, 'CÓDIGO'.chr(10).'(Recursos)', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->SetFont('','B',7);
+      $pdf->MultiCell(10, 11, chr(10).'RAMO', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(30, 5, 'SUB - RAMOS', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(5);
 
-      $tab_presupuesto_ingreso = tab_presupuesto_ingreso::select( 'id', 'id_tab_ejercicio_fiscal',
-      'nu_partida', 'de_partida', 'mo_partida','in_activo' )
-      ->where('in_activo', '=', TRUE)
-      ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-      ->orderBy('nu_partida','ASC')
+      $pdf->SetFont('','B',6);
+      $pdf->MultiCell(10, 5, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 6, 'GEN.', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 6, 'ESP.', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 6, 'SUB. ESP.', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(-15);
+      $pdf->SetFont('','B',9);
+      $pdf->MultiCell(40, 21, '', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(116, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 21, chr(10).chr(10).'MONTO', 1, 'C', 0, 0, '', '', true);
+
+      $pdf->ln(21);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(10, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(116, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(40, 214, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(221);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-221);
+      $pdf->ln(2);
+      $pdf->SetFont('','',7);
+      $pdf->setCellHeightRatio(1);
+
+      $presupuesto_uno = tab_presupuesto_ingreso::
+      join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
+      ->select( 't01.co_partida', 'tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
+      ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
+      ->groupBy('t01.co_partida')
+      ->groupBy('tx_nombre')
+      ->orderBy('co_partida','ASC')
       ->get();
 
-      $filtro = array();
-      $total = 0;
+      $movimiento_ingreso = 0;
+      $culminado_ingreso = false;
 
-      foreach ($tab_presupuesto_ingreso as $key => $value) {
+      foreach ($presupuesto_uno as $key => $value_presupuesto_uno) {
 
-        $data = DB::select( DB::raw("
-            WITH partidas (co_partida) AS (
-                    SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 1 as nivel
-                  	FROM mantenimiento.tab_partidas
-                  	WHERE co_partida = left(:partida, 3)
-                  	UNION ALL
-                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 2 as nivel
-                  	FROM mantenimiento.tab_partidas
-                  	WHERE co_partida = left(:partida, 5)
-                  	UNION ALL
-                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 3 as nivel
-                  	FROM mantenimiento.tab_partidas
-                  	WHERE co_partida = left(:partida, 7)
-                  	UNION ALL
-                  	SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, 4 as nivel
-                  	FROM mantenimiento.tab_partidas
-                  	WHERE co_partida = left(:partida, 12)
-                 )
-            SELECT co_partida, tx_nombre, ace_mov, id_tab_ejercicio_fiscal, nivel
-            FROM partidas
-            WHERE
-            id_tab_ejercicio_fiscal = :ejercicio;
-  				"), array( 'partida' => $value->nu_partida , 'ejercicio' => Session::get('ejercicio')));
+        $pdf->SetFont('','B',8);
+        $pdf->writeHTMLCell(10,5, '', '', '<u><b>'.$value_presupuesto_uno->co_partida.'</b></u>', 0, 0, 0, true, 'C', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->writeHTMLCell(116,5, '', '', '<u><b>'.$value_presupuesto_uno->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
+        $pdf->MultiCell(40, 5, number_format($value_presupuesto_uno->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->ln(5);
 
-          foreach ($data as $key => $values) {
+        $presupuesto_dos = tab_presupuesto_ingreso::
+        join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
+        ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 5)'))
+        ->select( 't02.co_partida', 't02.tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
+        ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
+        ->where('t01.co_partida', '=', $value_presupuesto_uno->co_partida)
+        ->groupBy('t02.co_partida')
+        ->groupBy('t02.tx_nombre')
+        ->orderBy('t02.co_partida','ASC')
+        ->get();
 
-          if (in_array($values->co_partida, $filtro)) {
+        foreach ($presupuesto_dos as $key => $value_presupuesto_dos) {
 
-          }else{
+          $pdf->SetFont('','',8);
+          $pdf->MultiCell(10, 5, substr(trim($value_presupuesto_dos->co_partida), 0, 3), 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_dos->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(2, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(114, 5, $value_presupuesto_dos->tx_nombre, 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(40, 5, number_format($value_presupuesto_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->ln(5);
 
-            $filtro[] = $values->co_partida;
+          $presupuesto_tres = tab_presupuesto_ingreso::
+          join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
+          ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 5)'))
+          ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 7)'))
+          ->select( 't03.co_partida', 't03.tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
+          ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
+          ->where('t01.co_partida', '=', $value_presupuesto_uno->co_partida)
+          ->where('t02.co_partida', '=', $value_presupuesto_dos->co_partida)
+          ->groupBy('t03.co_partida')
+          ->groupBy('t03.tx_nombre')
+          ->orderBy('t03.co_partida','ASC')
+          ->get();
 
+          foreach ($presupuesto_tres as $key => $value_presupuesto_tres) {
 
-            $tabla_presupuesto_ingreso.='
-            <tr>
-              <td style="text-align: center;width:5%">'.substr($values->co_partida, 0, 3).'</td>
-              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 5), 3).'</td>
-              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 7), 5).'</td>
-              <td style="text-align: center;width:5%">'.substr(substr($values->co_partida, 0, 9), 7).'</td>
-              <td style="text-align: left;width:60%">'.$values->tx_nombre.'</td>';
+            $pdf->SetFont('','',8);
+            $pdf->MultiCell(10, 5, substr(trim($value_presupuesto_tres->co_partida), 0, 3), 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_tres->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_tres->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(4, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(112, 5, $value_presupuesto_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(40, 5, number_format($value_presupuesto_tres->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->ln(5);
 
-              if ($values->nivel==4) {
-                $tabla_presupuesto_ingreso.='
-                  <td style="text-align: rigth;width:20%"><strong>'.number_format($value->mo_partida, 2, ',', '.').'</strong></td>';
-              }elseif($values->nivel==1){
-                $tabla_presupuesto_ingreso.='
-                  <td style="text-align: rigth;width:20%"></td>';
-              }elseif($values->nivel==2){
-                $tabla_presupuesto_ingreso.='
-                  <td style="text-align: rigth;width:20%"></td>';
-              }elseif($values->nivel==3){
-                $tabla_presupuesto_ingreso.='
-                  <td style="text-align: rigth;width:20%"></td>';
+            $presupuesto_cuatro = tab_presupuesto_ingreso::
+            select( 'nu_partida as co_partida', 'de_partida as tx_nombre',  'mo_partida' )
+            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('in_activo', '=', TRUE)
+            ->where(DB::raw('left(nu_partida::character varying, 7)::numeric'), '=', $value_presupuesto_tres->co_partida)
+            ->orderBy('nu_partida','ASC')
+            ->get();
+
+            foreach ($presupuesto_cuatro as $key => $value_presupuesto_cuatro) {
+
+              $pdf->SetFont('','',8);
+              $pdf->MultiCell(10, 5, substr(trim($value_presupuesto_cuatro->co_partida), 0, 3), 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_cuatro->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_cuatro->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_cuatro->co_partida), 0, 9), 7), 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(110, 5, $value_presupuesto_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(40, 5, number_format($value_presupuesto_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              $condicionPartida = strlen($value_presupuesto_cuatro->tx_nombre);
+              if ($condicionPartida >= 60) {
+                $pdf->ln(7);
+              }else {
+                $pdf->ln(5);
               }
 
-            $tabla_presupuesto_ingreso.='</tr>';
+            }
 
           }
 
-          $total = $total + $value->mo_partida;
-
         }
+
+        $movimiento_ingreso = $movimiento_ingreso + $value_presupuesto_uno->mo_partida;
 
       }
 
-      $tabla_presupuesto_ingreso.='
-      <tr>
-      <td style="text-align: left;width:80%" colspan="5"><b>TOTAL</b></td>
-      <td style="text-align: rigth;width:20%"><b>'.number_format($total, 2, ',', '.').'</b></td>
-      </tr>
-      </tbody>
-      </table>';
+      $culminado_ingreso = true;
 
-      $pdf->writeHTML(Helper::htmlComprimir($tabla_presupuesto_ingreso), true, false, false, false, '');
+      if($culminado_ingreso ==true){
+        $pdf->SetFont('','B',8);
+        $pdf->setCellHeightRatio(1.5);
+        $pdf->SetY(262);
+        $pdf->MultiCell(156, 5, 'TOTAL GENERAL', 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(40, 5, number_format($movimiento_ingreso, 2, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      }
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);;
 
 
       $pdf->AddPage();

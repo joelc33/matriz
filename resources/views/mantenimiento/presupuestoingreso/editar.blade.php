@@ -72,6 +72,11 @@ this.de_nombre = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	//readOnly:true
+	listeners:{
+			change: function(){
+					this.setValue(String(this.getValue()).toUpperCase());
+			}
+	}
 });
 
 this.mo_partida = new Ext.form.NumberField({
