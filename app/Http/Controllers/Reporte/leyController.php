@@ -10,6 +10,7 @@ use matriz\Models\Ac\tab_ac_ae_partida;
 use matriz\Models\Proyecto\tab_proyecto;
 use matriz\Models\Proyecto\tab_proyecto_ae_partida;
 use matriz\Models\Proyecto\vista_relacion_transferencia;
+use matriz\Models\Proyecto\vista_distribucion_presupuesto;
 use View;
 use Input;
 use Response;
@@ -331,10 +332,15 @@ class leyController extends Controller
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
       $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);;
-
+      $pdf->setCellHeightRatio(2);
 
       $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
 
       /******Portada Titulo III*********/
       $pdf->SetAlpha(0.3);
@@ -355,7 +361,7 @@ class leyController extends Controller
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
       $pdf->writeHTML('<b><u>TITULO III<u/></b>', true, false, true, false, 'R');
-      $pdf->ln(0);
+      $pdf->ln(1);
       $pdf->MultiCell(195, 5, 'PRESUPUESTO DE GASTOS', 0, 'R', 0, 0, '', '', true);
       $pdf->ln(10);
       // set border width
@@ -366,6 +372,261 @@ class leyController extends Controller
       $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
       $pdf->ln(2);
       $pdf->Cell(195, 0, '', 'B', 1, 'R', 1, '', 0, false, 'T', 'R');
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->SetFont('','B',8);
+  		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->SetFont('','B',11);
+      $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->setCellHeightRatio(1.2);
+
+      $pdf->ln(21);
+      $pdf->SetFont('','B',6);
+      $pdf->StartTransform();
+      $pdf->Rotate(90);
+      $pdf->MultiCell(21, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->MultiCell(21, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->MultiCell(21, 10, chr(10).'ACCIÓN  ESPECÍFICA', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(10);
+      $pdf->StopTransform();
+      $pdf->ln(-51);
+      $pdf->SetFont('','B',9);
+      $pdf->MultiCell(30, 21, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(83, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(83, 21, chr(10).chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(21);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->ln(221);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-221);
+      $pdf->ln(2);
+      $pdf->SetFont('','',7);
+      $pdf->setCellHeightRatio(1);
+
+      $categoria_uno = vista_distribucion_presupuesto::
+      select( 'co_sector', 'tx_descripcion')
+      ->where('ef_uno', '=', Session::get('ejercicio'))
+      ->groupBy('co_sector')
+      ->groupBy('tx_descripcion')
+      ->orderBy('co_sector','ASC')
+      ->get();
+
+      foreach ($categoria_uno as $key => $value_categoria_uno) {
+
+        $pdf->SetFont('','B',7);
+        $pdf->MultiCell(10, 5, $value_categoria_uno->co_sector, 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_uno->tx_descripcion, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(5);
+
+        $categoria_dos = vista_distribucion_presupuesto::
+        select( 'nu_original', 'de_nombre')
+        ->where('ef_uno', '=', Session::get('ejercicio'))
+        ->where('co_sector', '=', $value_categoria_uno->co_sector)
+        ->groupBy('nu_original')
+        ->groupBy('de_nombre')
+        ->orderBy('nu_original','ASC')
+        ->get();
+
+        foreach ($categoria_dos as $key => $value_categoria_dos) {
+
+          $pdf->SetFont('','',7);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, substr($value_categoria_dos->nu_original, -2), 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+
+          $condicionPartida = strlen($value_categoria_dos->de_nombre);
+          if ($condicionPartida >= 60) {
+            $pdf->ln(10);
+          }else {
+            $pdf->ln(5);
+          }
+
+          $start_y = $pdf->GetY();
+
+          if ($start_y >= 260) {
+
+            $pdf->AddPage();
+
+            // reset font stretching  reset font spacing
+            $pdf->setFontStretching(100);
+            $pdf->setFontSpacing(0);
+            $pdf->SetLineWidth(0.150);
+            $pdf->setCellHeightRatio(2);
+
+            $pdf->SetFont('','B',8);
+        		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+            $pdf->SetFont('','B',11);
+            $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+            $pdf->ln(8);
+            $pdf->SetFont('','B',8);
+            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->ln(-10);
+            $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(19);
+            $pdf->setCellHeightRatio(1.2);
+
+            $pdf->ln(21);
+            $pdf->SetFont('','B',6);
+            $pdf->StartTransform();
+            $pdf->Rotate(90);
+            $pdf->MultiCell(21, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(21, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->MultiCell(21, 10, chr(10).'ACCIÓN  ESPECÍFICA', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+            $pdf->StopTransform();
+            $pdf->ln(-51);
+            $pdf->SetFont('','B',9);
+            $pdf->MultiCell(30, 21, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 21, chr(10).chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(21);
+            $pdf->setCellHeightRatio(1);
+            $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+            $pdf->ln(221);
+            $pdf->SetFont('','',7);
+            $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+            $pdf->ln(-221);
+            $pdf->ln(2);
+            $pdf->SetFont('','',7);
+            $pdf->setCellHeightRatio(1);
+
+          }
+
+          $categoria_tres = vista_distribucion_presupuesto::
+          select('nu_ae', 'de_ae')
+          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('co_sector', '=', $value_categoria_uno->co_sector)
+          ->where('nu_original', '=', $value_categoria_dos->nu_original)
+          ->groupBy('nu_ae')
+          ->groupBy('de_ae')
+          ->orderBy('nu_ae','ASC')
+          ->get();
+
+          foreach ($categoria_tres as $key => $value_categoria_tres) {
+
+            $pdf->SetFont('','',7);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(10, 5, substr($value_categoria_tres->nu_ae, -2), 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+
+            $condicionPartida = strlen($value_categoria_tres->de_ae);
+            if ($condicionPartida >= 60) {
+              $pdf->ln(10);
+            }else {
+              $pdf->ln(5);
+            }
+
+            $start_y = $pdf->GetY();
+
+            if ($start_y >= 260) {
+
+              $pdf->AddPage();
+
+              // reset font stretching  reset font spacing
+              $pdf->setFontStretching(100);
+              $pdf->setFontSpacing(0);
+              $pdf->SetLineWidth(0.150);
+              $pdf->setCellHeightRatio(2);
+
+              $pdf->SetFont('','B',8);
+              $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+              $pdf->SetFont('','B',11);
+              $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+              $pdf->ln(8);
+              $pdf->SetFont('','B',8);
+              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->ln(-10);
+              $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(19);
+              $pdf->setCellHeightRatio(1.2);
+
+              $pdf->ln(21);
+              $pdf->SetFont('','B',6);
+              $pdf->StartTransform();
+              $pdf->Rotate(90);
+              $pdf->MultiCell(21, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(21, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->MultiCell(21, 10, chr(10).'ACCIÓN  ESPECÍFICA', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(10);
+              $pdf->StopTransform();
+              $pdf->ln(-51);
+              $pdf->SetFont('','B',9);
+              $pdf->MultiCell(30, 21, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 21, chr(10).chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+              $pdf->ln(21);
+              $pdf->setCellHeightRatio(1);
+              $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+              $pdf->ln(221);
+              $pdf->SetFont('','',7);
+              $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+              $pdf->ln(-221);
+              $pdf->ln(2);
+              $pdf->SetFont('','',7);
+              $pdf->setCellHeightRatio(1);
+
+            }
+
+          }
+
+        }
+
+      }
+
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
