@@ -552,7 +552,29 @@ class leyController extends Controller
             $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(10, 5, substr($value_categoria_tres->nu_ae, -2), 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
-            $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+
+            $categoria_cuatro = vista_distribucion_presupuesto::
+            select('tx_ejecutor')
+            ->where('ef_uno', '=', Session::get('ejercicio'))
+            ->where('co_sector', '=', $value_categoria_uno->co_sector)
+            ->where('nu_original', '=', $value_categoria_dos->nu_original)
+            ->where('nu_ae', '=', $value_categoria_tres->nu_ae)
+            ->groupBy('tx_ejecutor')
+            ->orderBy('tx_ejecutor','ASC')
+            ->get();
+
+            $lista_ejecutores = '';
+            $linea = 0;
+
+            foreach ($categoria_cuatro as $key => $value_categoria_cuatro) {
+              $linea = $linea + 2;
+              $lista_ejecutores.= '- '.$value_categoria_cuatro->tx_ejecutor.chr(10);
+            }
+
+            $pdf->SetFont('','',5);
+            $pdf->MultiCell(83, $linea, $lista_ejecutores, 0, 'L', 0, 0, '', '', true);
+
+            $pdf->ln($linea);
 
             $condicionPartida = strlen($value_categoria_tres->de_ae);
             if ($condicionPartida >= 60) {
