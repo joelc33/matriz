@@ -969,42 +969,57 @@ class leyController extends Controller
 
         $pdf->AddPage();
 
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
         $pdf->SetFont('','B',8);
         $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
         $pdf->SetFont('','B',11);
-        $pdf->MultiCell(90, 5, 'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, chr(10).'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(8);
         $pdf->SetFont('','B',8);
         $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(-10);
         $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
         $pdf->ln(19);
+        $pdf->setCellHeightRatio(1.2);
+
+        $pdf->MultiCell(20, 5, '', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(20, 5, 'CODIGO', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(156, 5, 'DENOMINACION', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(5);
+        $pdf->MultiCell(20, 5, 'SECTOR:', 1, 'C', 0, 0, '', '', true);
         $pdf->SetFont('','',8);
+        $pdf->MultiCell(20, 5, $value->tx_codigo, 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(156, 5, mb_strtoupper($value->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(5);
+        $pdf->SetFont('','B',9);
+        $pdf->MultiCell(196, 10, chr(10).'DESCRIPCIÓN', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(10);
+        $pdf->setCellHeightRatio(1);
+        $pdf->MultiCell(196, 219, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(222);
+        $pdf->SetFont('','',7);
+        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-222);
+        $pdf->ln(2);
+        $pdf->SetFont('','',7);
+        $pdf->setCellHeightRatio(1);
 
-        $tabla_objetivo_sectorial = '
-        <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
-        <thead>
-        <tr style="font-size: 8px;">
-          <th style="text-align: center;width:20%" rowspan="2"><strong><br>SECTOR</strong></th>
-          <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
-          <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
-        </tr>
-        <tr style="font-size: 8px;">
-          <th style="text-align: center;width:20%">'.$value->tx_codigo.'</th>
-          <th style="text-align: left;width:60%">'.mb_strtoupper($value->tx_descripcion, 'UTF-8').'</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="font-size: 9px;">
-          <td colspan="3" style="text-align: center;width:100%"><strong>DESCRIPCIÓN</strong></td>
-        </tr>
-        <tr style="font-size: 7px;">
-          <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 200%;">'.nl2br($value->de_objetivo_sectorial).'</td>
-        </tr>
-        </tbody>
-        </table>';
+        $pdf->MultiCell(10, 5, '', 0, 'L', 0, 0, '', '', true);
+        $pdf->writeHTMLCell(176,5, '', '', nl2br($value->de_objetivo_sectorial), 0, 0, 0, true, 'L', true);
 
-        $pdf->writeHTML(Helper::htmlComprimir($tabla_objetivo_sectorial), true, false, false, false, '');
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
 
         /*Listado de Proyectos*/
         // reset font stretching  reset font spacing
@@ -1022,6 +1037,12 @@ class leyController extends Controller
         ->get();
 
         foreach ($pr_lista as $key => $value_pr) {
+
+          // reset font stretching  reset font spacing
+          $pdf->setFontStretching(100);
+          $pdf->setFontSpacing(0);
+          $pdf->SetLineWidth(0.150);
+          $pdf->setCellHeightRatio(2);
 
           $pdf->AddPage();
           /******Portada Titulo Sectores*********/
