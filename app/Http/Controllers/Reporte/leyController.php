@@ -1083,59 +1083,6 @@ class leyController extends Controller
           $pdf->SetLineWidth(0.150);
           $pdf->setCellHeightRatio(2);
 
-          /*$pdf->AddPage();
-
-          $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-          $pdf->SetFont('','B',10);
-          $pdf->setCellHeightRatio(1);
-          $pdf->MultiCell(70, 5, 'DESCRIPCIÓN DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
-          $pdf->setCellHeightRatio(2);
-          $pdf->ln(8);
-          $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
-          //$pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->ln(-10);
-          $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
-          $pdf->ln(19);
-          $pdf->SetFont('','',8);
-
-          $tabla_objetivo_proyecto = '
-          <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
-          <thead>
-          <tr style="font-size: 8px;">
-            <th style="text-align: center;width:20%"></th>
-            <th style="text-align: center;width:20%"><strong>CODIGO</strong></th>
-            <th style="text-align: left;width:60%"><strong>DENOMINACION</strong></th>
-          </tr>
-          <tr style="font-size: 8px;">
-            <th style="text-align: left;width:20%"><strong>SECTOR:</strong></th>
-            <th style="text-align: center;width:20%">'.$value_pr->clase_sector.'</th>
-            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->tx_descripcion, 'UTF-8').'</th>
-          </tr>
-          <tr style="font-size: 8px;">
-            <th style="text-align: left;width:20%"><strong>PROYECTO Y/O ACCIÓN CENTRALIZADA:</strong></th>
-            <th style="text-align: center;width:20%">'.substr($value_pr->id_proyecto, -3).'</th>
-            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->nombre, 'UTF-8').'</th>
-          </tr>
-          <tr style="font-size: 8px;">
-            <th style="text-align: left;width:20%"><strong>UNIDAD EJECUTORA:</strong></th>
-            <th style="text-align: center;width:20%">'.$value_pr->id_ejecutor.'</th>
-            <th style="text-align: left;width:60%">'.mb_strtoupper($value_pr->tx_ejecutor, 'UTF-8').'</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr style="font-size: 9px;">
-            <td colspan="3" style="text-align: center;width:100%"><strong>DESCRIPCIÓN</strong></td>
-          </tr>
-          <tr style="font-size: 7px;">
-            <td colspan="3" style="text-align: justify; width:100%; padding: 10px; line-height: 200%;">'.nl2br($value_pr->descripcion).'</td>
-          </tr>
-          </tbody>
-          </table>';
-
-          $pdf->writeHTML(Helper::htmlComprimir($tabla_objetivo_proyecto), true, false, false, false, '');*/
-
           $pdf->AddPage();
 
           // reset font stretching  reset font spacing
