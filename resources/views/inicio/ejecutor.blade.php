@@ -33,6 +33,7 @@
 
 Ext.QuickTips.init();
 Ext.form.Field.prototype.msgTarget = 'side';
+Ext.override(Ext.data.Connection, { timeout : 240000 });
 this.panel_detalle =  new Ext.Panel({
     region: 'east',
     title: 'Detalles del Registro',
