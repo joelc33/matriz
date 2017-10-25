@@ -1094,7 +1094,7 @@ class leyController extends Controller
           $pdf->SetFont('','B',8);
           $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','B',11);
-          $pdf->MultiCell(90, 5, chr(10).'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(90, 5, 'DESCRIPCIÓN DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(8);
           $pdf->SetFont('','B',8);
           $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
