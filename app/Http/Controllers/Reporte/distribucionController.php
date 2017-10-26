@@ -316,7 +316,7 @@ class distribucionController extends Controller
 
           foreach ($distribucion_cuatro as $key => $value_distribucion_cuatro) {
 
-            $pdf->SetFont('','',6);
+            $pdf->SetFont('','',5);
             //$pdf->MultiCell(7, 5, $value_distribucion_cuatro->co_partida, 0, 'L', 0, 0, '', '', true);
             $pdf->writeHTMLCell(7,5, '', '', '<u><b>'.$value_distribucion_cuatro->co_partida.'</b></u>', 0, 0, 0, true, 'L', true);
             $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -325,9 +325,9 @@ class distribucionController extends Controller
             $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
             //$pdf->MultiCell(83, 5, $value_distribucion_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
             $pdf->writeHTMLCell(83,5, '', '', '<u><b>'.$value_distribucion_cuatro->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
-            $pdf->SetFont('','B',6);
-            $pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-            $pdf->SetFont('','',6);
+            $pdf->SetFont('','B',5);
+            $pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->SetFont('','',5);
             //$pdf->writeHTMLCell(20,5, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
 
             $distribucion_ae = vista_distribucion_presupuesto::
@@ -361,8 +361,8 @@ class distribucionController extends Controller
               foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
                 $i++;
                 $pdf->SetFont('','B',5);
-                $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                $pdf->SetFont('','B',6);
+                $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->SetFont('','B',5);
               }
               if ($i == 0){
                 $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -378,10 +378,13 @@ class distribucionController extends Controller
             $movimiento = $movimiento + $value_distribucion_cuatro->mo_partida;
 
             $condicionPartida = strlen($value_distribucion_cuatro->tx_nombre);
-            if ($condicionPartida >= 70) {
-              $pdf->ln(8);
-            }else {
+            if ($condicionPartida >= 60) {
               $pdf->ln(4);
+            }else {
+              $pdf->ln(2);
+            }
+            if ($condicionPartida >= 120) {
+              $pdf->ln(2);
             }
 
             $start_y = $pdf->GetY();
@@ -479,7 +482,7 @@ class distribucionController extends Controller
                 $b++;
                 $pdf->SetFont('','',5);
                 $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
-                $pdf->SetFont('','B',6);
+                $pdf->SetFont('','B',5);
                 $c = $a - $b;
               }
               for ($n=0; $n<$c; $n++){
@@ -529,14 +532,14 @@ class distribucionController extends Controller
 
             foreach ($distribucion_cinco as $key => $value_distribucion_cinco) {
 
-              $pdf->SetFont('','',6);
+              $pdf->SetFont('','',5);
               $pdf->MultiCell(7, 5, substr(trim($value_distribucion_cinco->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_cinco->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(83, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
-              $pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
               $distribucion_ae = vista_distribucion_presupuesto::
               select( 'nu_ae', 'de_ae' )
@@ -572,8 +575,8 @@ class distribucionController extends Controller
                 foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
                   $i++;
                   $pdf->SetFont('','',5);
-                  $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                  $pdf->SetFont('','B',6);
+                  $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->SetFont('','B',5);
                 }
                 if ($i == 0){
                   $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -587,10 +590,13 @@ class distribucionController extends Controller
               //$pdf->ln(4);
 
               $condicionPartida = strlen($value_distribucion_cinco->tx_nombre);
-              if ($condicionPartida >= 70) {
-                $pdf->ln(8);
-              }else {
+              if ($condicionPartida >= 60) {
                 $pdf->ln(4);
+              }else {
+                $pdf->ln(2);
+              }
+              if ($condicionPartida >= 120) {
+                $pdf->ln(2);
               }
 
               $start_y = $pdf->GetY();
@@ -688,7 +694,7 @@ class distribucionController extends Controller
                   $b++;
                   $pdf->SetFont('','',5);
                   $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
-                  $pdf->SetFont('','B',6);
+                  $pdf->SetFont('','B',5);
                   $c = $a - $b;
                 }
                 for ($n=0; $n<$c; $n++){
@@ -741,14 +747,14 @@ class distribucionController extends Controller
 
               foreach ($distribucion_seis as $key => $value_distribucion_seis) {
 
-                $pdf->SetFont('','',6);
+                $pdf->SetFont('','',5);
                 $pdf->MultiCell(7, 5, substr(trim($value_distribucion_seis->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_seis->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_seis->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(5, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(83, 5, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 5, number_format($value_distribucion_seis->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 5, number_format($value_distribucion_seis->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                 $distribucion_ae = vista_distribucion_presupuesto::
                 select( 'nu_ae', 'de_ae' )
@@ -787,8 +793,8 @@ class distribucionController extends Controller
                   foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
                     $i++;
                     $pdf->SetFont('','',5);
-                    $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                    $pdf->SetFont('','B',6);
+                    $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                    $pdf->SetFont('','B',5);
                   }
                   if ($i == 0){
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -802,10 +808,13 @@ class distribucionController extends Controller
                 //$pdf->ln(4);
 
                 $condicionPartida = strlen($value_distribucion_seis->tx_nombre);
-                if ($condicionPartida >= 70) {
-                  $pdf->ln(8);
-                }else {
+                if ($condicionPartida >= 60) {
                   $pdf->ln(4);
+                }else {
+                  $pdf->ln(2);
+                }
+                if ($condicionPartida >= 120) {
+                  $pdf->ln(2);
                 }
 
                 $start_y = $pdf->GetY();
@@ -903,7 +912,7 @@ class distribucionController extends Controller
                     $b++;
                     $pdf->SetFont('','',5);
                     $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
-                    $pdf->SetFont('','B',6);
+                    $pdf->SetFont('','B',5);
                     $c = $a - $b;
                   }
                   for ($n=0; $n<$c; $n++){
@@ -959,14 +968,14 @@ class distribucionController extends Controller
 
                 foreach ($distribucion_siete as $key => $value_distribucion_siete) {
 
-                  $pdf->SetFont('','',6);
+                  $pdf->SetFont('','',5);
                   $pdf->MultiCell(7, 5, substr(trim($value_distribucion_siete->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_siete->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_siete->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_siete->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
                   $pdf->MultiCell(83, 5, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 5, number_format($value_distribucion_siete->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(20, 5, number_format($value_distribucion_siete->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                   $distribucion_ae = vista_distribucion_presupuesto::
                   select( 'nu_ae', 'de_ae' )
@@ -1008,8 +1017,8 @@ class distribucionController extends Controller
                     foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
                       $i++;
                       $pdf->SetFont('','',5);
-                      $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                      $pdf->SetFont('','B',6);
+                      $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                      $pdf->SetFont('','B',5);
                     }
                     if ($i == 0){
                       $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1023,10 +1032,13 @@ class distribucionController extends Controller
                   //$pdf->ln(4);
 
                   $condicionPartida = strlen($value_distribucion_siete->tx_nombre);
-                  if ($condicionPartida >= 70) {
-                    $pdf->ln(8);
-                  }else {
+                  if ($condicionPartida >= 60) {
                     $pdf->ln(4);
+                  }else {
+                    $pdf->ln(2);
+                  }
+                  if ($condicionPartida >= 120) {
+                    $pdf->ln(2);
                   }
 
                   $start_y = $pdf->GetY();
@@ -1124,7 +1136,7 @@ class distribucionController extends Controller
                       $b++;
                       $pdf->SetFont('','',5);
                       $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
-                      $pdf->SetFont('','B',6);
+                      $pdf->SetFont('','B',5);
                       $c = $a - $b;
                     }
                     for ($n=0; $n<$c; $n++){
@@ -1193,14 +1205,14 @@ class distribucionController extends Controller
 
                   foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
 
-                    $pdf->SetFont('','',6);
+                    $pdf->SetFont('','',5);
                     $pdf->MultiCell(7, 5, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(7, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(83, 5, $value_distribucion_ocho->de_denominacion, 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, number_format($value_distribucion_ocho->monto, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(20, 5, number_format($value_distribucion_ocho->monto, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                     $distribucion_ae = vista_distribucion_presupuesto::
                     select( 'nu_ae', 'de_ae' )
@@ -1245,8 +1257,8 @@ class distribucionController extends Controller
                       foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
                         $i++;
                         $pdf->SetFont('','',5);
-                        $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->SetFont('','B',6);
+                        $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('','B',5);
                       }
                       if ($i == 0){
                         $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1260,10 +1272,13 @@ class distribucionController extends Controller
                     //$pdf->ln(4);
 
                     $condicionPartida = strlen($value_distribucion_ocho->de_denominacion);
-                    if ($condicionPartida >= 70) {
-                      $pdf->ln(8);
-                    }else {
+                    if ($condicionPartida >= 60) {
                       $pdf->ln(4);
+                    }else {
+                      $pdf->ln(2);
+                    }
+                    if ($condicionPartida >= 120) {
+                      $pdf->ln(2);
                     }
 
                     $start_y = $pdf->GetY();
@@ -1361,7 +1376,7 @@ class distribucionController extends Controller
                         $b++;
                         $pdf->SetFont('','',5);
                         $pdf->MultiCell(16, 25, substr($value_distribucion_ae->nu_ae, -2).' - '.mb_strtoupper($value_distribucion_ae->de_ae, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
-                        $pdf->SetFont('','B',6);
+                        $pdf->SetFont('','B',5);
                         $c = $a - $b;
                       }
                       for ($n=0; $n<$c; $n++){
@@ -1413,7 +1428,7 @@ class distribucionController extends Controller
           $pdf->MultiCell(7, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(83, 5, 'TOTAL', 0, 'C', 0, 0, '', '', true);
           $pdf->SetFont('','B',6);
-          $pdf->MultiCell(20, 5, number_format($movimiento, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(20, 5, number_format($movimiento, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
           $pdf->SetFont('','B',8);
 
           $distribucion_ae_partida = vista_distribucion_presupuesto::
@@ -1430,7 +1445,7 @@ class distribucionController extends Controller
           foreach($distribucion_ae_partida as $key => $value_distribucion_ae_partida){
             $i++;
             $pdf->SetFont('','B',5);
-            $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, number_format($value_distribucion_ae_partida->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->SetFont('','B',8);
           }
           if ($i == 0){
