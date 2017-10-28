@@ -21,8 +21,13 @@ this.nu_codigo = new Ext.form.TextField({
 	name:'codigo',
 	value:this.OBJ.nu_codigo,
 	width:100,
-	maxLength: 4,
-	allowBlank:false
+	maxLength: 10,
+	allowBlank:false,
+	listeners:{
+			change: function(){
+					this.setValue(String(this.getValue()).toUpperCase());
+			}
+	}
 });
 
 this.de_tipo_personal = new Ext.form.TextField({
@@ -31,7 +36,12 @@ this.de_tipo_personal = new Ext.form.TextField({
 	value:this.OBJ.de_tipo_personal,
 	width:400,
 	maxLength: 600,
-	allowBlank:false
+	allowBlank:false,
+	listeners:{
+			change: function(){
+					this.setValue(String(this.getValue()).toUpperCase());
+			}
+	}
 });
 
 this.id_padre = new Ext.form.ComboBox({
