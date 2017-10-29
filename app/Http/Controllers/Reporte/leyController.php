@@ -5,6 +5,8 @@ namespace matriz\Http\Controllers\Reporte;
 use matriz\Models\Mantenimiento\tab_presupuesto_ingreso;
 use matriz\Models\Mantenimiento\tab_partidas;
 use matriz\Models\Mantenimiento\tab_objetivo_sectorial;
+use matriz\Models\Mantenimiento\tab_clasificador_tipo;
+use matriz\Models\Mantenimiento\tab_tipo_personal;
 use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
 use matriz\Models\Proyecto\tab_proyecto;
@@ -1159,6 +1161,30 @@ class leyController extends Controller
       $pdf->ln(2);
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(1);
+
+      /*$clasificador_tipo = tab_clasificador_tipo::
+      join('mantenimiento.tab_tipo_personal as t01', 't01.id', '=', 'mantenimiento.tab_clasificador_tipo.id_tab_tipo_personal')
+      ->select( 'nu_codigo', 'de_tipo_personal')
+      //->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('id_tab_ejercicio_fiscal', '=', 2017)
+      ->orderBy('nu_codigo','ASC')
+      ->get();*/
+
+      $tipo_personal = tab_tipo_personal::select( 'id', 'nu_codigo', 'de_tipo_personal', 'id_padre')
+      ->orderBy('nu_codigo','ASC')
+      ->get();
+
+      foreach ($tipo_personal as $key => $value_tipo_personal) {
+
+        $pdf->SetFont('','',5);
+        if($value_tipo_personal->id_padre==0){
+          $pdf->writeHTMLCell(20,5, '', '', '<u><b>'.trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal).'</b></u>', 0, 0, 0, true, 'L', true);
+        }else{
+          $pdf->MultiCell(20, 5, trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal), 0, 'L', 0, 0, '', '', true);
+        }
+        $pdf->ln(10);
+
+      }
 
       $pdf->SetFont('','B',8);
       $pdf->setCellHeightRatio(1.5);
