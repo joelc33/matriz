@@ -1064,6 +1064,39 @@ class leyController extends Controller
       $pdf->MultiCell(154, 5, 'TOTAL GENERAL', 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(42, 5, number_format($partida_credito, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->AddPage();
+
+      // reset font stretching  reset font spacing
+      $pdf->setFontStretching(100);
+      $pdf->setFontSpacing(0);
+      $pdf->SetLineWidth(0.150);
+      $pdf->setCellHeightRatio(2);
+
+      $pdf->SetFont('','B',8);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->SetFont('','B',9);
+      $pdf->MultiCell(95, 5, 'RESUMEN DEL COSTO DE LOS RECURSOS HUMANOS'.chr(10).'EN LA ENTIDAD FEDERAL CLASIFICADOS SEGUN SU TIPO', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
+      $pdf->ln(8);
+      $pdf->SetFont('','B',8);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->ln(-10);
+      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(19);
+      $pdf->setCellHeightRatio(1.2);
+
+      /******Inicio de Objetivos Sectoriales******/
+
       $objetivos = tab_objetivo_sectorial::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'mantenimiento.tab_objetivo_sectorial.id_tab_sectores')
   		->select( 'mantenimiento.tab_objetivo_sectorial.id', 'id_tab_ejercicio_fiscal',
       'id_tab_sectores', 'de_objetivo_sectorial', 'tx_codigo', 'tx_descripcion' )
