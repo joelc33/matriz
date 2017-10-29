@@ -229,7 +229,7 @@ class leyController extends Controller
         $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->writeHTMLCell(116,5, '', '', '<u><b>'.$value_presupuesto_uno->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
-        $pdf->MultiCell(40, 5, number_format($value_presupuesto_uno->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(40, 5, number_format($value_presupuesto_uno->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
         $pdf->ln(8);
 
         $presupuesto_dos = tab_presupuesto_ingreso::
@@ -255,7 +255,7 @@ class leyController extends Controller
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(2, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(114, 5, $value_presupuesto_dos->tx_nombre, 0, 'L', 0, 0, '', '', true);
-          $pdf->MultiCell(40, 5, number_format($value_presupuesto_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(40, 5, number_format($value_presupuesto_dos->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
           $pdf->ln(8);
 
           $presupuesto_tres = tab_presupuesto_ingreso::
@@ -285,7 +285,7 @@ class leyController extends Controller
             $pdf->MultiCell(4, 5, '', 0, 'C', 0, 0, '', '', true);
             //$pdf->MultiCell(112, 5, $value_presupuesto_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
             $pdf->writeHTMLCell(112,5, '', '', '<u>'.$value_presupuesto_tres->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
-            $pdf->MultiCell(40, 5, number_format($value_presupuesto_tres->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(40, 5, number_format($value_presupuesto_tres->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->ln(5);
 
             $presupuesto_cuatro = tab_presupuesto_ingreso::
@@ -305,7 +305,7 @@ class leyController extends Controller
               $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_cuatro->co_partida), 0, 9), 7), 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(110, 5, $value_presupuesto_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
-              $pdf->MultiCell(40, 5, number_format($value_presupuesto_cuatro->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(40, 5, number_format($value_presupuesto_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
               $condicionPartida = strlen($value_presupuesto_cuatro->tx_nombre);
               if ($condicionPartida >= 60) {
@@ -331,7 +331,7 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(1.5);
         $pdf->SetY(262);
         $pdf->MultiCell(156, 5, 'TOTAL GENERAL', 1, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(40, 5, number_format($movimiento_ingreso, 2, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(40, 5, number_format($movimiento_ingreso, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       }
 
       // reset font stretching  reset font spacing
@@ -474,7 +474,8 @@ class leyController extends Controller
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, substr($value_categoria_dos->nu_original, -2), 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+          //$pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+          $pdf->writeHTMLCell(83,5, '', '', '<u>'.mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8').'</u>', 0, 0, 0, true, 'L', true);
           $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
 
           $condicionPartida = strlen($value_categoria_dos->de_nombre);
@@ -564,6 +565,8 @@ class leyController extends Controller
             $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(10, 5, substr($value_categoria_tres->nu_ae, -2), 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+            //$pdf->writeHTMLCell(83,5, '', '', '<u>'.mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8').'</u>', 0, 0, 0, true, 'L', true);
+            $pdf->ln(0);
 
             $categoria_cuatro = vista_distribucion_presupuesto::
             select('tx_ejecutor')
@@ -579,6 +582,84 @@ class leyController extends Controller
             $linea = 0;
 
             foreach ($categoria_cuatro as $key => $value_categoria_cuatro) {
+              $pdf->SetFont('','',6);
+              $pdf->MultiCell(113, 5, '', 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(83, 5, '- '.$value_categoria_cuatro->tx_ejecutor, 0, 'L', 0, 0, '', '', true);
+              //$pdf->ln(5);
+
+              $condicionPartida = strlen($value_categoria_cuatro->tx_ejecutor);
+              if ($condicionPartida >= 60) {
+                $pdf->ln(7);
+              }else {
+                $pdf->ln(4);
+              }
+
+              $start_y = $pdf->GetY();
+
+              if ($start_y >= 260) {
+
+                $pdf->AddPage();
+
+                // reset font stretching  reset font spacing
+                $pdf->setFontStretching(100);
+                $pdf->setFontSpacing(0);
+                $pdf->SetLineWidth(0.150);
+                $pdf->setCellHeightRatio(2);
+
+                $pdf->SetFont('','B',8);
+                $pdf->setCellHeightRatio(1.2);
+                $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->setCellHeightRatio(2);
+                $pdf->SetFont('','B',11);
+                $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+                $pdf->ln(8);
+                $pdf->SetFont('','B',8);
+                $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->ln(-10);
+                $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->ln(19);
+                $pdf->setCellHeightRatio(1.2);
+
+                $pdf->ln(21);
+                $pdf->SetFont('','B',6);
+                $pdf->StartTransform();
+                $pdf->Rotate(90);
+                $pdf->MultiCell(21, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
+                $pdf->ln(10);
+                $pdf->MultiCell(21, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+                $pdf->ln(10);
+                $pdf->MultiCell(21, 10, chr(10).'ACCIÓN  ESPECÍFICA', 1, 'L', 0, 0, '', '', true);
+                $pdf->ln(10);
+                $pdf->StopTransform();
+                $pdf->ln(-51);
+                $pdf->SetFont('','B',9);
+                $pdf->MultiCell(30, 21, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 21, chr(10).chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+                $pdf->ln(21);
+                $pdf->setCellHeightRatio(1);
+                $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+                $pdf->ln(221);
+                $pdf->SetFont('','',7);
+                $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                $pdf->ln(-221);
+                $pdf->ln(2);
+                $pdf->SetFont('','',7);
+                $pdf->setCellHeightRatio(1);
+
+              }
+
+            }
+
+            /*foreach ($categoria_cuatro as $key => $value_categoria_cuatro) {
               $linea = $linea + 2;
               $lista_ejecutores.= '- '.$value_categoria_cuatro->tx_ejecutor.chr(10);
             }
@@ -592,6 +673,11 @@ class leyController extends Controller
             if ($condicionPartida >= 60) {
               $pdf->ln(10);
             }else {
+              $pdf->ln(5);
+            }*/
+
+            $condicionPartida = strlen($value_categoria_tres->de_ae);
+            if ($condicionPartida >= 50) {
               $pdf->ln(5);
             }
 
