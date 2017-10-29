@@ -152,7 +152,10 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->SetFont('','B',8);
-  		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+  		$pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',11);
       $pdf->MultiCell(90, 5, 'PRESUPUESTO DE INGRESOS', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(8);
@@ -387,7 +390,10 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->SetFont('','B',8);
-  		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',11);
       $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(8);
@@ -488,7 +494,10 @@ class leyController extends Controller
             $pdf->setCellHeightRatio(2);
 
             $pdf->SetFont('','B',8);
-        		$pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(1.2);
+            $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(2);
             $pdf->SetFont('','B',11);
             $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
             $pdf->ln(8);
@@ -596,7 +605,10 @@ class leyController extends Controller
               $pdf->setCellHeightRatio(2);
 
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(1.2);
+              $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(2);
               $pdf->SetFont('','B',11);
               $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(8);
@@ -664,7 +676,10 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',9);
       $pdf->setCellHeightRatio(1.2);
       $pdf->MultiCell(100, 8, 'RESUMEN DE LOS CREDITOS PRESUPUESTARIOS A NIVEL DE SECTORES, PROYECTOS Y/O ACCIÓNES CENTRALIZADAS', 0, 'C', 0, 0, '', '', true);
@@ -777,7 +792,10 @@ class leyController extends Controller
             $pdf->setCellHeightRatio(2);
 
             $pdf->SetFont('','B',8);
-            $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(1.2);
+            $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(2);
             $pdf->SetFont('','B',9);
             $pdf->setCellHeightRatio(1.2);
             $pdf->MultiCell(100, 8, 'RESUMEN DE LOS CREDITOS PRESUPUESTARIOS A NIVEL DE SECTORES, PROYECTOS Y/O ACCIÓNES CENTRALIZADAS', 0, 'C', 0, 0, '', '', true);
@@ -851,7 +869,10 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',9);
       $pdf->setCellHeightRatio(1.2);
       $pdf->MultiCell(90, 8, 'RESUMEN DE LOS CREDITOS PRESUPUESTARIOS A NIVEL DE PARTIDAS', 0, 'C', 0, 0, '', '', true);
@@ -976,7 +997,10 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(2);
 
         $pdf->SetFont('','B',8);
-        $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(2);
         $pdf->SetFont('','B',11);
         $pdf->MultiCell(90, 5, chr(10).'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(8);
@@ -1092,7 +1116,10 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(2);
 
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
           $pdf->SetFont('','B',11);
           $pdf->MultiCell(90, 5, 'DESCRIPCIÓN DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(8);
@@ -1158,7 +1185,10 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(2);
 
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
           $pdf->SetFont('','B',10);
           $pdf->setCellHeightRatio(1);
           $pdf->MultiCell(90, 5, 'CREDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -1310,7 +1340,10 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(2);
 
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
           $pdf->SetFont('','B',10);
           $pdf->setCellHeightRatio(1);
           $pdf->MultiCell(90, 5, 'CREDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -1453,7 +1486,10 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',10);
       $pdf->setCellHeightRatio(1);
       $pdf->MultiCell(90, 5, 'RELACIÓN DE OBRAS', 0, 'C', 0, 0, '', '', true);
@@ -1546,7 +1582,10 @@ class leyController extends Controller
       $pdf->AddPage();
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',10);
       $pdf->setCellHeightRatio(1);
       $pdf->MultiCell(90, 5, 'RELACIÓN DE PROYECTOS DE INVERSIÓN A SER FINANCIADOS A TRAVÉS DEL FONDO DE COMPENSACION INTERTERRITORIAL', 0, 'C', 0, 0, '', '', true);
@@ -1617,7 +1656,10 @@ class leyController extends Controller
       $pdf->AddPage();
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',10);
       $pdf->setCellHeightRatio(1);
       $pdf->MultiCell(90, 5, 'DISTRIBUCIÓN DE SITUADOS A NIVEL DE MUNICIPIOS', 0, 'C', 0, 0, '', '', true);
@@ -1689,7 +1731,10 @@ class leyController extends Controller
       $movimiento = 0;
 
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(1.2);
+      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',10);
       $pdf->setCellHeightRatio(1);
       $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
@@ -1879,7 +1924,10 @@ class leyController extends Controller
             $pdf->AddPage();
 
             $pdf->SetFont('','B',8);
-            $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(1.2);
+            $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->setCellHeightRatio(2);
             $pdf->SetFont('','B',10);
             $pdf->setCellHeightRatio(1);
             $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
@@ -2018,7 +2066,10 @@ class leyController extends Controller
               $pdf->AddPage();
 
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(1.2);
+              $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(2);
               $pdf->SetFont('','B',10);
               $pdf->setCellHeightRatio(1);
               $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
@@ -2238,7 +2289,10 @@ class leyController extends Controller
                   $pdf->AddPage();
 
                   $pdf->SetFont('','B',8);
-                  $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                  $pdf->setCellHeightRatio(1.2);
+                  $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->setCellHeightRatio(2);
                   $pdf->SetFont('','B',10);
                   $pdf->setCellHeightRatio(1);
                   $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
