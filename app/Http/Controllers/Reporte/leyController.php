@@ -127,6 +127,7 @@ class leyController extends Controller
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
       $pdf->writeHTML('<b><u>TITULO II<u/></b>', true, false, true, false, 'R');
       $pdf->ln(1);
+      //$pdf->setTextShadow(array('enabled'=>true, 'depth_w'=>1, 'depth_h'=>1, 'color'=>array(255,0,0), 'opacity'=>1, 'blend_mode'=>'Normal'));
       $pdf->MultiCell(195, 5, 'PRESUPUESTO DE INGRESOS', 0, 'R', 0, 0, '', '', true);
       $pdf->ln(10);
       // set border width
@@ -222,13 +223,14 @@ class leyController extends Controller
       foreach ($presupuesto_uno as $key => $value_presupuesto_uno) {
 
         $pdf->SetFont('','B',8);
-        $pdf->writeHTMLCell(10,5, '', '', '<u><b>'.$value_presupuesto_uno->co_partida.'</b></u>', 0, 0, 0, true, 'C', true);
+        //$pdf->writeHTMLCell(10,5, '', '', '<u><b>'.$value_presupuesto_uno->co_partida.'</b></u>', 0, 0, 0, true, 'C', true);
+        $pdf->MultiCell(10, 5, trim($value_presupuesto_uno->co_partida), 0, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->writeHTMLCell(116,5, '', '', '<u><b>'.$value_presupuesto_uno->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
         $pdf->MultiCell(40, 5, number_format($value_presupuesto_uno->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-        $pdf->ln(5);
+        $pdf->ln(8);
 
         $presupuesto_dos = tab_presupuesto_ingreso::
         join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
@@ -246,7 +248,7 @@ class leyController extends Controller
 
         foreach ($presupuesto_dos as $key => $value_presupuesto_dos) {
 
-          $pdf->SetFont('','',8);
+          $pdf->SetFont('','B',8);
           $pdf->MultiCell(10, 5, substr(trim($value_presupuesto_dos->co_partida), 0, 3), 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_dos->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -254,7 +256,7 @@ class leyController extends Controller
           $pdf->MultiCell(2, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->MultiCell(114, 5, $value_presupuesto_dos->tx_nombre, 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(40, 5, number_format($value_presupuesto_dos->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
-          $pdf->ln(5);
+          $pdf->ln(8);
 
           $presupuesto_tres = tab_presupuesto_ingreso::
           join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
@@ -281,7 +283,8 @@ class leyController extends Controller
             $pdf->MultiCell(10, 5, substr(substr(trim($value_presupuesto_tres->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(4, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(112, 5, $value_presupuesto_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            //$pdf->MultiCell(112, 5, $value_presupuesto_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
+            $pdf->writeHTMLCell(112,5, '', '', '<u>'.$value_presupuesto_tres->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
             $pdf->MultiCell(40, 5, number_format($value_presupuesto_tres->mo_partida, 2, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->ln(5);
 
@@ -306,9 +309,9 @@ class leyController extends Controller
 
               $condicionPartida = strlen($value_presupuesto_cuatro->tx_nombre);
               if ($condicionPartida >= 60) {
-                $pdf->ln(7);
+                $pdf->ln(8);
               }else {
-                $pdf->ln(5);
+                $pdf->ln(8);
               }
 
             }

@@ -187,7 +187,10 @@ class distribucionController extends Controller
           $pdf->AddPage();
 
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
           $pdf->SetFont('','B',8);
           $pdf->setCellHeightRatio(1);
           $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -400,7 +403,10 @@ class distribucionController extends Controller
               $pdf->AddPage();
 
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(1.2);
+              $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->setCellHeightRatio(2);
               $pdf->SetFont('','B',8);
               $pdf->setCellHeightRatio(1);
               $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -612,7 +618,10 @@ class distribucionController extends Controller
                 $pdf->AddPage();
 
                 $pdf->SetFont('','B',8);
-                $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                $pdf->setCellHeightRatio(1.2);
+                $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->setCellHeightRatio(2);
                 $pdf->SetFont('','B',8);
                 $pdf->setCellHeightRatio(1);
                 $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -830,7 +839,10 @@ class distribucionController extends Controller
                   $pdf->AddPage();
 
                   $pdf->SetFont('','B',8);
-                  $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                  $pdf->setCellHeightRatio(1.2);
+                  $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->setCellHeightRatio(2);
                   $pdf->SetFont('','B',8);
                   $pdf->setCellHeightRatio(1);
                   $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -1054,7 +1066,10 @@ class distribucionController extends Controller
                     $pdf->AddPage();
 
                     $pdf->SetFont('','B',8);
-                    $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                    $pdf->setCellHeightRatio(1.2);
+                    $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->setCellHeightRatio(2);
                     $pdf->SetFont('','B',8);
                     $pdf->setCellHeightRatio(1);
                     $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
@@ -1294,7 +1309,10 @@ class distribucionController extends Controller
                       $pdf->AddPage();
 
                       $pdf->SetFont('','B',8);
-                      $pdf->MultiCell(55, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                      $pdf->setCellHeightRatio(1.2);
+                      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                      $pdf->setCellHeightRatio(2);
                       $pdf->SetFont('','B',8);
                       $pdf->setCellHeightRatio(1);
                       $pdf->MultiCell(90, 5, 'CRÉDITOS PRESUPUESTARIOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA A NIVEL DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
