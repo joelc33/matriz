@@ -178,7 +178,7 @@ Route::group(['namespace' => 'Ac'], function(){
 });
 //*Modulos de Mantenimiento*/
 Route::group(['namespace' => 'Mantenimiento'], function(){
-	//*Modulo de roles*/
+	//*Modulo de Unidad de Medida*/
 	Route::group(['prefix' => 'mantenimiento/unidadmedida'], function(){
 		Route::get('lista', 'unidadmedidaController@lista');
 		Route::post('storeLista', 'unidadmedidaController@storeLista');
@@ -379,5 +379,16 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'objetivosectorialController@guardar');
 		Route::post('eliminar', 'objetivosectorialController@eliminar');
 		Route::post('habilitar', 'objetivosectorialController@habilitar');
+	});
+	//*Modulo de Distribucion por Municipio*/
+	Route::group(['prefix' => 'mantenimiento/distribucionmunicipio'], function(){
+		Route::get('lista', 'distribucionController@lista');
+		Route::post('storeLista', 'distribucionController@storeLista');
+		Route::get('nuevo', 'distribucionController@nuevo');
+		Route::get('editar/{id}', 'distribucionController@editar');
+		Route::post('guardar', 'distribucionController@guardar');
+		Route::post('guardar/{id}', 'distribucionController@guardar');
+		Route::post('eliminar', 'distribucionController@eliminar');
+		Route::post('habilitar', 'distribucionController@habilitar');
 	});
 });
