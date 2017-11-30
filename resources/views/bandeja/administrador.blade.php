@@ -137,10 +137,12 @@ this.reabrirProyecto = new Ext.Button({
 		var sel = opcionPlanificador.main.gridPanel_.getSelectionModel().getSelected();
 		Ext.Ajax.request({
 			method: 'POST',
-			url: 'formulacion/modulos/proyecto/funcion.php?op=8888',
+			/*url: 'formulacion/modulos/proyecto/funcion.php?op=8888',*/
+			url:'{{ URL::to('proyecto/abrir') }}',
 			params: {
-				op: 8888,
-				co_proyectos: sel.get('co_proyectos'),
+				/*op: 8888,*/
+				_token: '{{ csrf_token() }}',
+				proyecto: sel.get('co_proyectos'),
 			},
 			success: function(result) {
 				var obj = Ext.util.JSON.decode(result.responseText);

@@ -177,8 +177,8 @@ this.in_financiamiento = new Ext.form.ComboBox({
 });
 
 this.in_financiamiento.on('select',function(cmb,record,index){
-        if(tabuladorNueve.main.in_financiamiento.getValue()=='NO'){ 
-		this.co_tipo_fondo.enable();           
+        if(tabuladorNueve.main.in_financiamiento.getValue()=='NO'){
+		this.co_tipo_fondo.enable();
         }else{
 		this.co_tipo_fondo.disable();
 		this.co_tipo_fondo.clearValue();
@@ -209,8 +209,8 @@ this.in_tipo_financiamiento = new Ext.form.ComboBox({
 });
 
 this.in_tipo_financiamiento.on('select',function(cmb,record,index){
-        if(tabuladorNueve.main.in_tipo_financiamiento.getValue()=='PARCIAL'){ 
-		this.mo_parcial.enable();           
+        if(tabuladorNueve.main.in_tipo_financiamiento.getValue()=='PARCIAL'){
+		this.mo_parcial.enable();
         }else{
 		this.mo_parcial.disable();
 		this.mo_parcial.clearValue();
@@ -238,8 +238,8 @@ this.mo_parcial = new Ext.form.NumberField({
 
 this.mo_parcial.disable();
 
-if(tabuladorNueve.main.in_tipo_financiamiento.getValue()=='PARCIAL'){ 
-	this.mo_parcial.enable();           
+if(tabuladorNueve.main.in_tipo_financiamiento.getValue()=='PARCIAL'){
+	this.mo_parcial.enable();
 }
 
 this.co_tipo_fondo = new Ext.form.ComboBox({
@@ -272,8 +272,8 @@ this.storeCO_TIPO_FONDO.load();
 
 this.co_tipo_fondo.disable();
 
-if(tabuladorNueve.main.in_financiamiento.getValue()=='SI'){ 
-	this.co_tipo_fondo.enable();           
+if(tabuladorNueve.main.in_financiamiento.getValue()=='SI'){
+	this.co_tipo_fondo.enable();
 }
 
 this.tx_justificacion = new Ext.form.TextArea({
@@ -435,10 +435,11 @@ this.cuadrar = new Ext.Button({
 
         Ext.Ajax.request({
             method:'POST',
-            url:'formulacion/modulos/proyecto/orm.php/cerrar',
+            /*url:'formulacion/modulos/proyecto/orm.php/cerrar',*/
+						url: 'proyecto/cerrar',
             params:{
-                co_proyectos: <?php echo $codigo ?>,
-                id_proyecto: '<?php echo $id_proyecto ?>'
+                codigo: <?php echo $codigo ?>,
+                proyecto: '<?php echo $id_proyecto ?>'
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
@@ -469,7 +470,7 @@ this.cuadrar = new Ext.Button({
             }});
 
 	}});
-   
+
     }
 });
 
@@ -555,9 +556,9 @@ this.Store = new Ext.data.GroupingStore({
 });
 return this.Store;
 },
-afterEdit : function(e){	
+afterEdit : function(e){
 	var recordsToSend = [];
-	
+
 	recordsToSend = Ext.encode(e.record.data);
 
 	this.gridPanelRecurso_.el.mask("Guardando...","x-mask-loading");

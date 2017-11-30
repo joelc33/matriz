@@ -148,6 +148,8 @@ Route::group(['namespace' => 'Proyecto'], function(){
 	Route::group(['prefix' => 'proyecto'], function(){
 		Route::get('nuevo', 'proyectoController@nuevo');
 		Route::post('storeLista', 'proyectoController@storeLista');
+		Route::post('abrir', 'proyectoController@abrir');
+		Route::post('cerrar', 'proyectoController@cerrar');
 	});
 	//*Modulo de Proyecto Partidas*/
 	Route::group(['prefix' => 'proyecto/ae/partida'], function(){

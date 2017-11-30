@@ -29,5 +29,6 @@ class VerifyCsrfToken extends BaseVerifier
         'proyecto/storeLista',
         'ac/storeLista',
         'ac/ae/partida/cargar',
+        'proyecto/cerrar',
     ];
 }
