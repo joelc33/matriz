@@ -70,13 +70,15 @@ class proyectoController extends Controller
     ->join('public.t26_proyectos as t05','t03.id_proyecto','=','t05.id_proyecto')
     ->join('mantenimiento.tab_ejecutores as t06','t06.id_ejecutor','=','t05.id_ejecutor')
     ->select( 'mo_presupuesto', 'co_partida', 'de_fuente_financiamiento', 'nb_meta',
-    't04.id_ejecutor as ej_ae', 't03.descripcion as de_ae', 't05.nombre as nb_proyecto',
-    'clase_sector', 't05.id_ejecutor', 't06.tx_ejecutor as nb_ejecutor', 't05.id_ejercicio',
+    't04.id_ejecutor as ej_ae', 't04.tx_ejecutor as nb_ej_ae', 't03.descripcion as de_ae', 't05.nombre as nb_proyecto',
+    'clase_sector', 't05.id_ejecutor', 't06.tx_ejecutor as nb_ejecutor', 't05.id_ejercicio', 't05.id_proyecto', 't03.tx_codigo as codigo_ae',
     DB::raw('tx_categoria_proyecto( t05.id_proyecto, t03.tx_codigo, t05.id_ejercicio) as categoria'))
     ->where('public.t68_metas_detalle.edo_reg', '=', true )
     ->where('t02.edo_reg', '=', true )
     ->where('t05.id_ejercicio', '=', Session::get('ejercicio') )
     ->where('t05.edo_reg', '=', true )
+    ->where('t03.edo_reg', '=', true )
+    //->whereNull('t03.id_padre' )
     ->orderBy('t05.id_ejecutor','ASC')
     ->get();
 
@@ -205,9 +207,9 @@ class proyectoController extends Controller
         $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio);
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->id_ejecutor.'-'.$value->nb_ejecutor);
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->clase_sector);
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->nb_proyecto);
-        $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->de_ae);
-        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->ej_ae);
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_proyecto.'-'.$value->nb_proyecto);
+        $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->codigo_ae.'-'.$value->de_ae);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->ej_ae.'-'.$value->nb_ej_ae);
         $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_meta);
         $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->mo_presupuesto);
         $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->categoria);
