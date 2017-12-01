@@ -49,11 +49,13 @@ class MYPDF extends TCPDF {
 
 		$comunes = new ConexionComun();
 
-		$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, fecha_inicio, fecha_fin, monto, monto_cargado(t26.id_proyecto) as mo_registrado, '1' as co_tipo,
+		$sql = "SELECT t26.id_proyecto as id_proy_ac, nombre, t24.tx_ejecutor, t24a.tx_ejecutor AS tx_eje_titulo, fecha_inicio, fecha_fin, monto, monto_cargado(t26.id_proyecto) as mo_registrado, '1' as co_tipo,
                     t26.id_ejecutor, t18a.tx_codigo as tx_sector, t26.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica, t20.tx_descripcion as tx_objetivo_historico,
                     t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general, t39.tx_codigo as tx_codigo_ae,
                     t39.descripcion as tx_nombre_ae, t39.co_proyecto_acc_espec as co_ae, 0 as id_accion_centralizada, t39.total as subtotal_actividades,
-                    mo_total_ejecutor_pr(t26.id_ejecutor, t26.id_ejercicio) as mo_proyecto_ac, tx_objetivo_institucional,t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t32.co_nodo as tx_nodos, t24a.id_ejecutor as id_ejecutor_ae, tx_categoria_proyecto(t26.id_proyecto,t39.tx_codigo,t26.id_ejercicio)
+                    mo_total_ejecutor_pr(t26.id_ejecutor, t26.id_ejercicio) as mo_proyecto_ac, tx_objetivo_institucional,t45a.tx_descripcion as tx_ambito_estado,
+										t45b.tx_descripcion as tx_macroproblema,t32.co_nodo as tx_nodos, t24a.id_ejecutor as id_ejecutor_ae,
+										tx_categoria_proyecto(t26.id_proyecto,t39.tx_codigo,t26.id_ejercicio), EXTRACT(month FROM t26.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t26.fecha_actualizacion::DATE) as nu_anio_poa
 		FROM t26_proyectos as t26
 		inner join mantenimiento.tab_ejecutores as t24 on t26.id_ejecutor=t24.id_ejecutor
 		inner join t18_sectores as t18a on t26.clase_sector=t18a.co_sector and t18a.nu_nivel = 1
@@ -68,7 +70,8 @@ class MYPDF extends TCPDF {
 		inner join t39_proyecto_acc_espec as t39 on t26.id_proyecto=t39.id_proyecto
 		inner join mantenimiento.tab_ejecutores as t24a on t39.co_ejecutores=t24a.id
 		inner join vista_cn_actividad_proy as v1 on v1.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
-		where t26.edo_reg is true AND ".$condicionPR." t39.edo_reg is true AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."' order by 9, 8, 1, 17 ASC";
+		where t26.edo_reg is true AND ".$condicionPR." t39.edo_reg is true AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."'
+		order by 10, 9, 1, 18 ASC";
 
 		$this->datos = $comunes->ObtenerFilasBySqlSelect($sql);
 		$this->cantidadTotal = $comunes->getFilas($sql);
@@ -105,6 +108,7 @@ class MYPDF extends TCPDF {
 	$this->SetFont('','',11);
 	//$this->Ln(-20);
 	$contador=0;
+	$in_portada=false;
 	$acumulador_pr_a=0;
 	$ejecutor_ant = '';
 	foreach($this->datos as $key => $campo){
@@ -155,6 +159,30 @@ class MYPDF extends TCPDF {
 
                 $sqlAlcance= "SELECT (benef_femeninos+benef_masculinos) as nu_beneficiarios, (emp_dir_feme+emp_dir_mascu+emp_new_feme+emp_new_mascu+emp_sos_feme+emp_sos_mascu) as nu_empleos FROM t38_proyecto_alcance
 		WHERE id_proyecto='".$campo['id_proy_ac']."' AND edo_reg is true";
+
+		/******Portada*********/
+
+				if($in_portada==false){
+
+				//$this->SetXY(30,50);
+				$this->SetY(75);
+				$this->SetFont('','B',20);
+				$this->SetTextColor(0,0,0);
+				$this->Write(0, 'PLAN OPERATIVO INSTITUCIONAL PRESUPUESTO', '', 0, 'C', true, 0, false, false, 0);
+				$this->Ln(5);
+				$this->Write(0, 'AÑO '.$campo['nu_anio'], '', 0, 'C', true, 0, false, false, 0);
+				//$this->Ln(26);
+				$this->Ln(10);
+				$this->Write(0, $campo['tx_eje_titulo'], '', 0, 'C', true, 0, false, false, 0);
+				$this->SetY(190);
+				$this->SetFont('','',11);
+				$this->Write(0, 'Maracaibo, '.mes($campo['nu_mes_poa']).' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
+				$this->AddPage();
+
+				}
+
+				$this->SetFont('','',11);
+		/******POA*********/
 
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -381,7 +409,9 @@ $html6 = '
 ';
 		$this->writeHTML($html6, true, false, false, false, '');
 		$contador=$contador+1;
+		$in_portada=true;
 		if($this->cantidadTotal>$contador){
+			$in_portada=false;
 			$this->AddPage();
 			//$this->Ln(-20);
 		}

@@ -394,4 +394,15 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('eliminar', 'distribucionController@eliminar');
 		Route::post('habilitar', 'distribucionController@habilitar');
 	});
+	//*Modulo de Ejercicio Fiscal*/
+	Route::group(['prefix' => 'mantenimiento/ejercicio'], function(){
+		Route::get('lista', 'ejercicioController@lista');
+		Route::post('storeLista', 'ejercicioController@storeLista');
+		Route::get('nuevo', 'ejercicioController@nuevo');
+		Route::get('cronograma/{id}', 'ejercicioController@cronograma');
+		Route::post('guardar', 'ejercicioController@guardar');
+		Route::post('guardar/{id}', 'ejercicioController@guardar');
+		Route::post('cerrar', 'ejercicioController@cerrar');
+		Route::post('habilitar', 'ejercicioController@habilitar');
+	});
 });
