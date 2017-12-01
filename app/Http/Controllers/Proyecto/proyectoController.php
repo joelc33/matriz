@@ -217,6 +217,7 @@ class proyectoController extends Controller
       $ae_partida = tab_proyecto_ae::select('tx_codigo', 'descripcion', 'total', DB::raw("monto_cargado_ae_proy(co_proyecto_acc_espec) as mo_cargado"))
       ->where('id_proyecto', '=', $id_proyecto)
       ->orderby('tx_codigo','ASC')
+      ->where('edo_reg', '=', true )
       ->get();
 
       $validador_registros = array();
