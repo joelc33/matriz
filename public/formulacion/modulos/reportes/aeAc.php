@@ -54,7 +54,8 @@ class MYPDF extends TCPDF {
         t20.tx_descripcion as tx_objetivo_historico, t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general,
         t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac,
         objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t49.co_nodos as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
-        tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac
+        tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac,
+				inst_mision, inst_vision, inst_objetivos, tx_pr_objetivo, tx_re_esperado, nu_po_beneficiar, nu_em_previsto, EXTRACT(month FROM t46.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t46.fecha_actualizacion::DATE) as nu_anio_poa
 		from t46_acciones_centralizadas as t46
 		join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
 		join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
@@ -108,6 +109,7 @@ class MYPDF extends TCPDF {
 	$this->SetFont('','',11);
 	//$this->Ln(-20);
 	$contador=0;
+	$in_portada=false;
 	$acumulador_ac_a=0;
 	$ejecutor_ant = '';
 	foreach($this->datos as $key => $campo){
@@ -143,6 +145,63 @@ class MYPDF extends TCPDF {
                         $sqlAlcance= "SELECT '' as nu_beneficiarios, '' as nu_empleos FROM t47_ac_accion_especifica
 			WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' and id_accion='".$campo['co_ae']."' AND edo_reg is true";
 		}
+
+		/******Portada*********/
+
+				if($in_portada==false){
+
+				//$this->SetXY(30,50);
+				$this->SetY(75);
+				$this->SetFont('','B',20);
+				$this->SetTextColor(0,0,0);
+				$this->Write(0, 'PLAN OPERATIVO INSTITUCIONAL PRESUPUESTO', '', 0, 'C', true, 0, false, false, 0);
+				$this->Ln(5);
+				$this->Write(0, 'AÑO '.$campo['nu_anio'], '', 0, 'C', true, 0, false, false, 0);
+				//$this->Ln(26);
+				$this->Ln(10);
+				$this->Write(0, $campo['tx_ejecutor'], '', 0, 'C', true, 0, false, false, 0);
+				$this->SetY(190);
+				$this->SetFont('','',11);
+				$this->Write(0, 'Maracaibo, '.mes($campo['nu_mes_poa']).' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
+				$this->AddPage();
+		/******Objetivos*********/
+
+			$htmlObjetivo = '
+		<table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
+			<tr align="center" bgcolor="#BDBDBD">
+				<td colspan="2"><b>PLAN OPERATIVO INSTITUCIONAL - PRESUPUESTO AÑO '.$campo['nu_anio'].'</b></td>
+			</tr>
+			<tr align="left">
+				<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$campo['tx_ejecutor'].'</td>
+			</tr>
+			<tr align="left">
+				<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$campo['tx_area_estrategica'].'</td>
+			</tr>
+			<tr>
+				<td><b>MISIÓN</b></td>
+				<td><b>VISIÓN</b></td>
+			</tr>
+			<tr>
+				<td height="100" align="justify">'.$campo['inst_mision'].'</td>
+				<td height="100" align="justify">'.$campo['inst_vision'].'</td>
+			</tr>
+		<thead>
+			<tr>
+				<td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr nobr="true">
+				<td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$campo['inst_objetivos']).'</td>
+			</tr>
+		</tbody>
+		</table>';
+				$this->SetFont('','',11);
+				//$this->Ln(-20);
+				$this->writeHTML($htmlObjetivo, true, false, false, false, '');
+				$this->AddPage();
+
+				}
 
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -369,7 +428,9 @@ $html6 = '
 ';
 		$this->writeHTML($html6, true, false, false, false, '');
 		$contador=$contador+1;
+		$in_portada=true;
 		if($this->cantidadTotal>$contador){
+			$in_portada=false;
 			$this->AddPage();
 			//$this->Ln(-20);
 		}
