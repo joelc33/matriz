@@ -6,6 +6,8 @@ use matriz\Models\Proyecto\tab_proyecto;
 use matriz\Models\Proyecto\tab_proyecto_vinculo;
 use matriz\Models\Proyecto\tab_proyecto_localizacion;
 use matriz\Models\Proyecto\tab_proyecto_responsable;
+use matriz\Models\Proyecto\tab_proyecto_ae;
+use matriz\Models\Proyecto\tab_proyecto_ae_partida;
 use View;
 use Validator;
 use Input;
@@ -212,9 +214,39 @@ class proyectoController extends Controller
       $validadorProyectoLocalizacion = Validator::make($datosProyectoLocalizacion, tab_proyecto_localizacion::$cerrarProyecto);
       $validadorProyectoResponsable = Validator::make($datosProyectoResponsable, tab_proyecto_responsable::$cerrarProyecto);
 
-      $validacion = array_merge_recursive($validadorProyecto->getMessageBag()->toArray(), $validadorProyectoVinculo->getMessageBag()->toArray(), $validadorProyectoLocalizacion->getMessageBag()->toArray(), $validadorProyectoResponsable->getMessageBag()->toArray());
+      $ae_partida = tab_proyecto_ae::select('tx_codigo', 'descripcion', 'total', DB::raw("monto_cargado_ae_proy(co_proyecto_acc_espec) as mo_cargado"))
+      ->where('id_proyecto', '=', $id_proyecto)
+      ->orderby('tx_codigo','ASC')
+      ->get();
 
-      if ($validadorProyecto->fails() || $validadorProyectoVinculo->fails() || $validadorProyectoLocalizacion->fails() || $validadorProyectoResponsable->fails()) {
+      $validador_registros = array();
+      $contador_partida = 0;
+
+      foreach($ae_partida as $valor){
+
+        if($valor->total == $valor->mo_cargado){
+          $in_valido = 1;
+        }else{
+          $in_valido = 0;
+        }
+
+        $de_ae = $valor->tx_codigo;
+
+        $mensaje_ae_partida = array(
+          $de_ae.'.in'=>'*El monto de la Accion Especifica, no Coincide con el total de sus partidas. <br>Monto AE '.$de_ae.': <span style="color:green"><b>'.number_format($valor->total, 2, ',', '.').'</b></span>'.'<br>Monto Partidas: <span style="color:red"><b>'.number_format($valor->mo_cargado, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($valor->total - $valor->mo_cargado), 2, ',', '.').'</b>'
+        );
+
+        $validador_partida = Validator::make(array($de_ae => $in_valido), array($de_ae => 'integer|in:1'), $mensaje_ae_partida);
+        if ($validador_partida->fails()) {
+          $validador_registros[$de_ae] = array($validador_partida->messages()->first($de_ae));
+          $contador_partida++;
+        }
+
+      }
+
+      $validacion = array_merge_recursive($validadorProyecto->getMessageBag()->toArray(), $validadorProyectoVinculo->getMessageBag()->toArray(), $validadorProyectoLocalizacion->getMessageBag()->toArray(), $validadorProyectoResponsable->getMessageBag()->toArray(), $validador_registros);
+
+      if ($validadorProyecto->fails() || $validadorProyectoVinculo->fails() || $validadorProyectoLocalizacion->fails() || $validadorProyectoResponsable->fails() || $contador_partida>0 ) {
         return Response::json(array(
           'success' => false,
           'msg' => $validacion
