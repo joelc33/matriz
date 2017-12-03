@@ -8,6 +8,7 @@ use Validator;
 use Input;
 use Response;
 use DB;
+use Session;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -79,8 +80,11 @@ class ejerciciofiscalController extends Controller
    */
   public function nuevo()
   {
-    $data = json_encode(array("id" => ""));
-    return View::make('mantenimiento.ejercicio.editar')->with('data',$data);
+    $ejercicio = Session::get('ejercicio')+1;
+    $data = json_encode(array("nu_anio" => $ejercicio));
+    return View::make('mantenimiento.ejercicio.editar')
+    ->with('data',$data)
+    ->with('ejercicio',$ejercicio);
   }
 
   /**

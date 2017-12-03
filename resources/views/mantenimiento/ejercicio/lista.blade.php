@@ -32,13 +32,14 @@ this.nuevo = new Ext.Button({
     text:'Nuevo',
     iconCls: 'icon-nuevo',
     handler:function(){
-        ejercicioLista.main.mascara.show();
+        /*ejercicioLista.main.mascara.show();
         this.msg = Ext.get('formularioejercicio');
         this.msg.load({
          url:"{{ URL::to('mantenimiento/ejercicio/nuevo') }}",
          scripts: true,
          text: "Cargando.."
-        });
+			 });*/
+			 addTab('nuevoEjercicio','Crear Ejercicio','{{ URL::to('mantenimiento/ejercicio/nuevo') }}','load','icon-nuevo','');
     }
 });
 

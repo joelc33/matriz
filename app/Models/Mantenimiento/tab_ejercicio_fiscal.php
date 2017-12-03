@@ -15,4 +15,8 @@ class tab_ejercicio_fiscal extends Model
 	public static $seleccionar = array(
 		"ejercicio" => "required|numeric|min:2015|max:3000"
 	);
+
+	public static $validarCrear = array(
+		"periodo" => "required|numeric|min:2015|max:3000|unique:tab_ejercicio_fiscal,id"
+	);
 }
