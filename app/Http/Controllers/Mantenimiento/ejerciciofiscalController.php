@@ -149,7 +149,7 @@ class ejerciciofiscalController extends Controller
       }
       $tabla = new tab_ejercicio_fiscal;
       $tabla->id = Input::get("periodo");
-      $tabla->in_activo = 'TRUE';
+      $tabla->in_activo = 'FALSE';
       $tabla->save();
 
       DB::commit();

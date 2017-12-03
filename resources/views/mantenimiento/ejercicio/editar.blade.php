@@ -46,6 +46,7 @@ this.botones = new this.GrupoBotones({
                 iconAlign:'top'
             },
             items: [
+              @if( in_array( array( 'de_privilegio' => 'ejerciciofiscal.guardar', 'in_habilitado' => true), Session::get('credencial') ))
               {
                 text:'Crear',  // Generar la impresión en pdf
                 iconCls:'icon-salvar',
@@ -87,6 +88,7 @@ this.botones = new this.GrupoBotones({
                   });
                 }
               },
+              @endif
               {
                 text:'Cancelar',  // Limpiar campos del formulario
                 iconCls:'icon-canceladeclara',
