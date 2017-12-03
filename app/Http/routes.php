@@ -396,13 +396,19 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 	});
 	//*Modulo de Ejercicio Fiscal*/
 	Route::group(['prefix' => 'mantenimiento/ejercicio'], function(){
-		Route::get('lista', 'ejercicioController@lista');
-		Route::post('storeLista', 'ejercicioController@storeLista');
-		Route::get('nuevo', 'ejercicioController@nuevo');
-		Route::get('cronograma/{id}', 'ejercicioController@cronograma');
-		Route::post('guardar', 'ejercicioController@guardar');
-		Route::post('guardar/{id}', 'ejercicioController@guardar');
-		Route::post('cerrar', 'ejercicioController@cerrar');
-		Route::post('habilitar', 'ejercicioController@habilitar');
+		Route::get('lista', 'ejerciciofiscalController@lista');
+		Route::post('storeLista', 'ejerciciofiscalController@storeLista');
+		Route::get('nuevo', 'ejerciciofiscalController@nuevo');
+		Route::get('cronograma/{id}', 'ejerciciofiscalController@cronograma');
+		Route::post('guardar', 'ejerciciofiscalController@guardar');
+		Route::post('guardar/{id}', 'ejerciciofiscalController@guardar');
+		Route::post('cerrar', 'ejerciciofiscalController@cerrar');
+		Route::post('habilitar', 'ejerciciofiscalController@habilitar');
+		Route::post('cronograma/storeLista', 'ejerciciocronogramaController@storeLista');
+		Route::post('cronograma/nuevo', 'ejerciciocronogramaController@nuevo');
+		Route::get('cronograma/editar/{id}', 'ejerciciocronogramaController@editar');
+		Route::post('cronograma/guardar', 'ejerciciocronogramaController@guardar');
+		Route::post('cronograma/guardar/{id}', 'ejerciciocronogramaController@guardar');
+		Route::post('cronograma/eliminar', 'ejerciciocronogramaController@eliminar');
 	});
 });

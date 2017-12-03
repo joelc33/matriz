@@ -68,10 +68,10 @@ this.deshabilitar= new Ext.Button({
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'{{ URL::to('mantenimiento/ejecicio/cerrar') }}',
+            url:'{{ URL::to('mantenimiento/ejercicio/cerrar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: ejercicioLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                periodo: ejercicioLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
@@ -96,10 +96,10 @@ this.habilitar= new Ext.Button({
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'{{ URL::to('mantenimiento/ejecicio/habilitar') }}',
+            url:'{{ URL::to('mantenimiento/ejercicio/habilitar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: ejercicioLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                periodo: ejercicioLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
@@ -115,8 +115,8 @@ this.habilitar= new Ext.Button({
     }
 });
 
-this.editar.disable();
-this.eliminar.disable();
+this.ver.disable();
+this.deshabilitar.disable();
 this.habilitar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
@@ -204,9 +204,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			ejercicioLista.main.editar.enable();
+			ejercicioLista.main.ver.enable();
 			ejercicioLista.main.habilitar.enable();
-			ejercicioLista.main.eliminar.enable();
+			ejercicioLista.main.deshabilitar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -224,9 +224,9 @@ this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-ejercicioLista.main.editar.disable();
+ejercicioLista.main.ver.disable();
 ejercicioLista.main.habilitar.disable();
-ejercicioLista.main.eliminar.disable();
+ejercicioLista.main.deshabilitar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

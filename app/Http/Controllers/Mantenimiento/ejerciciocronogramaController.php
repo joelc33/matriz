@@ -2,7 +2,7 @@
 
 namespace matriz\Http\Controllers\Mantenimiento;
 //*******agregar esta linea******//
-use matriz\Models\Mantenimiento\tab_ejercicio_fiscal;
+use matriz\Models\Mantenimiento\tab_apertura_ef;
 use View;
 use Validator;
 use Input;
@@ -14,24 +14,14 @@ use Illuminate\Http\Request;
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
 
-class ejerciciofiscalController extends Controller
+class ejerciciocronogramaController extends Controller
 {
-  protected $tab_ejercicio_fiscal;
+  protected $tab_apertura_ef;
 
-  public function __construct(tab_ejercicio_fiscal $tab_ejercicio_fiscal)
+  public function __construct(tab_apertura_ef $tab_apertura_ef)
   {
     $this->middleware('auth');
-    $this->tab_ejercicio_fiscal = $tab_ejercicio_fiscal;
-  }
-
-  /**
-  * Display a listing of the resource.
-  *
-  * @return Response
-  */
-  public function lista()
-  {
-    return View::make('mantenimiento.ejercicio.lista');
+    $this->tab_apertura_ef = $tab_apertura_ef;
   }
 
   /**
@@ -46,24 +36,27 @@ class ejerciciofiscalController extends Controller
       $limit  = Input::get('limit', 20);
       $variable = Input::get('variable');
 
-      $tab_ejercicio_fiscal = $this->tab_ejercicio_fiscal
-      ->select( 'id', 'in_activo' );
+      $tab_apertura_ef = $this->tab_apertura_ef
+      ->select( 'id', 'de_apertura', DB::raw("to_char(fe_desde, 'dd/mm/YYYY') as fe_desde"),
+      DB::raw("to_char(fe_hasta, 'dd/mm/YYYY') as fe_hasta"))
+      ->where('in_activo', '=', TRUE)
+      ->where('id_tab_ejercicio_fiscal', '=', Input::get('ejercicio'));
 
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_ejercicio_fiscal->where('id', 'ILIKE', "%$variable%");
+          $tab_apertura_ef->where('de_apertura', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
-        $response['total'] = $tab_ejercicio_fiscal->count();
-        $tab_ejercicio_fiscal->skip($start)->take($limit);
-        $response['data']  = $tab_ejercicio_fiscal->orderby('id','DESC')->get()->toArray();
+        $response['total'] = $tab_apertura_ef->count();
+        $tab_apertura_ef->skip($start)->take($limit);
+        $response['data']  = $tab_apertura_ef->orderby('id','ASC')->get()->toArray();
       } else {
         $response['success']  = 'true';
-        $response['total'] = $tab_ejercicio_fiscal->count();
-        $tab_ejercicio_fiscal->skip($start)->take($limit);
-        $response['data']  = $tab_ejercicio_fiscal->orderby('id','DESC')->get()->toArray();
+        $response['total'] = $tab_apertura_ef->count();
+        $tab_apertura_ef->skip($start)->take($limit);
+        $response['data']  = $tab_apertura_ef->orderby('id','ASC')->get()->toArray();
       }
 
       return Response::json($response, 200);
@@ -79,8 +72,19 @@ class ejerciciofiscalController extends Controller
    */
   public function nuevo()
   {
-    $data = json_encode(array("id" => ""));
-    return View::make('mantenimiento.ejercicio.editar')->with('data',$data);
+
+    $ejercicio = json_encode(array("id_tab_ejercicio_fiscal" => Input::get('ejercicio')));
+
+    $fechaI = '01-01-'.((empty(Input::get('ejercicio'))? $ejercicio->id_tab_ejercicio_fiscal : Input::get('ejercicio') )-1);
+    $fechaF = '31-12-'.((empty(Input::get('ejercicio'))? $ejercicio->id_tab_ejercicio_fiscal : Input::get('ejercicio') )-1);
+
+    $data = json_encode(array(
+      "id_tab_ejercicio_fiscal" => Input::get('ejercicio'),
+      "fe_ini" => $fechaI,
+      "fe_fin" => $fechaF
+    ));
+
+    return View::make('mantenimiento.ejercicio.cronograma.editar')->with('data',$data);
   }
 
   /**
@@ -90,10 +94,19 @@ class ejerciciofiscalController extends Controller
    */
   public function editar($id)
   {
-    $data = tab_ejercicio_fiscal::select('id', 'in_activo')
+    $data = tab_apertura_ef::select('id', 'id_tab_ejercicio_fiscal', 'fe_desde', 'fe_hasta', 'de_apertura',
+    'in_activo')
     ->where('id', '=', $id)
     ->first();
-    return View::make('mantenimiento.ejercicio.editar')->with('data',$data);
+
+    $fechaI = '01-01-'.($data->id_tab_ejercicio_fiscal-1);
+    $fechaF = '31-12-'.($data->id_tab_ejercicio_fiscal-1);
+
+    $limite = array('fe_ini' => $fechaI, 'fe_fin' => $fechaF );
+
+    $data = json_encode(array_merge( $data->toArray(), $limite ));
+
+    return View::make('mantenimiento.ejercicio.cronograma.editar')->with('data',$data);
   }
 
   /**
@@ -108,14 +121,17 @@ class ejerciciofiscalController extends Controller
     if($id!=''||$id!=null){
 
        try {
-      $validator= Validator::make(Input::all(), tab_ejercicio_fiscal::$validarEditar);
+      $validator= Validator::make(Input::all(), tab_apertura_ef::$validarEditar);
       if ($validator->fails()){
         return Response::json(array(
           'success' => false,
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = tab_ejercicio_fiscal::find($id);
+      $tabla = tab_apertura_ef::find($id);
+      $tabla->fe_desde = Input::get("fecha_apertura");
+      $tabla->fe_hasta = Input::get("fecha_cierre");
+      $tabla->de_apertura = Input::get("descripcion");
       $tabla->save();
 
       DB::commit();
@@ -136,22 +152,25 @@ class ejerciciofiscalController extends Controller
     }else{
 
        try {
-      $validator = Validator::make(Input::all(), tab_ejercicio_fiscal::$validarCrear);
+      $validator = Validator::make(Input::all(), tab_apertura_ef::$validarCrear);
       if ($validator->fails()){
         return Response::json(array(
           'success' => false,
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = new tab_ejercicio_fiscal;
-      $tabla->id = Input::get("periodo");
+      $tabla = new tab_apertura_ef;
+      $tabla->id_tab_ejercicio_fiscal = Input::get("periodo");
+      $tabla->fe_desde = Input::get("fecha_apertura");
+      $tabla->fe_hasta = Input::get("fecha_cierre");
+      $tabla->de_apertura = Input::get("descripcion");
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 
       DB::commit();
       return Response::json(array(
         'success' => true,
-        'msg' => 'Ejercicio creado con Exito!'
+        'msg' => 'Registro Guardado con Exito!'
       ));
 
           }catch (\Illuminate\Database\QueryException $e)
@@ -170,45 +189,17 @@ class ejerciciofiscalController extends Controller
    *
    * @return Response
    */
-  public function habilitar()
+  public function eliminar()
   {
     DB::beginTransaction();
     try {
-      $tabla = tab_ejercicio_fiscal::find(Input::get("periodo"));
-      $tabla->in_activo = 'TRUE';
-      $tabla->save();
-      DB::commit();
-
-      $response['success']  = 'true';
-      $response['msg']  = 'Periodo Habilitado con Exito!';
-      return Response::json($response, 200);
-
-    }catch (\Illuminate\Database\QueryException $e)
-    {
-      DB::rollback();
-
-      $response['success']  = 'false';
-      $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
-      return Response::json($response, 200);
-    }
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function cerrar()
-  {
-    DB::beginTransaction();
-    try {
-      $tabla = tab_ejercicio_fiscal::find(Input::get("periodo"));
+      $tabla = tab_apertura_ef::find(Input::get("periodo"));
       $tabla->in_activo = 'FALSE';
       $tabla->save();
       DB::commit();
 
       $response['success']  = 'true';
-      $response['msg']  = 'Periodo cerrado con Exito!';
+      $response['msg']  = 'Registro Deshabilitado con Exito!';
       return Response::json($response, 200);
 
     }catch (\Illuminate\Database\QueryException $e)
@@ -221,17 +212,4 @@ class ejerciciofiscalController extends Controller
     }
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function cronograma($id)
-  {
-    $data = tab_ejercicio_fiscal::select('id as periodo', 'in_activo')
-    ->where('id', '=', $id)
-    ->first();
-
-    return View::make('mantenimiento.ejercicio.cronograma.lista')->with('data',$data);
-  }
 }
