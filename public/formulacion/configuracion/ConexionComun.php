@@ -173,13 +173,13 @@ function enviar_correo($correo,$nombre,$motivo,$cuerpo){
 	$mail->isSMTP();
 	$mail->Host = 'mail.yoser.dafesoluciones.net;mail.yoser.dafesoluciones.net';
 	$mail->SMTPAuth = true;
-	$mail->Username = 'sedatez@yoser.dafesoluciones.net';
-	$mail->Password = 'sedatez';
+	$mail->Username = 'spe@yoser.dafesoluciones.net';
+	$mail->Password = 'spe';
 	$mail->SMTPSecure = 'tls';
 	$mail->Port = 25;
 //*********************************CONTENIDO************************************************//
 	$mail->From = 'sedatez@yoser.dafesoluciones.net';
-	$mail->FromName = utf8_encode('Sistema Automatizado - SEDATEZ');
+	$mail->FromName = utf8_encode('Sistema Automatizado - SPE');
 	$mail->addAddress($correo, $nombre);
 	$mail->addReplyTo('sedatez@yoser.dafesoluciones.net', 'Informacion');
 
@@ -203,12 +203,45 @@ function enviar_correo($correo,$nombre,$motivo,$cuerpo){
 
 function encabezado($pdf,$h,$tipo){
 	if($h=='v'){
-		$pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    if($_SESSION['ejercicio_fiscal'] == 2015){
+      $pdf->Image('../../images/cintillo_2015.png', 10, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] == 2016){
+      $pdf->Image('../../images/cintillo_2016.png', 10, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] == 2017){
+      $pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] > 2017){
+      $pdf->Image('../../images/zulia_escudo.png', 10, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->setXY(30,7);
+      $pdf->SetFont('','B',11);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setXY(30,14);
+      $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
+      $pdf->setY(23);
+    }
+		//$pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
 		//$pdf->Image('../../images/izquierda.png', 10, 3, 120, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		//$pdf->Image('../../images/derecha.png', 170, 3, 35, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 	}
 	if($h=='h'){
-		$pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    if($_SESSION['ejercicio_fiscal'] == 2015){
+      $pdf->Image('../../images/cintillo_2015.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] == 2016){
+      $pdf->Image('../../images/cintillo_2016.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] == 2017){
+      $pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    }elseif($_SESSION['ejercicio_fiscal'] > 2017){
+      $pdf->Image('../../images/zulia_escudo.png', 10, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->setXY(30,7);
+      $pdf->SetFont('','B',11);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->setXY(30,14);
+      $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
+      $pdf->setY(23);
+    }
+		//$pdf->Image('../../images/cintillo_2018.jpg', 10, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    //$pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+    //$pdf->Image('../../images/cintillo_2016.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    //$pdf->Image('../../images/cintillo_2015.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		//$pdf->Image('../../images/izquierda.png', 10, 3, 120, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		//$pdf->Image('../../images/derecha.png', 250, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		//$pdf->Image('../../images/derecha.png', 235, 3, 35, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
