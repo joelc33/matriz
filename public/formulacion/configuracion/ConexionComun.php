@@ -204,17 +204,17 @@ function enviar_correo($correo,$nombre,$motivo,$cuerpo){
 function encabezado($pdf,$h,$tipo){
 	if($h=='v'){
     if($_SESSION['ejercicio_fiscal'] == 2015){
-      $pdf->Image('../../images/cintillo_2015.png', 10, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2015.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2016){
-      $pdf->Image('../../images/cintillo_2016.png', 10, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2016.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2017){
-      $pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2017.jpg', 15, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] > 2017){
-      $pdf->Image('../../images/zulia_escudo.png', 10, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
-      $pdf->setXY(30,7);
+      $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->setXY(35,7);
       $pdf->SetFont('','B',11);
       $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-      $pdf->setXY(30,14);
+      $pdf->setXY(35,14);
       $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
       $pdf->setY(23);
     }
@@ -224,17 +224,17 @@ function encabezado($pdf,$h,$tipo){
 	}
 	if($h=='h'){
     if($_SESSION['ejercicio_fiscal'] == 2015){
-      $pdf->Image('../../images/cintillo_2015.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2015.png', 15, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2016){
-      $pdf->Image('../../images/cintillo_2016.png', 10, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2016.png', 15, 3, 259, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2017){
-      $pdf->Image('../../images/cintillo_2017.jpg', 10, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->Image('../../images/cintillo_2017.jpg', 15, 3, 259, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] > 2017){
-      $pdf->Image('../../images/zulia_escudo.png', 10, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
-      $pdf->setXY(30,7);
+      $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      $pdf->setXY(35,7);
       $pdf->SetFont('','B',11);
       $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-      $pdf->setXY(30,14);
+      $pdf->setXY(35,14);
       $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
       $pdf->setY(23);
     }
@@ -260,14 +260,14 @@ function pie( $pdf, $h, $tipo){
 			$termino='AC';
 		}
 	if($h=='v'){
-		$pdf->Image('../../images/logo.png', 10, 260, 25, 12, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+		//$pdf->Image('../../images/logo.png', 10, 260, 25, 12, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		$pdf->ln(0);
 		$pdf->writeHTMLCell(205,0, '', '', $termino.'-'.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'R', true);
 		$pdf->ln(0);
 		$pdf->writeHTMLCell(205,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
 	}
 	if($h=='h'){
-		$pdf->Image('../../images/logo.png', 10, 198, 25, 12, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+		//$pdf->Image('../../images/logo.png', 10, 198, 25, 12, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
 		$pdf->ln(0);
 		$pdf->writeHTMLCell(260,0, '', '', $termino/*.'-'.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages()*/, 0, 0, 0, true, 'R', true);
 		$pdf->ln(0);

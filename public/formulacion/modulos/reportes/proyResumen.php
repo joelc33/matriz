@@ -216,7 +216,7 @@ $pdf->SetAuthor('Secretaria de Planificacion y Estadistica');
 $pdf->SetTitle('RESUMEN EJECUTORES');
 $pdf->SetSubject('MI DOCUMENTO');
 $pdf->SetKeywords('Planilla, PDF, Registro');
-$pdf->SetMargins(10,20,10);
+$pdf->SetMargins(15,20,10);
 $pdf->SetTopMargin(23);
 $pdf->setPrintHeader(false);
 $pdf->SetPrintFooter(true);
