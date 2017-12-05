@@ -114,6 +114,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('empleado/tipo', 'documentoController@empleadoTipo');
 		Route::get('municipio/todo', 'documentoController@municipioTodo');
 		Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
+		Route::get('municipio', 'documentoController@municipio');
 	});
 });
 //*Modulos de Reportes*/

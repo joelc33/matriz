@@ -103,4 +103,80 @@ class distribucionController extends Controller
     return View::make('mantenimiento.distribucion.editar')->with('data',$data);
   }
 
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_distribucion_municipio::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_distribucion_municipio::find($id);
+      $tabla->co_partida = Input::get("partida");
+      $tabla->nu_base_censo = Input::get("base_censo");
+      $tabla->superficie_km = Input::get("superficie_km");
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_distribucion_municipio::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_distribucion_municipio;
+      $tabla->id_tab_ejercicio_fiscal = Session::get('ejercicio');
+      $tabla->id_tab_municipio = Input::get("municipio");
+      $tabla->co_partida = Input::get("partida");
+      $tabla->nu_base_censo = Input::get("base_censo");
+      $tabla->superficie_km = Input::get("superficie_km");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
 }

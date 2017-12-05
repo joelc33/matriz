@@ -13,10 +13,14 @@ class tab_distribucion_municipio extends Model
 	protected $table = 'mantenimiento.tab_distribucion_municipio';
 
 	public static $validarCrear = array(
-		"cargo" => "required|min:1|max:1200|unique:tab_cargo,de_cargo"
+		"partida" => "required|numeric",
+		"base_censo" => "required|numeric",
+		"superficie_km" => "required|numeric"
 	);
 
 	public static $validarEditar = array(
-		"cargo" => "required|min:1|max:1200"
+		"partida" => "required|numeric",
+		"base_censo" => "required|numeric",
+		"superficie_km" => "required|numeric"
 	);
 }

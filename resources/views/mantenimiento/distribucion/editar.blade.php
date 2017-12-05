@@ -5,6 +5,10 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+//<Stores de fk>
+this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
+//<Stores de fk>
+
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -12,12 +16,63 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
-this.de_cargo = new Ext.form.TextField({
-	fieldLabel:'Descripcion',
-	name:'cargo',
-	value:this.OBJ.de_cargo,
-	width:400,
-	maxLength: 600
+this.id_tab_municipio = new Ext.form.ComboBox({
+	fieldLabel:'MUNICIPIO',
+	store: this.storeCO_MUNICIPIO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_municipio',
+	hiddenName:'municipio',
+	//readOnly:(this.OBJ.id_tab_municipio!='')?true:false,
+	//style:(this.main.OBJ.id_tab_municipio!='')?'background:#c9c9c9;':'',
+	//forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Municipio...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:200,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
+	resizable:true,
+	allowBlank:false
+});
+this.storeCO_MUNICIPIO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_municipio,
+	value:  this.OBJ.id_tab_municipio,
+	objStore: this.storeCO_MUNICIPIO
+});
+
+this.co_partida = new Ext.form.NumberField({
+	fieldLabel:'PARTIDA',
+	name:'partida',
+	value:this.OBJ.co_partida,
+	allowBlank:false,
+	width:200,
+	minLength : 0,
+	maxLength: 18,
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
+});
+
+this.nu_base_censo = new Ext.form.NumberField({
+	fieldLabel:'PROYECCION DE POBLACION',
+	name:'base_censo',
+	value:this.OBJ.nu_base_censo,
+	allowBlank:false,
+	width:200,
+	minLength : 0,
+	maxLength: 18
+});
+
+this.superficie_km = new Ext.form.NumberField({
+	fieldLabel:'SUPERF. KM2',
+	name:'superficie_km',
+	value:this.OBJ.superficie_km,
+	allowBlank:false,
+	width:200,
+	minLength : 0,
+	maxLength: 18
 });
 
 this.guardar = new Ext.Button({
@@ -77,19 +132,22 @@ this.salir = new Ext.Button({
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	width:600,
-	labelWidth: 120,
+	labelWidth: 180,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-		this.de_cargo
+		this.id_tab_municipio,
+		this.co_partida,
+		this.nu_base_censo,
+		this.superficie_km
 	]
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Cargos',
+    title:'Formulario: Distribucion Municipios',
     modal:true,
     constrain:true,
 width:614,
@@ -109,6 +167,22 @@ width:614,
 });
 this.winformPanel_.show();
 distribucionmunicipioLista.main.mascara.hide();
+},
+getStoreCO_MUNICIPIO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/municipio') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},
+						{name: 'de_municipio'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
 }
 };
 Ext.onReady(distribucionmunicipioEditar.main.init, distribucionmunicipioEditar.main);
