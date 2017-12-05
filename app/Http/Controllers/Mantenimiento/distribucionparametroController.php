@@ -2,7 +2,7 @@
 
 namespace matriz\Http\Controllers\Mantenimiento;
 //*******agregar esta linea******//
-use matriz\Models\Mantenimiento\tab_distribucion_municipio;
+use matriz\Models\Mantenimiento\tab_distribucion_parametro;
 use View;
 use Validator;
 use Input;
@@ -31,7 +31,7 @@ class distribucionparametroController extends Controller
   public function nuevo()
   {
     $data = json_encode(array("id" => ""));
-    return View::make('mantenimiento.distribucion.editar')->with('data',$data);
+    return View::make('mantenimiento.distribucion.parametro.editar')->with('data',$data);
   }
 
   /**
@@ -39,14 +39,22 @@ class distribucionparametroController extends Controller
    *
    * @return Response
    */
-  public function editar($id)
+  public function editar()
   {
-    $data = tab_distribucion_municipio::select('id', 'id_tab_ejercicio_fiscal', 'id_tab_municipio', 'co_partida', 'nu_base_censo',
-       'nu_factor_poblacion', 'cuatrocinco_ppi', 'cincocero_fpp', 'superficie_km',
-       'superficie_factor', 'extension_territorio', 'mo_total')
-    ->where('id', '=', $id)
-    ->first();
-    return View::make('mantenimiento.distribucion.editar')->with('data',$data);
+    if (tab_distribucion_parametro::where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))->exists()) {
+
+      $data = tab_distribucion_parametro::select('id', 'id_tab_ejercicio_fiscal', 'nu_total_poblacion', 'cuatrocinco_ppi',
+         'cincocero_fpp', 'nu_superficie', 'nu_extension_territorio')
+      ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->first();
+
+    }else{
+
+      $data = json_encode(array("id" => ""));
+
+    }
+
+    return View::make('mantenimiento.distribucion.parametro.editar')->with('data',$data);
   }
 
   /**
@@ -61,17 +69,19 @@ class distribucionparametroController extends Controller
     if($id!=''||$id!=null){
 
        try {
-      $validator= Validator::make(Input::all(), tab_distribucion_municipio::$validarEditar);
+      $validator= Validator::make(Input::all(), tab_distribucion_parametro::$validarEditar);
       if ($validator->fails()){
         return Response::json(array(
           'success' => false,
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = tab_distribucion_municipio::find($id);
-      $tabla->co_partida = Input::get("partida");
-      $tabla->nu_base_censo = Input::get("base_censo");
-      $tabla->superficie_km = Input::get("superficie_km");
+      $tabla = tab_distribucion_parametro::find($id);
+      $tabla->nu_total_poblacion = Input::get("poblacion");
+      $tabla->cuatrocinco_ppi = Input::get("parte_igual");
+      $tabla->cincocero_fpp = Input::get("parte_proporcional");
+      $tabla->nu_superficie = Input::get("total_superficie");
+      $tabla->nu_extension_territorio = Input::get("extension_territorio");
       $tabla->save();
 
       DB::commit();
@@ -92,19 +102,20 @@ class distribucionparametroController extends Controller
     }else{
 
        try {
-      $validator = Validator::make(Input::all(), tab_distribucion_municipio::$validarCrear);
+      $validator = Validator::make(Input::all(), tab_distribucion_parametro::$validarCrear);
       if ($validator->fails()){
         return Response::json(array(
           'success' => false,
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = new tab_distribucion_municipio;
+      $tabla = new tab_distribucion_parametro;
       $tabla->id_tab_ejercicio_fiscal = Session::get('ejercicio');
-      $tabla->id_tab_municipio = Input::get("municipio");
-      $tabla->co_partida = Input::get("partida");
-      $tabla->nu_base_censo = Input::get("base_censo");
-      $tabla->superficie_km = Input::get("superficie_km");
+      $tabla->nu_total_poblacion = Input::get("poblacion");
+      $tabla->cuatrocinco_ppi = Input::get("parte_igual");
+      $tabla->cincocero_fpp = Input::get("parte_proporcional");
+      $tabla->nu_superficie = Input::get("total_superficie");
+      $tabla->nu_extension_territorio = Input::get("extension_territorio");
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 
