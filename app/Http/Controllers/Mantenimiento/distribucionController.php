@@ -3,6 +3,7 @@
 namespace matriz\Http\Controllers\Mantenimiento;
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_distribucion_municipio;
+use matriz\Models\Mantenimiento\tab_distribucion_parametro;
 use View;
 use Validator;
 use Input;
@@ -111,6 +112,29 @@ class distribucionController extends Controller
    */
   public function guardar($id = NULL)
   {
+
+    if (tab_distribucion_parametro::where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))->exists()) {
+
+      $data = tab_distribucion_parametro::select('id', 'id_tab_ejercicio_fiscal', 'nu_total_poblacion', 'cuatrocinco_ppi',
+         'cincocero_fpp', 'nu_superficie', 'nu_extension_territorio')
+      ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->first();
+
+      $factor_poblacion = Input::get("base_censo")/$data->nu_total_poblacion;
+      $cuatrocinco_ppi = round($data->cuatrocinco_ppi/21, 0);
+      $cincocero_fpp = round($data->cincocero_fpp*$factor_poblacion, 0);
+      $superficie_factor = Input::get("superficie_km")/$data->nu_superficie;
+      $extension_territorio = round($data->nu_extension_territorio*$superficie_factor, 0);
+      $mo_total = round($cuatrocinco_ppi+$cincocero_fpp+$extension_territorio, 0);
+
+    }else{
+
+      return Response::json(array(
+        'success' => false,
+        'msg' => array('uno'=>'Debe configurar primero los parametros iniciales.')
+      ));
+
+    }
   DB::beginTransaction();
     if($id!=''||$id!=null){
 
@@ -126,6 +150,12 @@ class distribucionController extends Controller
       $tabla->co_partida = Input::get("partida");
       $tabla->nu_base_censo = Input::get("base_censo");
       $tabla->superficie_km = Input::get("superficie_km");
+      $tabla->nu_factor_poblacion = $factor_poblacion;
+      $tabla->cuatrocinco_ppi = $cuatrocinco_ppi;
+      $tabla->cincocero_fpp = $cincocero_fpp;
+      $tabla->superficie_factor = $superficie_factor;
+      $tabla->extension_territorio = $extension_territorio;
+      $tabla->mo_total = $mo_total;
       $tabla->save();
 
       DB::commit();
@@ -159,6 +189,12 @@ class distribucionController extends Controller
       $tabla->co_partida = Input::get("partida");
       $tabla->nu_base_censo = Input::get("base_censo");
       $tabla->superficie_km = Input::get("superficie_km");
+      $tabla->nu_factor_poblacion = $factor_poblacion;
+      $tabla->cuatrocinco_ppi = $cuatrocinco_ppi;
+      $tabla->cincocero_fpp = $cincocero_fpp;
+      $tabla->superficie_factor = $superficie_factor;
+      $tabla->extension_territorio = $extension_territorio;
+      $tabla->mo_total = $mo_total;
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 
