@@ -115,6 +115,21 @@ this.habilitar= new Ext.Button({
     }
 });
 
+//Agregar un registro
+this.parametros = new Ext.Button({
+    text:'Parametros',
+    iconCls: 'icon-paracont',
+    handler:function(){
+        distribucionmunicipioLista.main.mascara.show();
+        this.msg = Ext.get('formulariodistribucionmunicipio');
+        this.msg.load({
+         url:"{{ URL::to('mantenimiento/distribucionmunicipio/parametro') }}",
+         scripts: true,
+         text: "Cargando.."
+        });
+    }
+});
+
 this.editar.disable();
 this.eliminar.disable();
 this.habilitar.disable();
@@ -192,6 +207,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			@endif
 			@if( in_array( array( 'de_privilegio' => 'libro.distribucionmunicipio.deshabilitar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.eliminar,'-',
+			@endif
+			@if( in_array( array( 'de_privilegio' => 'libro.distribucionmunicipio.parametro', 'in_habilitado' => true), Session::get('credencial') ))
+				this.parametros,'-',
 			@endif
 				this.buscador
     ],

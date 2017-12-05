@@ -394,6 +394,9 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('guardar/{id}', 'distribucionController@guardar');
 		Route::post('eliminar', 'distribucionController@eliminar');
 		Route::post('habilitar', 'distribucionController@habilitar');
+		Route::get('parametro', 'distribucionparametroController@editar');
+		Route::post('parametro/guardar', 'distribucionparametroController@guardar');
+		Route::post('parametro/guardar/{id}', 'distribucionparametroController@guardar');
 	});
 	//*Modulo de Ejercicio Fiscal*/
 	Route::group(['prefix' => 'mantenimiento/ejercicio'], function(){
