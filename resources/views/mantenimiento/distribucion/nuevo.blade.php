@@ -65,64 +65,10 @@ this.nu_base_censo = new Ext.form.NumberField({
 	maxLength: 18
 });
 
-this.nu_factor_poblacion = new Ext.form.NumberField({
-	fieldLabel:'FACTOR POBLACIONAL',
-	name:'factor_poblacion',
-	value:this.OBJ.nu_factor_poblacion,
-	allowBlank:false,
-	width:200,
-	minLength : 0,
-	maxLength: 18,
-	decimalPrecision: 8,
-	allowDecimals: true
-});
-
-this.cuatrocinco_ppi = new Ext.form.NumberField({
-	fieldLabel:'45% PARTES IGUALES',
-	name:'cuatrocinco_ppi',
-	value:this.OBJ.cuatrocinco_ppi,
-	allowBlank:false,
-	width:200,
-	minLength : 0,
-	maxLength: 18
-});
-
-this.cincocero_fpp = new Ext.form.NumberField({
-	fieldLabel:'50% EN FUNCION DE LA POBLACION',
-	name:'cincocero_fpp',
-	value:this.OBJ.cincocero_fpp,
-	allowBlank:false,
-	width:200,
-	minLength : 0,
-	maxLength: 18
-});
-
 this.superficie_km = new Ext.form.NumberField({
 	fieldLabel:'SUPERF. KM2',
 	name:'superficie_km',
 	value:this.OBJ.superficie_km,
-	allowBlank:false,
-	width:200,
-	minLength : 0,
-	maxLength: 18
-});
-
-this.superficie_factor = new Ext.form.NumberField({
-	fieldLabel:'FACTOR SUPERFICIE',
-	name:'superficie_factor',
-	value:this.OBJ.superficie_factor,
-	allowBlank:false,
-	width:200,
-	minLength : 0,
-	maxLength: 18,
-	decimalPrecision: 8,
-	allowDecimals: true
-});
-
-this.extension_territorio = new Ext.form.NumberField({
-	fieldLabel:'5% PROP. EXTENSION TERRITORIO',
-	name:'extension_territorio',
-	value:this.OBJ.extension_territorio,
 	allowBlank:false,
 	width:200,
 	minLength : 0,
@@ -186,7 +132,7 @@ this.salir = new Ext.Button({
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	width:600,
-	labelWidth: 220,
+	labelWidth: 180,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
@@ -196,12 +142,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.id_tab_municipio,
 		this.co_partida,
 		this.nu_base_censo,
-		this.nu_factor_poblacion,
-		this.cuatrocinco_ppi,
-		this.cincocero_fpp,
-		this.superficie_km,
-		this.superficie_factor,
-		this.extension_territorio
+		this.superficie_km
 	]
 });
 

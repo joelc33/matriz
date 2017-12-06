@@ -217,6 +217,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
 		{header: 'Municipio', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_municipio'},
+		{header: 'Partida', width:100,  menuDisabled:true, sortable: true, dataIndex: 'co_partida'},
 		{header: 'Proyeccion Poblacion', width:100,  menuDisabled:true, sortable: true, dataIndex: 'nu_base_censo'},
     {header: 'Factor Poblacion', width:100,  menuDisabled:true, sortable: true, dataIndex: 'nu_factor_poblacion'},
     {header: '45% P.I', width:100,  menuDisabled:true, sortable: true, dataIndex: 'cuatrocinco_ppi'},
@@ -264,6 +265,7 @@ getLista: function(){
     fields:[
     {name: 'id'},
 		{name: 'de_municipio'},
+		{name: 'co_partida'},
 		{name: 'nu_base_censo'},
     {name: 'nu_factor_poblacion'},
     {name: 'cuatrocinco_ppi'},

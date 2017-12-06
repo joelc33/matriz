@@ -86,7 +86,7 @@ class distribucionController extends Controller
   public function nuevo()
   {
     $data = json_encode(array("id" => ""));
-    return View::make('mantenimiento.distribucion.editar')->with('data',$data);
+    return View::make('mantenimiento.distribucion.nuevo')->with('data',$data);
   }
 
   /**
@@ -150,12 +150,17 @@ class distribucionController extends Controller
       $tabla->co_partida = Input::get("partida");
       $tabla->nu_base_censo = Input::get("base_censo");
       $tabla->superficie_km = Input::get("superficie_km");
-      $tabla->nu_factor_poblacion = $factor_poblacion;
+      /*$tabla->nu_factor_poblacion = $factor_poblacion;
       $tabla->cuatrocinco_ppi = $cuatrocinco_ppi;
       $tabla->cincocero_fpp = $cincocero_fpp;
       $tabla->superficie_factor = $superficie_factor;
-      $tabla->extension_territorio = $extension_territorio;
-      $tabla->mo_total = $mo_total;
+      $tabla->extension_territorio = $extension_territorio;*/
+      $tabla->nu_factor_poblacion = Input::get("factor_poblacion");
+      $tabla->cuatrocinco_ppi = Input::get("cuatrocinco_ppi");
+      $tabla->cincocero_fpp = Input::get("cincocero_fpp");
+      $tabla->superficie_factor = Input::get("superficie_factor");
+      $tabla->extension_territorio = Input::get("extension_territorio");
+      $tabla->mo_total = Input::get("cuatrocinco_ppi")+Input::get("cincocero_fpp")+Input::get("extension_territorio");
       $tabla->save();
 
       DB::commit();

@@ -21,6 +21,11 @@ class tab_distribucion_municipio extends Model
 	public static $validarEditar = array(
 		"partida" => "required|numeric",
 		"base_censo" => "required|numeric",
-		"superficie_km" => "required|numeric"
+		"factor_poblacion" => "required|numeric",
+		"cuatrocinco_ppi" => "required|numeric",
+		"cincocero_fpp" => "required|numeric",
+		"superficie_km" => "required|numeric",
+		"superficie_factor" => "required|numeric",
+		"extension_territorio" => "required|numeric"
 	);
 }
