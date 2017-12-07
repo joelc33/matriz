@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relacion_formulacion" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe0c446e-b1ee-4cb5-981a-80fd3adfa5e3">
 	<property name="ireport.zoom" value="1.4641000000000013"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="52"/>
 	<property name="ireport.y" value="35"/>
 	<parameter name="formato" class="java.text.DecimalFormat" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new DecimalFormat("Bs #,##0.00")]]></defaultValueExpression>
@@ -153,10 +153,6 @@ order by 1, 2, 4]]>
 					</textElement>
 					<textFieldExpression><![CDATA["Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela"]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="0" y="0" width="50" height="28" uuid="b9b07a33-604e-46f2-90ea-613e5eb18390"/>
-					<imageExpression><![CDATA["logo.png"]]></imageExpression>
-				</image>
 				<textField>
 					<reportElement x="466" y="8" width="69" height="20" uuid="0ad27c93-db88-4dba-878b-ce06f6d17d0e"/>
 					<textElement textAlignment="Right"/>

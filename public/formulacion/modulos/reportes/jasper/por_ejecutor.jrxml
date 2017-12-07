@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relacion_formulacion" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe0c446e-b1ee-4cb5-981a-80fd3adfa5e3">
 	<property name="ireport.zoom" value="1.4641000000000013"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="ejecutor" class="java.lang.String">
 		<defaultValueExpression><![CDATA['%']]></defaultValueExpression>
 	</parameter>
@@ -589,10 +589,6 @@
 					</textElement>
 					<textFieldExpression><![CDATA["Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela"]]></textFieldExpression>
 				</textField>
-				<image>
-					<reportElement x="0" y="2" width="32" height="24" uuid="89ec49a9-bb35-4b4e-afa1-6c5d1a529d12"/>
-					<imageExpression><![CDATA["logo.png"]]></imageExpression>
-				</image>
 				<textField>
 					<reportElement x="439" y="8" width="79" height="20" uuid="0ad27c93-db88-4dba-878b-ce06f6d17d0e"/>
 					<textElement textAlignment="Right"/>

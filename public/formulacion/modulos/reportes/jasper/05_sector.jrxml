@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="05_sector" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="772" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="1a68cb12-9a9b-495d-b058-8eef80ef5803">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="340"/>
 	<property name="ireport.y" value="136"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
@@ -52,10 +52,6 @@
 	</detail>
 	<pageFooter>
 		<band height="45">
-			<image>
-				<reportElement x="0" y="-1" width="61" height="31" uuid="b9b07a33-604e-46f2-90ea-613e5eb18390"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"logo.png"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="705" y="15" width="59" height="20" uuid="19e0c923-b9a5-4c1d-ad29-7a4311a8c880"/>
 				<textElement textAlignment="Right">
@@ -64,7 +60,7 @@
 				<textFieldExpression><![CDATA["5-"+String.format(  "%03d",  $V{PAGE_NUMBER} )]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="61" y="14" width="703" height="1" uuid="86df743c-2813-47d8-a21b-7804698313ec"/>
+				<reportElement x="5" y="14" width="755" height="1" uuid="86df743c-2813-47d8-a21b-7804698313ec"/>
 			</line>
 			<staticText>
 				<reportElement x="77" y="14" width="615" height="20" uuid="fca1ccaa-05a7-4792-9241-06dd94c31548"/>
