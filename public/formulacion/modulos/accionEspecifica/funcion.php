@@ -582,7 +582,7 @@ if($_GET['op']==1){
 		    "fec_termino"     => trim(date_format(date_create($row["fec_termino"]),'d/m/Y')),
 		    "co_ejecutores"     => trim($row["tx_ejecutor"]),
 		    "ejecutor_resp"     => trim($row["ejecutor_resp"]),
-			"cargar" => ( $row["cargar"] == 't' )
+			"cargar" => ( $row["cargar"] == 'f' )
 		);
 	}
 	echo json_encode(array(
