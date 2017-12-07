@@ -125,7 +125,7 @@ class proyectoaepartidaController extends Controller
             WHERE edo_reg is true and id_proyecto = :proyecto and
             sp_verificar_hijo_ae(co_proyecto_acc_espec) is true order by 1 asc;"), array( 'proyecto' => Input::get('id_proyecto')));
 
-            $select_cursor = DB::select( DB::raw("select num_tabla,tx_codigo, in_foraneo from a_cursor where in_foraneo is false and num_tabla = :codigo;"), array( 'codigo' => $tx_codigo));
+            $select_cursor = DB::select( DB::raw("select num_tabla,tx_codigo, in_foraneo from a_cursor where in_foraneo is true and num_tabla = :codigo;"), array( 'codigo' => $tx_codigo));
 
               //empieza  lectura vertical
               $start_v=10;
