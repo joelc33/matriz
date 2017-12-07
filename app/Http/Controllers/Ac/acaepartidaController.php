@@ -7,6 +7,7 @@ use matriz\Models\Mantenimiento\tab_ac_ae_partida as mmt_ac_ae_partida;
 use matriz\Models\Mantenimiento\tab_ac_ae_predefinida;
 use matriz\Models\Ac\tab_ac_ae;
 use matriz\Models\Ac\tab_ac;
+use matriz\Models\Mantenimiento\tab_partidas;
 use View;
 use Validator;
 use Input;
@@ -57,7 +58,7 @@ class acaepartidaController extends Controller
         $j->on('t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
           ->on('t01.id_tab_ejercicio_fiscal','=','public.t54_ac_ae_partidas.id_tab_ejercicio_fiscal');
       })
-      ->select( 'public.t54_ac_ae_partidas.co_partida', 'tx_nombre', 'monto' )
+      ->select( 'public.t54_ac_ae_partidas.co_partida', 'de_denominacion as tx_nombre', 'monto' )
       ->where('id_accion_centralizada', '=', $ac)
       ->where('id_accion', '=', $ae);
 
@@ -529,6 +530,13 @@ class acaepartidaController extends Controller
 
 						try {
 						$i=0;
+            $acumulado=0;
+
+            $consulta_ac_ae = tab_ac_ae::select('monto')
+            ->where('id_accion_centralizada' , '=', $ac)
+            ->where('id_accion' , '=', $ae)
+            ->first();
+
 						foreach ($insert as $key => $valor) {
 							$i++;
 							$validarDetalle = Validator::make($valor, tab_ac_ae_partida::$validarDesagregado);
@@ -544,7 +552,25 @@ class acaepartidaController extends Controller
 
 							}else{
 
+              $acumulado = $acumulado + floatval($valor['monto']);
+
               $partidaCrear = $valor['pa'].$valor['ge'].$valor['es'].$valor['se'].$valor['sse'];
+
+              if (tab_partidas::where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('co_partida', '=', $partidaCrear)
+              ->exists()) {
+
+              }else{
+
+                $tabla = new tab_partidas;
+                $tabla->id_tab_ejercicio_fiscal = Session::get('ejercicio');
+                $tabla->co_partida = $partidaCrear;
+                $tabla->tx_nombre = $valor['denominacion'];
+                $tabla->ace_mov = TRUE;
+                $tabla->in_activo = TRUE;
+                $tabla->save();
+
+              }
 
               $partida = new tab_ac_ae_partida;
               $partida->id_accion_centralizada = $valor['ac'];
@@ -559,6 +585,22 @@ class acaepartidaController extends Controller
 
 							}
 						}
+
+            if($acumulado<>$consulta_ac_ae->monto){
+
+              DB::rollback();
+
+              $mensaje_ae_partida = array(
+                'in'=>'*El monto de la Accion Especifica, no Coincide con el total de sus partidas. <br>Monto Accion Esp.: '.number_format($consulta_ac_ae->monto, 2, ',', '.').''.'<br>Monto Partidas: '.number_format($acumulado, 2, ',', '.').''.'<br>Diferencia: '.number_format(($consulta_ac_ae->monto - $acumulado), 2, ',', '.').''
+              );
+
+              $data = json_encode(array('success' => false, 'msg' => $mensaje_ae_partida));
+              $response = Response::make($data);
+              $response->header('Content-Type', 'text/html');
+              return $response;
+
+            }
+
 						DB::commit();
 
 						$data = json_encode(array('success' => true, 'msg' => 'Archivo procesado exitosamente!'));
