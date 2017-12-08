@@ -3,6 +3,7 @@
 namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\Ac\tab_meta_fisica;
 use View;
 use Validator;
 use Input;
@@ -15,7 +16,7 @@ use Illuminate\Http\Request;
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
 
-class formaunoController extends Controller
+class formadosController extends Controller
 {
   protected $tab_ac;
 
@@ -32,7 +33,7 @@ class formaunoController extends Controller
   */
   public function lista()
   {
-    return View::make('seguimiento.ac.001.lista');
+    return View::make('seguimiento.ac.002.lista');
   }
 
   /**
@@ -94,7 +95,7 @@ class formaunoController extends Controller
     ->where('ac_seguimiento.tab_ac.id', '=', Input::get('codigo'))
     ->first();
 
-    return View::make('seguimiento.ac.001.detalle')->with('data',$data);
+    return View::make('seguimiento.ac.002.detalle')->with('data',$data);
   }
 
   /**
@@ -112,8 +113,61 @@ class formaunoController extends Controller
     ->where('id', '=', $id)
     ->first();
 
-    //return View::make('seguimiento.ac.001.datos.lista')->with('data',$data);
-    return View::make('seguimiento.ac.001.datos.editar')->with('data',$data);
+    return View::make('seguimiento.ac.002.datos.lista')->with('data',$data);
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function datosstoreLista()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_ac = tab_meta_fisica::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta',
+       'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable' )
+      ->where('id_accion_centralizada', '=', 1285)
+      ->where('co_ac_acc_espec', '=', 1);
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_ac->where('de_aplicacion', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_ac->count();
+        $tab_ac->skip($start)->take($limit);
+        $response['data']  = $tab_ac->orderby('co_metas','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_ac->count();
+        $tab_ac->skip($start)->take($limit);
+        $response['data']  = $tab_ac->orderby('co_metas','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function editar($id)
+  {
+    $data = tab_meta_fisica::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta',
+     'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable' )
+    ->where('co_metas', '=', $id)
+    ->first();
+    return View::make('seguimiento.ac.002.datos.editar')->with('data',$data);
   }
 
 }

@@ -68,7 +68,7 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::post('cambiar/clave', 'usuarioController@guardarCambioClave');
 	});
 	//*Modulo de validar*/
-	Route::group(['prefix' => 'validar'], function(){
+	/*Route::group(['prefix' => 'validar'], function(){
 		Route::post('rif', 'documentoController@rif');
 		Route::post('rif/completoP', 'documentoController@rifCompletoP');
 		Route::post('rif/completoF', 'documentoController@rifCompletoF');
@@ -77,7 +77,7 @@ Route::group(['namespace' => 'Autenticacion'], function(){
 		Route::post('fax', 'documentoController@fax');
 		Route::get('tf/licencia/{id}', 'externoController@tfLicencia');
 		Route::get('{id}/guia/sa', 'externoController@guiaSal');
-	});
+	});*/
 });
 //*Modulos de Tablas Auxiliares*/
 Route::group(['namespace' => 'Auxiliar'], function(){
@@ -442,8 +442,42 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 	});
 		//*Modulo de Accion Centralizada Forma 001*/
 	Route::group(['prefix' => 'ac/seguimiento/001'], function(){
-		Route::get('lista', 'formaunoController@nuevo');
+		Route::get('lista', 'formaunoController@lista');
 		Route::post('storeLista', 'formaunoController@storeLista');
-		Route::get('detalle/{id}', 'formaunoController@detalle');
+		Route::post('detalle', 'formaunoController@detalle');
+		Route::get('datos/{id}', 'formaunoController@datos');
+	});
+	//*Modulo de Accion Centralizada Forma 002*/
+	Route::group(['prefix' => 'ac/seguimiento/002'], function(){
+		Route::get('lista', 'formadosController@lista');
+		Route::post('storeLista', 'formadosController@storeLista');
+		Route::post('detalle', 'formadosController@detalle');
+		Route::get('datos/{id}', 'formadosController@datos');
+		Route::post('datos/storeLista', 'formadosController@datosstoreLista');
+		Route::get('editar/{id}', 'formadosController@editar');
+	});
+	//*Modulo de Accion Centralizada Forma 003*/
+	Route::group(['prefix' => 'ac/seguimiento/003'], function(){
+		Route::get('lista', 'formatresController@lista');
+		Route::post('storeLista', 'formatresController@storeLista');
+		Route::post('detalle', 'formatresController@detalle');
+	});
+	//*Modulo de Accion Centralizada Forma 004*/
+	Route::group(['prefix' => 'ac/seguimiento/004'], function(){
+		Route::get('lista', 'formacuatroController@lista');
+		Route::post('storeLista', 'formacuatroController@storeLista');
+		Route::post('detalle', 'formacuatroController@detalle');
+	});
+	//*Modulo de Accion Centralizada Forma 005*/
+	Route::group(['prefix' => 'ac/seguimiento/005'], function(){
+		Route::get('lista', 'formacincoController@lista');
+		Route::post('storeLista', 'formacincoController@storeLista');
+		Route::post('detalle', 'formacincoController@detalle');
+	});
+	//*Modulo de Accion Centralizada Ejecucion*/
+	Route::group(['prefix' => 'ac/seguimiento/ejecucion'], function(){
+		Route::get('lista', 'ejecucionController@lista');
+		Route::post('storeLista', 'ejecucionController@storeLista');
+		Route::post('detalle', 'ejecucionController@detalle');
 	});
 });
