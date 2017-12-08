@@ -235,4 +235,23 @@ class acController extends Controller
     }
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function detalle()
+  {
+    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+    ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
+    ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
+    'ac_seguimiento.tab_ac.in_activo',
+    DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+    DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' )
+    ->where('ac_seguimiento.tab_ac.id', '=', Input::get('codigo'))
+    ->first();
+
+    return View::make('seguimiento.ac.detalle')->with('data',$data);
+  }
+
 }

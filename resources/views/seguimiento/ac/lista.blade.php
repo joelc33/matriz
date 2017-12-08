@@ -215,16 +215,16 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			/*AQUI ES DONDE ESTA EL LISTENER*/
 				listeners: {
 				rowselect: function(sm, row, rec) {
-																							var msg = Ext.get('detalle');
-																							msg.load({
-																											url: '{{ URL::to('ac/seguimiento/detalle') }}',
-																											scripts: true,
-																											params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
-																											text: 'Cargando...'
-																							});
+					var msg = Ext.get('detalle');
+					msg.load({
+									url: '{{ URL::to('ac/seguimiento/detalle') }}',
+									scripts: true,
+									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+									text: 'Cargando...'
+					});
 					if(panel_detalle.collapsed == true)
 					{
-					panel_detalle.toggleCollapse();
+						panel_detalle.toggleCollapse();
 					}
 				}
 			}

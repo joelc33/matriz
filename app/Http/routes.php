@@ -438,7 +438,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('nuevo', 'acController@nuevo');
 		Route::get('disponible', 'acController@disponible');
 		Route::post('guardar', 'acController@guardar');
-		Route::get('detalle/{id}', 'acController@detalle');
+		Route::post('detalle', 'acController@detalle');
 	});
 		//*Modulo de Accion Centralizada Forma 001*/
 	Route::group(['prefix' => 'ac/seguimiento/001'], function(){
