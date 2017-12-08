@@ -437,6 +437,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::post('storeLista', 'acController@storeLista');
 		Route::get('nuevo', 'acController@nuevo');
 		Route::get('disponible', 'acController@disponible');
+		Route::post('guardar', 'acController@guardar');
 		Route::get('detalle/{id}', 'acController@detalle');
 	});
 		//*Modulo de Accion Centralizada Forma 001*/

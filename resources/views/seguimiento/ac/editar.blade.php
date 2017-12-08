@@ -97,9 +97,9 @@ this.guardar = new Ext.Button({
         acseguimientoEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('seguimiento/ac/guardar') }}',
+		url:'{{ URL::to('ac/seguimiento/guardar') }}',
 	@else
-		url:'{{ URL::to('seguimiento/ac/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('ac/seguimiento/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',

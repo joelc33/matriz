@@ -11,4 +11,9 @@ class tab_ac extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'ac_seguimiento.tab_ac';
+
+	public static $validarCrear = array(
+		"ejercicio" => "required|numeric",
+		"ac" => "required|numeric"
+	);
 }

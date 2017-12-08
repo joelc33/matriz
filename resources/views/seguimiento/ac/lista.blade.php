@@ -189,10 +189,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Periodo', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_periodo'},
-    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'tx_ejecutor'},
-		{header: 'Codigo', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
-    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'de_ac'},
+		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'periodo'},
+    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
+		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
+    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
     {header: '% Ejecutado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
@@ -209,7 +209,40 @@ this.gridPanel_ = new Ext.grid.GridPanel({
         displayInfo: true,
         displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
         emptyMsg: "<span style=\"color:black\">No se encontraron registros</span>"
-    })
+    }),
+		sm: new Ext.grid.RowSelectionModel({
+			singleSelect: true,
+			/*AQUI ES DONDE ESTA EL LISTENER*/
+				listeners: {
+				rowselect: function(sm, row, rec) {
+																							var msg = Ext.get('detalle');
+																							msg.load({
+																											url: '{{ URL::to('ac/seguimiento/detalle') }}',
+																											scripts: true,
+																											params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+																											text: 'Cargando...'
+																							});
+					if(panel_detalle.collapsed == true)
+					{
+					panel_detalle.toggleCollapse();
+					}
+				}
+			}
+		})
+});
+
+/*Evento Doble Click*/
+this.gridPanel_.on('rowdblclick', function( grid, row, evt){
+	panel_detalle.toggleCollapse(true);
+	this.record = acseguimientoLista.main.store_lista.getAt(row);
+	this.codigo = this.record.data["id"];
+	this.msg = Ext.get('detalle');
+	this.msg.load({
+	    url: '{{ URL::to('ac/seguimiento/detalle') }}',
+	    scripts: true,
+	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
+	    text: "Cargando..."
+	});
 });
 
 this.panel = new Ext.Panel({
@@ -238,14 +271,28 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'{{ URL::to('seguimiento/ac/storeLista') }}',
-    root:'data',
-    fields:[
-    {name: 'id'},
-		{name: 'co_acseguimiento'},
-    {name: 'de_acseguimiento'},
-    {name: 'in_activo'},
-           ]
+	    url:'{{ URL::to('ac/seguimiento/storeLista') }}',
+	    root:'data',
+	    fields:[
+		    {name: 'id'},
+				{name: 'id_tab_ejecutores'},
+				{name: 'id_tab_ejecutores'},
+		    {name: 'tx_ejecutor'},
+				{name: 'nu_codigo'},
+		    {name: 'de_ac'},
+				{
+						name: 'ejecutor',
+						convert: function(v, r) {
+								return r.id_tab_ejecutores + ' - ' + r.tx_ejecutor;
+						}
+				},
+				{
+						name: 'periodo',
+						convert: function(v, r) {
+								return r.fe_inicio + ' - ' + r.fe_fin;
+						}
+				}
+	    ]
     });
     return this.store;
 }
