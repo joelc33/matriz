@@ -116,6 +116,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
 		Route::get('municipio', 'documentoController@municipio');
 		Route::get('periodo', 'documentoController@periodo');
+		Route::get('lapso', 'documentoController@lapso');
 	});
 });
 //*Modulos de Reportes*/
@@ -431,6 +432,14 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 //*Modulos de Accion Centralizada Seguimiento*/
 Route::group(['namespace' => 'AcSeguimiento'], function(){
 	//*Modulo de Accion Centralizada*/
+	Route::group(['prefix' => 'ac/seguimiento'], function(){
+		Route::get('lista', 'acController@lista');
+		Route::post('storeLista', 'acController@storeLista');
+		Route::get('nuevo', 'acController@nuevo');
+		Route::get('disponible', 'acController@disponible');
+		Route::get('detalle/{id}', 'acController@detalle');
+	});
+		//*Modulo de Accion Centralizada Forma 001*/
 	Route::group(['prefix' => 'ac/seguimiento/001'], function(){
 		Route::get('lista', 'formaunoController@nuevo');
 		Route::post('storeLista', 'formaunoController@storeLista');

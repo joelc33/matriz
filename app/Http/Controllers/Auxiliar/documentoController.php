@@ -23,6 +23,7 @@ use matriz\Models\Mantenimiento\tab_municipio_detalle;
 use matriz\Models\Mantenimiento\tab_parroquia_detalle;
 use matriz\Models\Mantenimiento\tab_municipio;
 use matriz\Models\Mantenimiento\tab_periodo;
+use matriz\Models\Mantenimiento\tab_lapso;
 use Input;
 use Response;
 use DB;
@@ -487,6 +488,23 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_periodo::select('id', 'de_periodo')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function lapso()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_lapso::select( 'id', 'id_tab_ejercicio_fiscal', 'id_tab_periodo', 'nu_lapso',
+      DB::raw("to_char(fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+      DB::raw("to_char(fe_fin, 'dd/mm/YYYY') as fe_fin"))
+      ->where('in_activo', '=', true)
+      ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
