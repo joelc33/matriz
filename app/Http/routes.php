@@ -115,6 +115,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('municipio/todo', 'documentoController@municipioTodo');
 		Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
 		Route::get('municipio', 'documentoController@municipio');
+		Route::get('periodo', 'documentoController@periodo');
 	});
 });
 //*Modulos de Reportes*/
@@ -414,5 +415,25 @@ Route::group(['namespace' => 'Mantenimiento'], function(){
 		Route::post('cronograma/guardar', 'ejerciciocronogramaController@guardar');
 		Route::post('cronograma/guardar/{id}', 'ejerciciocronogramaController@guardar');
 		Route::post('cronograma/eliminar', 'ejerciciocronogramaController@eliminar');
+	});
+	//*Modulo de Cronograma*/
+	Route::group(['prefix' => 'mantenimiento/lapso'], function(){
+		Route::get('lista', 'lapsoController@lista');
+		Route::post('storeLista', 'lapsoController@storeLista');
+		Route::get('nuevo', 'lapsoController@nuevo');
+		Route::get('editar/{id}', 'lapsoController@editar');
+		Route::post('guardar', 'lapsoController@guardar');
+		Route::post('guardar/{id}', 'lapsoController@guardar');
+		Route::post('eliminar', 'lapsoController@eliminar');
+		Route::post('habilitar', 'lapsoController@habilitar');
+	});
+});
+//*Modulos de Accion Centralizada Seguimiento*/
+Route::group(['namespace' => 'AcSeguimiento'], function(){
+	//*Modulo de Accion Centralizada*/
+	Route::group(['prefix' => 'ac/seguimiento/001'], function(){
+		Route::get('lista', 'formaunoController@nuevo');
+		Route::post('storeLista', 'formaunoController@storeLista');
+		Route::get('detalle/{id}', 'formaunoController@detalle');
 	});
 });

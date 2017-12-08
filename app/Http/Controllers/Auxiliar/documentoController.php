@@ -22,6 +22,7 @@ use matriz\Models\Mantenimiento\tab_tipo_empleado;
 use matriz\Models\Mantenimiento\tab_municipio_detalle;
 use matriz\Models\Mantenimiento\tab_parroquia_detalle;
 use matriz\Models\Mantenimiento\tab_municipio;
+use matriz\Models\Mantenimiento\tab_periodo;
 use Input;
 use Response;
 use DB;
@@ -474,6 +475,18 @@ class documentoController extends Controller
       //->where('in_activo', '=', true)
       ->where('id_tab_estado', '=', 23)
       ->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function periodo()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_periodo::select('id', 'de_periodo')->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 

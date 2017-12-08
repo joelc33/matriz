@@ -11,4 +11,19 @@ class tab_lapso extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 'mantenimiento.tab_lapso';
+
+	public static $validarCrear = array(
+		"ejercicio" => "required|numeric",
+		"periodo" => "required|numeric",
+		'fecha_inicio' => "required|date_format:d/m/Y|before:fecha_cierre",
+		'fecha_cierre' => "required|date_format:d/m/Y|after:fecha_inicio",
+	);
+
+	public static $validarEditar = array(
+		"ejercicio" => "required|numeric",
+		"periodo" => "required|numeric",
+		'fecha_inicio' => "required|date_format:d/m/Y|before:fecha_cierre",
+		'fecha_cierre' => "required|date_format:d/m/Y|after:fecha_inicio",
+	);
+
 }
