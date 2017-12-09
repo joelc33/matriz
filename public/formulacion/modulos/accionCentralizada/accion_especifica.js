@@ -904,6 +904,13 @@
                             self.store.reload();
                         });
                     }
+                },'-',{
+                    xtype: 'button',
+                    text: 'Ver Desagregado',
+                    iconCls: 'icon-reporteest',
+                    handler: function() {
+
+                    }
                 }]
             });
 
