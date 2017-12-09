@@ -49,34 +49,30 @@ class acaedesagregadoController extends Controller
       $start  = Input::get('start', 0);
       $limit  = Input::get('limit', 30);
       $variable = Input::get('variable');
-      $ac = Input::get('id_accion_centralizada');
-      $ae = Input::get('id_accion_especifica');
+      $ac = Input::get('ac');
+      $ae = Input::get('ae');
 
-      $tab_ac_ae_partida = $this->tab_ac_ae_partida
-      //->join('mantenimiento.tab_partidas as t01','t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
-      ->join('mantenimiento.tab_partidas as t01', function ($j) {
-        $j->on('t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
-          ->on('t01.id_tab_ejercicio_fiscal','=','public.t54_ac_ae_partidas.id_tab_ejercicio_fiscal');
-      })
-      ->select( 'public.t54_ac_ae_partidas.co_partida', 'de_denominacion as tx_nombre', 'monto' )
-      ->where('id_accion_centralizada', '=', $ac)
-      ->where('id_accion', '=', $ae);
+      $tab_ac_es_partida_desagregado = $this->tab_ac_es_partida_desagregado
+      ->select( 'id', 'td_tab_ac', 'id_tab_ac_ae_predefinida', 'co_partida', 'id_tab_ejercicio_fiscal',
+       'de_denominacion', 'nu_aplicacion', 'mo_partida', 'in_activo' )
+      ->where('td_tab_ac', '=', $ac)
+      ->where('id_tab_ac_ae_predefinida', '=', $ae);
 
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_ac_ae_partida->where('public.t54_ac_ae_partidas.co_partida', 'ILIKE', "%$variable%");
+          $tab_ac_es_partida_desagregado->where('de_denominacion', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
-        $response['total'] = $tab_ac_ae_partida->count();
-        $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('public.t54_ac_ae_partidas.co_partida','ASC')->get()->toArray();
+        $response['total'] = $tab_ac_es_partida_desagregado->count();
+        $tab_ac_es_partida_desagregado->skip($start)->take($limit);
+        $response['data']  = $tab_ac_es_partida_desagregado->orderby('id','ASC')->get()->toArray();
       } else {
         $response['success']  = 'true';
-        $response['total'] = $tab_ac_ae_partida->count();
-        $tab_ac_ae_partida->skip($start)->take($limit);
-        $response['data']  = $tab_ac_ae_partida->orderby('public.t54_ac_ae_partidas.co_partida','ASC')->get()->toArray();
+        $response['total'] = $tab_ac_es_partida_desagregado->count();
+        $tab_ac_es_partida_desagregado->skip($start)->take($limit);
+        $response['data']  = $tab_ac_es_partida_desagregado->orderby('id','ASC')->get()->toArray();
       }
 
       return Response::json($response, 200);

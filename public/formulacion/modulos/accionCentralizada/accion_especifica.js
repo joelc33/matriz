@@ -909,7 +909,16 @@
                     text: 'Ver Desagregado',
                     iconCls: 'icon-reporteest',
                     handler: function() {
-
+                      var v = Ext.create({
+                          xtype: 'ac_ae_partidas_desagregado',
+                          ac: self.ac,
+                          ae: self.ae,
+                          cuenta: self.store.getCount()
+                      });
+                      v.show();
+                      v.on('close', function() {
+                          self.store.reload();
+                      });
                     }
                 }]
             });
@@ -923,6 +932,96 @@
                 x: 0,
                 y: 0,
                 width: 600,
+                height: 400,
+                layout: 'fit',
+                items: [
+                    this.grid
+                ]
+            }, config);
+
+            this.callParent(arguments);
+        }
+    });
+
+    Ext.define('AccionCentralizada.AccionEspecifica_Desagregado', {
+        extend: 'Ext.Window',
+        xtype: 'ac_ae_partidas_desagregado',
+        constructor: function(config) {
+            var self = this,
+            tpagina = 30;
+
+            this.store = new Ext.data.JsonStore({
+                url: 'ac/ae/partida/desagregado/storeLista',
+                baseParams: {
+                    op: 10,
+                    ac: config.ac.id,
+                    ae: config.ae.id_accion,
+                    start: 0,
+                    limit: tpagina
+                },
+                root: 'data',
+                fields: [{
+                    name: 'co_partida'
+                }, {
+                    name: 'de_denominacion'
+                }, {
+                    name: 'nu_aplicacion'
+                }, {
+                    name: 'mo_partida'
+                }],
+                idProperty: 'co_partida',
+                autoLoad: true
+            });
+
+            this.grid = Ext.create({
+                xtype: 'grid',
+                store: self.store,
+                border: false,
+                colModel: new Ext.grid.ColumnModel({
+                    defaults: {
+                        menuDisabled: true,
+                        sortable: false
+                    },
+                    columns: [{
+                        id: 'partida',
+                        header: 'PARTIDA',
+                        width: 100,
+                        dataIndex: 'co_partida'
+                    }, {
+                        id: 'aplicacion',
+                        header: 'APLICACION',
+                        width: 100,
+                        dataIndex: 'nu_aplicacion'
+                    }, {
+                        header: 'DENOMINACIÓN',
+                        width: 330,
+                        dataIndex: 'de_denominacion'
+                    }, {
+                        header: 'MONTO (BS)',
+                        width: 130,
+                        dataIndex: 'mo_partida',
+                        renderer: Reingsys.util.formatoNumero
+                    }]
+                }),
+                stripeRows: true,
+                bbar: new Ext.PagingToolbar({
+                    pageSize: tpagina,
+                    store: self.store,
+                    displayInfo: true,
+                    displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
+                    emptyMsg: "<span style=\"color:black\">No se encontraron registros</span>"
+                })
+            });
+
+            config = Ext.apply({
+                title: 'Partidas Desagregadas de la Acción Específica: ' +
+                config.ac.codigo + ' - ' + config.ae.numero,
+                modal: true,
+                maximizable: true,
+                resizable: true,
+                x: 30,
+                y: 30,
+                width: 700,
                 height: 400,
                 layout: 'fit',
                 items: [
