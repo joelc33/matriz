@@ -58,7 +58,7 @@ class acaepartidaController extends Controller
         $j->on('t01.co_partida','=','public.t54_ac_ae_partidas.co_partida')
           ->on('t01.id_tab_ejercicio_fiscal','=','public.t54_ac_ae_partidas.id_tab_ejercicio_fiscal');
       })
-      ->select( 'public.t54_ac_ae_partidas.co_partida', 'de_denominacion as tx_nombre', 'monto' )
+      ->select( 'public.t54_ac_ae_partidas.co_partida', 'tx_nombre', 'monto' )
       ->where('id_accion_centralizada', '=', $ac)
       ->where('id_accion', '=', $ae);
 
