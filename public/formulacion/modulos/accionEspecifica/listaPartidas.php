@@ -1,8 +1,8 @@
-<?php        
-session_start(); 
+<?php
+session_start();
 if($_SESSION['estatus']!='OK'){
 	header('Location: ../../');
-}   
+}
 include("../../configuracion/ConexionComun.php");
 
 $codigo = decode($_POST['codigo']);
@@ -46,6 +46,33 @@ Ext.ux.grid.GroupSummary.Calculations['nuMonto'] = function(v, record, field){
 };
 this.summary = new Ext.ux.grid.GroupSummary();
 
+//Editar un registro
+this.descargar= new Ext.Button({
+    text:'Descargar',
+    iconCls: 'icon-excel',
+    handler:function(){
+
+    }
+});
+
+//Editar un registro
+this.cargar= new Ext.Button({
+    text:'Subir Partidas',
+    iconCls: 'icon-generar',
+    handler:function(){
+
+    }
+});
+
+//Editar un registro
+this.ver= new Ext.Button({
+    text:'Ver Desagregado',
+    iconCls: 'icon-reporteest',
+    handler:function(){
+
+    }
+});
+
 //Grid principal
 this.gridPanel_ = new Ext.grid.GridPanel({
     border:false,
@@ -53,6 +80,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     loadMask:true,
 //    frame:true,
     autoHeight:true,
+		tbar:[
+				this.descargar,'-',this.cargar,'-',this.ver
+		],
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_partida_acc_espec',hidden:true, menuDisabled:true,dataIndex: 'co_partida_acc_espec'},
@@ -122,3 +152,4 @@ return this.Store;
 Ext.onReady(partidaLista.main.init, partidaLista.main);
 </script>
 <div id="contenedorpartidaLista<?php echo $codigo;?>"></div>
+<div id="desagregadopartidaLista<?php echo $codigo;?>"></div>
