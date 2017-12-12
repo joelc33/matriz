@@ -51,7 +51,9 @@ this.descargar= new Ext.Button({
     text:'Descargar',
     iconCls: 'icon-excel',
     handler:function(){
-
+			bajar.load({
+					url: 'proyecto/ae/partida/<?php echo $codigo;?>/bajar'
+			});
     }
 });
 
