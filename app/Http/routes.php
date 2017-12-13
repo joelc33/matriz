@@ -160,6 +160,8 @@ Route::group(['namespace' => 'Proyecto'], function(){
 		Route::post('masivo', 'proyectoaepartidaController@procesarMasivo');
 		Route::post('individual', 'proyectoaepartidaController@procesarIndividual');
 		Route::get('{ae}/bajar', 'proyectoaepartidaController@bajar');
+		Route::post('cargar', 'proyectoaedesagregadoController@procesarDesagregado');
+		Route::post('desagregado/storeLista', 'proyectoaedesagregadoController@storeLista');
 	});
 });
 //*Modulos de Accion Centralizada*/

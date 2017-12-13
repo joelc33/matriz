@@ -71,7 +71,7 @@ class MYPDF extends TCPDF {
 		inner join mantenimiento.tab_ejecutores as t24a on t39.co_ejecutores=t24a.id
 		inner join vista_cn_actividad_proy as v1 on v1.co_proyecto_acc_espec=t39.co_proyecto_acc_espec
 		where t26.edo_reg is true AND ".$condicionPR." t39.edo_reg is true AND t26.id_ejercicio = '".$_SESSION['ejercicio_fiscal']."'
-		order by 10, 9, 1, 18 ASC";
+		order by 28, 1, 10, 9, 18 ASC";
 
 		$this->datos = $comunes->ObtenerFilasBySqlSelect($sql);
 		$this->cantidadTotal = $comunes->getFilas($sql);
@@ -109,6 +109,7 @@ class MYPDF extends TCPDF {
 	//$this->Ln(-20);
 	$contador=0;
 	$in_portada=false;
+	$lastPortada='';
 	$acumulador_pr_a=0;
 	$ejecutor_ant = '';
 	foreach($this->datos as $key => $campo){
@@ -162,7 +163,8 @@ class MYPDF extends TCPDF {
 
 		/******Portada*********/
 
-				if($in_portada==false){
+				//if($in_portada==false){
+				if($lastPortada != $campo['id_ejecutor_ae']) {
 
 				//$this->SetXY(30,50);
 				$this->SetY(75);
@@ -178,6 +180,8 @@ class MYPDF extends TCPDF {
 				$this->SetFont('','',11);
 				$this->Write(0, 'Maracaibo, '.'Diciembre'/*mes($campo['nu_mes_poa'])*/.' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
 				$this->AddPage();
+
+				$lastPortada = $campo['id_ejecutor_ae'];
 
 				}
 
