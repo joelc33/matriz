@@ -110,6 +110,7 @@ class MYPDF extends TCPDF {
 	//$this->Ln(-20);
 	$contador=0;
 	$in_portada=false;
+	$lastPortada='';
 	$acumulador_ac_a=0;
 	$ejecutor_ant = '';
 	foreach($this->datos as $key => $campo){
@@ -148,7 +149,8 @@ class MYPDF extends TCPDF {
 
 		/******Portada*********/
 
-				if($in_portada==false){
+				//if($in_portada==false){
+				if($lastPortada != $campo['id_ejecutor_ae']) {
 
 				//$this->SetXY(30,50);
 				$this->SetY(75);
@@ -200,6 +202,8 @@ class MYPDF extends TCPDF {
 				//$this->Ln(-20);
 				$this->writeHTML($htmlObjetivo, true, false, false, false, '');
 				$this->AddPage();
+
+				$lastPortada = $campo['id_ejecutor'];
 
 				}
 
