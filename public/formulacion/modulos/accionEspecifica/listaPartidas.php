@@ -81,7 +81,17 @@ this.ver= new Ext.Button({
     text:'Ver Desagregado',
     iconCls: 'icon-reporteest',
     handler:function(){
-
+			partidaLista.main.mascara.show();
+			this.msg = Ext.get('subirpartidaLista<?php echo $codigo;?>');
+			this.msg.load({
+				method:'POST',
+				params:{
+					codigo:<?php echo $codigo;?>
+				},
+				url:"proyecto/ae/partida/desagregado/lista",
+				scripts: true,
+				text: "Cargando.."
+			});
     }
 });
 

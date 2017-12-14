@@ -91,6 +91,22 @@ class proyectoaedesagregadoController extends Controller
     return View::make('proyecto.ae.desagregado.editar')->with('data',$data);
   }
 
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function lista()
+  {
+    $data = tab_proyecto_ae::select('co_proyecto_acc_espec', 'tx_codigo', 'id_proyecto', 'descripcion', 'co_unidades_medida',
+       'meta', 'ponderacion', 'bien_servicio', 'total', 'fec_inicio', 'fec_termino',
+       'co_ejecutores', 'fecha_creacion', 'fecha_actualizacion', 'edo_reg',
+       'tx_objetivo_institucional', 'id_padre', 'in_definitivo')
+    ->where('co_proyecto_acc_espec', '=', Input::get('codigo'))
+    ->first();
+    return View::make('proyecto.ae.desagregado.lista')->with('data',$data);
+  }
+
 
   /**
    * Show the form for creating a new resource.

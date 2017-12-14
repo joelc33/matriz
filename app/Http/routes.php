@@ -162,6 +162,7 @@ Route::group(['namespace' => 'Proyecto'], function(){
 		Route::get('{ae}/bajar', 'proyectoaepartidaController@bajar');
 		Route::post('cargar', 'proyectoaedesagregadoController@procesarDesagregado');
 		Route::post('desagregado', 'proyectoaedesagregadoController@editar');
+		Route::post('desagregado/lista', 'proyectoaedesagregadoController@lista');
 		Route::post('desagregado/storeLista', 'proyectoaedesagregadoController@storeLista');
 	});
 });
@@ -184,6 +185,7 @@ Route::group(['namespace' => 'Ac'], function(){
 		Route::post('masivo', 'acaepartidaController@procesarMasivo');
 		Route::get('{ac}/{ae}/bajar', 'acaepartidaController@bajar');
 		Route::post('cargar', 'acaedesagregadoController@procesarDesagregado');
+		Route::post('desagregado/lista', 'acaedesagregadoController@lista');
 		Route::post('desagregado/storeLista', 'acaedesagregadoController@storeLista');
 	});
 });
