@@ -161,6 +161,7 @@ Route::group(['namespace' => 'Proyecto'], function(){
 		Route::post('individual', 'proyectoaepartidaController@procesarIndividual');
 		Route::get('{ae}/bajar', 'proyectoaepartidaController@bajar');
 		Route::post('cargar', 'proyectoaedesagregadoController@procesarDesagregado');
+		Route::post('desagregado', 'proyectoaedesagregadoController@editar');
 		Route::post('desagregado/storeLista', 'proyectoaedesagregadoController@storeLista');
 	});
 });

@@ -62,7 +62,17 @@ this.cargar= new Ext.Button({
     text:'Subir Partidas',
     iconCls: 'icon-generar',
     handler:function(){
-
+			partidaLista.main.mascara.show();
+			this.msg = Ext.get('subirpartidaLista<?php echo $codigo;?>');
+			this.msg.load({
+				method:'POST',
+				params:{
+					codigo:<?php echo $codigo;?>
+				},
+				url:"proyecto/ae/partida/desagregado",
+				scripts: true,
+				text: "Cargando.."
+			});
     }
 });
 
@@ -154,4 +164,5 @@ return this.Store;
 Ext.onReady(partidaLista.main.init, partidaLista.main);
 </script>
 <div id="contenedorpartidaLista<?php echo $codigo;?>"></div>
+<div id="subirpartidaLista<?php echo $codigo;?>"></div>
 <div id="desagregadopartidaLista<?php echo $codigo;?>"></div>

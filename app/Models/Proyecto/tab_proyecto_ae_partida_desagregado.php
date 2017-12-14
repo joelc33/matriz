@@ -1,19 +1,18 @@
 <?php
 
-namespace matriz\Models\Ac;
+namespace matriz\Models\Proyecto;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tab_ac_es_partida_desagregado extends Model
+class tab_proyecto_ae_partida_desagregado extends Model
 {
   //Nombre de la conexion que utitlizara este modelo
 	protected $connection= 'local';
 
 	//Todos los modelos deben extender la clase Eloquent
-	protected $table = 'tab_ac_es_partida_desagregado';
+	protected $table = 'tab_proyecto_ae_partida_desagregado';
 
   public static $validarDesagregado = array(
-    "ac" => "required",
     "ae" => "required",
     "pa" => "required",
     "ge" => "required",

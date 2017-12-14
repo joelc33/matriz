@@ -523,7 +523,7 @@ class proyectoaepartidaController extends Controller
           $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, substr(substr($value->co_partida, 0, 5), 3), PHPExcel_Cell_DataType::TYPE_STRING);
           $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, substr(substr($value->co_partida, 0, 7), 5), PHPExcel_Cell_DataType::TYPE_STRING);
           $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, substr(substr($value->co_partida, 0, 9), 7), PHPExcel_Cell_DataType::TYPE_STRING);
-          $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, substr(substr($value->co_partida, 0, 12), 9), PHPExcel_Cell_DataType::TYPE_STRING);
+          //$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, substr(substr($value->co_partida, 0, 12), 9), PHPExcel_Cell_DataType::TYPE_STRING);
           $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_aplicacion, PHPExcel_Cell_DataType::TYPE_STRING);
           $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->tx_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
           $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->monto);
