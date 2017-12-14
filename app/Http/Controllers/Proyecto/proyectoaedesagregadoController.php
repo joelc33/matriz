@@ -48,7 +48,7 @@ class proyectoaedesagregadoController extends Controller
       $ae = Input::get('ae');
 
       $tab_proyecto_ae_partida_desagregado = $this->tab_proyecto_ae_partida_desagregado
-      ->select( 'id', 'td_tab_ac', 'id_tab_ac_ae_predefinida', 'co_partida', 'id_tab_ejercicio_fiscal',
+      ->select( 'id', 'co_partida', 'id_tab_ejercicio_fiscal',
        'de_denominacion', 'nu_aplicacion', 'mo_partida', 'in_activo' )
       ->where('id_tab_proyecto_ae', '=', $ae);
 
