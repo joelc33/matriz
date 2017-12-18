@@ -49,7 +49,7 @@ function partida_proyecto_ae() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -57,14 +57,14 @@ function partida_proyecto_ae() {
 		$objPHPExcel->getProperties()->setSubject("Reporte");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('PROYECTO_PARTIDAS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -99,22 +99,22 @@ function partida_proyecto_ae() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_proyecto); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_proyecto); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value->tx_codigo, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_proyecto);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_proyecto);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value->tx_codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -131,7 +131,7 @@ function partida_proyecto_ae() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -146,7 +146,7 @@ function partida_proyecto_ae_todo() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -154,14 +154,14 @@ function partida_proyecto_ae_todo() {
 		$objPHPExcel->getProperties()->setSubject("Reporte Partidas Proyecto");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('PROYECTO_PARTIDAS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -195,22 +195,22 @@ function partida_proyecto_ae_todo() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_proyecto); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_proyecto); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value->tx_codigo, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_proyecto);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_proyecto);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value->tx_codigo, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -227,7 +227,7 @@ function partida_proyecto_ae_todo() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -242,7 +242,7 @@ function partida_ac_ae() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -250,14 +250,14 @@ function partida_ac_ae() {
 		$objPHPExcel->getProperties()->setSubject("Reporte Partidas AC");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('AC_PARTIDAS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -302,22 +302,22 @@ function partida_ac_ae() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ac); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_ac); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ac);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_ac);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -334,7 +334,7 @@ function partida_ac_ae() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -349,7 +349,7 @@ function partida_ac_ae_todo() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -357,14 +357,14 @@ function partida_ac_ae_todo() {
 		$objPHPExcel->getProperties()->setSubject("Reporte Partidas AC");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('AC_PARTIDAS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -408,22 +408,22 @@ function partida_ac_ae_todo() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ac); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_ac); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_ejercicio);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->tx_ejecutor);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ac);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_ac);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->nu_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->nb_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->co_partida);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_denominacion);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_monto);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -440,7 +440,7 @@ function partida_ac_ae_todo() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -481,7 +481,7 @@ function exportar_proyecto_ubicacion() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -489,14 +489,15 @@ function exportar_proyecto_ubicacion() {
 		$objPHPExcel->getProperties()->setSubject("Reporte Proyectos Ubicacion");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('PROYECTOS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -507,7 +508,8 @@ function exportar_proyecto_ubicacion() {
 		->setCellValue('D1', 'ENTE EJECUTOR RESPONSABLE')
 		->setCellValue('E1', 'ACTIVIDAD')
 		->setCellValue('F1', 'MUNICIPIO')
-		->setCellValue('G1', 'MONTO');
+		->setCellValue('G1', 'MONTO')
+		->setCellValue('H1', 'FUENTE FINANCIAMIENTO');
 
 		// Make bold cells
 		$objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
@@ -518,7 +520,12 @@ function exportar_proyecto_ubicacion() {
 		->join('t26_proyectos as t26','t26.id_proyecto','=','t39.id_proyecto')
 		->join('mantenimiento.tab_ejecutores as t24','t24.id','=','t39.co_ejecutores')
 		->join('mantenimiento.tab_municipio_detalle as t13','t13.id','=','t68_metas_detalle.co_municipio')
-		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'), DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"), DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"), DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),'de_municipio', 'mo_presupuesto')
+		->join('mantenimiento.tab_fuente_financiamiento as t06','t06.id','=','t68_metas_detalle.co_fuente')
+		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'),
+		DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"),
+		DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"),
+		DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),
+		'de_municipio', 'mo_presupuesto', 'de_fuente_financiamiento')
 		->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio'])
 		->where('t26.id_ejercicio', '=', $_SESSION['ejercicio_fiscal'])
 		->where('t26.edo_reg', '=', true)
@@ -531,19 +538,20 @@ function exportar_proyecto_ubicacion() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_proyecto); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->de_proyecto, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->de_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, trim($value->ejecutor)); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->de_actividad); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_municipio); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_proyecto);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->de_proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->de_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, trim($value->ejecutor));
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->de_actividad);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_municipio);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto);
+				$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->de_fuente_financiamiento);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -560,7 +568,7 @@ function exportar_proyecto_ubicacion() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -575,7 +583,7 @@ function exportar_proyecto_ubicacion_todo() {
 	try {
 
 		// Instantiate a new PHPExcel object
-		$objPHPExcel = new PHPExcel(); 
+		$objPHPExcel = new PHPExcel();
 		// Set properties
 		$objPHPExcel->getProperties()->setCreator("Yoser Perez");
 		$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
@@ -583,14 +591,15 @@ function exportar_proyecto_ubicacion_todo() {
 		$objPHPExcel->getProperties()->setSubject("Reporte Proyectos Ubicacion");
 		$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
 		// Set the active Excel worksheet to sheet 0
-		$objPHPExcel->setActiveSheetIndex(0); 
+		$objPHPExcel->setActiveSheetIndex(0);
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+		$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->setTitle('PROYECTOS');
 		// Initialise the Excel row number
-		$rowCount = 2; 
+		$rowCount = 2;
 		// Iterate through each result from the SQL query in turn
 		// We fetch each database result row into $row in turn
 
@@ -601,7 +610,8 @@ function exportar_proyecto_ubicacion_todo() {
 		->setCellValue('D1', 'ENTE EJECUTOR RESPONSABLE')
 		->setCellValue('E1', 'ACTIVIDAD')
 		->setCellValue('F1', 'MUNICIPIO')
-		->setCellValue('G1', 'MONTO');
+		->setCellValue('G1', 'MONTO')
+		->setCellValue('H1', 'FUENTE FINANCIAMIENTO');
 
 		// Make bold cells
 		$objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
@@ -612,7 +622,12 @@ function exportar_proyecto_ubicacion_todo() {
 		->join('t26_proyectos as t26','t26.id_proyecto','=','t39.id_proyecto')
 		->join('mantenimiento.tab_ejecutores as t24','t24.id','=','t39.co_ejecutores')
 		->join('mantenimiento.tab_municipio_detalle as t13','t13.id','=','t68_metas_detalle.co_municipio')
-		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'), DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"), DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"), DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),'de_municipio', 'mo_presupuesto')
+		->join('mantenimiento.tab_fuente_financiamiento as t06','t06.id','=','t68_metas_detalle.co_fuente')
+		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'),
+		DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"),
+		DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"),
+		DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),
+		'de_municipio', 'mo_presupuesto', 'de_fuente_financiamiento')
 		->where('t26.id_ejercicio', '=', $_SESSION['ejercicio_fiscal'])
 		->where('t26.edo_reg', '=', true)
 		->where('t39.edo_reg', '=', true)
@@ -624,19 +639,20 @@ function exportar_proyecto_ubicacion_todo() {
 		foreach ($partida as $key => $value) {
 		    // Set cell An to the "name" column from the database (assuming you have a column called name)
 		    //    where n is the Excel row number (ie cell A1 in the first row)
-		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_proyecto); 
-		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->de_proyecto, PHPExcel_Cell_DataType::TYPE_STRING); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->de_ae); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, trim($value->ejecutor)); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->de_actividad); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_municipio); 
-		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto); 
+		    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_proyecto);
+		    $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->de_proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->de_ae);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, trim($value->ejecutor));
+		    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->de_actividad);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_municipio);
+		    $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto);
+				$objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->de_fuente_financiamiento);
 		    // Increment the Excel row counter
-		    $rowCount++; 
-		} 
+		    $rowCount++;
+		}
 
 		// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		// We'll be outputting an excel file
 		header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		// It will be called file.xls
@@ -653,7 +669,7 @@ function exportar_proyecto_ubicacion_todo() {
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
