@@ -48,12 +48,12 @@ function reporte_proyecto_ubicacion() {
 	ini_set('max_execution_time', 600);
 
 	class MYPDF extends TCPDF {
-	//=========================================== Datos del Reporte ====================================================/	
-		public function Footer()	
+	//=========================================== Datos del Reporte ====================================================/
+		public function Footer()
 		{
 			pie($this,'h',1);
 		}
-		public function setHeader()	
+		public function setHeader()
 		{
 			encabezado($this,'h',1);
 		}
@@ -67,7 +67,12 @@ function reporte_proyecto_ubicacion() {
 		->join('t26_proyectos as t26','t26.id_proyecto','=','t39.id_proyecto')
 		->join('mantenimiento.tab_ejecutores as t24','t24.id','=','t39.co_ejecutores')
 		->join('mantenimiento.tab_municipio_detalle as t13','t13.id','=','t68_metas_detalle.co_municipio')
-		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'), DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"), DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"), DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),'de_municipio', 'mo_presupuesto')
+		->join('mantenimiento.tab_fuente_financiamiento as t06','t06.id','=','t68_metas_detalle.co_fuente')
+		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'),
+		DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"),
+		DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"),
+		DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),
+		'de_municipio', 'mo_presupuesto', 'de_fuente_financiamiento')
 		->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio'])
 		->where('t26.id_ejercicio', '=', $_SESSION['ejercicio_fiscal'])
 		->where('t26.edo_reg', '=', true)
@@ -83,16 +88,17 @@ $htmlUbicacion = '
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 <thead>
 <tr align="center" bgcolor="#BDBDBD">
-<th colspan="5" style="width: 100%;"><b>DISTRIBUCIÓN DE PROYECTOS POR MUNICIPIO - AÑO '.$_SESSION['ejercicio_fiscal'].'</b></th>
+<th colspan="6" style="width: 100%;"><b>DISTRIBUCIÓN DE PROYECTOS POR MUNICIPIO - AÑO '.$_SESSION['ejercicio_fiscal'].'</b></th>
 </tr>
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">COD. PROYECTO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">DESCRIPCION PROYECTO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 20%;">ACCION ESPECIFICA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 15%;">ACCION ESPECIFICA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">ENTE EJECUTOR RESPONSABLE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 20%;">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 15%;">ACTIVIDAD</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNICIPIO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">MONTO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">FUENTE FINANCIAMIENTO</th>
 </tr>
 </thead>
 ';
@@ -108,14 +114,15 @@ $htmlUbicacion.='
 			<tr style="font-size:7px" nobr="true">
 				<td style="width: 10%;">'.$value->id_proyecto.'</td>
 				<td style="width: 15%;" align="justify">'.$value->de_proyecto.'</td>
-				<td style="width: 20%;" align="justify">'.$value->de_ae.'</td>
+				<td style="width: 15%;" align="justify">'.$value->de_ae.'</td>
 				<td style="width: 15%;" align="justify">'.$value->ejecutor.'</td>
-				<td style="width: 20%;" align="justify">'.$value->de_actividad.'</td>
+				<td style="width: 15%;" align="justify">'.$value->de_actividad.'</td>
 				<td style="width: 10%;" align="center">'.$value->de_municipio.'</td>
 				<td style="width: 10%;">'.formatoDinero($value->mo_presupuesto).'</td>
+				<td style="width: 10%;" align="center">'.$value->de_fuente_financiamiento.'</td>
 			</tr>';
 
-		} 
+		}
 
 $htmlUbicacion.='
 </tbody>
@@ -146,7 +153,7 @@ $htmlUbicacion.='
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
@@ -165,12 +172,12 @@ function reporte_proyecto_ubicacion_todo() {
 	ini_set('max_execution_time', 600);
 
 	class MYPDF extends TCPDF {
-	//=========================================== Datos del Reporte ====================================================/	
-		public function Footer()	
+	//=========================================== Datos del Reporte ====================================================/
+		public function Footer()
 		{
 			pie($this,'h',1);
 		}
-		public function setHeader()	
+		public function setHeader()
 		{
 			encabezado($this,'h',1);
 		}
@@ -231,7 +238,7 @@ $htmlUbicacion.='
 				<td style="width: 10%;">'.formatoDinero($value->mo_presupuesto).'</td>
 			</tr>';
 
-		} 
+		}
 
 $htmlUbicacion.='
 </tbody>
@@ -262,7 +269,7 @@ $htmlUbicacion.='
 			'success' => false,
 			'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
 			//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
-		)); 
+		));
 	}
 
 }
