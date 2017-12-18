@@ -91,6 +91,15 @@ this.fe_fin = new Ext.form.DateField({
 	width:100
 });
 
+this.de_lapso = new Ext.form.TextField({
+	fieldLabel:'Descripcion',
+	name:'descripcion',
+	value:this.OBJ.de_lapso,
+	width:200,
+	maxLength: 600,
+	allowBlank:false
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -157,6 +166,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this._token,
 		this.id_tab_ejercicio_fiscal,
     this.id_tab_periodo,
+		this.de_lapso,
 		this.fe_inicio,
     this.fe_fin
 	]

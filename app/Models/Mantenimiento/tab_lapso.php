@@ -15,6 +15,7 @@ class tab_lapso extends Model
 	public static $validarCrear = array(
 		"ejercicio" => "required|numeric",
 		"periodo" => "required|numeric",
+		"descripcion" => "required",
 		'fecha_inicio' => "required|date_format:d/m/Y|before:fecha_cierre",
 		'fecha_cierre' => "required|date_format:d/m/Y|after:fecha_inicio",
 	);
@@ -22,6 +23,7 @@ class tab_lapso extends Model
 	public static $validarEditar = array(
 		"ejercicio" => "required|numeric",
 		"periodo" => "required|numeric",
+		"descripcion" => "required",
 		'fecha_inicio' => "required|date_format:d/m/Y|before:fecha_cierre",
 		'fecha_cierre' => "required|date_format:d/m/Y|after:fecha_inicio",
 	);

@@ -48,7 +48,7 @@ class lapsoController extends Controller
 
       $tab_lapso = $this->tab_lapso
       ->join('mantenimiento.tab_periodo as t01','t01.id','=','mantenimiento.tab_lapso.id_tab_periodo')
-      ->select( 'mantenimiento.tab_lapso.id', 'id_tab_ejercicio_fiscal', 'de_periodo', 'nu_lapso',
+      ->select( 'mantenimiento.tab_lapso.id', 'id_tab_ejercicio_fiscal', 'de_periodo', 'nu_lapso', 'de_lapso',
       DB::raw("to_char(fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
       DB::raw("to_char(fe_fin, 'dd/mm/YYYY') as fe_fin"), 'mantenimiento.tab_lapso.in_activo' );
 
@@ -94,7 +94,7 @@ class lapsoController extends Controller
   public function editar($id)
   {
     $data = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'id_tab_periodo', 'nu_lapso', 'fe_inicio',
-       'fe_fin', 'in_activo')
+       'fe_fin', 'in_activo', 'de_lapso')
     ->where('id', '=', $id)
     ->first();
     return View::make('mantenimiento.lapso.editar')->with('data',$data);
@@ -124,6 +124,7 @@ class lapsoController extends Controller
       $tabla->id_tab_periodo = Input::get("periodo");
       $tabla->fe_inicio = Input::get("fecha_inicio");
       $tabla->fe_fin = Input::get("fecha_cierre");
+      $tabla->de_lapso = Input::get("descripcion");
       $tabla->save();
 
       DB::commit();
@@ -157,6 +158,7 @@ class lapsoController extends Controller
       $tabla->nu_lapso = 1;
       $tabla->fe_inicio = Input::get("fecha_inicio");
       $tabla->fe_fin = Input::get("fecha_cierre");
+      $tabla->de_lapso = Input::get("descripcion");
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 

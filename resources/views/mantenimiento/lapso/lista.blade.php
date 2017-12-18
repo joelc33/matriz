@@ -200,6 +200,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
 		{header: 'Ejercicio', width:100,  menuDisabled:true, sortable: true, dataIndex: 'id_tab_ejercicio_fiscal'},
 		{header: 'Tipo', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_periodo'},
+		{header: 'Descripcion', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_lapso'},
     {header: 'Fecha Inicio', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fe_inicio'},
     {header: 'Fecha Cierre', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fe_fin'},
     {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
@@ -248,6 +249,7 @@ getLista: function(){
     {name: 'fe_inicio'},
     {name: 'fe_fin'},
     {name: 'in_activo'},
+		{name: 'de_lapso'},
            ]
     });
     return this.store;
