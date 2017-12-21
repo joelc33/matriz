@@ -76,7 +76,7 @@ this.botones = new this.GrupoBotones({
 				bbar: [{
 						xtype: 'buttongroup',
 						title: 'Formatos',
-						columns: 5,
+						columns: 6,
 						defaults: {
 								scale: 'medium',
 								iconAlign:'top'
@@ -115,6 +115,13 @@ this.botones = new this.GrupoBotones({
 									text:'Responsables Todos',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onResponsableTodo
+								},
+							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.responsable.todos', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Resumen A.C.',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onResumenAc
 								},
 							@endif
 							@if( in_array( array( 'de_privilegio' => 'ac.poa.exportar.partida', 'in_habilitado' => true), Session::get('credencial') ))
@@ -241,6 +248,11 @@ onExportarResponsable : function() {
 onExportarResponsableTodo : function() {
 	bajar.load({
 		url: '{{ URL::to('reporte/ac/responsable/todo/exportar') }}'
+	});
+},
+onResumenAc : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/poa/ac/resumen') }}'
 	});
 },
 onLimpiar: function(){
