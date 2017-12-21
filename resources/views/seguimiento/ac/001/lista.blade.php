@@ -193,7 +193,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
     {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
-    {header: '% Ejecutado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
     autoScroll:true,

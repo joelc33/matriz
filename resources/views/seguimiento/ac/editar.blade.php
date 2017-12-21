@@ -31,7 +31,7 @@ this.id_tab_ejercicio = new Ext.form.ComboBox({
 	tpl: new Ext.XTemplate('<tpl for=".">'+
     '<div class="search-item">'+
       '<div style="margin: 4px;" class="x-boundlist-item">'+
-      '<div><b>EJERCICIO FISCAL: {id_tab_ejercicio_fiscal}</b></div>'+
+      '<div><b>{de_lapso}: {id_tab_ejercicio_fiscal}</b></div>'+
       '<div style="font-size: xx-small; color: grey;">({rango})</div>'+
       '</div>'+
     '</div>'+
@@ -40,7 +40,14 @@ this.id_tab_ejercicio = new Ext.form.ComboBox({
 	mode: 'local',
 	width:300,
 	resizable:true,
-	allowBlank:false
+	allowBlank:false,
+	listeners:{
+						change: function(){
+								acseguimientoEditar.main.storeCO_AC.load({
+										params: { periodo:this.getValue(), _token: '{{ csrf_token() }}'}
+								})
+						}
+				}
 });
 
 this.storeCO_EJERCICIO.load();
@@ -78,12 +85,12 @@ this.id_tab_ejecutores = new Ext.form.ComboBox({
 	allowBlank:false
 });
 
-this.storeCO_AC.load();
+/*this.storeCO_AC.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
 	objCMB: this.id_tab_ejecutores,
 	value:  this.OBJ.id_tab_ejecutores,
 	objStore: this.storeCO_AC
-});
+});*/
 
 this.guardar = new Ext.Button({
     text:'Guardar',
@@ -186,6 +193,7 @@ getStoreCO_EJERCICIO:function(){
               {name: 'id_tab_periodo'},
               {name: 'fe_inicio'},
               {name: 'fe_fin'},
+							{name: 'de_lapso'},
               {
                   name: 'rango',
                   convert: function(v, r) {

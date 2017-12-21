@@ -445,7 +445,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('lista', 'acController@lista');
 		Route::post('storeLista', 'acController@storeLista');
 		Route::get('nuevo', 'acController@nuevo');
-		Route::get('disponible', 'acController@disponible');
+		Route::post('disponible', 'acController@disponible');
 		Route::post('guardar', 'acController@guardar');
 		Route::post('detalle', 'acController@detalle');
 	});
@@ -454,7 +454,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('lista', 'formaunoController@lista');
 		Route::post('storeLista', 'formaunoController@storeLista');
 		Route::post('detalle', 'formaunoController@detalle');
-		Route::get('datos/{id}', 'formaunoController@datos');
+		Route::get('editar/{id}', 'formaunoController@datos');
+		Route::post('guardar', 'formaunoController@guardar');
+		Route::post('guardar/{id}', 'formaunoController@guardar');
 	});
 	//*Modulo de Accion Centralizada Forma 002*/
 	Route::group(['prefix' => 'ac/seguimiento/002'], function(){

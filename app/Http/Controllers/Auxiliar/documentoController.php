@@ -499,7 +499,7 @@ class documentoController extends Controller
     public function lapso()
     {
       $response['success']  = 'true';
-      $response['data']  = tab_lapso::select( 'id', 'id_tab_ejercicio_fiscal', 'id_tab_periodo', 'nu_lapso',
+      $response['data']  = tab_lapso::select( 'id', 'id_tab_ejercicio_fiscal', 'id_tab_periodo', 'nu_lapso', 'de_lapso',
       DB::raw("to_char(fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
       DB::raw("to_char(fe_fin, 'dd/mm/YYYY') as fe_fin"))
       ->where('in_activo', '=', true)

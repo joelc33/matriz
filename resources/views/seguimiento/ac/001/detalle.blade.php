@@ -14,7 +14,7 @@ this.fieldset2 = new Ext.form.FieldSet({
 	html: this.datos2
 });
 
-this.deposito = new Ext.Button({
+this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
   /*handler:function(){
@@ -25,7 +25,7 @@ this.deposito = new Ext.Button({
 	forma001Lista.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
-			 url:"{{ URL::to('ac/seguimiento/001/datos') }}/"+this.codigo,
+			 url:"{{ URL::to('ac/seguimiento/001/editar') }}/"+this.codigo,
 			 scripts: true,
 			 text: "Cargando.."
 			});
@@ -50,7 +50,7 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
-      this.deposito,'-',this.cerrar
+      this.editar/*,'-',this.cerrar*/
   ]
 });
 

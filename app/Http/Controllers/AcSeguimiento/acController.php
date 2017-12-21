@@ -99,6 +99,11 @@ class acController extends Controller
   public function disponible()
   {
 
+    $excluir = tab_ac::select('nu_codigo')
+    ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+    ->where('id_tab_lapso', '=', Input::get('periodo'))
+    ->get()->toArray();
+
     $tab_ac = ac::
     join('mantenimiento.tab_ejecutores as t01', 'public.t46_acciones_centralizadas.id_ejecutor', '=', 't01.id_ejecutor')
     ->join('mantenimiento.tab_ac_predefinida as t03', 'public.t46_acciones_centralizadas.id_accion', '=', 't03.id')
@@ -108,6 +113,7 @@ class acController extends Controller
        DB::raw("'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo"))
     ->where('edo_reg', '=', true)
     ->where('id_estatus', '=', 3)
+    ->whereNotIn(DB::raw("'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0')"), $excluir)
     ->where('id_ejercicio', '=', Session::get('ejercicio'));
 
     $rol_planificador = array(3, 8);

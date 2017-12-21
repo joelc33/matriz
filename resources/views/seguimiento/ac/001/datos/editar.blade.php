@@ -34,7 +34,7 @@ this.inst_vision = new Ext.form.TextArea({
 
 this.inst_objetivos = new Ext.form.TextArea({
 	fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-	name: 'inst_objetivos',
+	name: 'objetivos',
 	value:this.OBJ.inst_objetivos,
 	allowBlank: false,
 	width:400,
@@ -54,9 +54,9 @@ this.guardar = new Ext.Button({
         forma001Editar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('mantenimiento/aplicacion/guardar') }}',
+		url:'{{ URL::to('ac/seguimiento/001/guardar') }}',
 	@else
-		url:'{{ URL::to('mantenimiento/aplicacion/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('ac/seguimiento/001/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',

@@ -16,4 +16,10 @@ class tab_ac extends Model
 		"ejercicio" => "required|numeric",
 		"ac" => "required|numeric"
 	);
+
+	public static $validarEditar = array(
+		"mision" => "required",
+		"vision" => "required",
+		"objetivos" => "required"
+	);
 }

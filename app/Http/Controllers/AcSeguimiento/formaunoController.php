@@ -116,4 +116,79 @@ class formaunoController extends Controller
     return View::make('seguimiento.ac.001.datos.editar')->with('data',$data);
   }
 
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find($id);
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_ac;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+
 }
