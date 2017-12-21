@@ -39,10 +39,12 @@ class ReportePDF extends TCPDF {
   }
 
   function pie($pdf){
+    $pdf->setXY(10,-10);
+    $pdf->SetFont('','',8);
     $pdf->ln(0);
-    $pdf->writeHTMLCell(205,0, '', '', 'PR'.'-'.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'R', true);
+    $pdf->writeHTMLCell(200,0, '', '', 'PR'.'-'.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'R', true);
     $pdf->ln(0);
-    $pdf->writeHTMLCell(205,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
+    $pdf->writeHTMLCell(190,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
     return $pdf;
   }
 
