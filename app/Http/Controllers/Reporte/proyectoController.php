@@ -3,6 +3,7 @@
 namespace matriz\Http\Controllers\Reporte;
 //*******agregar esta linea******//
 use matriz\Models\Proyecto\tab_meta_financiera;
+use matriz\Models\Proyecto\tab_proyecto_ae;
 use View;
 use Validator;
 use Input;
@@ -16,11 +17,45 @@ use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Style_Fill;
 use PHPExcel_Cell_DataType;
+use TCPDF;
 //*******************************//
 use Illuminate\Http\Request;
 
 use matriz\Http\Requests;
 use matriz\Http\Controllers\Controller;
+
+//*******clase extendida TCPDF******//
+class ReportePDF extends TCPDF {
+
+  function encabezado($pdf){
+    $pdf->Image(public_path().'/images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+    $pdf->setXY(35,7);
+    $pdf->SetFont('','B',11);
+    $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+    $pdf->setXY(35,14);
+    $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+    $pdf->setY(23);
+    return $pdf;
+  }
+
+  function pie($pdf){
+    $pdf->ln(0);
+    $pdf->writeHTMLCell(205,0, '', '', 'PR'.'-'.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'R', true);
+    $pdf->ln(0);
+    $pdf->writeHTMLCell(205,0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
+    return $pdf;
+  }
+
+  public function Footer()
+  {
+    self::pie($this);
+  }
+
+  public function Header()
+  {
+    self::encabezado($this);
+  }
+}
 
 class proyectoController extends Controller
 {
@@ -28,6 +63,7 @@ class proyectoController extends Controller
   {
     $this->middleware('auth');
   }
+
   /**
   * Display a listing of the resource.
   *
@@ -249,6 +285,80 @@ class proyectoController extends Controller
    */
   public function resumen()
   {
+
+    /***distribucion***/
+    $htmlReporte = '
+    <!-- Tabla 1 -->
+    <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+    <thead>
+    <tr align="left" bgcolor="#E6E6E6">
+    <th colspan="5" style="width: 100%;"><b>RESUMEN DE PROYECTOS POA:'.Session::get('ejercicio').' </b></th>
+    </tr>
+    <tr style="font-size:8px">
+    <th align="center" bgcolor="#E6E6E6" style="width: 40%;"><b>PROYECTOS</b></th>
+    <th align="center" bgcolor="#E6E6E6" style="width: 40%;"><b>ACCIONES ESPECIFICAS</b></th>
+    <th align="center" bgcolor="#E6E6E6" style="width: 20%;"><b>MONTO</b></th>
+    </tr>
+    </thead>
+    ';
+
+    $htmlReporte.='
+    <tbody>
+    ';
+
+    //Query
+    $consulta1 = tab_proyecto_ae::join('public.t26_proyectos as t01','public.t39_proyecto_acc_espec.id_proyecto','=','t01.id_proyecto')
+    ->select( 'public.t39_proyecto_acc_espec.id_proyecto', 'nombre as nb_proyecto', 'total as mo_ae',
+    'public.t39_proyecto_acc_espec.tx_codigo as co_ae', 'public.t39_proyecto_acc_espec.descripcion as de_ae')
+    ->where('t01.id_ejercicio', '=', Session::get('ejercicio') )
+    ->where('t01.edo_reg', '=', true )
+    ->where('public.t39_proyecto_acc_espec.edo_reg', '=', true )
+    ->orderBy('public.t39_proyecto_acc_espec.id_proyecto','ASC')
+    ->get();
+
+    $i = 0;
+    $acumulado = 0;
+
+    foreach ($consulta1 as $key => $value) {
+    // Set cell An to the "name" column from the database (assuming you have a column called name)
+      $i++;
+      $acumulado = $acumulado+$value->mo_ae;
+      $htmlReporte.='
+      <tr style="font-size:8px" nobr="true">
+        <td style="width: 40%;" align="justify">'.$value->id_proyecto.'-'.$value->nb_proyecto.'</td>
+        <td style="width: 40%;" align="justify">'.$value->co_ae.'-'.$value->de_ae.'</td>
+        <td style="width: 20%;">'.number_format($value->mo_ae, 2, ',', '.').'</td>
+      </tr>';
+
+    }
+
+    $htmlReporte.='
+    <tr style="font-size:8px" nobr="true">
+      <td style="width: 80%;" align="right"><b>TOTAL</b></td>
+      <td style="width: 20%;">'.number_format($acumulado, 2, ',', '.').'</td>
+    </tr>';
+
+    $htmlReporte.='
+    </tbody>
+    </table>';
+
+    $pdf = new ReportePDF("P", PDF_UNIT, 'Letter', true, 'UTF-8', false);
+    $pdf->SetCreator('Yoser Perez');
+    $pdf->SetAuthor('POA, SPE');
+    $pdf->SetTitle('Reporte');
+    $pdf->SetSubject('Reporte');
+    $pdf->SetKeywords('Planilla, PDF, SPE');
+    $pdf->SetMargins(10,10,10);
+    $pdf->SetTopMargin(20);
+    $pdf->SetPrintHeader(true);
+    $pdf->SetPrintFooter(true);
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, 15);
+    $pdf->AddPage();
+    //Cuerpo de la planilla
+		$pdf->writeHTML($htmlReporte, true, false, false, false, '');
+    $pdf->lastPage();
+    $pdf->output('PROYECTO_RESUMEN_'.date("H:i:s").'.pdf', 'D');
 
   }
 

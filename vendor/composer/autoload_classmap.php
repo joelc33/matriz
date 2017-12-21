@@ -3365,6 +3365,7 @@ return array(
     'matriz\\Http\\Controllers\\Proyecto\\proyectoaepartidaController' => $baseDir . '/app/Http/Controllers/Proyecto/proyectoaepartidaController.php',
     'matriz\\Http\\Controllers\\Reporte\\PDFresponsable' => $baseDir . '/app/Http/Controllers/Reporte/acresponsableController.php',
     'matriz\\Http\\Controllers\\Reporte\\PDFresponsablePR' => $baseDir . '/app/Http/Controllers/Reporte/proyectoresponsableController.php',
+    'matriz\\Http\\Controllers\\Reporte\\ReportePDF' => $baseDir . '/app/Http/Controllers/Reporte/proyectoController.php',
     'matriz\\Http\\Controllers\\Reporte\\acController' => $baseDir . '/app/Http/Controllers/Reporte/acController.php',
     'matriz\\Http\\Controllers\\Reporte\\acresponsableController' => $baseDir . '/app/Http/Controllers/Reporte/acresponsableController.php',
     'matriz\\Http\\Controllers\\Reporte\\distribucionController' => $baseDir . '/app/Http/Controllers/Reporte/distribucionController.php',

@@ -3681,6 +3681,7 @@ class ComposerStaticInitc0fb0a7ffb498fe963665b09edd38e8e
         'matriz\\Http\\Controllers\\Proyecto\\proyectoaepartidaController' => __DIR__ . '/../..' . '/app/Http/Controllers/Proyecto/proyectoaepartidaController.php',
         'matriz\\Http\\Controllers\\Reporte\\PDFresponsable' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/acresponsableController.php',
         'matriz\\Http\\Controllers\\Reporte\\PDFresponsablePR' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/proyectoresponsableController.php',
+        'matriz\\Http\\Controllers\\Reporte\\ReportePDF' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/proyectoController.php',
         'matriz\\Http\\Controllers\\Reporte\\acController' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/acController.php',
         'matriz\\Http\\Controllers\\Reporte\\acresponsableController' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/acresponsableController.php',
         'matriz\\Http\\Controllers\\Reporte\\distribucionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Reporte/distribucionController.php',
