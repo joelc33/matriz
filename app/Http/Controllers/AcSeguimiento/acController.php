@@ -3,7 +3,9 @@
 namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\Ac\tab_ac as ac;
+use matriz\Models\Ac\tab_ac_ae as ac_ae;
 use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
@@ -191,6 +193,13 @@ class acController extends Controller
       ->where('id_ejercicio', '=', $data->id_tab_ejercicio_fiscal)
       ->first();
 
+      $tab_ac_ae = ac_ae::select( 'id_accion_centralizada', 'id_accion', 'id_ejecutor', 'bien_servicio',
+       'id_unidad_medida', 'meta', 'ponderacion', 'id_tipo_fondo', 'monto', 'monto_calc',
+       'fecha_inicio', 'fecha_fin', 'edo_reg', 'fecha_creacion', 'fecha_actualizacion',
+       'objetivo_institucional', 'id_tab_ejecutor', 'in_definitivo')
+      ->where('id_accion_centralizada', '=', $tab_ac->id)
+      ->get();
+
        try {
       $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
       if ($validator->fails()){
@@ -223,6 +232,25 @@ class acController extends Controller
       $tabla->id_tab_lapso = $data->id;
       $tabla->in_activo = 'TRUE';
       $tabla->save();
+
+      foreach ($tab_ac_ae as $arreglo_ac_ae ) {
+        $tabla_ac_ae= new tab_ac_ae;
+        $tabla_ac_ae->id_tab_ac = $tabla->id;
+        $tabla_ac_ae->id_tab_ac_ae_predefinida = $arreglo_ac_ae->id_accion;
+        $tabla_ac_ae->id_tab_ejecutores = $arreglo_ac_ae->id_ejecutor;
+        $tabla_ac_ae->bien_servicio = $arreglo_ac_ae->bien_servicio;
+        $tabla_ac_ae->id_tab_unidad_medida = $arreglo_ac_ae->id_unidad_medida;
+        $tabla_ac_ae->meta = $arreglo_ac_ae->meta;
+        $tabla_ac_ae->ponderacion = $arreglo_ac_ae->ponderacion;
+        $tabla_ac_ae->id_tab_tipo_fondo = $arreglo_ac_ae->id_tipo_fondo;
+        $tabla_ac_ae->mo_ae = $arreglo_ac_ae->monto;
+        $tabla_ac_ae->mo_ae_calculado = $arreglo_ac_ae->monto_calc;
+        $tabla_ac_ae->fecha_inicio = $arreglo_ac_ae->fecha_inicio;
+        $tabla_ac_ae->fecha_fin = $arreglo_ac_ae->fecha_fin;
+        $tabla_ac_ae->objetivo_institucional = $arreglo_ac_ae->objetivo_institucional;
+        $tabla_ac_ae->in_activo = 'TRUE';
+        $tabla_ac_ae->save();
+      }
 
       DB::commit();
       return Response::json(array(

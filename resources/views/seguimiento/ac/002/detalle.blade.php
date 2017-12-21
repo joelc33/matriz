@@ -14,11 +14,11 @@ this.fieldset2 = new Ext.form.FieldSet({
 	html: this.datos2
 });
 
-this.deposito = new Ext.Button({
+this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
   handler:function(){
-		addTab('foma001{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/002/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
+		addTab('foma002{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/002/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}
 });
 
@@ -26,7 +26,7 @@ this.cerrar = new Ext.Button({
 	text:'Cerrar',
 	iconCls: 'icon-guardar',
   handler:function(){
-		addTab('foma001'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
+		addTab('foma002'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
 	}
 });
 
@@ -40,7 +40,7 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
-      this.deposito,'-',this.cerrar
+      this.editar/*,'-',this.cerrar*/
   ]
 });
 

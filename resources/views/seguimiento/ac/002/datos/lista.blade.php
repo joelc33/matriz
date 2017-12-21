@@ -150,6 +150,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 		forma002DetalleLista.main.store_lista.baseParams={};
 		forma002DetalleLista.main.store_lista.baseParams.paginar = 'si';
 		forma002DetalleLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		forma002DetalleLista.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
 		forma002DetalleLista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
@@ -165,6 +166,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 			forma002DetalleLista.main.store_lista.baseParams={}
 			forma002DetalleLista.main.store_lista.baseParams.BuscarBy = true;
 			forma002DetalleLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			forma002DetalleLista.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
 			forma002DetalleLista.main.store_lista.baseParams[this.paramName] = v;
 			forma002DetalleLista.main.store_lista.baseParams.paginar = 'si';
 			forma002DetalleLista.main.store_lista.load();
@@ -197,15 +199,13 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-		{header: 'co_metas',hidden:true, menuDisabled:true,dataIndex: 'co_metas'},
-    {header: 'CODIGO', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'codigo'},
-    {header: 'ACTIVIDAD', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nb_meta'},
-    {header: 'UNIDAD DE MEDIDA', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'co_unidades_medida'},
-    {header: 'PROGRAMADO ANUAL', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'tx_prog_anual'},
-    {header: 'INICIO', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fecha_inicio'},
-    {header: 'FINAL', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fecha_fin'},
-    {header: 'TOTAL CARGADO', width:120,  menuDisabled:true, sortable: true, dataIndex: 'mo_cargado'},
-    {header: 'RESPONSABLE', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nb_responsable'},
+		{header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'Numero', width:50,  menuDisabled:true, sortable: true,  dataIndex: 'nu_numero'},
+    {header: 'Nombre', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_nombre'},
+    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
+    {header: 'Programado Anual', width:120,  menuDisabled:true, sortable: true, dataIndex: 'programado'},
+    {header: 'Inicio', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fecha_inicio'},
+    {header: 'Final', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'fecha_fin'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -229,6 +229,7 @@ this.gridPanel_.render("contenedorforma002DetalleLista");
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
+this.store_lista.baseParams.ac = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002DetalleLista.main.editar.disable();
@@ -244,16 +245,28 @@ getLista: function(){
     url:'{{ URL::to('ac/seguimiento/002/datos/storeLista') }}',
     root:'data',
     fields:[
-			{name: 'co_metas'},
-	    {name: 'codigo'},
-	    {name: 'co_proyecto_acc_espec'},
+			{name: 'id'},
+	    {name: 'nu_numero'},
+	    {name: 'de_nombre'},
 	    {name: 'nb_meta'},
-	    {name: 'co_unidades_medida'},
+	    {name: 'tx_ejecutor'},
 	    {name: 'tx_prog_anual'},
 	    {name: 'fecha_inicio'},
 	    {name: 'fecha_fin'},
 	    {name: 'nb_responsable'},
 	    {name: 'mo_cargado'},
+			{
+					name: 'ejecutor',
+					convert: function(v, r) {
+							return r.id_tab_ejecutores + ' - ' + r.tx_ejecutor;
+					}
+			},
+			{
+					name: 'programado',
+					convert: function(v, r) {
+							return r.meta + ' ' + r.de_unidad_medida;
+					}
+			}
            ]
     });
     return this.store;
