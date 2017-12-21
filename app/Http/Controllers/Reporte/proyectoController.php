@@ -292,7 +292,7 @@ class proyectoController extends Controller
     <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
     <thead>
     <tr align="left" bgcolor="#E6E6E6">
-    <th colspan="5" style="width: 100%;"><b>RESUMEN DE PROYECTOS POA:'.Session::get('ejercicio').' </b></th>
+    <th colspan="5" style="width: 100%;"><b>RESUMEN DE PROYECTOS POA: '.Session::get('ejercicio').' </b></th>
     </tr>
     <tr style="font-size:8px">
     <th align="center" bgcolor="#E6E6E6" style="width: 40%;"><b>PROYECTOS</b></th>
@@ -312,8 +312,9 @@ class proyectoController extends Controller
     'public.t39_proyecto_acc_espec.tx_codigo as co_ae', 'public.t39_proyecto_acc_espec.descripcion as de_ae')
     ->where('t01.id_ejercicio', '=', Session::get('ejercicio') )
     ->where('t01.edo_reg', '=', true )
+    ->whereRaw('sp_verificar_hijo_ae(public.t39_proyecto_acc_espec.co_proyecto_acc_espec) IS TRUE')
     ->where('public.t39_proyecto_acc_espec.edo_reg', '=', true )
-    ->orderBy('public.t39_proyecto_acc_espec.id_proyecto','ASC')
+    ->orderBy('public.t39_proyecto_acc_espec.id_proyecto', 'public.t39_proyecto_acc_espec.tx_codigo','ASC')
     ->get();
 
     $i = 0;
