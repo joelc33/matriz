@@ -143,6 +143,8 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('proyecto/responsable/exportar', 'proyectoresponsableController@responsableExportar');
 		Route::get('proyecto/responsable/todo/exportar', 'proyectoresponsableController@responsableTodoExportar');
 		Route::get('poa/proyecto/todo/exportar', 'proyectoController@todoExportar');
+		Route::get('poa/proyecto/resumen', 'proyectoController@resumen');
+		Route::get('poa/ac/resumen', 'acController@resumen');
 	});
 });
 //*Modulos de Proyecto*/
