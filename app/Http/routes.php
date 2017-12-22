@@ -465,7 +465,8 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::post('detalle', 'formadosController@detalle');
 		Route::get('datos/{id}', 'formadosController@datos');
 		Route::post('datos/storeLista', 'formadosController@datosstoreLista');
-		Route::get('editar/{id}', 'formadosController@editar');
+		Route::get('actividad/lista/{id}', 'formadosController@editar');
+		Route::post('actividad/storeLista', 'formadosController@actividadstoreLista');
 	});
 	//*Modulo de Accion Centralizada Forma 003*/
 	Route::group(['prefix' => 'ac/seguimiento/003'], function(){

@@ -27,97 +27,23 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
-//Agregar un registro
-this.nuevo = new Ext.Button({
-    text:'Nuevo',
-    iconCls: 'icon-nuevo',
-    handler:function(){
-        forma002DetalleLista.main.mascara.show();
-        this.msg = Ext.get('forma002Detalle');
-        this.msg.load({
-         url:"{{ URL::to('mantenimiento/aplicacion/nuevo') }}",
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Editar',
-    iconCls: 'icon-editar',
+    text:'Ver Actividades',
+    iconCls: 'icon-accion_fisica',
     handler:function(){
-	this.codigo  = forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('co_metas');
+	this.codigo  = forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	forma002DetalleLista.main.mascara.show();
         this.msg = Ext.get('forma002Detalle');
         this.msg.load({
-         url:"{{ URL::to('ac/seguimiento/002/editar') }}/"+this.codigo,
+         url:"{{ URL::to('ac/seguimiento/002/actividad/lista') }}/"+this.codigo,
          scripts: true,
          text: "Cargando.."
         });
-    }
-});
-
-//Desabilitar un registro
-this.eliminar= new Ext.Button({
-    text:'Deshabilitar',
-    iconCls: 'icon-cancelar',
-    handler:function(){
-	this.codigo  = forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('mantenimiento/aplicacion/eliminar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    forma002DetalleLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                forma002DetalleLista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.habilitar= new Ext.Button({
-    text:'Habilitar',
-    iconCls: 'icon-fin',
-    handler:function(){
-	this.codigo  = forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('mantenimiento/aplicacion/habilitar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: forma002DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    forma002DetalleLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                forma002DetalleLista.main.mascara.hide();
-            }});
-	}});
     }
 });
 
 this.editar.disable();
-this.eliminar.disable();
-this.habilitar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -183,17 +109,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.nuevo,'-',
-			@endif
 			@if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.habilitar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.habilitar,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.deshabilitar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.eliminar,'-',
 			@endif
 				this.buscador
     ],
@@ -212,8 +129,6 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002DetalleLista.main.editar.enable();
-			forma002DetalleLista.main.habilitar.enable();
-			forma002DetalleLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -233,8 +148,6 @@ this.store_lista.baseParams.ac = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002DetalleLista.main.editar.disable();
-forma002DetalleLista.main.habilitar.disable();
-forma002DetalleLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

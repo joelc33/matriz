@@ -4,7 +4,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
-use matriz\Models\Ac\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_fisica;
 use View;
 use Validator;
 use Input;
@@ -171,11 +171,53 @@ class formadosController extends Controller
    */
   public function editar($id)
   {
-    $data = tab_meta_fisica::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta',
-     'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable' )
-    ->where('co_metas', '=', $id)
+    $data = tab_ac_ae::select( 'id', 'id_tab_ac', 'id_tab_ac_ae_predefinida', 'id_tab_ejecutores', 'bien_servicio',
+       'id_tab_unidad_medida', 'meta', 'ponderacion', 'id_tab_tipo_fondo', 'mo_ae',
+       'mo_ae_calculado', 'fecha_inicio', 'fecha_fin',
+       'in_activo' )
+    ->where('id', '=', $id)
     ->first();
-    return View::make('seguimiento.ac.002.datos.editar')->with('data',$data);
+    return View::make('seguimiento.ac.002.actividad.lista')->with('data',$data);
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function actividadstoreLista()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_meta_fisica = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
+       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo' )
+       ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
+       ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_meta_fisica->where('nb_meta', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_meta_fisica->count();
+        $tab_meta_fisica->skip($start)->take($limit);
+        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_meta_fisica->count();
+        $tab_meta_fisica->skip($start)->take($limit);
+        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+    }
   }
 
 }
