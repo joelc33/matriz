@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns("foma002ActividadLista");
-foma002ActividadLista.main = {
+Ext.ns("forma002ActividadLista");
+forma002ActividadLista.main = {
 init:function(){
 //Mascara general del modulo
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
@@ -12,14 +12,14 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Editar',
+    text:'Datos',
     iconCls: 'icon-editar',
     handler:function(){
-	this.codigo  = foma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	foma002ActividadLista.main.mascara.show();
-        this.msg = Ext.get('formularioaplicacion');
+	this.codigo  = forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma002ActividadLista.main.mascara.show();
+        this.msg = Ext.get('forma002Actividad');
         this.msg.load({
-         url:"{{ URL::to('mantenimiento/aplicacion/editar') }}/"+this.codigo,
+         url:"{{ URL::to('ac/seguimiento/002/actividad/editar') }}/"+this.codigo,
          scripts: true,
          text: "Cargando.."
         });
@@ -56,11 +56,11 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		foma002ActividadLista.main.store_lista.baseParams={};
-		foma002ActividadLista.main.store_lista.baseParams.paginar = 'si';
-		foma002ActividadLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-    foma002ActividadLista.main.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
-		foma002ActividadLista.main.store_lista.load();
+		forma002ActividadLista.main.store_lista.baseParams={};
+		forma002ActividadLista.main.store_lista.baseParams.paginar = 'si';
+		forma002ActividadLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+    forma002ActividadLista.main.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
+		forma002ActividadLista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -72,13 +72,13 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			foma002ActividadLista.main.store_lista.baseParams={}
-			foma002ActividadLista.main.store_lista.baseParams.BuscarBy = true;
-			foma002ActividadLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-      foma002ActividadLista.main.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
-			foma002ActividadLista.main.store_lista.baseParams[this.paramName] = v;
-			foma002ActividadLista.main.store_lista.baseParams.paginar = 'si';
-			foma002ActividadLista.main.store_lista.load();
+			forma002ActividadLista.main.store_lista.baseParams={}
+			forma002ActividadLista.main.store_lista.baseParams.BuscarBy = true;
+			forma002ActividadLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+      forma002ActividadLista.main.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
+			forma002ActividadLista.main.store_lista.baseParams[this.paramName] = v;
+			forma002ActividadLista.main.store_lista.baseParams.paginar = 'si';
+			forma002ActividadLista.main.store_lista.load();
 		}
 	}
 });
@@ -100,15 +100,18 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Codigo', width:50,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'codigo'},
-		{header: 'Actividad', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nb_meta'},
-    {header: 'Unidad de Medida', width:100,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
+		{header: 'Codigo', width:50,  menuDisabled:true, sortable: true, dataIndex: 'codigo'},
+		{header: 'Actividad', width:300,  menuDisabled:true, sortable: true, dataIndex: 'nb_meta'},
+    {header: 'Programado', width:120,  menuDisabled:true, sortable: true,  dataIndex: 'programado'},
+    {header: 'Inicio', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_inicio'},
+    {header: 'Final', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_fin'},
+    {header: 'Responsable', width:130,  menuDisabled:true, sortable: true, dataIndex: 'nb_responsable'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			foma002ActividadLista.main.editar.enable();
+			forma002ActividadLista.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -140,7 +143,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-foma002ActividadLista.main.editar.disable();
+forma002ActividadLista.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -152,13 +155,22 @@ getLista: function(){
     root:'data',
     fields:[
     {name: 'id'},
-		{name: 'co_aplicacion'},
-    {name: 'de_aplicacion'},
-    {name: 'in_activo'},
+		{name: 'codigo'},
+    {name: 'nb_meta'},
+    {name: 'de_unidad_medida'},
+    {name: 'fecha_inicio'},
+    {name: 'fecha_fin'},
+    {name: 'nb_responsable'},
+    {
+        name: 'programado',
+        convert: function(v, r) {
+            return r.tx_prog_anual + ' ' + r.de_unidad_medida;
+        }
+    }
            ]
     });
     return this.store;
 }
 };
-Ext.onReady(foma002ActividadLista.main.init, foma002ActividadLista.main);
+Ext.onReady(forma002ActividadLista.main.init, forma002ActividadLista.main);
 </script>

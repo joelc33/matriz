@@ -200,6 +200,7 @@ class acController extends Controller
        'fecha_inicio', 'fecha_fin', 'edo_reg', 'fecha_creacion', 'fecha_actualizacion',
        'objetivo_institucional', 'id_tab_ejecutor', 'in_definitivo')
       ->where('id_accion_centralizada', '=', $tab_ac->id)
+      ->orderby('id_accion','ASC')
       ->get();
 
        try {
@@ -260,6 +261,7 @@ class acController extends Controller
         ->where('id_accion_centralizada', '=', $arreglo_ac_ae->id_accion_centralizada)
         ->where('co_ac_acc_espec', '=', $arreglo_ac_ae->id_accion)
         ->where('edo_reg', '=', true)
+        ->orderby('codigo','ASC')
         ->get();
 
         foreach ($ac_ae_mf as $arreglo_ac_ae_mf ) {

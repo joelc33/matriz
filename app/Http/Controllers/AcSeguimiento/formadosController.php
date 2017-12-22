@@ -193,7 +193,10 @@ class formadosController extends Controller
       $variable = Input::get('variable');
 
       $tab_meta_fisica = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
-       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo' )
+       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo',
+       'de_unidad_medida',
+       DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+       DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
        ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
 
@@ -218,6 +221,20 @@ class formadosController extends Controller
     } catch (\Illuminate\Database\QueryException $e) {
       return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
     }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function editarActividad($id)
+  {
+    $data = tab_meta_fisica::select( 'id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
+       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'in_activo' )
+    ->where('id', '=', $id)
+    ->first();
+    return View::make('seguimiento.ac.002.actividad.editar')->with('data',$data);
   }
 
 }

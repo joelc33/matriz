@@ -189,3 +189,4 @@ Ext.onReady(forma002DetalleLista.main.init, forma002DetalleLista.main);
 </script>
 <div id="contenedorforma002DetalleLista"></div>
 <div id="forma002Detalle"></div>
+<div id="forma002Actividad"></div>
