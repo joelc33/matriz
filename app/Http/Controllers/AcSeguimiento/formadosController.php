@@ -194,7 +194,7 @@ class formadosController extends Controller
 
       $tab_meta_fisica = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
        'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo',
-       'de_unidad_medida',
+       'de_unidad_medida', 'in_cargado',
        DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
        DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
        ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
@@ -233,12 +233,98 @@ class formadosController extends Controller
     $data = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
       'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo', 'de_unidad_medida',
        DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
-       DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
+       DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
+       'nu_meta_modificada', 'nu_meta_actualizada', 'nu_obtenido',
+       'nu_corte', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle' )
     ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
     ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
     ->first();
 
     return View::make('seguimiento.ac.002.actividad.editar')->with('data',$data);
   }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_meta_fisica::find($id);
+      $tabla->nu_meta_modificada = Input::get("meta_modificada");
+      $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
+      $tabla->nu_obtenido = Input::get("obtenido");
+      $tabla->nu_corte = Input::get("corte");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->in_cargado = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_meta_fisica::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_meta_fisica;
+      $tabla->nu_meta_modificada = Input::get("meta_modificada");
+      $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
+      $tabla->nu_obtenido = Input::get("obtenido");
+      $tabla->nu_corte = Input::get("corte");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
 
 }

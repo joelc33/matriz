@@ -1,5 +1,13 @@
 <script type="text/javascript">
 Ext.ns("forma002ActividadLista");
+function actividadEstado(val){
+	if(val==true){
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
+	}else{
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
+	}
+return val;
+};
 forma002ActividadLista.main = {
 init:function(){
 //Mascara general del modulo
@@ -105,7 +113,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Programado', width:120,  menuDisabled:true, sortable: true,  dataIndex: 'programado'},
     {header: 'Inicio', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_inicio'},
     {header: 'Final', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_fin'},
-    {header: 'Responsable', width:130,  menuDisabled:true, sortable: true, dataIndex: 'nb_responsable'},
+    {header: 'Estatus', width:130,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'in_cargado'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -161,6 +169,7 @@ getLista: function(){
     {name: 'fecha_inicio'},
     {name: 'fecha_fin'},
     {name: 'nb_responsable'},
+    {name: 'in_cargado'},
     {
         name: 'programado',
         convert: function(v, r) {

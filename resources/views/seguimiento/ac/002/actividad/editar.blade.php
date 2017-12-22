@@ -6,6 +6,9 @@ init:function(){
 //<Stores de fk>
 this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
 //<Stores de fk>
+//<Stores de fk>
+this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
+//<Stores de fk>
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
@@ -130,7 +133,14 @@ this.id_tab_municipio_detalle = new Ext.form.ComboBox({
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
 	resizable:true,
-	allowBlank:false
+	allowBlank:false,
+	listeners:{
+						change: function(){
+								forma002ActividadEditar.main.storeCO_PARROQUIA.load({
+										params: {id_tab_municipio:this.getValue(), _token:'{{ csrf_token() }}'}
+								})
+						}
+	}
 });
 
 this.storeCO_MUNICIPIO.load();
@@ -141,11 +151,45 @@ paqueteComunJS.funcion.seleccionarComboByCo({
 	objStore: this.storeCO_MUNICIPIO
 });
 
+if(this.OBJ.id_tab_municipio_detalle){
+  this.storeCO_PARROQUIA.load({
+                    params: {id_tab_municipio:this.OBJ.id_tab_municipio_detalle, _token: '{{ csrf_token() }}'},
+                    callback: function(){
+                        forma002ActividadEditar.main.id_tab_parroquia_detalle.setValue(forma002ActividadEditar.main.OBJ.id_tab_parroquia_detalle);
+                    }
+                });
+}
+
+this.id_tab_municipio_detalle.on('beforeselect',function(cmb,record,index){
+        	this.id_tab_parroquia_detalle.clearValue();
+},this);
+
+this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
+	fieldLabel:'PARROQUIA',
+	store: this.storeCO_PARROQUIA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_parroquia',
+	hiddenName:'parroquia',
+	//readOnly:(this.OBJ.co_parroquia!='')?true:false,
+	//style:(this.OBJ.co_parroquia!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Parroquia',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	resizable:true,
+	allowBlank:false
+});
+
 this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos del Seguimiento',
 	items:[
 		this.nb_responsable,
 		this.id_tab_municipio_detalle,
+		this.id_tab_parroquia_detalle,
 		this.nu_meta_moificada,
 		this.nu_meta_actualizada,
 		this.nu_obtenido,
@@ -165,9 +209,9 @@ this.guardar = new Ext.Button({
         forma002ActividadEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('mantenimiento/aplicacion/guardar') }}',
+		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}',
 	@else
-		url:'{{ URL::to('mantenimiento/aplicacion/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',
@@ -250,6 +294,21 @@ getStoreCO_MUNICIPIO:function(){
         root:'data',
         fields:[
             {name: 'id'},{name: 'de_municipio'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
+},
+getStoreCO_PARROQUIA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/parroquia/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_parroquia'}
             ],
             listeners : {
                 exception : function(proxy, response, operation) {
