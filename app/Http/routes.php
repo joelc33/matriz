@@ -480,6 +480,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('actividad/lista/{id}', 'formatresController@editar');
 		Route::post('actividad/storeLista', 'formatresController@actividadstoreLista');
 		Route::get('actividad/editar/{id}', 'formatresController@editarActividad');
+		Route::post('actividad/guardar/{id}', 'formatresController@guardar');
 	});
 	//*Modulo de Accion Centralizada Forma 004*/
 	Route::group(['prefix' => 'ac/seguimiento/004'], function(){

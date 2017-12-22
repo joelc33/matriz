@@ -1,14 +1,7 @@
 <script type="text/javascript">
-Ext.ns("forma002ActividadEditar");
-forma002ActividadEditar.main = {
+Ext.ns("forma003ActividadEditar");
+forma003ActividadEditar.main = {
 init:function(){
-
-//<Stores de fk>
-this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
-//<Stores de fk>
-//<Stores de fk>
-this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
-//<Stores de fk>
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
@@ -22,7 +15,8 @@ this._token = new Ext.form.Hidden({
 this.datos1 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.codigo+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Actividad: </b>'+this.OBJ.nb_meta+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Fecha Programada: </b>'+this.OBJ.fecha_inicio+' - '+this.OBJ.fecha_fin+'</p>';
-this.datos1 +='<p class="registro_detalle"><b>Programado: </b>'+this.OBJ.tx_prog_anual+' '+this.OBJ.de_unidad_medida+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Presupuesto Programado Anual: </b>'+formatoNumero(this.OBJ.mo_presupuesto)+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Categoria: </b>'+this.OBJ.co_sector + '.' + this.OBJ.nu_original + '.' + this.OBJ.nu_numero + '.' + this.OBJ.co_partida+'</p>';
 
 this.fieldset1 = new Ext.form.FieldSet({
 	title: 'Datos de la Actividad',
@@ -38,162 +32,99 @@ this.fieldset1 = new Ext.form.FieldSet({
 	allowBlank:false
 });*/
 
-this.nu_meta_moificada = new Ext.form.NumberField({
-	fieldLabel:'META MODIFICADA',
-	name:'meta_modificada',
-	value:this.OBJ.nu_meta_modificada,
+this.mo_modificado_anual = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO MODIFICADO ANUAL',
+	name:'modificado_anual',
+	value:this.OBJ.mo_modificado_anual,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
 	emptyText: '0',
-	decimalPrecision: 0,
+	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: false,
+	allowDecimals: true,
 	allowNegative: false
 });
 
-this.nu_meta_actualizada = new Ext.form.NumberField({
-	fieldLabel:'META ACTUALIZADA',
-	name:'meta_actualizada',
-	value:this.OBJ.nu_meta_actualizada,
+this.mo_actualizado_anual = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO ACTUALIZADO ANUAL (Bs.)',
+	name:'actualizado_anual',
+	value:this.OBJ.mo_actualizado_anual,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
 	emptyText: '0',
-	decimalPrecision: 0,
+	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: false,
+	allowDecimals: true,
 	allowNegative: false
 });
 
-this.nu_obtenido = new Ext.form.NumberField({
-	fieldLabel:'OBTENIDO AL CORTE',
-	name:'obtenido',
-	value:this.OBJ.nu_obtenido,
+this.mo_comprometido = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO COMPROM. AL CORTE (Bs.)',
+	name:'comprometido',
+	value:this.OBJ.mo_comprometido,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
 	emptyText: '0',
-	decimalPrecision: 0,
+	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: false,
+	allowDecimals: true,
 	allowNegative: false
 });
 
-this.nu_corte = new Ext.form.NumberField({
-	fieldLabel:'% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL',
-	name:'corte',
-	value:this.OBJ.nu_corte,
+this.mo_causado = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO CAUSADO AL CORTE (Bs.)',
+	name:'causado',
+	value:this.OBJ.mo_causado,
 	allowBlank:false,
 	width:200,
-	maxLength: 3,
+	maxLength: 20,
 	emptyText: '0',
-	decimalPrecision: 0,
+	decimalPrecision: 2,
  	minValue : 0,
- 	maxValue : 100,
+ 	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 3},
-	allowDecimals: false,
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
+	allowDecimals: true,
 	allowNegative: false
 });
 
-this.nb_responsable = new Ext.form.TextField({
-	fieldLabel:'RESPONSABLE',
-	name:'responsable',
-	value:this.OBJ.nb_responsable,
-	width:400,
-	allowBlank:false
-});
-
-this.id_tab_municipio_detalle = new Ext.form.ComboBox({
-	fieldLabel:'LOCALIZACIÓN',
-	store: this.storeCO_MUNICIPIO,
-	typeAhead: true,
-	valueField: 'id',
-	displayField:'de_municipio',
-	hiddenName:'municipio',
-	//readOnly:(this.OBJ.id_tab_tipo_personal!='')?true:false,
-	//style:(this.main.OBJ.id_tab_tipo_personal!='')?'background:#c9c9c9;':'',
-	//forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	emptyText:'Seleccione Localizacion...',
-	selectOnFocus: true,
-	mode: 'local',
-	width:400,
-	itemSelector: 'div.search-item',
-	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
-	resizable:true,
+this.mo_pagado = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO PAGADO AL CORTE (Bs.)',
+	name:'pagado',
+	value:this.OBJ.mo_pagado,
 	allowBlank:false,
-	listeners:{
-						change: function(){
-								forma002ActividadEditar.main.storeCO_PARROQUIA.load({
-										params: {id_tab_municipio:this.getValue(), _token:'{{ csrf_token() }}'}
-								})
-						}
-	}
-});
-
-this.storeCO_MUNICIPIO.load();
-
-paqueteComunJS.funcion.seleccionarComboByCo({
-	objCMB: this.id_tab_municipio_detalle,
-	value:  this.OBJ.id_tab_municipio_detalle,
-	objStore: this.storeCO_MUNICIPIO
-});
-
-if(this.OBJ.id_tab_municipio_detalle){
-  this.storeCO_PARROQUIA.load({
-                    params: {id_tab_municipio:this.OBJ.id_tab_municipio_detalle, _token: '{{ csrf_token() }}'},
-                    callback: function(){
-                        forma002ActividadEditar.main.id_tab_parroquia_detalle.setValue(forma002ActividadEditar.main.OBJ.id_tab_parroquia_detalle);
-                    }
-                });
-}
-
-this.id_tab_municipio_detalle.on('beforeselect',function(cmb,record,index){
-        	this.id_tab_parroquia_detalle.clearValue();
-},this);
-
-this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
-	fieldLabel:'PARROQUIA',
-	store: this.storeCO_PARROQUIA,
-	typeAhead: true,
-	valueField: 'id',
-	displayField:'de_parroquia',
-	hiddenName:'parroquia',
-	//readOnly:(this.OBJ.co_parroquia!='')?true:false,
-	//style:(this.OBJ.co_parroquia!='')?'background:#c9c9c9;':'',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	emptyText:'Seleccione Parroquia',
-	selectOnFocus: true,
-	mode: 'local',
-	width:400,
-	resizable:true,
-	allowBlank:false
+	width:200,
+	maxLength: 20,
+	emptyText: '0',
+	decimalPrecision: 2,
+ 	minValue : 0,
+ 	maxValue : 999999999999999999999,
+	msgTarget : 'Rango Entre 0 y 9',
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
+	allowDecimals: true,
+	allowNegative: false
 });
 
 this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos del Seguimiento',
 	items:[
-		this.nb_responsable,
-		this.id_tab_municipio_detalle,
-		this.id_tab_parroquia_detalle,
-		this.nu_meta_moificada,
-		this.nu_meta_actualizada,
-		this.nu_obtenido,
-		this.nu_corte
+		this.mo_modificado_anual,
+		this.mo_actualizado_anual,
+		this.mo_comprometido,
+		this.mo_causado,
+		this.mo_pagado
 	]
 });
 
@@ -202,16 +133,16 @@ this.guardar = new Ext.Button({
     iconCls: 'icon-guardar',
     handler:function(){
 
-        if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
+        if(!forma003ActividadEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
-        forma002ActividadEditar.main.formPanel_.getForm().submit({
+        forma003ActividadEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}',
+		url:'{{ URL::to('ac/seguimiento/003/actividad/guardar') }}',
 	@else
-		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('ac/seguimiento/003/actividad/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',
@@ -234,8 +165,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadLista.main.store_lista.load();
-                 forma002ActividadEditar.main.winformPanel_.close();
+                 forma003ActividadLista.main.store_lista.load();
+                 forma003ActividadEditar.main.winformPanel_.close();
              }
         });
 
@@ -247,14 +178,14 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        forma002ActividadEditar.main.winformPanel_.close();
+        forma003ActividadEditar.main.winformPanel_.close();
     }
 });
 
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	width:800,
-	labelWidth: 200,
+	labelWidth: 280,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
@@ -267,7 +198,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: METAS FÍSICAS',
+    title:'Formulario: METAS FINANCIERAS',
     modal:true,
     constrain:true,
 width:814,
@@ -286,38 +217,8 @@ width:814,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma002ActividadLista.main.mascara.hide();
-},
-getStoreCO_MUNICIPIO:function(){
-    this.store = new Ext.data.JsonStore({
-        url:'{{ URL::to('auxiliar/municipio/todo') }}',
-        root:'data',
-        fields:[
-            {name: 'id'},{name: 'de_municipio'}
-            ],
-            listeners : {
-                exception : function(proxy, response, operation) {
-                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
-                }
-            }
-    });
-    return this.store;
-},
-getStoreCO_PARROQUIA:function(){
-    this.store = new Ext.data.JsonStore({
-        url:'{{ URL::to('auxiliar/parroquia/todo') }}',
-        root:'data',
-        fields:[
-            {name: 'id'},{name: 'de_parroquia'}
-            ],
-            listeners : {
-                exception : function(proxy, response, operation) {
-                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
-                }
-            }
-    });
-    return this.store;
+forma003ActividadLista.main.mascara.hide();
 }
 };
-Ext.onReady(forma002ActividadEditar.main.init, forma002ActividadEditar.main);
+Ext.onReady(forma003ActividadEditar.main.init, forma003ActividadEditar.main);
 </script>
