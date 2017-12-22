@@ -171,7 +171,7 @@ getLista: function(){
     {
         name: 'categoria',
         convert: function(v, r) {
-            return r.tx_prog_anual + ' ' + r.co_partida;
+            return r.co_sector + '.' + r.nu_original + '.' + r.nu_numero + '.' + r.co_partida;
         }
     },
     {

@@ -196,9 +196,15 @@ class formatresController extends Controller
       $tab_meta_financiera = tab_meta_financiera::select( 'ac_seguimiento.tab_meta_financiera.id', 'id_tab_meta_fisica',
        'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle', 'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
        'mo_presupuesto', 'co_partida', 'id_tab_fuente_financiamiento', 'ac_seguimiento.tab_meta_financiera.in_activo',
-       'ac_seguimiento.tab_meta_financiera.in_cargado', 'codigo', 'nb_meta', 'de_fuente_financiamiento' )
+       'ac_seguimiento.tab_meta_financiera.in_cargado', 'codigo', 'nb_meta', 'de_fuente_financiamiento',
+       'nu_numero', 'nu_original', 'co_sector' )
        ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
        ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
+       ->join('ac_seguimiento.tab_ac_ae as t03', 't01.id_tab_ac_ae', '=', 't03.id')
+       ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+       ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+       ->join('mantenimiento.tab_ac_predefinida as t06', 't03.id_tab_ac_ae_predefinida', '=', 't06.id')
+       ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
 
       if (Input::get("BuscarBy")=="true") {
