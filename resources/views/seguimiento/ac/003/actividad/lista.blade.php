@@ -108,10 +108,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Codigo', width:50,  menuDisabled:true, sortable: true, dataIndex: 'codigo'},
-		{header: 'Actividad', width:300,  menuDisabled:true, sortable: true, dataIndex: 'nb_meta'},
-    {header: 'Fuente F.', width:140,  menuDisabled:true, sortable: true,  dataIndex: 'de_fuente_financiamiento'},
-    {header: 'Presupuesto Anual', width:120,  menuDisabled:true, sortable: true,  dataIndex: 'mo_presupuesto'},
+		/*{header: 'Codigo', width:50,  menuDisabled:true, sortable: true, dataIndex: 'codigo'},*/
+		{header: 'Actividad', width:250,  menuDisabled:true, sortable: true, dataIndex: 'actividad'},
+    {header: 'Fuente Financimiento', width:220,  menuDisabled:true, sortable: true,  dataIndex: 'de_fuente_financiamiento'},
+    {header: 'Presupuesto Anual', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_presupuesto'},
 		{header: 'Categoria', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'categoria'},
     {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'in_cargado'},
     ],
@@ -165,15 +165,19 @@ getLista: function(){
     {name: 'id'},
 		{name: 'codigo'},
     {name: 'nb_meta'},
-    {name: 'de_unidad_medida'},
-    {name: 'fecha_inicio'},
-    {name: 'fecha_fin'},
-    {name: 'nb_responsable'},
+    {name: 'de_fuente_financiamiento'},
+    {name: 'mo_presupuesto'},
     {name: 'in_cargado'},
     {
-        name: 'programado',
+        name: 'categoria',
         convert: function(v, r) {
-            return r.tx_prog_anual + ' ' + r.de_unidad_medida;
+            return r.tx_prog_anual + ' ' + r.co_partida;
+        }
+    },
+    {
+        name: 'actividad',
+        convert: function(v, r) {
+            return r.codigo + ' - ' + r.nb_meta;
         }
     }
            ]

@@ -5,6 +5,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_financiera;
 use View;
 use Validator;
 use Input;
@@ -192,29 +193,29 @@ class formatresController extends Controller
       $limit  = Input::get('limit', 20);
       $variable = Input::get('variable');
 
-      $tab_meta_fisica = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
-       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo',
-       'de_unidad_medida', 'in_cargado',
-       DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
-       DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
-       ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
+      $tab_meta_financiera = tab_meta_financiera::select( 'ac_seguimiento.tab_meta_financiera.id', 'id_tab_meta_fisica',
+       'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle', 'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
+       'mo_presupuesto', 'co_partida', 'id_tab_fuente_financiamiento', 'ac_seguimiento.tab_meta_financiera.in_activo',
+       'ac_seguimiento.tab_meta_financiera.in_cargado', 'codigo', 'nb_meta', 'de_fuente_financiamiento' )
+       ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+       ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
 
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_meta_fisica->where('nb_meta', 'ILIKE', "%$variable%");
+          $tab_meta_financiera->where('nb_meta', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
-        $response['total'] = $tab_meta_fisica->count();
-        $tab_meta_fisica->skip($start)->take($limit);
-        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+        $response['total'] = $tab_meta_financiera->count();
+        $tab_meta_financiera->skip($start)->take($limit);
+        $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id','ASC')->get()->toArray();
       } else {
         $response['success']  = 'true';
-        $response['total'] = $tab_meta_fisica->count();
-        $tab_meta_fisica->skip($start)->take($limit);
-        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+        $response['total'] = $tab_meta_financiera->count();
+        $tab_meta_financiera->skip($start)->take($limit);
+        $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id','ASC')->get()->toArray();
       }
 
       return Response::json($response, 200);

@@ -5,9 +5,11 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\Ac\tab_ac as ac;
 use matriz\Models\Ac\tab_ac_ae as ac_ae;
 use matriz\Models\Ac\tab_meta_fisica as ac_ae_mf;
+use matriz\Models\Ac\tab_meta_financiera as ac_ae_mff;
 use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
@@ -277,6 +279,27 @@ class acController extends Controller
           $tabla_ac_ae_mf->nb_responsable = $arreglo_ac_ae_mf->nb_responsable;
           $tabla_ac_ae_mf->in_activo = 'TRUE';
           $tabla_ac_ae_mf->save();
+
+          $ac_ae_mff = ac_ae_mff::select( 'co_metas_detalle', 'co_metas', 'co_municipio', 'co_parroquia', 'mo_presupuesto',
+          'co_partida', 'co_fuente', 'fecha_creacion', 'fecha_actualizacion', 'edo_reg')
+          ->where('co_metas', '=', $arreglo_ac_ae_mf->co_metas)
+          ->where('edo_reg', '=', true)
+          ->orderby('co_partida','ASC')
+          ->get();
+
+          foreach ($ac_ae_mff as $arreglo_ac_ae_mff ) {
+
+            $tabla_ac_ae_mff= new tab_meta_financiera;
+            $tabla_ac_ae_mff->id_tab_meta_fisica = $tabla_ac_ae_mf->id;
+            $tabla_ac_ae_mff->id_tab_municipio_detalle = $arreglo_ac_ae_mff->co_municipio;
+            $tabla_ac_ae_mff->id_tab_parroquia_detalle = $arreglo_ac_ae_mff->co_parroquia;
+            $tabla_ac_ae_mff->mo_presupuesto = $arreglo_ac_ae_mff->mo_presupuesto;
+            $tabla_ac_ae_mff->co_partida = $arreglo_ac_ae_mff->co_partida;
+            $tabla_ac_ae_mff->id_tab_fuente_financiamiento = $arreglo_ac_ae_mff->co_fuente;
+            $tabla_ac_ae_mff->in_activo = 'TRUE';
+            $tabla_ac_ae_mff->save();
+
+          }
 
         }
 
