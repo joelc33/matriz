@@ -117,7 +117,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
 		{header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-    {header: 'Numero', width:50,  menuDisabled:true, sortable: true,  dataIndex: 'nu_numero'},
+    {header: 'Numero', width:60,  menuDisabled:true, sortable: true,  dataIndex: 'nu_numero'},
     {header: 'Nombre', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_nombre'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
     {header: 'Programado Anual', width:120,  menuDisabled:true, sortable: true, dataIndex: 'programado'},

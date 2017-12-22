@@ -4,8 +4,10 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\Ac\tab_ac as ac;
 use matriz\Models\Ac\tab_ac_ae as ac_ae;
+use matriz\Models\Ac\tab_meta_fisica as ac_ae_mf;
 use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
@@ -234,6 +236,7 @@ class acController extends Controller
       $tabla->save();
 
       foreach ($tab_ac_ae as $arreglo_ac_ae ) {
+
         $tabla_ac_ae= new tab_ac_ae;
         $tabla_ac_ae->id_tab_ac = $tabla->id;
         $tabla_ac_ae->id_tab_ac_ae_predefinida = $arreglo_ac_ae->id_accion;
@@ -250,6 +253,31 @@ class acController extends Controller
         $tabla_ac_ae->objetivo_institucional = $arreglo_ac_ae->objetivo_institucional;
         $tabla_ac_ae->in_activo = 'TRUE';
         $tabla_ac_ae->save();
+
+        $ac_ae_mf = ac_ae_mf::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta',
+       'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable',
+       'fecha_creacion', 'fecha_actualizacion', 'edo_reg')
+        ->where('id_accion_centralizada', '=', $arreglo_ac_ae->id_accion_centralizada)
+        ->where('co_ac_acc_espec', '=', $arreglo_ac_ae->id_accion)
+        ->where('edo_reg', '=', true)
+        ->get();
+
+        foreach ($ac_ae_mf as $arreglo_ac_ae_mf ) {
+
+          $tabla_ac_ae_mf= new tab_meta_fisica;
+          $tabla_ac_ae_mf->id_tab_ac_ae = $tabla_ac_ae->id;
+          $tabla_ac_ae_mf->codigo = $arreglo_ac_ae_mf->codigo;
+          $tabla_ac_ae_mf->nb_meta = $arreglo_ac_ae_mf->nb_meta;
+          $tabla_ac_ae_mf->id_tab_unidad_medida = $arreglo_ac_ae_mf->co_unidades_medida;
+          $tabla_ac_ae_mf->tx_prog_anual = $arreglo_ac_ae_mf->tx_prog_anual;
+          $tabla_ac_ae_mf->fecha_inicio = $arreglo_ac_ae_mf->fecha_inicio;
+          $tabla_ac_ae_mf->fecha_fin = $arreglo_ac_ae_mf->fecha_fin;
+          $tabla_ac_ae_mf->nb_responsable = $arreglo_ac_ae_mf->nb_responsable;
+          $tabla_ac_ae_mf->in_activo = 'TRUE';
+          $tabla_ac_ae_mf->save();
+
+        }
+
       }
 
       DB::commit();
