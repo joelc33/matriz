@@ -3,11 +3,11 @@ Ext.ns("forma002ActividadEditar");
 forma002ActividadEditar.main = {
 init:function(){
 
-this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
+//<Stores de fk>
+this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
+//<Stores de fk>
 
-//<Stores de fk>
-this.storeCO_UNIDADES_MEDIDA = this.getStoreCO_UNIDADES_MEDIDA();
-//<Stores de fk>
+this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 //<token>
 this._token = new Ext.form.Hidden({
@@ -16,187 +16,141 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
-this.nb_actividad = new Ext.form.TextField({
-	fieldLabel:'NOMBRE DE LA ACTIVIDAD',
-	name:'nb_actividad',
-	value:this.OBJ.nb_meta,
-	width:400,
-	maxLength: 250,
-	allowBlank:false,
-        listeners:{
-            change: function(){
-                this.setValue(String(this.getValue()).toUpperCase());
-            }
-        }
+this.datos1 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.codigo+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Actividad: </b>'+this.OBJ.nb_meta+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Fecha Programada: </b>'+this.OBJ.fecha_inicio+' - '+this.OBJ.fecha_fin+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Programado: </b>'+this.OBJ.tx_prog_anual+' '+this.OBJ.de_unidad_medida+'</p>';
+
+this.fieldset1 = new Ext.form.FieldSet({
+	title: 'Datos de la Actividad',
+	html: this.datos1
 });
 
-this.co_unidades_medida = new Ext.form.ComboBox({
-	fieldLabel:'UNIDAD DE MEDIDA',
-	store: this.storeCO_UNIDADES_MEDIDA,
-	typeAhead: true,
-	valueField: 'co_unidades_medida',
-	displayField:'tx_unidades_medida',
-	hiddenName:'co_unidades_medida',
-	//readOnly:(this.OBJ.co_unidades_medida!='')?true:false,
-	//style:(this.OBJ.co_unidades_medida!='')?'background:#c9c9c9;':'',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	emptyText:'Seleccione Unidades',
-	selectOnFocus: true,
-	mode: 'local',
-	width:400,
-	resizable:true,
-	allowBlank:false
-});
-
-this.storeCO_UNIDADES_MEDIDA.load();
-	paqueteComunJS.funcion.seleccionarComboByCo({
-	objCMB: this.co_unidades_medida,
-	value:  this.OBJ.co_unidades_medida,
-	objStore: this.storeCO_UNIDADES_MEDIDA
-});
-
-this.pr_anual = new Ext.form.NumberField({
-	fieldLabel:'META PROGRAMADA POA',
-	name:'pr_anual',
-	value:this.OBJ.pr_anual,
-	allowBlank:false,
-	width:200,
-	maxLength: 8,
-	emptyText: '0',
-	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 99999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
-	allowDecimals: false,
-	allowNegative: false
-});
-
-this.fecha_inicio = new Ext.form.DateField({
-	fieldLabel:'FECHA DE INICIO',
-	name:'fecha_inicio',
-	value:this.OBJ.fecha_inicio,
-	allowBlank:false,
-	width:100,
-});
-
-this.fecha_culminacion = new Ext.form.DateField({
-	fieldLabel:'FECHA DE CULMINACIÓN',
-	name:'fecha_culminacion',
-	value:this.OBJ.fecha_culminacion,
-	allowBlank:false,
-	width:100,
-});
-
-this.meta_modificada = new Ext.form.NumberField({
+/*this.nu_meta_moificada = new Ext.form.TextField({
 	fieldLabel:'META MODIFICADA',
-	name:'pr_anual',
-	value:this.OBJ.pr_anual,
-	allowBlank:false,
-	width:200,
-	maxLength: 8,
-	emptyText: '0',
-	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 99999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
-	allowDecimals: false,
-	allowNegative: false
-});
-
-this.meta_actualizada = new Ext.form.NumberField({
-	fieldLabel:'META ACTUALIZADA',
-	name:'pr_anual',
-	value:this.OBJ.pr_anual,
-	allowBlank:false,
-	width:200,
-	maxLength: 8,
-	emptyText: '0',
-	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 99999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
-	allowDecimals: false,
-	allowNegative: false
-});
-
-this.obtenido_corte = new Ext.form.NumberField({
-	fieldLabel:'OBTENIDO AL CORTE',
-	name:'pr_anual',
-	value:this.OBJ.pr_anual,
-	allowBlank:false,
-	width:200,
-	maxLength: 8,
-	emptyText: '0',
-	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 99999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
-	allowDecimals: false,
-	allowNegative: false
-});
-
-this.obtenido = new Ext.form.NumberField({
-	fieldLabel:'% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL',
-	name:'pr_anual',
-	value:this.OBJ.pr_anual,
-	allowBlank:false,
-	width:200,
-	maxLength: 8,
-	emptyText: '0',
-	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 99999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
-	allowDecimals: false,
-	allowNegative: false
-});
-
-this.comFechaInCul = new Ext.form.CompositeField({
-fieldLabel: 'FECHA DE INICIO',
-items: [
-	this.fecha_inicio,
-             {
-                   xtype: 'displayfield',
-                   value: '&nbsp;&nbsp;&nbsp; FECHA DE CULMINACIÓN:',
-                   width: 190
-             },
-	this.fecha_culminacion
-	]
-});
-
-this.localizacion = new Ext.form.TextField({
-	fieldLabel:'LOCALIZACIÓN',
-	name:'nb_responsable',
-	value:this.OBJ.nb_responsables,
+	name:'meta_modificada',
+	value:this.OBJ.nu_meta_modificada,
 	width:400,
 	maxLength: 250,
+	allowBlank:false
+});*/
+
+this.nu_meta_moificada = new Ext.form.NumberField({
+	fieldLabel:'META MODIFICADA',
+	name:'meta_modificada',
+	value:this.OBJ.nu_meta_modificada,
 	allowBlank:false,
-        listeners:{
-            change: function(){
-                this.setValue(String(this.getValue()).toUpperCase());
-            }
-        }
+	width:200,
+	maxLength: 20,
+	emptyText: '0',
+	decimalPrecision: 0,
+ 	minValue : 0,
+ 	maxValue : 999999999999999999999,
+	msgTarget : 'Rango Entre 0 y 9',
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
+	allowDecimals: false,
+	allowNegative: false
+});
+
+this.nu_meta_actualizada = new Ext.form.NumberField({
+	fieldLabel:'META ACTUALIZADA',
+	name:'meta_actualizada',
+	value:this.OBJ.nu_meta_actualizada,
+	allowBlank:false,
+	width:200,
+	maxLength: 20,
+	emptyText: '0',
+	decimalPrecision: 0,
+ 	minValue : 0,
+ 	maxValue : 999999999999999999999,
+	msgTarget : 'Rango Entre 0 y 9',
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
+	allowDecimals: false,
+	allowNegative: false
+});
+
+this.nu_obtenido = new Ext.form.NumberField({
+	fieldLabel:'OBTENIDO AL CORTE',
+	name:'obtenido',
+	value:this.OBJ.nu_obtenido,
+	allowBlank:false,
+	width:200,
+	maxLength: 20,
+	emptyText: '0',
+	decimalPrecision: 0,
+ 	minValue : 0,
+ 	maxValue : 999999999999999999999,
+	msgTarget : 'Rango Entre 0 y 9',
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
+	allowDecimals: false,
+	allowNegative: false
+});
+
+this.nu_corte = new Ext.form.NumberField({
+	fieldLabel:'% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL',
+	name:'corte',
+	value:this.OBJ.nu_corte,
+	allowBlank:false,
+	width:200,
+	maxLength: 3,
+	emptyText: '0',
+	decimalPrecision: 0,
+ 	minValue : 0,
+ 	maxValue : 100,
+	msgTarget : 'Rango Entre 0 y 9',
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 3},
+	allowDecimals: false,
+	allowNegative: false
 });
 
 this.nb_responsable = new Ext.form.TextField({
 	fieldLabel:'RESPONSABLE',
-	name:'nb_responsable',
+	name:'responsable',
 	value:this.OBJ.nb_responsable,
 	width:400,
-	maxLength: 250,
-	allowBlank:false,
-        listeners:{
-            change: function(){
-                this.setValue(String(this.getValue()).toUpperCase());
-            }
-        }
+	allowBlank:false
+});
+
+this.id_tab_municipio_detalle = new Ext.form.ComboBox({
+	fieldLabel:'LOCALIZACIÓN',
+	store: this.storeCO_MUNICIPIO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_municipio',
+	hiddenName:'municipio',
+	//readOnly:(this.OBJ.id_tab_tipo_personal!='')?true:false,
+	//style:(this.main.OBJ.id_tab_tipo_personal!='')?'background:#c9c9c9;':'',
+	//forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Localizacion...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
+	resizable:true,
+	allowBlank:false
+});
+
+this.storeCO_MUNICIPIO.load();
+
+paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_municipio_detalle,
+	value:  this.OBJ.id_tab_municipio_detalle,
+	objStore: this.storeCO_MUNICIPIO
+});
+
+this.fieldset2 = new Ext.form.FieldSet({
+	title: 'Datos del Seguimiento',
+	items:[
+		this.nb_responsable,
+		this.id_tab_municipio_detalle,
+		this.nu_meta_moificada,
+		this.nu_meta_actualizada,
+		this.nu_obtenido,
+		this.nu_corte
+	]
 });
 
 this.guardar = new Ext.Button({
@@ -255,24 +209,16 @@ this.salir = new Ext.Button({
 
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
-	width:600,
-	labelWidth: 120,
+	width:800,
+	labelWidth: 200,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-		this.nb_actividad,
-		this.co_unidades_medida,
-		this.pr_anual,
-		this.comFechaInCul,
-		this.meta_modificada,
-		this.meta_actualizada,
-		this.obtenido_corte,
-		this.obtenido,
-		this.localizacion,
-		this.nb_responsable
+		this.fieldset1,
+		this.fieldset2
 	]
 });
 
@@ -280,7 +226,7 @@ this.winformPanel_ = new Ext.Window({
     title:'Formulario: METAS FÍSICAS',
     modal:true,
     constrain:true,
-width:614,
+width:814,
     frame:true,
     closabled:true,
     autoHeight:true,
@@ -298,13 +244,18 @@ width:614,
 this.winformPanel_.show();
 forma002ActividadLista.main.mascara.hide();
 },
-getStoreCO_UNIDADES_MEDIDA:function(){
+getStoreCO_MUNICIPIO:function(){
     this.store = new Ext.data.JsonStore({
-        url:'formulacion/modulos/proyecto/funcion.php?op=16',
+        url:'{{ URL::to('auxiliar/municipio/todo') }}',
         root:'data',
         fields:[
-            {name: 'co_unidades_medida'},{name: 'tx_unidades_medida'}
-            ]
+            {name: 'id'},{name: 'de_municipio'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
     });
     return this.store;
 }
