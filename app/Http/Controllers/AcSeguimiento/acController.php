@@ -278,6 +278,7 @@ class acController extends Controller
           $tabla_ac_ae_mf->fecha_fin = $arreglo_ac_ae_mf->fecha_fin;
           $tabla_ac_ae_mf->nb_responsable = $arreglo_ac_ae_mf->nb_responsable;
           $tabla_ac_ae_mf->in_activo = 'TRUE';
+          $tabla_ac_ae_mf->in_cargado = 'FALSE';
           $tabla_ac_ae_mf->save();
 
           $ac_ae_mff = ac_ae_mff::select( 'co_metas_detalle', 'co_metas', 'co_municipio', 'co_parroquia', 'mo_presupuesto',
@@ -297,6 +298,7 @@ class acController extends Controller
             $tabla_ac_ae_mff->co_partida = $arreglo_ac_ae_mff->co_partida;
             $tabla_ac_ae_mff->id_tab_fuente_financiamiento = $arreglo_ac_ae_mff->co_fuente;
             $tabla_ac_ae_mff->in_activo = 'TRUE';
+            $tabla_ac_ae_mff->in_cargado = 'FALSE';
             $tabla_ac_ae_mff->save();
 
           }
