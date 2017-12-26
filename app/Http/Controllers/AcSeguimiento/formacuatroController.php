@@ -235,11 +235,95 @@ class formacuatroController extends Controller
        'fecha_inicio', 'fecha_fin', 'nb_responsable', 'in_activo', 'created_at',
        'updated_at', 'nu_meta_modificada', 'nu_meta_actualizada', 'nu_obtenido',
        'nu_corte', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle',
-       'in_cargado' )
+       'in_cargado', 'de_desvio' )
     ->where('id', '=', $id)
     ->first();
 
     return View::make('seguimiento.ac.004.actividad.editar')->with('data',$data);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditarMeta);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_meta_fisica::find($id);
+      $tabla->nb_meta = Input::get("actividad");
+      $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
+      $tabla->tx_prog_anual = Input::get("programado_anual");
+      $tabla->fecha_inicio = Input::get("fecha_inicio");
+      $tabla->fecha_fin = Input::get("fecha_culminacion");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->de_desvio = Input::get("desvio");
+      //$tabla->in_cargado = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_meta_fisica::$validarCrearMeta);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_meta_fisica;
+      $tabla->nb_meta = Input::get("actividad");
+      $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
+      $tabla->tx_prog_anual = Input::get("programado_anual");
+      $tabla->fecha_inicio = Input::get("fecha_inicio");
+      $tabla->fecha_fin = Input::get("fecha_culminacion");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->de_desvio = Input::get("desvio");
+      $tabla->in_cargado = false;
+      $tabla->in_activo = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
   }
 
 }

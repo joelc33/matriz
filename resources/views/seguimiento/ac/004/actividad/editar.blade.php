@@ -21,7 +21,7 @@ this._token = new Ext.form.Hidden({
 
 this.nb_meta = new Ext.form.TextField({
 	fieldLabel:'NOMBRE DE LA ACTIVIDAD',
-	name:'nb_actividad',
+	name:'actividad',
 	value:this.OBJ.nb_meta,
 	width:550,
 	//maxLength: 250,
