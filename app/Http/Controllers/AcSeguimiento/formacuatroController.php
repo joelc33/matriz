@@ -231,9 +231,20 @@ class formacuatroController extends Controller
    */
   public function nuevoActividad($id)
   {
-    $data = json_encode(array("id_tab_ac_ae" => $id));
+    $fechaI = '01-01-'.Session::get('ejercicio');
+    $fechaF = '31-12-'.Session::get('ejercicio');
 
-    return View::make('seguimiento.ac.004.actividad.editar')->with('data',$data);
+    $data = json_encode(array(
+      "id_tab_ac_ae" => $id,
+      "fe_ini" => $fechaI,
+      "fe_fin" => $fechaF
+    ));
+
+    $limite = json_encode(array('fe_ini' => $fechaI, 'fe_fin' => $fechaF ));
+
+    return View::make('seguimiento.ac.004.actividad.editar')
+    ->with('data',$data)
+    ->with('fecha',$limite);
   }
 
   /**
@@ -247,11 +258,21 @@ class formacuatroController extends Controller
        'fecha_inicio', 'fecha_fin', 'nb_responsable', 'in_activo', 'created_at',
        'updated_at', 'nu_meta_modificada', 'nu_meta_actualizada', 'nu_obtenido',
        'nu_corte', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle',
-       'in_cargado', 'de_desvio' )
+       'in_cargado', 'de_desvio',
+       DB::raw("EXTRACT(year FROM fecha_inicio::DATE) as id_tab_ejercicio_fiscal") )
     ->where('id', '=', $id)
     ->first();
 
-    return View::make('seguimiento.ac.004.actividad.editar')->with('data',$data);
+    $fechaI = '01-01-'.($data->id_tab_ejercicio_fiscal);
+    $fechaF = '31-12-'.($data->id_tab_ejercicio_fiscal);
+
+    $limite = json_encode(array('fe_ini' => $fechaI, 'fe_fin' => $fechaF ));
+
+    //$data = json_encode(array_merge( $data->toArray(), $limite ));
+
+    return View::make('seguimiento.ac.004.actividad.editar')
+    ->with('data',$data)
+    ->with('fecha',$limite);
   }
 
   /**

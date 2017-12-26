@@ -4,6 +4,7 @@ forma004ActividadEditar.main = {
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
+this.FECHA = paqueteComunJS.funcion.doJSON({stringData:'{!! $fecha !!}'});
 
 @if(empty($data->id))
 
@@ -90,6 +91,8 @@ this.fecha_inicio = new Ext.form.DateField({
 	fieldLabel:'FECHA DE INICIO',
 	name:'fecha_inicio',
 	value:this.OBJ.fecha_inicio,
+	minValue:this.FECHA.fe_ini,
+	maxValue:this.FECHA.fe_fin,
 	allowBlank:false,
 	width:100,
 });
@@ -98,6 +101,8 @@ this.fecha_fin = new Ext.form.DateField({
 	fieldLabel:'FECHA DE CULMINACIÓN',
 	name:'fecha_culminacion',
 	value:this.OBJ.fecha_fin,
+	minValue:this.FECHA.fe_ini,
+	maxValue:this.FECHA.fe_fin,
 	allowBlank:false,
 	width:100
 });
