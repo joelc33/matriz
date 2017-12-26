@@ -337,9 +337,9 @@ this.nuevo = new Ext.Button({
 	iconCls: 'icon-nuevo',
 	handler: function(boton){
 		//tramiteTimbreLista.main.mascara.show();
-		this.msg = Ext.get('formulariotramiteFormula');
+		this.msg = Ext.get('formulariometafinanciera');
 		this.msg.load({
-		 url:"{{ URL::to('tramitetimbre/variable/nuevo') }}/{{ $data['id'] }}",
+		 url:"{{ URL::to('ac/seguimiento/004/actividad/financiera/nuevo') }}/{{ $data->id }}",
 		 scripts: true,
 		 text: "Cargando.."
 		});
@@ -352,9 +352,9 @@ this.editar = new Ext.Button({
 	handler: function(boton){
 		this.codigo  = forma004ActividadEditar.main.gridPanel_.getSelectionModel().getSelected().get('id');
 		//forma004ActividadEditar.main.mascara.show();
-	  this.msg = Ext.get('formulariotramiteFormula');
+	  this.msg = Ext.get('formulariometafinanciera');
 	  this.msg.load({
-	      url:"{{ URL::to('tramitetimbre/variable/editar') }}/"+this.codigo,
+	      url:"{{ URL::to('ac/seguimiento/004/actividad/financiera/editar') }}/"+this.codigo,
 	      scripts: true,
 	      text: "Cargando.."
 	  });
@@ -370,7 +370,7 @@ this.eliminar = new Ext.Button({
 		if(boton=="yes"){
 	        Ext.Ajax.request({
 	            method:'POST',
-	            url:'{{ URL::to('tramitetimbre/variable/eliminar') }}',
+	            url:'{{ URL::to('ac/seguimiento/004/actividad/financiera/eliminar') }}',
 	            params:{
 			_token: '{{ csrf_token() }}',
 	                id: forma004ActividadEditar.main.gridPanel_.getSelectionModel().getSelected().get('id')
@@ -476,6 +476,9 @@ width:814,
 this.winformPanel_.show();
 forma004ActividadLista.main.mascara.hide();
 
+@if(empty($data->id))
+
+@else
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
@@ -487,6 +490,7 @@ forma004ActividadEditar.main.eliminar.disable();
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
 });
+@endif
 },
 getStoreCO_UNIDADES_MEDIDA:function(){
     this.store = new Ext.data.JsonStore({
@@ -518,3 +522,4 @@ getStoreCO_UNIDADES_MEDIDA:function(){
 };
 Ext.onReady(forma004ActividadEditar.main.init, forma004ActividadEditar.main);
 </script>
+<div id="formulariometafinanciera"></div>

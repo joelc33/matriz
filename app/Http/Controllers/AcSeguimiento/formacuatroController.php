@@ -403,4 +403,39 @@ class formacuatroController extends Controller
     }
   }
 
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function nuevoFinanciera($id)
+  {
+
+    $data = json_encode(array(
+      "id_tab_meta_fisica" => $id
+    ));
+
+    return View::make('seguimiento.ac.004.financiera.editar')
+    ->with('data',$data);
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function editarFinanciera($id)
+  {
+
+    $data = tab_meta_financiera::select('id', 'id_tab_meta_fisica', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle',
+       'mo_presupuesto', 'co_partida', 'id_tab_fuente_financiamiento', 'in_activo',
+       'created_at', 'updated_at', 'in_cargado', 'mo_modificado_anual', 'mo_actualizado_anual',
+       'mo_comprometido', 'mo_causado', 'mo_pagado')
+    ->where('id', '=', $id)
+    ->first();
+
+    return View::make('seguimiento.ac.004.financiera.editar')
+    ->with('data',$data);
+  }
+
 }
