@@ -113,11 +113,14 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('personal/hijo', 'documentoController@personalHijo');
 		Route::get('empleado/tipo', 'documentoController@empleadoTipo');
 		Route::get('municipio/todo', 'documentoController@municipioTodo');
+		Route::post('municipio/todo', 'documentoController@municipioTodoPost');
 		Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
 		Route::get('municipio', 'documentoController@municipio');
 		Route::get('periodo', 'documentoController@periodo');
 		Route::get('lapso', 'documentoController@lapso');
 		Route::get('unidadmedida', 'documentoController@unidadmedida');
+		Route::get('fuentefinanciamiento', 'documentoController@fuentefinanciamiento');
+		Route::get('estado', 'documentoController@estado');
 	});
 });
 //*Modulos de Reportes*/

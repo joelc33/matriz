@@ -1,9 +1,25 @@
 <script type="text/javascript">
-Ext.ns("metafinacieraEditar");
-metafinacieraEditar.main = {
+Ext.ns("metafinancieraEditar");
+metafinancieraEditar.main = {
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
+
+//<Stores de fk>
+this.storeCO_ESTADO = this.getStoreCO_ESTADO();
+//<Stores de fk>
+//<Stores de fk>
+this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
+//<Stores de fk>
+//<Stores de fk>
+this.storeCO_PARROQUIA = this.getStoreCO_PARROQUIA();
+//<Stores de fk>
+//<Stores de fk>
+this.storeCO_PARTIDA = this.getStoreCO_PARTIDA();
+//<Stores de fk>
+//<Stores de fk>
+this.storeCO_FUENTE_FINANCIAMIENTO = this.getStoreCO_FUENTE_FINANCIAMIENTO();
+//<Stores de fk>
 
 //<token>
 this._token = new Ext.form.Hidden({
@@ -12,6 +28,188 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
+this.id_tab_estado = new Ext.form.ComboBox({
+	fieldLabel:'ESTADO',
+	store: this.storeCO_ESTADO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_estado',
+	hiddenName:'estado',
+	//readOnly:(this.OBJ.id_tab_estado!='')?true:false,
+	//style:(this.OBJ.id_tab_estado!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Estado',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	resizable:true,
+	allowBlank:false,
+	listeners:{
+            change: function(){
+                metafinancieraEditar.main.storeCO_MUNICIPIO.load({
+                    params: {estado:this.getValue(), _token:'{{ csrf_token() }}'}
+                })
+            }
+        }
+});
+
+this.storeCO_ESTADO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_estado,
+	value:  this.OBJ.id_tab_estado,
+	objStore: this.storeCO_ESTADO
+});
+
+if(this.OBJ.id_tab_estado){
+	this.storeCO_MUNICIPIO.load({
+		params: {estado:this.OBJ.id_tab_estado, _token:'{{ csrf_token() }}'},
+		callback: function(){
+			metafinancieraEditar.main.id_tab_municipio_detalle.setValue(metafinancieraEditar.main.OBJ.id_tab_municipio_detalle);
+		}
+	});
+}
+
+this.id_tab_estado.on('beforeselect',function(cmb,record,index){
+        	this.id_tab_municipio_detalle.clearValue();
+},this);
+
+this.id_tab_municipio_detalle = new Ext.form.ComboBox({
+	fieldLabel:'MUNICIPIO',
+	store: this.storeCO_MUNICIPIO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_municipio',
+	hiddenName:'municipio',
+	//readOnly:(this.OBJ.id_tab_municipio_detalle!='')?true:false,
+	//style:(this.OBJ.id_tab_municipio_detalle!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Municipio',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	resizable:true,
+	allowBlank:false,
+	listeners:{
+            change: function(){
+                metafinancieraEditar.main.storeCO_PARROQUIA.load({
+                    params: {id_tab_municipio:this.getValue(), _token:'{{ csrf_token() }}'}
+                })
+            }
+        }
+});
+
+this.id_tab_municipio_detalle.on('beforeselect',function(cmb,record,index){
+        	this.id_tab_parroquia_detalle.clearValue();
+},this);
+
+if(this.OBJ.id_tab_municipio_detalle){
+	this.storeCO_PARROQUIA.load({
+		params: {id_tab_municipio:this.OBJ.id_tab_municipio_detalle, _token:'{{ csrf_token() }}'},
+		callback: function(){
+			metafinancieraEditar.main.id_tab_parroquia_detalle.setValue(metafinancieraEditar.main.OBJ.id_tab_parroquia_detalle);
+		}
+	});
+}
+
+this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
+	fieldLabel:'PARROQUIA',
+	store: this.storeCO_PARROQUIA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_parroquia',
+	hiddenName:'parroquia',
+	//readOnly:(this.OBJ.id_tab_parroquia_detalle!='')?true:false,
+	//style:(this.OBJ.id_tab_parroquia_detalle!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Parroquia',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	resizable:true,
+	allowBlank:false
+});
+
+this.co_partida = new Ext.form.ComboBox({
+	fieldLabel:'PARTIDA',
+	store: this.storeCO_PARTIDA,
+	typeAhead: true,
+	valueField: 'co_partida',
+	displayField:'co_partida',
+	hiddenName:'co_partida',
+	//readOnly:(this.OBJ.co_partida!='')?true:false,
+	//style:(this.OBJ.co_partida!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Partida',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	resizable:true,
+	allowBlank:false
+});
+
+this.storeCO_PARTIDA.load({
+		params: {id_accion_centralizada:this.OBJ.id_accion_centralizada,co_ac_acc_espec:this.OBJ.co_ac_acc_espec}
+	});
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_partida,
+	value:  this.OBJ.co_partida,
+	objStore: this.storeCO_PARTIDA
+});
+
+this.id_tab_fuente_financiamiento = new Ext.form.ComboBox({
+	fieldLabel:'FUENTE DE FINANCIAMIENTO',
+	store: this.storeCO_FUENTE_FINANCIAMIENTO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_fuente_financiamiento',
+	hiddenName:'fuente_financiamiento',
+	//readOnly:(this.OBJ.id_tab_fuente_financiamiento!='')?true:false,
+	//style:(this.OBJ.id_tab_fuente_financiamiento!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Fuente de Fianciamiento',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_fuente_financiamiento}</div></div></tpl>'),
+	resizable:true,
+	allowBlank:false
+});
+
+this.storeCO_FUENTE_FINANCIAMIENTO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_fuente_financiamiento,
+	value:  this.OBJ.id_tab_fuente_financiamiento,
+	objStore: this.storeCO_FUENTE_FINANCIAMIENTO
+});
+
+this.mo_presupuesto = new Ext.form.NumberField({
+	fieldLabel:'PRESUPUESTO BS.',
+	name:'mo_presupuesto',
+	value:this.OBJ.mo_presupuesto,
+	allowBlank:false,
+	width:200,
+	minLength : 1,
+	maxLength: 20,
+	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 20},
+	blankText: '0.00',
+	//decimalPrecision: 2,
+	allowNegative: false,
+   	//style: 'text-align: right',
+	emptyText: '0.00',
+	decimalPrecision: 0,
+	allowDecimals: false
+});
 
 
 this.guardar = new Ext.Button({
@@ -19,11 +217,11 @@ this.guardar = new Ext.Button({
     iconCls: 'icon-guardar',
     handler:function(){
 
-        if(!metafinacieraEditar.main.formPanel_.getForm().isValid()){
+        if(!metafinancieraEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
-        metafinacieraEditar.main.formPanel_.getForm().submit({
+        metafinancieraEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
 		url:'{{ URL::to('ac/seguimiento/004/actividad/financiera/guardar') }}',
@@ -52,7 +250,7 @@ this.guardar = new Ext.Button({
                      });
                  }
                  forma004ActividadEditar.main.store_lista.load();
-                 metafinacieraEditar.main.winformPanel_.close();
+                 metafinancieraEditar.main.winformPanel_.close();
              }
         });
 
@@ -64,20 +262,26 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        metafinacieraEditar.main.winformPanel_.close();
+        metafinancieraEditar.main.winformPanel_.close();
     }
 });
 
 this.formPanel_ = new Ext.form.FormPanel({
 	//frame:true,
 	width:600,
-	labelWidth: 120,
+	labelWidth: 180,
 	border:false,
 	autoHeight:true,
 	autoScroll:true,
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+		this.id_tab_estado,
+		this.id_tab_municipio_detalle,
+		this.id_tab_parroquia_detalle,
+		this.mo_presupuesto,
+		this.co_partida,
+		this.id_tab_fuente_financiamiento
 	]
 });
 
@@ -102,7 +306,60 @@ width:614,
 });
 this.winformPanel_.show();
 //forma004ActividadEditar.main.mascara.hide();
+},
+getStoreCO_ESTADO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/estado') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_estado'}
+            ]
+    });
+    return this.store;
+},
+getStoreCO_MUNICIPIO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/municipio/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_municipio'}
+            ]
+    });
+    return this.store;
+},
+getStoreCO_PARROQUIA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/parroquia/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_parroquia'}
+            ]
+    });
+    return this.store;
+},
+getStoreCO_PARTIDA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'formulacion/modulos/metas/orm.php',
+        root:'data',
+	baseParams:{
+		op:4
+	},
+        fields:[
+            {name: 'co_partida'}
+            ]
+    });
+    return this.store;
+},
+getStoreCO_FUENTE_FINANCIAMIENTO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/fuentefinanciamiento') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_fuente_financiamiento'}
+            ]
+    });
+    return this.store;
 }
 };
-Ext.onReady(metafinacieraEditar.main.init, metafinacieraEditar.main);
+Ext.onReady(metafinancieraEditar.main.init, metafinancieraEditar.main);
 </script>

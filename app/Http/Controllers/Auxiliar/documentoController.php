@@ -25,6 +25,8 @@ use matriz\Models\Mantenimiento\tab_municipio;
 use matriz\Models\Mantenimiento\tab_periodo;
 use matriz\Models\Mantenimiento\tab_lapso;
 use matriz\Models\Mantenimiento\tab_unidad_medida;
+use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
+use matriz\Models\Mantenimiento\tab_estado;
 use Input;
 use Response;
 use DB;
@@ -455,6 +457,21 @@ class documentoController extends Controller
      *
      * @return Response
      */
+    public function municipioTodoPost()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_municipio_detalle::select('id','de_municipio')
+      //->where('in_activo', '=', true)
+      ->where('id_tab_estado', '=', Input::get('estado'))
+      ->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function parroquiaTodo()
     {
       $response['success']  = 'true';
@@ -518,6 +535,33 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_unidad_medida::select('id', 'de_unidad_medida')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function fuentefinanciamiento()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_fuente_financiamiento::select('id', 'de_fuente_financiamiento')->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function estado()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_estado::select('id', 'de_estado')
+      ->where('id_tab_pais', '=', 1)
+      ->orderby('id','ASC')
+      ->get()->toArray();
       return Response::json($response, 200);
     }
 
