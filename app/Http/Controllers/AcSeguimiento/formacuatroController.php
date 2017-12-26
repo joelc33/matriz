@@ -229,6 +229,18 @@ class formacuatroController extends Controller
    *
    * @return Response
    */
+  public function nuevoActividad($id)
+  {
+    $data = json_encode(array("id_tab_ac_ae" => $id));
+
+    return View::make('seguimiento.ac.004.actividad.editar')->with('data',$data);
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
   public function editarActividad($id)
   {
     $data = tab_meta_fisica::select( 'id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
@@ -298,6 +310,7 @@ class formacuatroController extends Controller
         ));
       }
       $tabla = new tab_meta_fisica;
+      $tabla->id_tab_ac_ae = Input::get("ac_ae");
       $tabla->nb_meta = Input::get("actividad");
       $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
       $tabla->tx_prog_anual = Input::get("programado_anual");

@@ -492,7 +492,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::post('datos/storeLista', 'formacuatroController@datosstoreLista');
 		Route::get('actividad/lista/{id}', 'formacuatroController@editar');
 		Route::post('actividad/storeLista', 'formacuatroController@actividadstoreLista');
+		Route::get('actividad/nuevo/{id}', 'formacuatroController@nuevoActividad');
 		Route::get('actividad/editar/{id}', 'formacuatroController@editarActividad');
+		Route::post('actividad/guardar', 'formacuatroController@guardar');
 		Route::post('actividad/guardar/{id}', 'formacuatroController@guardar');
 	});
 	//*Modulo de Accion Centralizada Forma 005*/

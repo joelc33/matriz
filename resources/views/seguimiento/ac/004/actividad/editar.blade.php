@@ -5,9 +5,13 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+@if(empty($data->id))
+
+@else
 //objeto store
 this.store_lista = this.getLista();
 //objeto store
+@endif
 //<Stores de fk>
 this.storeCO_UNIDADES_MEDIDA = this.getStoreCO_UNIDADES_MEDIDA();
 //<Stores de fk>
@@ -18,6 +22,11 @@ this._token = new Ext.form.Hidden({
 	value:'{{ csrf_token() }}'
 });
 //</token>
+
+this.id_tab_ac_ae = new Ext.form.Hidden({
+	name:'ac_ae',
+	value:this.OBJ.id_tab_ac_ae
+});
 
 this.nb_meta = new Ext.form.TextField({
 	fieldLabel:'NOMBRE DE LA ACTIVIDAD',
@@ -249,6 +258,20 @@ this.panelDatos1 = new Ext.Panel({
 	]
 });
 
+@if(empty($data->id))
+
+this.gridPanel_ = new Ext.Panel ({
+	title: 'META FINANCIERA',
+	bodyStyle:'padding:5px;',
+	autoHeight:true,
+	baseCls : 'x-plain',
+	html    : 'Debe gaurdar primero la meta fisica para luego agregar las metas financieras.',
+	cls     : 'icon-autorizacion',
+	region  : 'north'
+});
+
+@else
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -397,6 +420,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })
 });
 
+@endif
+
 this.panel = new Ext.TabPanel({
     activeTab:0,
     height:350,
@@ -419,6 +444,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:0px;',
 	items:[
 		this._token,
+		this.id_tab_ac_ae,
 		this.panel
 	]
 });
@@ -454,8 +480,11 @@ getStoreCO_UNIDADES_MEDIDA:function(){
             ]
     });
     return this.store;
-},
-getLista: function(){
+}
+@if(empty($data->id))
+
+@else
+,getLista: function(){
     this.store = new Ext.data.JsonStore({
     url:'{{ URL::to('tramitetimbre/variable/storeLista') }}/{{ $data->id }}',
     root:'data',
@@ -468,6 +497,7 @@ getLista: function(){
     });
     return this.store;
 }
+@endif
 };
 Ext.onReady(forma004ActividadEditar.main.init, forma004ActividadEditar.main);
 </script>
