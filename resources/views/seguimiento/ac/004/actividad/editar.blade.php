@@ -405,8 +405,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-    {header: 'PRESUPUESTO', width:160,  menuDisabled:true, sortable: true, dataIndex: 'mo_presupuesto'},
-    {header: 'PARTIDA', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'co_partida'},
+    {header: 'PRESUPUESTO', width:160,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_presupuesto'},
+    {header: 'PARTIDA', width:100,  menuDisabled:true, sortable: true, dataIndex: 'co_partida'},
     {header: 'FUENTE DE FINANCIAMIENTO', width:300,  menuDisabled:true, sortable: true, dataIndex: 'de_fuente_financiamiento'},
     ],
     stripeRows: true,
@@ -475,6 +475,18 @@ width:814,
 });
 this.winformPanel_.show();
 forma004ActividadLista.main.mascara.hide();
+
+//Cargar el grid
+this.store_lista.baseParams.paginar = 'si';
+this.store_lista.baseParams._token = '{{ csrf_token() }}';
+this.store_lista.load();
+this.store_lista.on('load',function(){
+forma004ActividadEditar.main.editar.disable();
+forma004ActividadEditar.main.eliminar.disable();
+});
+this.store_lista.on('beforeload',function(){
+panel_detalle.collapse();
+});
 },
 getStoreCO_UNIDADES_MEDIDA:function(){
     this.store = new Ext.data.JsonStore({
@@ -491,7 +503,7 @@ getStoreCO_UNIDADES_MEDIDA:function(){
 @else
 ,getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'{{ URL::to('tramitetimbre/variable/storeLista') }}/{{ $data->id }}',
+    url:'{{ URL::to('ac/seguimiento/004/actividad/financiera/storeLista') }}/{{ $data->id }}',
     root:'data',
     fields:[
     {name: 'id'},
