@@ -265,7 +265,7 @@ this.gridPanel_ = new Ext.Panel ({
 	bodyStyle:'padding:5px;',
 	autoHeight:true,
 	baseCls : 'x-plain',
-	html    : 'Debe gaurdar primero la meta fisica para luego agregar las metas financieras.',
+	html    : 'Debe guardar primero la meta fisica para luego agregar las metas financieras.',
 	cls     : 'icon-autorizacion',
 	region  : 'north'
 });
