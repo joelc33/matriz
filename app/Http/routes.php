@@ -117,6 +117,7 @@ Route::group(['namespace' => 'Auxiliar'], function(){
 		Route::get('municipio', 'documentoController@municipio');
 		Route::get('periodo', 'documentoController@periodo');
 		Route::get('lapso', 'documentoController@lapso');
+		Route::get('unidadmedida', 'documentoController@unidadmedida');
 	});
 });
 //*Modulos de Reportes*/
@@ -487,6 +488,12 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('lista', 'formacuatroController@lista');
 		Route::post('storeLista', 'formacuatroController@storeLista');
 		Route::post('detalle', 'formacuatroController@detalle');
+		Route::get('datos/{id}', 'formacuatroController@datos');
+		Route::post('datos/storeLista', 'formacuatroController@datosstoreLista');
+		Route::get('actividad/lista/{id}', 'formacuatroController@editar');
+		Route::post('actividad/storeLista', 'formacuatroController@actividadstoreLista');
+		Route::get('actividad/editar/{id}', 'formacuatroController@editarActividad');
+		Route::post('actividad/guardar/{id}', 'formacuatroController@guardar');
 	});
 	//*Modulo de Accion Centralizada Forma 005*/
 	Route::group(['prefix' => 'ac/seguimiento/005'], function(){

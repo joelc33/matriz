@@ -203,7 +203,7 @@ class formatresController extends Controller
        ->join('ac_seguimiento.tab_ac_ae as t03', 't01.id_tab_ac_ae', '=', 't03.id')
        ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
        ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
-       ->join('mantenimiento.tab_ac_predefinida as t06', 't03.id_tab_ac_ae_predefinida', '=', 't06.id')
+       ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
        ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
 
@@ -250,7 +250,7 @@ class formatresController extends Controller
      ->join('ac_seguimiento.tab_ac_ae as t03', 't01.id_tab_ac_ae', '=', 't03.id')
      ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
      ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
-     ->join('mantenimiento.tab_ac_predefinida as t06', 't03.id_tab_ac_ae_predefinida', '=', 't06.id')
+     ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
      ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
     ->where('ac_seguimiento.tab_meta_financiera.id', '=', $id)
     ->first();

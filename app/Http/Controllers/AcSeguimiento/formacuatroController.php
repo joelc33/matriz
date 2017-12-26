@@ -100,4 +100,146 @@ class formacuatroController extends Controller
     return View::make('seguimiento.ac.004.detalle')->with('data',$data);
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function datos($id)
+  {
+    $data = tab_ac::select( 'id', 'nu_codigo', 'id_tab_ejecutores', 'id_tab_ejercicio_fiscal', 'id_tab_ac_predefinida',
+       'id_tab_sectores', 'id_tab_estatus', 'id_tab_situacion_presupuestaria',
+       'id_tab_tipo_registro', 'co_new_etapa', 'de_ac', 'mo_ac', 'mo_calculado',
+       'fe_inicio', 'fe_fin', 'inst_mision', 'inst_vision', 'inst_objetivos',
+       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo', 'id_tab_lapso' )
+    ->where('id', '=', $id)
+    ->first();
+
+    return View::make('seguimiento.ac.004.datos.lista')->with('data',$data);
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function datosstoreLista()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_ac = tab_ac_ae::select( 'ac_seguimiento.tab_ac_ae.id', 'id_tab_ac', 'id_tab_ac_ae_predefinida', 'id_tab_ejecutores', 'bien_servicio',
+       'id_tab_unidad_medida', 'meta', 'ponderacion', 'id_tab_tipo_fondo', 'mo_ae',
+       'mo_ae_calculado', 'ac_seguimiento.tab_ac_ae.in_activo', 'nu_numero',
+       'de_nombre', 'de_unidad_medida', 'tx_ejecutor',
+        DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+        DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
+      ->join('mantenimiento.tab_ac_ae_predefinida as t01', 'ac_seguimiento.tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't01.id')
+      ->join('mantenimiento.tab_unidad_medida as t02', 'ac_seguimiento.tab_ac_ae.id_tab_unidad_medida', '=', 't02.id')
+      ->join('mantenimiento.tab_ejecutores as t03', 'ac_seguimiento.tab_ac_ae.id_tab_ejecutores', '=', 't03.id_ejecutor')
+      ->where('id_tab_ac', '=', Input::get('ac'))
+      ->where('ac_seguimiento.tab_ac_ae.in_activo', '=', true);
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_ac->where('de_nombre', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_ac->count();
+        $tab_ac->skip($start)->take($limit);
+        $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac_ae.id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_ac->count();
+        $tab_ac->skip($start)->take($limit);
+        $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac_ae.id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function editar($id)
+  {
+    $data = tab_ac_ae::select( 'id', 'id_tab_ac', 'id_tab_ac_ae_predefinida', 'id_tab_ejecutores', 'bien_servicio',
+       'id_tab_unidad_medida', 'meta', 'ponderacion', 'id_tab_tipo_fondo', 'mo_ae',
+       'mo_ae_calculado', 'fecha_inicio', 'fecha_fin',
+       'in_activo' )
+    ->where('id', '=', $id)
+    ->first();
+    return View::make('seguimiento.ac.004.actividad.lista')->with('data',$data);
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function actividadstoreLista()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_meta_fisica = tab_meta_fisica::select( 'ac_seguimiento.tab_meta_fisica.id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
+       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'ac_seguimiento.tab_meta_fisica.in_activo',
+       'de_unidad_medida', 'in_cargado',
+       DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+       DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
+       ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
+       ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_meta_fisica->where('nb_meta', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_meta_fisica->count();
+        $tab_meta_fisica->skip($start)->take($limit);
+        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_meta_fisica->count();
+        $tab_meta_fisica->skip($start)->take($limit);
+        $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function editarActividad($id)
+  {
+    $data = tab_meta_fisica::select( 'id', 'id_tab_ac_ae', 'codigo', 'nb_meta', 'id_tab_unidad_medida', 'tx_prog_anual',
+       'fecha_inicio', 'fecha_fin', 'nb_responsable', 'in_activo', 'created_at',
+       'updated_at', 'nu_meta_modificada', 'nu_meta_actualizada', 'nu_obtenido',
+       'nu_corte', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle',
+       'in_cargado' )
+    ->where('id', '=', $id)
+    ->first();
+
+    return View::make('seguimiento.ac.004.actividad.editar')->with('data',$data);
+  }
+
 }

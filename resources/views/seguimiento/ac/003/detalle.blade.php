@@ -18,7 +18,7 @@ this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
   handler:function(){
-		addTab('foma003{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/003/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
+		addTab('foma003{!! $data['nu_codigo'] !!}','F003 - A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/003/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}
 });
 

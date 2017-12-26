@@ -24,6 +24,7 @@ use matriz\Models\Mantenimiento\tab_parroquia_detalle;
 use matriz\Models\Mantenimiento\tab_municipio;
 use matriz\Models\Mantenimiento\tab_periodo;
 use matriz\Models\Mantenimiento\tab_lapso;
+use matriz\Models\Mantenimiento\tab_unidad_medida;
 use Input;
 use Response;
 use DB;
@@ -505,6 +506,18 @@ class documentoController extends Controller
       ->where('in_activo', '=', true)
       ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
       ->orderby('id','ASC')->get()->toArray();
+      return Response::json($response, 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function unidadmedida()
+    {
+      $response['success']  = 'true';
+      $response['data']  = tab_unidad_medida::select('id', 'de_unidad_medida')->orderby('id','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
 
