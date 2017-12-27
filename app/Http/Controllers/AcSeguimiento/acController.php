@@ -277,6 +277,7 @@ class acController extends Controller
           $tabla_ac_ae_partida->co_partida = $arreglo_ac_ae_partida->co_partida;
           $tabla_ac_ae_partida->monto = $arreglo_ac_ae_partida->monto;
           $tabla_ac_ae_partida->de_denominacion = $arreglo_ac_ae_partida->de_denominacion;
+          $tabla_ac_ae_partida->id_tab_ejercicio_fiscal = $arreglo_ac_ae_partida->id_tab_ejercicio_fiscal;
           $tabla_ac_ae_partida->in_activo = 'TRUE';
           $tabla_ac_ae_partida->id_tab_origen = 1;
           $tabla_ac_ae_partida->save();
