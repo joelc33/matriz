@@ -20,4 +20,20 @@ class tab_meta_financiera extends Model
 		"pagado" => "required|numeric"
 	);
 
+	public static $validarCrearMeta = array(
+		"municipio" => "required|numeric",
+		"parroquia" => "required|numeric",
+		"presupuesto" => "required|numeric",
+		"partida" => "required",
+		"fuente_financiamiento" => "required|numeric"
+	);
+
+	public static $validarEditarMeta = array(
+		"municipio" => "required|numeric",
+		"parroquia" => "required|numeric",
+		"presupuesto" => "required|numeric",
+		"partida" => "required",
+		"fuente_financiamiento" => "required|numeric"
+	);
+
 }

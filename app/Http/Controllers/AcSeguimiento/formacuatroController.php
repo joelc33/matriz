@@ -340,6 +340,7 @@ class formacuatroController extends Controller
       $tabla->fecha_fin = Input::get("fecha_culminacion");
       $tabla->nb_responsable = Input::get("responsable");
       $tabla->de_desvio = Input::get("desvio");
+      $tabla->id_tab_origen = 2;
       $tabla->in_cargado = false;
       $tabla->in_activo = true;
       $tabla->save();
@@ -455,6 +456,88 @@ class formacuatroController extends Controller
   	->groupBy(DB::raw('1'))
   	->orderby('co_partida','ASC')->get()->toArray();
     return Response::json($response, 200);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardarFinanciera($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_meta_financiera::$validarEditarMeta);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_meta_financiera::find($id);
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->mo_presupuesto = Input::get("presupuesto");
+      $tabla->co_partida = Input::get("partida");
+      $tabla->id_tab_fuente_financiamiento = Input::get("fuente_financiamiento");
+      //$tabla->in_cargado = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_meta_financiera::$validarCrearMeta);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_meta_financiera;
+      $tabla->id_tab_meta_fisica = Input::get("meta_fisica");
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->mo_presupuesto = Input::get("presupuesto");
+      $tabla->co_partida = Input::get("partida");
+      $tabla->id_tab_fuente_financiamiento = Input::get("fuente_financiamiento");
+      $tabla->id_tab_origen = 2;
+      $tabla->in_cargado = false;
+      $tabla->in_activo = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
   }
 
 }

@@ -27,6 +27,10 @@ this._token = new Ext.form.Hidden({
 	value:'{{ csrf_token() }}'
 });
 //</token>
+this.id_tab_meta_fisica = new Ext.form.Hidden({
+	name:'meta_fisica',
+	value:this.OBJ.id_tab_meta_fisica,
+});
 
 this.id_tab_estado = new Ext.form.ComboBox({
 	fieldLabel:'ESTADO',
@@ -141,7 +145,7 @@ this.co_partida = new Ext.form.ComboBox({
 	typeAhead: true,
 	valueField: 'co_partida',
 	displayField:'co_partida',
-	hiddenName:'co_partida',
+	hiddenName:'partida',
 	//readOnly:(this.OBJ.co_partida!='')?true:false,
 	//style:(this.OBJ.co_partida!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
@@ -196,7 +200,7 @@ this.storeCO_FUENTE_FINANCIAMIENTO.load();
 
 this.mo_presupuesto = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO BS.',
-	name:'mo_presupuesto',
+	name:'presupuesto',
 	value:this.OBJ.mo_presupuesto,
 	allowBlank:false,
 	width:200,
@@ -277,6 +281,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+		this.id_tab_meta_fisica,
 		this.id_tab_estado,
 		this.id_tab_municipio_detalle,
 		this.id_tab_parroquia_detalle,
