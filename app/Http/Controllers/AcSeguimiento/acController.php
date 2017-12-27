@@ -4,10 +4,12 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_ac_ae_partida;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\Ac\tab_ac as ac;
 use matriz\Models\Ac\tab_ac_ae as ac_ae;
+use matriz\Models\Ac\tab_ac_ae_partida as ac_ae_partida;
 use matriz\Models\Ac\tab_meta_fisica as ac_ae_mf;
 use matriz\Models\Ac\tab_meta_financiera as ac_ae_mff;
 use matriz\Models\Mantenimiento\tab_lapso;
@@ -235,6 +237,7 @@ class acController extends Controller
       $tabla->nu_em_previsto = $tab_ac->nu_em_previsto;
       $tabla->tx_re_esperado = $tab_ac->tx_re_esperado;
       $tabla->id_tab_lapso = $data->id;
+      $tabla->id_tab_origen = 1;
       $tabla->in_activo = 'TRUE';
       $tabla->save();
 
@@ -254,8 +257,31 @@ class acController extends Controller
         $tabla_ac_ae->fecha_inicio = $arreglo_ac_ae->fecha_inicio;
         $tabla_ac_ae->fecha_fin = $arreglo_ac_ae->fecha_fin;
         $tabla_ac_ae->objetivo_institucional = $arreglo_ac_ae->objetivo_institucional;
+        $tabla_ac_ae->id_tab_origen = 1;
         $tabla_ac_ae->in_activo = 'TRUE';
         $tabla_ac_ae->save();
+
+        $ac_ae_partida = ac_ae_partida::select( 'id_accion_centralizada', 'id_accion', 'co_partida', 'monto', 'edo_reg',
+       'fecha_creacion', 'fecha_actualizacion', 'id_tab_ejercicio_fiscal',
+       'nu_aplicacion', 'de_denominacion')
+        ->where('id_accion_centralizada', '=', $arreglo_ac_ae->id_accion_centralizada)
+        ->where('id_accion', '=', $arreglo_ac_ae->id_accion)
+        ->where('edo_reg', '=', true)
+        ->orderby('co_partida','ASC')
+        ->get();
+
+        foreach ($ac_ae_partida as $arreglo_ac_ae_partida ) {
+
+          $tabla_ac_ae_partida= new tab_ac_ae_partida;
+          $tabla_ac_ae_partida->id_tab_ac_ae = $tabla_ac_ae->id;
+          $tabla_ac_ae_partida->co_partida = $arreglo_ac_ae_partida->co_partida;
+          $tabla_ac_ae_partida->monto = $arreglo_ac_ae_partida->monto;
+          $tabla_ac_ae_partida->de_denominacion = $arreglo_ac_ae_partida->de_denominacion;
+          $tabla_ac_ae_partida->in_activo = 'TRUE';
+          $tabla_ac_ae_partida->id_tab_origen = 1;
+          $tabla_ac_ae_partida->save();
+
+        }
 
         $ac_ae_mf = ac_ae_mf::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta',
        'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable',
@@ -277,6 +303,7 @@ class acController extends Controller
           $tabla_ac_ae_mf->fecha_inicio = $arreglo_ac_ae_mf->fecha_inicio;
           $tabla_ac_ae_mf->fecha_fin = $arreglo_ac_ae_mf->fecha_fin;
           $tabla_ac_ae_mf->nb_responsable = $arreglo_ac_ae_mf->nb_responsable;
+          $tabla_ac_ae_mf->id_tab_origen = 1;
           $tabla_ac_ae_mf->in_activo = 'TRUE';
           $tabla_ac_ae_mf->in_cargado = 'FALSE';
           $tabla_ac_ae_mf->save();
@@ -297,6 +324,7 @@ class acController extends Controller
             $tabla_ac_ae_mff->mo_presupuesto = $arreglo_ac_ae_mff->mo_presupuesto;
             $tabla_ac_ae_mff->co_partida = $arreglo_ac_ae_mff->co_partida;
             $tabla_ac_ae_mff->id_tab_fuente_financiamiento = $arreglo_ac_ae_mff->co_fuente;
+            $tabla_ac_ae_mff->id_tab_origen = 1;
             $tabla_ac_ae_mff->in_activo = 'TRUE';
             $tabla_ac_ae_mff->in_cargado = 'FALSE';
             $tabla_ac_ae_mff->save();
