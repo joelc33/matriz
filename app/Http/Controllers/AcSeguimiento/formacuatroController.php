@@ -4,6 +4,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_ac_ae_partida;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use View;
@@ -411,9 +412,9 @@ class formacuatroController extends Controller
   public function nuevoFinanciera($id)
   {
 
-    $data = json_encode(array(
-      "id_tab_meta_fisica" => $id
-    ));
+    $data = tab_meta_fisica::select('id as id_tab_meta_fisica', 'id_tab_ac_ae')
+    ->where('id', '=', $id)
+    ->first();
 
     return View::make('seguimiento.ac.004.financiera.editar')
     ->with('data',$data);
@@ -427,16 +428,33 @@ class formacuatroController extends Controller
   public function editarFinanciera($id)
   {
 
-    $data = tab_meta_financiera::select('ac_seguimiento.tab_meta_financiera.id', 'id_tab_meta_fisica', 'id_tab_municipio_detalle', 'id_tab_parroquia_detalle',
+    $data = tab_meta_financiera::select('ac_seguimiento.tab_meta_financiera.id', 'id_tab_meta_fisica', 'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle', 'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
        'mo_presupuesto', 'co_partida', 'id_tab_fuente_financiamiento', 'ac_seguimiento.tab_meta_financiera.in_activo',
-       'in_cargado', 'mo_modificado_anual', 'mo_actualizado_anual',
-       'mo_comprometido', 'mo_causado', 'mo_pagado', 'id_tab_estado')
-       ->join('mantenimiento.tab_municipio_detalle as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle', '=', 't01.id')
+       'ac_seguimiento.tab_meta_financiera.in_cargado', 'mo_modificado_anual', 'mo_actualizado_anual',
+       'mo_comprometido', 'mo_causado', 'mo_pagado', 'id_tab_estado', 'id_tab_ac_ae')
+    ->join('mantenimiento.tab_municipio_detalle as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle', '=', 't01.id')
+    ->join('ac_seguimiento.tab_meta_fisica as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't02.id')
     ->where('ac_seguimiento.tab_meta_financiera.id', '=', $id)
     ->first();
 
     return View::make('seguimiento.ac.004.financiera.editar')
     ->with('data',$data);
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function partida()
+  {
+    $response['success']  = 'true';
+    $response['data']  = tab_ac_ae_partida::select(DB::raw('left(co_partida, 3) as co_partida'))
+  	->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+  	->where('in_activo', '=', true)
+  	->groupBy(DB::raw('1'))
+  	->orderby('co_partida','ASC')->get()->toArray();
+    return Response::json($response, 200);
   }
 
 }

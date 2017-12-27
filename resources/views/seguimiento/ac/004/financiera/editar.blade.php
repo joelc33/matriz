@@ -155,9 +155,10 @@ this.co_partida = new Ext.form.ComboBox({
 	allowBlank:false
 });
 
-this.storeCO_PARTIDA.load({
+/*this.storeCO_PARTIDA.load({
 		params: {id_accion_centralizada:this.OBJ.id_accion_centralizada,co_ac_acc_espec:this.OBJ.co_ac_acc_espec}
-	});
+	});*/
+this.storeCO_PARTIDA.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
 	objCMB: this.co_partida,
 	value:  this.OBJ.co_partida,
@@ -339,11 +340,12 @@ getStoreCO_PARROQUIA:function(){
 },
 getStoreCO_PARTIDA:function(){
     this.store = new Ext.data.JsonStore({
-        url:'formulacion/modulos/metas/orm.php',
+        url:'{{ URL::to('ac/seguimiento/004/actividad/financiera/partida') }}',
         root:'data',
-	baseParams:{
-		op:4
-	},
+				baseParams:{
+					ac_ae:{{ $data->id_tab_ac_ae }},
+					_token: '{{ csrf_token() }}',
+				},
         fields:[
             {name: 'co_partida'}
             ]

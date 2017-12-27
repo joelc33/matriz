@@ -504,6 +504,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('actividad/financiera/editar/{id}', 'formacuatroController@editarFinanciera');
 		Route::post('actividad/financiera/guardar', 'formacuatroController@guardarFinanciera');
 		Route::post('actividad/financiera/guardar/{id}', 'formacuatroController@guardarFinanciera');
+		Route::post('actividad/financiera/partida', 'formacuatroController@partida');
 	});
 	//*Modulo de Accion Centralizada Forma 005*/
 	Route::group(['prefix' => 'ac/seguimiento/005'], function(){
