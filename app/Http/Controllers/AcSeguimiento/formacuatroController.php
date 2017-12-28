@@ -200,7 +200,8 @@ class formacuatroController extends Controller
        DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
        DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
        ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
-       ->where('id_tab_ac_ae', '=', Input::get('ac_ae'));
+       ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+       ->where('ac_seguimiento.tab_meta_fisica.in_activo', '=', true);
 
       if (Input::get("BuscarBy")=="true") {
 
@@ -380,7 +381,8 @@ class formacuatroController extends Controller
        'mo_presupuesto', 'co_partida', 'id_tab_fuente_financiamiento', 'ac_seguimiento.tab_meta_financiera.in_activo',
        'ac_seguimiento.tab_meta_financiera.in_cargado', 'de_fuente_financiamiento' )
        ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
-       ->where('id_tab_meta_fisica', '=', $id);
+       ->where('id_tab_meta_fisica', '=', $id)
+       ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true);
 
       if (Input::get("BuscarBy")=="true") {
 
@@ -537,6 +539,67 @@ class formacuatroController extends Controller
           'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
         ));
           }
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function eliminar()
+  {
+    DB::beginTransaction();
+    try {
+      $tabla = tab_meta_fisica::find(Input::get("id"));
+      $tabla->in_activo = FALSE;
+      $tabla->save();
+
+      $tabla_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', Input::get('id'))
+      ->update(array('in_activo' => FALSE));
+
+      DB::commit();
+
+      $response['success']  = 'true';
+      $response['msg']  = 'Registro borrado con Exito!';
+      return Response::json($response, 200);
+
+    }catch (\Illuminate\Database\QueryException $e)
+    {
+      DB::rollback();
+
+      $response['success']  = 'false';
+      $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+      return Response::json($response, 200);
+    }
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function eliminarFinanciera()
+  {
+    DB::beginTransaction();
+    try {
+      $tabla = tab_meta_financiera::find(Input::get("id"));
+      $tabla->in_activo = FALSE;
+      $tabla->save();
+
+      DB::commit();
+
+      $response['success']  = 'true';
+      $response['msg']  = 'Registro borrado con Exito!';
+      return Response::json($response, 200);
+
+    }catch (\Illuminate\Database\QueryException $e)
+    {
+      DB::rollback();
+
+      $response['success']  = 'false';
+      $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+      return Response::json($response, 200);
     }
   }
 

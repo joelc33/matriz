@@ -499,12 +499,14 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('actividad/editar/{id}', 'formacuatroController@editarActividad');
 		Route::post('actividad/guardar', 'formacuatroController@guardar');
 		Route::post('actividad/guardar/{id}', 'formacuatroController@guardar');
+		Route::post('actividad/eliminar', 'formacuatroController@eliminar');
 		Route::post('actividad/financiera/storeLista/{id}', 'formacuatroController@financierastoreLista');
 		Route::get('actividad/financiera/nuevo/{id}', 'formacuatroController@nuevoFinanciera');
 		Route::get('actividad/financiera/editar/{id}', 'formacuatroController@editarFinanciera');
 		Route::post('actividad/financiera/guardar', 'formacuatroController@guardarFinanciera');
 		Route::post('actividad/financiera/guardar/{id}', 'formacuatroController@guardarFinanciera');
 		Route::post('actividad/financiera/partida', 'formacuatroController@partida');
+		Route::post('actividad/financiera/eliminar', 'formacuatroController@eliminarFinanciera');
 	});
 	//*Modulo de Accion Centralizada Forma 005*/
 	Route::group(['prefix' => 'ac/seguimiento/005'], function(){
