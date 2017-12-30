@@ -113,7 +113,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: MARCO NORMATIVO INSTITUCIONAL',
+    title:'F001: MARCO NORMATIVO INSTITUCIONAL',
     modal:true,
     constrain:true,
 width:614,

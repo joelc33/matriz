@@ -513,6 +513,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::get('lista', 'formacincoController@lista');
 		Route::post('storeLista', 'formacincoController@storeLista');
 		Route::post('detalle', 'formacincoController@detalle');
+		Route::get('editar/{id}', 'formacincoController@datos');
+		Route::post('guardar', 'formacincoController@guardar');
+		Route::post('guardar/{id}', 'formacincoController@guardar');
 	});
 	//*Modulo de Accion Centralizada Ejecucion*/
 	Route::group(['prefix' => 'ac/seguimiento/ejecucion'], function(){

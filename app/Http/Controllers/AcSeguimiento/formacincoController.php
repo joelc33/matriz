@@ -102,4 +102,22 @@ class formacincoController extends Controller
     return View::make('seguimiento.ac.005.detalle')->with('data',$data);
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function datos($id)
+  {
+    $data = tab_ac::select( 'id', 'nu_codigo', 'id_tab_ejecutores', 'id_tab_ejercicio_fiscal', 'id_tab_ac_predefinida',
+       'id_tab_sectores', 'id_tab_estatus', 'id_tab_situacion_presupuestaria',
+       'id_tab_tipo_registro', 'co_new_etapa', 'de_ac', 'mo_ac', 'mo_calculado',
+       'fe_inicio', 'fe_fin', 'inst_mision', 'inst_vision', 'inst_objetivos',
+       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo', 'id_tab_lapso' )
+    ->where('id', '=', $id)
+    ->first();
+
+    return View::make('seguimiento.ac.005.datos.editar')->with('data',$data);
+  }
+
 }

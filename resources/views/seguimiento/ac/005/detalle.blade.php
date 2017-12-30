@@ -17,8 +17,18 @@ this.fieldset2 = new Ext.form.FieldSet({
 this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
-  handler:function(){
+  /*handler:function(){
 		addTab('foma005{!! $data['nu_codigo'] !!}','F005 - A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/005/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
+	}*/
+	handler:function(){
+	this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma005Lista.main.mascara.show();
+			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/005/editar') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
 	}
 });
 
@@ -26,7 +36,7 @@ this.cerrar = new Ext.Button({
 	text:'Cerrar',
 	iconCls: 'icon-guardar',
   handler:function(){
-		addTab('foma005'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
+		addTab('foma005'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/005/datos') }}/'+this.OBJ.id,'load','icon-editar','');
 	}
 });
 
