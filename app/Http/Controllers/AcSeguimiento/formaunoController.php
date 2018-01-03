@@ -53,7 +53,9 @@ class formaunoController extends Controller
       ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
       'ac_seguimiento.tab_ac.in_activo',
       DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' );
+      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' )
+      ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
 
       if (Input::get("BuscarBy")=="true") {
 
@@ -74,7 +76,7 @@ class formaunoController extends Controller
 
       return Response::json($response, 200);
     } catch (\Illuminate\Database\QueryException $e) {
-      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 200);
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 500);
     }
   }
 
