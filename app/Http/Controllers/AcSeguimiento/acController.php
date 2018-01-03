@@ -67,10 +67,15 @@ class acController extends Controller
       ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
       ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
 
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_ac->where('ac_seguimiento.tab_ac.id_tab_ejecutores', '=', Session::get('ejecutor'));
+      }
+
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_ac->where('de_aplicacion', 'ILIKE', "%$variable%");
+          $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
