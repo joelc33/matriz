@@ -48,19 +48,24 @@ class formaunoController extends Controller
       $variable = Input::get('variable');
 
       $tab_ac = $this->tab_ac
-      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
       ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
       ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
       'ac_seguimiento.tab_ac.in_activo',
       DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' )
+      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac', 'in_001', 'ac_seguimiento.tab_ac.id_ejecutor' )
       ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
       ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
+
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_ac->where('ac_seguimiento.tab_ac.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+      }
 
       if (Input::get("BuscarBy")=="true") {
 
         if($variable!=""){
-          $tab_ac->where('de_aplicacion', 'ILIKE', "%$variable%");
+          $tab_ac->where('nu_codigo', 'ILIKE', "%$variable%");
         }
 
         $response['success']  = 'true';
@@ -87,7 +92,7 @@ class formaunoController extends Controller
   */
   public function detalle()
   {
-    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
     ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
     ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
     'ac_seguimiento.tab_ac.in_activo',
@@ -141,6 +146,7 @@ class formaunoController extends Controller
       $tabla->inst_mision = Input::get("mision");
       $tabla->inst_vision = Input::get("vision");
       $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_001 = true;
       $tabla->save();
 
       DB::commit();

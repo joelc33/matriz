@@ -82,7 +82,7 @@ class autenticarController extends Controller
             ->join('mantenimiento.tab_ejecutores as t24','t24.id','=','t29.id_tab_ejecutores')
             ->join('autenticacion.tab_usuario_rol as t05','t05.id_tab_usuarios','=','autenticacion.tab_usuarios.id')
             ->select('autenticacion.tab_usuarios.id', 'id_ejecutor', 'id_tab_rol',
-            DB::raw('t24.id as co_ejecutores'), 'da_login', 'da_password')
+            DB::raw('t29.id_tab_ejecutores'), 'da_login', 'da_password')
             ->where('autenticacion.tab_usuarios.id', '=', Auth::user()->id)
             ->where('autenticacion.tab_usuarios.in_estatus', '=', TRUE)
             ->first();
@@ -96,7 +96,7 @@ class autenticarController extends Controller
             Session::put('usuario', $data->id);
             Session::put('rol', $data->id_tab_rol);
             Session::put('ejecutor', $data->id_ejecutor);
-            Session::put('id_tab_ejecutores', $data->co_ejecutores);
+            Session::put('id_tab_ejecutores', $data->id_tab_ejecutores);
             Session::put( array('credencial' => $credencial));
 
             /*Uso para poa*/
@@ -110,10 +110,10 @@ class autenticarController extends Controller
             $_SESSION['co_usuario'] = $data->id;
             $_SESSION['co_rol'] = $data->id_tab_rol;
             $_SESSION['id_ejecutor'] = $data->id_ejecutor;
-            $_SESSION['co_ejecutores'] = $data->co_ejecutores;
+            $_SESSION['co_ejecutores'] = $data->id_tab_ejecutores;
 
             $_SESSION['spe_session']=array();
-      			array_push($_SESSION['spe_session'], array( 'estatus' => 'OK', 'co_usuario' => $data->id, 'co_rol' => $data->id_tab_rol, 'id_ejecutor' => $data->id_ejecutor, 'co_ejecutores' => $data->co_ejecutores, $credencial));
+      			array_push($_SESSION['spe_session'], array( 'estatus' => 'OK', 'co_usuario' => $data->id, 'co_rol' => $data->id_tab_rol, 'id_ejecutor' => $data->id_ejecutor, 'co_ejecutores' => $data->id_tab_ejecutores, $credencial));
             session_write_close();
             /*fin*/
 

@@ -52,14 +52,19 @@ class formacincoController extends Controller
       $variable = Input::get('variable');
 
       $tab_ac = $this->tab_ac
-      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
       ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
       ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
       'ac_seguimiento.tab_ac.in_activo',
       DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' )
+      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac', 'in_005', 'ac_seguimiento.tab_ac.id_ejecutor' )
       ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
       ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
+
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_ac->where('ac_seguimiento.tab_ac.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+      }
 
       if (Input::get("BuscarBy")=="true") {
 
@@ -92,7 +97,7 @@ class formacincoController extends Controller
   */
   public function detalle()
   {
-    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
     ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
     ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
     'ac_seguimiento.tab_ac.in_activo',
@@ -115,11 +120,99 @@ class formacincoController extends Controller
        'id_tab_sectores', 'id_tab_estatus', 'id_tab_situacion_presupuestaria',
        'id_tab_tipo_registro', 'co_new_etapa', 'de_ac', 'mo_ac', 'mo_calculado',
        'fe_inicio', 'fe_fin', 'inst_mision', 'inst_vision', 'inst_objetivos',
-       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo', 'id_tab_lapso' )
+       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo',
+       'created_at', 'updated_at', 'id_tab_lapso', 'id_tab_origen', 'pp_anual',
+       'tp_indicador', 'nb_indicador_gestion', 'de_valor_obtenido',
+       'de_valor_objetivo', 'nu_cumplimiento', 'de_indicador_descripcion',
+       'de_formula' )
     ->where('id', '=', $id)
     ->first();
 
     return View::make('seguimiento.ac.005.datos.editar')->with('data',$data);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar005);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find($id);
+      $tabla->pp_anual = Input::get("programado_anual");
+      $tabla->tp_indicador = Input::get("tipo_indicador");
+      $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
+      $tabla->de_valor_obtenido = Input::get("valor_objetivo");
+      $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+      $tabla->nu_cumplimiento = Input::get("cumplimiento");
+      $tabla->de_indicador_descripcion = Input::get("indicador");
+      $tabla->de_formula = Input::get("formula");
+      $tabla->in_005 = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_ac;
+      $tabla->pp_anual = Input::get("programado_anual");
+      $tabla->tp_indicador = Input::get("tipo_indicador");
+      $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
+      $tabla->de_valor_obtenido = Input::get("valor_objetivo");
+      $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+      $tabla->nu_cumplimiento = Input::get("cumplimiento");
+      $tabla->de_indicador_descripcion = Input::get("indicador");
+      $tabla->de_formula = Input::get("formula");
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
   }
 
 }

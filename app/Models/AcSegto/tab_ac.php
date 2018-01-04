@@ -22,4 +22,16 @@ class tab_ac extends Model
 		"vision" => "required",
 		"objetivos" => "required"
 	);
+
+	public static $validarEditar005 = array(
+		"programado_anual" => "required",
+		"tipo_indicador" => "required",
+		"nombre_indicador" => "required",
+		"valor_objetivo" => "required",
+		"valor_obtenido" => "required",
+		"cumplimiento" => "required",
+		"indicador" => "required",
+		"formula" => "required"
+	);
+
 }

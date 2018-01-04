@@ -15,7 +15,7 @@ this._token = new Ext.form.Hidden({
 this.de_programado_anual = new Ext.form.TextArea({
 	fieldLabel: 'PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL',
 	name: 'programado_anual',
-	value:this.OBJ.de_programado_anual,
+	value:this.OBJ.pp_anual,
 	allowBlank: false,
 	width:400,
 	height: 100,
@@ -34,7 +34,7 @@ this.tp_indicador = new Ext.form.TextField({
 this.nb_indicador = new Ext.form.TextField({
 	fieldLabel:'NOMBRE DEL INDICADOR',
 	name:'nombre_indicador',
-	value:this.OBJ.nb_indicador,
+	value:this.OBJ.nb_indicador_gestion,
 	width:400,
 	maxLength: 600,
 	allowBlank:false
@@ -43,7 +43,7 @@ this.nb_indicador = new Ext.form.TextField({
 this.valor_objetivo = new Ext.form.TextField({
 	fieldLabel:'VALOR OBJETIVO',
 	name:'valor_objetivo',
-	value:this.OBJ.valor_objetivo,
+	value:this.OBJ.de_valor_objetivo,
 	width:400,
 	maxLength: 600,
 	allowBlank:false
@@ -52,7 +52,7 @@ this.valor_objetivo = new Ext.form.TextField({
 this.valor_obtenido = new Ext.form.TextField({
 	fieldLabel:'VALOR OBTENIDO',
 	name:'valor_obtenido',
-	value:this.OBJ.valor_obtenido,
+	value:this.OBJ.de_valor_obtenido,
 	width:400,
 	maxLength: 600,
 	allowBlank:false
@@ -72,7 +72,7 @@ this.nu_cumplimiento = new Ext.form.NumberField({
 this.de_indicador = new Ext.form.TextField({
 	fieldLabel:'DESCRIPCIÓN DEL INDICADOR',
 	name:'indicador',
-	value:this.OBJ.de_indicador,
+	value:this.OBJ.de_indicador_descripcion,
 	width:400,
 	maxLength: 600,
 	allowBlank:false

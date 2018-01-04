@@ -50,14 +50,19 @@ class formadosController extends Controller
       $variable = Input::get('variable');
 
       $tab_ac = $this->tab_ac
-      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+      ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
       ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
       ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
       'ac_seguimiento.tab_ac.in_activo',
       DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac' )
+      DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac', 'ac_seguimiento.tab_ac.id_ejecutor' )
       ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
       ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
+
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_ac->where('ac_seguimiento.tab_ac.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+      }
 
       if (Input::get("BuscarBy")=="true") {
 
@@ -89,7 +94,7 @@ class formadosController extends Controller
   */
   public function detalle()
   {
-    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id_ejecutor')
+    $data = tab_ac::join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
     ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
     ->select( 'ac_seguimiento.tab_ac.id', 'tx_ejecutor', 'ac_seguimiento.tab_ac.id_tab_ejecutores',
     'ac_seguimiento.tab_ac.in_activo',
@@ -139,7 +144,7 @@ class formadosController extends Controller
         DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin") )
       ->join('mantenimiento.tab_ac_ae_predefinida as t01', 'ac_seguimiento.tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't01.id')
       ->join('mantenimiento.tab_unidad_medida as t02', 'ac_seguimiento.tab_ac_ae.id_tab_unidad_medida', '=', 't02.id')
-      ->join('mantenimiento.tab_ejecutores as t03', 'ac_seguimiento.tab_ac_ae.id_tab_ejecutores', '=', 't03.id_ejecutor')
+      ->join('mantenimiento.tab_ejecutores as t03', 'ac_seguimiento.tab_ac_ae.id_tab_ejecutores', '=', 't03.id')
       ->where('id_tab_ac', '=', Input::get('ac'))
       ->where('ac_seguimiento.tab_ac_ae.in_activo', '=', true);
 
