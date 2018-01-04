@@ -27,97 +27,19 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
-//Agregar un registro
-this.nuevo = new Ext.Button({
-    text:'Nuevo',
-    iconCls: 'icon-nuevo',
-    handler:function(){
-        forma004Lista.main.mascara.show();
-        this.msg = Ext.get('formularioacseguimiento');
-        this.msg.load({
-         url:"{{ URL::to('ac/seguimiento/nuevo') }}",
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
 //Editar un registro
-this.editar= new Ext.Button({
+this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-	this.codigo  = forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma004Lista.main.mascara.show();
-        this.msg = Ext.get('formularioacseguimiento');
-        this.msg.load({
-         url:"{{ URL::to('ac/seguimiento/editar') }}/"+this.codigo,
-         scripts: true,
-         text: "Cargando.."
-        });
+			this.codigo  = forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			bajar.load({
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+			});
     }
 });
 
-//Desabilitar un registro
-this.eliminar= new Ext.Button({
-    text:'Deshabilitar',
-    iconCls: 'icon-cancelar',
-    handler:function(){
-	this.codigo  = forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('seguimiento/ac/eliminar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    forma004Lista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                forma004Lista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.habilitar= new Ext.Button({
-    text:'Habilitar',
-    iconCls: 'icon-fin',
-    handler:function(){
-	this.codigo  = forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('seguimiento/ac/habilitar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    forma004Lista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                forma004Lista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.editar.disable();
-this.eliminar.disable();
-this.habilitar.disable();
+this.ficha.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -182,7 +104,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.editar,'-',
+			  this.ficha,'-',
 			@endif
 				this.buscador
     ],
@@ -199,9 +121,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma004Lista.main.editar.enable();
-			forma004Lista.main.habilitar.enable();
-			forma004Lista.main.eliminar.enable();
+			forma004Lista.main.ficha.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -261,9 +181,7 @@ this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma004Lista.main.editar.disable();
-forma004Lista.main.habilitar.disable();
-forma004Lista.main.eliminar.disable();
+forma004Lista.main.ficha.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
