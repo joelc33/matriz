@@ -27,28 +27,13 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
-//Agregar un registro
-this.nuevo = new Ext.Button({
-    text:'Nuevo',
-    iconCls: 'icon-nuevo',
-    handler:function(){
-        acejecucionLista.main.mascara.show();
-        this.msg = Ext.get('formularioacseguimiento');
-        this.msg.load({
-         url:"{{ URL::to('ac/seguimiento/nuevo') }}",
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Editar',
-    iconCls: 'icon-editar',
+    text:'Ver Ficha',
+    iconCls: 'icon-pdf',
     handler:function(){
-	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	acejecucionLista.main.mascara.show();
+	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma001Lista.main.mascara.show();
         this.msg = Ext.get('formularioacseguimiento');
         this.msg.load({
          url:"{{ URL::to('ac/seguimiento/editar') }}/"+this.codigo,
@@ -57,67 +42,6 @@ this.editar= new Ext.Button({
         });
     }
 });
-
-//Desabilitar un registro
-this.eliminar= new Ext.Button({
-    text:'Deshabilitar',
-    iconCls: 'icon-cancelar',
-    handler:function(){
-	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('seguimiento/ac/eliminar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    acejecucionLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                acejecucionLista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.habilitar= new Ext.Button({
-    text:'Habilitar',
-    iconCls: 'icon-fin',
-    handler:function(){
-	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('seguimiento/ac/habilitar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    acejecucionLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                acejecucionLista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.editar.disable();
-this.eliminar.disable();
-this.habilitar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -182,21 +106,21 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.habilitar,'-',
+			  this.editar,'-',
 			@endif
 				this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Código', width:80,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
-    {header: 'Denominación', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
-		{header: 'P. Inicial', width:100,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
-    {header: 'P. Modificado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
-    {header: 'P. Actualizado (Total)', width:100,  menuDisabled:true, sortable: true, dataIndex: 'in_activo'},
-		{header: 'Comprometido', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
-		{header: 'Causado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
-		{header: 'Pagado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
+		{header: 'Código', width:80,  menuDisabled:true, sortable: true, dataIndex: 'co_partida'},
+    {header: 'Denominación', width:200,  menuDisabled:true, sortable: true, dataIndex: 'tx_nombre'},
+		{header: 'P. Inicial', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_presupuesto'},
+    {header: 'P. Modificado', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_modificado_anual'},
+    {header: 'P. Actualizado (Total)', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_actualizado_anual'},
+		{header: 'Comprometido', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_comprometido'},
+		{header: 'Causado', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_causado'},
+		{header: 'Pagado', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_pagado'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -278,23 +202,14 @@ getLista: function(){
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
-				{name: 'id_tab_ejecutores'},
-				{name: 'id_tab_ejecutores'},
-		    {name: 'tx_ejecutor'},
-				{name: 'nu_codigo'},
-		    {name: 'de_ac'},
-				{
-						name: 'ejecutor',
-						convert: function(v, r) {
-								return r.id_tab_ejecutores + ' - ' + r.tx_ejecutor;
-						}
-				},
-				{
-						name: 'periodo',
-						convert: function(v, r) {
-								return r.fe_inicio + ' - ' + r.fe_fin;
-						}
-				}
+				{name: 'co_partida'},
+				{name: 'mo_presupuesto'},
+		    {name: 'tx_nombre'},
+				{name: 'mo_modificado_anual'},
+		    {name: 'mo_actualizado_anual'},
+				{name: 'mo_comprometido'},
+				{name: 'mo_causado'},
+				{name: 'mo_pagado'}
 	    ]
     });
     return this.store;
