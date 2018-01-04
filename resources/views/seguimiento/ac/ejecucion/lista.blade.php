@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("forma001Lista");
+Ext.ns("acejecucionLista");
 function change(val){
 	if(val==true){
 	    return '<span style="color:green;">Activo</span>';
@@ -16,7 +16,7 @@ function movimiento(val){
 	}
 return val;
 };
-forma001Lista.main = {
+acejecucionLista.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -32,7 +32,7 @@ this.nuevo = new Ext.Button({
     text:'Nuevo',
     iconCls: 'icon-nuevo',
     handler:function(){
-        forma001Lista.main.mascara.show();
+        acejecucionLista.main.mascara.show();
         this.msg = Ext.get('formularioacseguimiento');
         this.msg.load({
          url:"{{ URL::to('ac/seguimiento/nuevo') }}",
@@ -47,8 +47,8 @@ this.editar= new Ext.Button({
     text:'Editar',
     iconCls: 'icon-editar',
     handler:function(){
-	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma001Lista.main.mascara.show();
+	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	acejecucionLista.main.mascara.show();
         this.msg = Ext.get('formularioacseguimiento');
         this.msg.load({
          url:"{{ URL::to('ac/seguimiento/editar') }}/"+this.codigo,
@@ -63,7 +63,7 @@ this.eliminar= new Ext.Button({
     text:'Deshabilitar',
     iconCls: 'icon-cancelar',
     handler:function(){
-	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
@@ -71,17 +71,17 @@ this.eliminar= new Ext.Button({
             url:'{{ URL::to('seguimiento/ac/eliminar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                id: acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=="true"){
-		    forma001Lista.main.store_lista.load();
+		    acejecucionLista.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
                 }
-                forma001Lista.main.mascara.hide();
+                acejecucionLista.main.mascara.hide();
             }});
 	}});
     }
@@ -91,7 +91,7 @@ this.habilitar= new Ext.Button({
     text:'Habilitar',
     iconCls: 'icon-fin',
     handler:function(){
-	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
@@ -99,17 +99,17 @@ this.habilitar= new Ext.Button({
             url:'{{ URL::to('seguimiento/ac/habilitar') }}',
             params:{
 		_token: '{{ csrf_token() }}',
-                id: forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+                id: acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success=="true"){
-		    forma001Lista.main.store_lista.load();
+		    acejecucionLista.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
                 }
-                forma001Lista.main.mascara.hide();
+                acejecucionLista.main.mascara.hide();
             }});
 	}});
     }
@@ -147,10 +147,10 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		forma001Lista.main.store_lista.baseParams={};
-		forma001Lista.main.store_lista.baseParams.paginar = 'si';
-		forma001Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		forma001Lista.main.store_lista.load();
+		acejecucionLista.main.store_lista.baseParams={};
+		acejecucionLista.main.store_lista.baseParams.paginar = 'si';
+		acejecucionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		acejecucionLista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -162,12 +162,12 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			forma001Lista.main.store_lista.baseParams={}
-			forma001Lista.main.store_lista.baseParams.BuscarBy = true;
-			forma001Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			forma001Lista.main.store_lista.baseParams[this.paramName] = v;
-			forma001Lista.main.store_lista.baseParams.paginar = 'si';
-			forma001Lista.main.store_lista.load();
+			acejecucionLista.main.store_lista.baseParams={}
+			acejecucionLista.main.store_lista.baseParams.BuscarBy = true;
+			acejecucionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			acejecucionLista.main.store_lista.baseParams[this.paramName] = v;
+			acejecucionLista.main.store_lista.baseParams.paginar = 'si';
+			acejecucionLista.main.store_lista.load();
 		}
 	}
 });
@@ -189,19 +189,22 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'periodo'},
-    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
-		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
-    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
-    {header: '% Ejecutado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
+		{header: 'Código', width:80,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
+    {header: 'Denominación', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
+		{header: 'P. Inicial', width:100,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
+    {header: 'P. Modificado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
+    {header: 'P. Actualizado (Total)', width:100,  menuDisabled:true, sortable: true, dataIndex: 'in_activo'},
+		{header: 'Comprometido', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
+		{header: 'Causado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
+		{header: 'Pagado', width:100,  menuDisabled:true, sortable: true, dataIndex: 'de_ac'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma001Lista.main.editar.enable();
-			forma001Lista.main.habilitar.enable();
-			forma001Lista.main.eliminar.enable();
+			acejecucionLista.main.editar.enable();
+			acejecucionLista.main.habilitar.enable();
+			acejecucionLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -234,7 +237,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 /*Evento Doble Click*/
 this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	panel_detalle.toggleCollapse(true);
-	this.record = forma001Lista.main.store_lista.getAt(row);
+	this.record = acejecucionLista.main.store_lista.getAt(row);
 	this.codigo = this.record.data["id"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
@@ -254,16 +257,16 @@ this.panel = new Ext.Panel({
 	]
 });
 
-this.panel.render("contenedorforma001Lista");
+this.panel.render("contenedoracejecucionLista");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma001Lista.main.editar.disable();
-forma001Lista.main.habilitar.disable();
-forma001Lista.main.eliminar.disable();
+acejecucionLista.main.editar.disable();
+acejecucionLista.main.habilitar.disable();
+acejecucionLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -271,7 +274,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-	    url:'{{ URL::to('ac/seguimiento/001/storeLista') }}',
+	    url:'{{ URL::to('ac/seguimiento/ejecucion/storeLista') }}',
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
@@ -297,7 +300,7 @@ getLista: function(){
     return this.store;
 }
 };
-Ext.onReady(forma001Lista.main.init, forma001Lista.main);
+Ext.onReady(acejecucionLista.main.init, acejecucionLista.main);
 </script>
-<div id="contenedorforma001Lista"></div>
+<div id="contenedoracejecucionLista"></div>
 <div id="formularioacseguimiento"></div>
