@@ -69,7 +69,7 @@ class ejecucionController extends Controller
 
       $rol_planificador = array(3, 8);
       if (in_array(Session::get('rol'), $rol_planificador)) {
-          $tab_ac->where('t03.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+          $tab_meta_financiera->where('t03.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
       }
 
       if (Input::get("BuscarBy")=="true") {
@@ -95,5 +95,48 @@ class ejecucionController extends Controller
     }
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function detalle()
+  {
+    $data = tab_meta_financiera::select( DB::raw('sum(mo_presupuesto) as mo_presupuesto'),
+    DB::raw('sum(mo_modificado_anual) as mo_modificado_anual'),
+    DB::raw('sum(mo_actualizado_anual) as mo_actualizado_anual'),
+    DB::raw('sum(mo_comprometido) as mo_comprometido'),
+    DB::raw('sum(mo_causado) as mo_causado'),
+    DB::raw('sum(mo_pagado) as mo_pagado'),
+    'ac_seguimiento.tab_meta_financiera.co_partida' )
+    ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+    ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+    ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+    ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+    ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+    ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', Input::get('codigo'))
+    ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')->first();
+
+    $rol_planificador = array(3, 8);
+    if (in_array(Session::get('rol'), $rol_planificador)) {
+      $data = tab_meta_financiera::select( DB::raw('sum(mo_presupuesto) as mo_presupuesto'),
+      DB::raw('sum(mo_modificado_anual) as mo_modificado_anual'),
+      DB::raw('sum(mo_actualizado_anual) as mo_actualizado_anual'),
+      DB::raw('sum(mo_comprometido) as mo_comprometido'),
+      DB::raw('sum(mo_causado) as mo_causado'),
+      DB::raw('sum(mo_pagado) as mo_pagado'),
+      'ac_seguimiento.tab_meta_financiera.co_partida' )
+      ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+      ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+      ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+      ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+      ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', Input::get('codigo'))
+      ->where('t03.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'))
+      ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')->first();
+    }
+
+    return View::make('seguimiento.ac.ejecucion.detalle')->with('data',$data);
+  }
 
 }

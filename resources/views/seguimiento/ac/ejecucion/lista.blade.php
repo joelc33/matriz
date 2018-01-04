@@ -127,8 +127,6 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			acejecucionLista.main.editar.enable();
-			acejecucionLista.main.habilitar.enable();
-			acejecucionLista.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -144,9 +142,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				rowselect: function(sm, row, rec) {
 					var msg = Ext.get('detalle');
 					msg.load({
-									url: '{{ URL::to('ac/seguimiento/001/detalle') }}',
+									url: '{{ URL::to('ac/seguimiento/ejecucion/detalle') }}',
 									scripts: true,
-									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+									params: {_token:'{{ csrf_token() }}', codigo:rec.json.co_partida},
 									text: 'Cargando...'
 					});
 					if(panel_detalle.collapsed == true)
@@ -162,10 +160,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	panel_detalle.toggleCollapse(true);
 	this.record = acejecucionLista.main.store_lista.getAt(row);
-	this.codigo = this.record.data["id"];
+	this.codigo = this.record.data["co_partida"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
-	    url: '{{ URL::to('ac/seguimiento/001/detalle') }}',
+	    url: '{{ URL::to('ac/seguimiento/ejecucion/detalle') }}',
 	    scripts: true,
 	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
 	    text: "Cargando..."
