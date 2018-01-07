@@ -111,7 +111,7 @@ Ext.onReady(function(){
 			html    : '<b>El acceso a este lugar está restringido a los usuarios no autorizados.<br>Por favor escriba su nombre de usuario y contraseña.</b>',
 			cls     : 'icon-autorizacion',
 			region  : 'north',
-			height  : 70
+			height  : 40
 	});
 
 	this.validarForm = new Ext.form.FormPanel({
@@ -127,7 +127,7 @@ Ext.onReady(function(){
 			{
 				xtype:'box',
 				anchor:'',
-				autoEl:{tag:'div', style:'margin:0px 0px 8px 80px', children:[{tag:'img',src:'images/logo.png'}]}
+				autoEl:{tag:'div', style:'margin:0px 0px 2px 130px', children:[{tag:'img', src:'images/zulia.png', height: 110, width: 110 }]}
 			},
 				this.Panel,
 			{

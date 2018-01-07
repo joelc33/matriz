@@ -145,7 +145,7 @@ items: [{
           collapsedTitle: true,
           margins: '0 0 0 0',
           /*bbar: this.estatusbar,*/
-          bodyStyle: "background-image:url('{{ asset('/images/logotipo.png') }}');background-repeat: no-repeat;    background-attachment: fixed; background-position: 4.5% 85%; background-size: 120px 230px; !important;",
+          bodyStyle: "background-image:url('{{ asset('/images/zulia.png') }}');background-repeat: no-repeat;    background-attachment: fixed; background-position: 4.5% 90%; background-size: 120px 120px; !important;",
           layout: 'accordion',
           layoutConfig: {
             animate: true

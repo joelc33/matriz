@@ -1,7 +1,7 @@
 <div style="background-color:white; padding-left:0px; padding-right:0px; padding-bottom:0px;">
 <img height="75" src="{{ asset('/images/izquierda.png') }}">
-<img height="75" align="right" src="{{ asset('/images/zulia.png') }}">
-<img src="images/logo.jpg" width="150" style="position: absolute; top: 40%; left: 80px;" />
+<!-- <img height="75" align="right" src="{{ asset('/images/zulia.png') }}"> -->
+<!-- <img src="images/logo.jpg" width="150" style="position: absolute; top: 40%; left: 80px;" /> -->
 </div>
 <div id="loading-mask" style=""></div>
 <div id="loading">
