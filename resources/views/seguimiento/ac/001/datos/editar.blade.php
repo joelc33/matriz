@@ -88,6 +88,52 @@ this.guardar = new Ext.Button({
     }
 });
 
+this.enviar = new Ext.Button({
+    text:'Enviar Cambios',
+    iconCls: 'icon-report',
+    handler:function(){
+
+        if(!forma001Editar.main.formPanel_.getForm().isValid()){
+            Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+            return false;
+        }
+        forma001Editar.main.formPanel_.getForm().submit({
+		method:'POST',
+	@if(empty($data->id))
+		url:'{{ URL::to('ac/seguimiento/001/enviar') }}',
+	@else
+		url:'{{ URL::to('ac/seguimiento/001/enviar') }}/{!! $data->id !!}',
+	@endif
+		waitMsg: 'Enviando datos, por favor espere..',
+		waitTitle:'Enviando',
+            failure: function(form, action) {
+		var errores = '';
+		for(datos in action.result.msg){
+			errores += action.result.msg[datos] + '<br>';
+		}
+                Ext.MessageBox.alert('Error en transacción', errores);
+            },
+            success: function(form, action) {
+                 if(action.result.success){
+                     Ext.MessageBox.show({
+                         title: 'Mensaje',
+                         msg: action.result.msg,
+                         closable: false,
+                         icon: Ext.MessageBox.INFO,
+                         resizable: false,
+			 animEl: document.body,
+                         buttons: Ext.MessageBox.OK
+                     });
+                 }
+                 forma001Lista.main.store_lista.load();
+                 forma001Editar.main.winformPanel_.close();
+             }
+        });
+
+
+    }
+});
+
 this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
@@ -124,8 +170,11 @@ width:614,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.guardar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.guardar,
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.enviar,'-',
+			@endif
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.guardar,'-',
 			@endif
         this.salir
     ],
