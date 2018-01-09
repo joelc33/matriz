@@ -3,12 +3,14 @@
 namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\AcSegto\tab_forma_001;
 use View;
 use Validator;
 use Input;
 use Response;
 use DB;
 use Session;
+use Auth;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -115,7 +117,7 @@ class formaunoController extends Controller
        'id_tab_sectores', 'id_tab_estatus', 'id_tab_situacion_presupuestaria',
        'id_tab_tipo_registro', 'co_new_etapa', 'de_ac', 'mo_ac', 'mo_calculado',
        'fe_inicio', 'fe_fin', 'inst_mision', 'inst_vision', 'inst_objetivos',
-       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo', 'id_tab_lapso' )
+       'nu_po_beneficiar', 'nu_em_previsto', 'tx_re_esperado', 'in_activo', 'id_tab_lapso', 'in_bloquear_001', 'de_observacion_001' )
     ->where('id', '=', $id)
     ->first();
 
@@ -143,10 +145,12 @@ class formaunoController extends Controller
         ));
       }
       $tabla = tab_ac::find($id);
-      $tabla->inst_mision = Input::get("mision");
+      /*$tabla->inst_mision = Input::get("mision");
       $tabla->inst_vision = Input::get("vision");
-      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->inst_objetivos = Input::get("objetivos");*/
       $tabla->in_001 = true;
+      $tabla->in_bloquear_001 = true;
+      $tabla->de_observacion_001 = Input::get("observacion");
       $tabla->save();
 
       DB::commit();
@@ -175,6 +179,90 @@ class formaunoController extends Controller
         ));
       }
       $tabla = new tab_ac;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function enviar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find($id);
+      $tabla->in_bloquear_001 = true;
+      $tabla->de_observacion_001 = Input::get("observacion");
+      $tabla->save();
+
+      $tabla_001 = new tab_forma_001;
+      $tabla_001->id_tab_ac = $id;
+      $tabla_001->inst_mision = Input::get("mision");
+      $tabla_001->inst_vision = Input::get("vision");
+      $tabla_001->inst_objetivos = Input::get("objetivos");
+      $tabla_001->de_observacion = Input::get("observacion");
+      $tabla_001->in_001 = false;
+      $tabla_001->id_usuario_solicita = Auth::user()->id;
+      $tabla_001->in_activo = true;
+      $tabla_001->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Datos enviados con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_001;
       $tabla->inst_mision = Input::get("mision");
       $tabla->inst_vision = Input::get("vision");
       $tabla->inst_objetivos = Input::get("objetivos");

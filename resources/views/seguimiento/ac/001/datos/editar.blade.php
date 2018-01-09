@@ -19,7 +19,9 @@ this.inst_mision = new Ext.form.TextArea({
 	allowBlank: false,
 	width:400,
 	height: 100,
-	maxLength: 3000
+	maxLength: 6000,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.inst_vision = new Ext.form.TextArea({
@@ -29,7 +31,9 @@ this.inst_vision = new Ext.form.TextArea({
 	allowBlank: false,
 	width:400,
 	height: 100,
-	maxLength: 3000
+	maxLength: 6000,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.inst_objetivos = new Ext.form.TextArea({
@@ -39,7 +43,19 @@ this.inst_objetivos = new Ext.form.TextArea({
 	allowBlank: false,
 	width:400,
 	height: 200,
-	maxLength: 3000
+	maxLength: 6000,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+});
+
+this.de_observacion = new Ext.form.TextField({
+	fieldLabel:'Observacion',
+	name:'observacion',
+	value:this.OBJ.de_observacion_001,
+	allowBlank:false,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.guardar = new Ext.Button({
@@ -154,7 +170,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this._token,
 		this.inst_mision,
 		this.inst_vision,
-		this.inst_objetivos
+		this.inst_objetivos,
+		this.de_observacion
 	]
 });
 
@@ -171,10 +188,14 @@ width:614,
     ],
     buttons:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.enviar,'-',
+				@if($data->in_bloquear_001==false)
+					this.enviar,'-',
+				@endif
 			@endif
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.guardar,'-',
+				@if($data->in_bloquear_001==false)
+					this.guardar,'-',
+				@endif
 			@endif
         this.salir
     ],

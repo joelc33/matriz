@@ -250,6 +250,8 @@ class acController extends Controller
       $tabla->in_activo = 'TRUE';
       $tabla->in_001 = false;
       $tabla->in_005 = false;
+      $tabla->in_bloquear_001 = false;
+      $tabla->in_bloquear_005 = false;
       $tabla->save();
 
       foreach ($tab_ac_ae as $arreglo_ac_ae ) {
