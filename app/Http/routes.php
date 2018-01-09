@@ -464,6 +464,15 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::post('guardar/{id}', 'formaunoController@guardar');
 		Route::post('enviar/{id}', 'formaunoController@enviar');
 	});
+	//*Modulo de Accion Centralizada Forma 001*/
+Route::group(['prefix' => 'seguimiento/ac/001/cambio'], function(){
+	Route::get('lista', 'formaunoController@listaCambio');
+	Route::post('storeLista', 'formaunoController@storeListaCambio');
+	Route::post('detalle', 'formaunoController@detalleCambio');
+	Route::get('editar/{id}', 'formaunoController@datosCambio');
+	Route::post('aprobar/{id}', 'formaunoController@aprobar');
+	Route::post('negar/{id}', 'formaunoController@negar');
+});
 	//*Modulo de Accion Centralizada Forma 002*/
 	Route::group(['prefix' => 'ac/seguimiento/002'], function(){
 		Route::get('lista', 'formadosController@lista');

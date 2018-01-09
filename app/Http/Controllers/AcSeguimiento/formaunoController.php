@@ -20,11 +20,13 @@ use matriz\Http\Controllers\Controller;
 class formaunoController extends Controller
 {
   protected $tab_ac;
+  protected $tab_forma_001;
 
-  public function __construct(tab_ac $tab_ac)
+  public function __construct(tab_ac $tab_ac, tab_forma_001 $tab_forma_001)
   {
     $this->middleware('auth');
     $this->tab_ac = $tab_ac;
+    $this->tab_forma_001 = $tab_forma_001;
   }
 
   /**
@@ -286,5 +288,87 @@ class formaunoController extends Controller
     }
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function listaCambio()
+  {
+    return View::make('seguimiento.ac.001.cambio.lista');
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function storeListaCambio()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_forma_001 = $this->tab_forma_001
+      ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_001.id_tab_ac', '=', 't01.id')
+      ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+      ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+      ->select( 'ac_seguimiento.tab_forma_001.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
+      't02.in_activo',
+      DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+      DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_ac', 'ac_seguimiento.tab_forma_001.in_001', 't01.id_ejecutor' )
+      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t01.in_activo', '=', true);
+
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_forma_001->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+      }
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_forma_001->where('nu_codigo', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_forma_001->count();
+        $tab_forma_001->skip($start)->take($limit);
+        $response['data']  = $tab_forma_001->orderby('ac_seguimiento.tab_forma_001.id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_forma_001->count();
+        $tab_forma_001->skip($start)->take($limit);
+        $response['data']  = $tab_forma_001->orderby('ac_seguimiento.tab_forma_001.id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 500);
+    }
+  }
+
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function detalleCambio()
+  {
+    $data = tab_forma_001::join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_001.id_tab_ac', '=', 't01.id')
+    ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+    ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+    ->select( 'ac_seguimiento.tab_forma_001.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
+    't02.in_activo',
+    DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_observacion', 
+    'de_ac', 'ac_seguimiento.tab_forma_001.in_001', 't01.id_ejecutor' )
+    ->where('ac_seguimiento.tab_forma_001.id', '=', Input::get('codigo'))
+    ->first();
+
+    return View::make('seguimiento.ac.001.cambio.detalle')->with('data',$data);
+  }
 
 }
