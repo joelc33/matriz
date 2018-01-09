@@ -5,7 +5,8 @@ init: function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
-this.datos2 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+'</p>';
+this.datos2 = '<p class="registro_detalle"><b>Fecha de Solicitud: </b>'+this.OBJ.fe_solicitud+'</p>';
+this.datos2 += '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_ac+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Obervacion: </b>'+this.OBJ.de_observacion+'</p>';
