@@ -37,7 +37,7 @@ this.co_municipio = new Ext.form.ComboBox({
 	mode: 'local',
 	width:400,
 	resizable:true,
-	allowBlank:false,
+	//allowBlank:false,
 	listeners:{
             change: function(){
                 parametroUbicacionPR.main.storeCO_PARROQUIA.load({

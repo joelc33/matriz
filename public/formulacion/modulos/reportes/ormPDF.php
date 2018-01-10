@@ -73,17 +73,20 @@ function reporte_proyecto_ubicacion() {
 		DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"),
 		DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),
 		'de_municipio', 'mo_presupuesto', 'de_fuente_financiamiento')
-		->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio'])
+		//->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio'])
 		->where('t26.id_ejercicio', '=', $_SESSION['ejercicio_fiscal'])
 		->where('t26.edo_reg', '=', true)
 		->where('t39.edo_reg', '=', true)
 		->where('t67.edo_reg', '=', true)
 		->where('t68_metas_detalle.edo_reg', '=', true)
+		->when($_GET['id_tab_municipio'], function ($query) {
+			return $query->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio']);
+		})
 		->when($_GET['fuente_financiamiento'], function ($query) {
 		 	return $query->where('t68_metas_detalle.co_fuente', '=', $_GET['fuente_financiamiento']);
  		})
 		->when($_GET['ejecutor'], function ($query) {
-			return $query->where('t24.id_ejecutor', '=', $_GET['ejecutor']);
+			return $query->where('t26.id_ejecutor', '=', $_GET['ejecutor']);
 		})
 		->orderBy(DB::raw('id_proyecto', 'tx_codigo', 't67.codigo'), 'ASC')
 		->get();
@@ -95,7 +98,9 @@ $htmlUbicacion = '
 <thead>
 <tr align="center" bgcolor="#BDBDBD">
 <th colspan="6" style="width: 100%;"><b>DISTRIBUCIÓN DE PROYECTOS POR MUNICIPIO - AÑO '.$_SESSION['ejercicio_fiscal'].'</b></th>
-</tr>
+</tr>';
+$htmlUbicacion.='';
+$htmlUbicacion.='
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">COD. PROYECTO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">DESCRIPCION PROYECTO</th>
