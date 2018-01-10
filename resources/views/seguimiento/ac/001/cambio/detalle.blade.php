@@ -11,6 +11,10 @@ this.datos2 +='<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+
 this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_ac+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Obervacion: </b>'+this.OBJ.de_observacion+'</p>';
+this.datos2 +='<p class="registro_detalle"><b>Usuario: </b>'+this.OBJ.da_login_a+'</p>';
+@if(!empty($data->da_login_b))
+this.datos2 +='<p class="registro_detalle"><b>Atendio: </b>'+this.OBJ.da_login_b+'</p>';
+@endif
 
 this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos de la Accion Centralizada',
