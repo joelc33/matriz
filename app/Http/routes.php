@@ -137,6 +137,7 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('poa/proyecto', 'proyectoController@lista');
 		Route::get('poa/proyecto/ubica', 'proyectoController@ubica');
 		Route::get('poa/ac', 'acController@lista');
+		Route::get('poa/ac/ubica', 'acController@ubica');
 		Route::get('poa/fuentefinanciamiento', 'fuentefinanciamientoController@lista');
 		Route::get('ac/responsable', 'acresponsableController@responsable');
 		Route::get('ac/responsable/todo', 'acresponsableController@responsableTodo');
@@ -149,6 +150,10 @@ Route::group(['namespace' => 'Reporte'], function(){
 		Route::get('poa/proyecto/todo/exportar', 'proyectoController@todoExportar');
 		Route::get('poa/proyecto/resumen', 'proyectoController@resumen');
 		Route::get('poa/ac/resumen', 'acController@resumen');
+		Route::get('poa/ac/ubicacion', 'acController@ubicacion');
+		Route::get('poa/ac/ubicacion/todo', 'acController@ubicacionTodo');
+		Route::get('poa/ac/ubicacion/exportar', 'acController@ubicacionExportar');
+		Route::get('poa/ac/ubicacion/todo/exportar', 'acController@ubicacionTodoExportar');
 		Route::get('ac/seguimiento/ficha/{id}', 'acseguimientoController@ficha');
 	});
 });

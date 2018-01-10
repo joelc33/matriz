@@ -154,4 +154,15 @@ class acController extends Controller
 
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function ubica()
+  {
+    $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
+    return View::make('reporte.poa.ubicaac')->with('data',$data);
+  }
+
 }
