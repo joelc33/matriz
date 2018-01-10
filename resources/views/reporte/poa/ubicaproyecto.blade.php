@@ -11,6 +11,12 @@ this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
 //<Stores de fk>
 this.storeCO_PARROQUIA = this.getStoreCO_PARROQUIA();
 //<Stores de fk>
+//<Stores de fk>
+this.storeCO_EJECUTOR = this.getStoreID_EJECUTOR();
+//<Stores de fk>
+//<Stores de fk>
+this.storeCO_FUENTE_FINANCIAMIENTO = this.getStoreCO_FUENTE_FINANCIAMIENTO();
+//<Stores de fk>
 
 <?php $rol_planificador = array( 3, 8); ?>
 
@@ -29,7 +35,7 @@ this.co_municipio = new Ext.form.ComboBox({
 	emptyText:'Seleccione Municipio',
 	selectOnFocus: true,
 	mode: 'local',
-	width:300,
+	width:400,
 	resizable:true,
 	allowBlank:false,
 	listeners:{
@@ -67,15 +73,84 @@ this.co_parroquia = new Ext.form.ComboBox({
 	emptyText:'Seleccione Parroquia',
 	selectOnFocus: true,
 	mode: 'local',
-	width:300,
+	width:400,
 	resizable:true,
 	allowBlank:false
+});
+
+this.id_tab_ejecutores = new Ext.form.ComboBox({
+	fieldLabel:'UNIDAD EJECUTORA',
+	store: this.storeCO_EJECUTOR,
+	typeAhead: true,
+	valueField: 'id_ejecutor',
+	displayField:'de_ejecutor',
+	hiddenName:'ejecutor',
+	//readOnly:(this.OBJ.id_tab_ejecutores!='')?true:false,
+	//style:(this.main.OBJ.id_tab_ejecutores!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Unidad Ejecutora',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_ejecutor}</div></div></tpl>'),
+	//listWidth:'600',
+	resizable:true,
+	//allowBlank:false,
+	listeners:{
+			keyup: function() {
+				this.store.filter('tx_ejecutor', this.getRawValue(), true, false);
+			},
+			beforequery: function(queryEvent) {
+				queryEvent.combo.onLoad();
+				return false;
+			}
+	}
+});
+this.storeCO_EJECUTOR.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_ejecutores,
+	value:  this.OBJ.id_ejecutor,
+	objStore: this.storeCO_EJECUTOR
+});
+
+this.id_tab_fuente_financiamiento = new Ext.form.ComboBox({
+	fieldLabel:'FUENTE DE FINANCIAMIENTO',
+	store: this.storeCO_FUENTE_FINANCIAMIENTO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_fuente_financiamiento',
+	hiddenName:'fuente_financiamiento',
+	//readOnly:(this.OBJ.id_tab_fuente_financiamiento!='')?true:false,
+	//style:(this.OBJ.id_tab_fuente_financiamiento!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Fuente de Fianciamiento',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_fuente_financiamiento}</div></div></tpl>'),
+	resizable:true,
+	//allowBlank:false
+});
+
+this.storeCO_FUENTE_FINANCIAMIENTO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.id_tab_fuente_financiamiento,
+	value:  this.OBJ.id_tab_fuente_financiamiento,
+	objStore: this.storeCO_FUENTE_FINANCIAMIENTO
 });
 
 this.fieldset1 = new Ext.form.FieldSet({
     title: 'Seleccione Parametros',
     items:[
-			this.co_municipio
+			this.co_municipio,
+			this.id_tab_ejecutores,
+			this.id_tab_fuente_financiamiento
 		]
 });
 
@@ -215,6 +290,44 @@ getStoreCO_PARROQUIA:function(){
                     Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
                 }
             }
+    });
+    return this.store;
+},
+getStoreID_EJECUTOR:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/ejecutor/activo') }}',
+        root:'data',
+        fields:[
+						{name: 'id'},
+						{name: 'id_ejecutor'},
+						{name: 'tx_ejecutor'},
+						{name: 'de_ejecutor',
+								convert: function(v, r) {
+										return r.id_ejecutor + ' - ' + r.tx_ejecutor;
+								}
+						}
+            ],
+            filter: function(filters, value) {
+                Ext.data.Store.prototype.filter.apply(this, [
+                    filters,
+                    value ? new RegExp(String.escape(value), 'i') : value
+                ]);
+            },
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
+},
+getStoreCO_FUENTE_FINANCIAMIENTO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/fuentefinanciamiento') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_fuente_financiamiento'}
+            ]
     });
     return this.store;
 }

@@ -2,9 +2,9 @@
 Ext.ns("forma001ListaCambio");
 function change(val){
 	if(val==true){
-	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
 	}else{
-	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
 	}
 return val;
 };
@@ -106,7 +106,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
-    {header: 'Fecha', width:200,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
+    {header: 'Fecha', width:140,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
     {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_001'},
     ],
     stripeRows: true,

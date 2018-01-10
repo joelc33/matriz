@@ -79,6 +79,12 @@ function reporte_proyecto_ubicacion() {
 		->where('t39.edo_reg', '=', true)
 		->where('t67.edo_reg', '=', true)
 		->where('t68_metas_detalle.edo_reg', '=', true)
+		->when($_GET['fuente_financiamiento'], function ($query) {
+		 	return $query->where('t68_metas_detalle.co_fuente', '=', $_GET['fuente_financiamiento']);
+ 		})
+		->when($_GET['ejecutor'], function ($query) {
+			return $query->where('t24.id_ejecutor', '=', $_GET['ejecutor']);
+		})
 		->orderBy(DB::raw('id_proyecto', 'tx_codigo', 't67.codigo'), 'ASC')
 		->get();
 
