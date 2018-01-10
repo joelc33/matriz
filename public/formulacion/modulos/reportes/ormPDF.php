@@ -99,7 +99,14 @@ $htmlUbicacion = '
 <tr align="center" bgcolor="#BDBDBD">
 <th colspan="6" style="width: 100%;"><b>DISTRIBUCIÓN DE PROYECTOS POR MUNICIPIO - AÑO '.$_SESSION['ejercicio_fiscal'].'</b></th>
 </tr>';
-$htmlUbicacion.='';
+$htmlUbicacion.='
+<tr style="font-size:6px">
+<th colspan="6" style="width: 100%;">FILTROS: ';
+	if (!empty($_GET['ejecutor'])) {
+		$htmlUbicacion.='EJECUTOR: '.$_GET['ejecutor'];
+	}
+$htmlUbicacion.='</th>
+</tr>';
 $htmlUbicacion.='
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">COD. PROYECTO</th>
