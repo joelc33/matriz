@@ -79,20 +79,24 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea aprobar los cambios solicitados?<br><b>Nota:</b> No se podran modificar los cambios.', function(boton){
+				if(boton=="yes"){
+
         forma001EditarCambio.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}',
-	@else
-		url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
             failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
                 Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
@@ -103,7 +107,7 @@ this.guardar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -112,11 +116,13 @@ this.guardar = new Ext.Button({
              }
         });
 
+			}
+			});
 
     }
 });
 
-this.enviar = new Ext.Button({
+this.negar = new Ext.Button({
     text:'Negar',
     iconCls: 'icon-cancelar',
     handler:function(){
@@ -125,20 +131,24 @@ this.enviar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea negar los cambios solicitados?<br><b>Nota:</b> El Ejecutor tendra que solicitar de nuevo los cambios.', function(boton){
+				if(boton=="yes"){
+
         forma001EditarCambio.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/001/negar') }}',
-	@else
-		url:'{{ URL::to('ac/seguimiento/001/negar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
             failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
                 Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
@@ -149,7 +159,7 @@ this.enviar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -158,6 +168,8 @@ this.enviar = new Ext.Button({
              }
         });
 
+			}
+			});
 
     }
 });
@@ -207,7 +219,7 @@ width:614,
 			@endif
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_001==false)
-					this.enviar,'-',
+					this.negar,'-',
 				@endif
 			@endif
         this.salir

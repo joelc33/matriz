@@ -237,6 +237,7 @@ class formaunoController extends Controller
       $tabla_001->in_001 = false;
       $tabla_001->id_usuario_solicita = Auth::user()->id;
       $tabla_001->in_activo = true;
+      $tabla_001->id_tab_estatus = 5;
       $tabla_001->save();
 
       DB::commit();
@@ -314,8 +315,9 @@ class formaunoController extends Controller
       ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_001.id_tab_ac', '=', 't01.id')
       ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
       ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+      ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_001.id_tab_estatus')
       ->select( 'ac_seguimiento.tab_forma_001.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
-      't02.in_activo',
+      't02.in_activo', 'de_estatus',
       DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
       DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo',
       'de_ac', 'ac_seguimiento.tab_forma_001.in_001', 't01.id_ejecutor',
@@ -420,13 +422,14 @@ class formaunoController extends Controller
 
       $tabla_001 = tab_forma_001::find($id);
       $tabla_001->in_001 = true;
+      $tabla_001->id_tab_estatus = 6;
       $tabla_001->id_usuario_procesa = Auth::user()->id;
       $tabla_001->save();
 
       DB::commit();
       return Response::json(array(
         'success' => true,
-        'msg' => 'Datos procesados con Exito!'
+        'msg' => 'Datos aprobados con Exito!'
       ));
 
           }catch (\Illuminate\Database\QueryException $e)
@@ -471,5 +474,86 @@ class formaunoController extends Controller
           }
     }
   }
+
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function negar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find(Input::get("ac"));
+      $tabla->in_001 = false;
+      $tabla->in_bloquear_001 = false;
+      $tabla->save();
+
+      $tabla_001 = tab_forma_001::find($id);
+      $tabla_001->in_001 = true;
+      $tabla_001->id_tab_estatus = 7;
+      $tabla_001->id_usuario_procesa = Auth::user()->id;
+      $tabla_001->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Solicitud procesada con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_001;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
 
 }

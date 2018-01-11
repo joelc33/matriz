@@ -67,21 +67,25 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar si hacer cambios?<br><b>Nota:</b> No se podra modificar el contenido.', function(boton){
+				if(boton=="yes"){
+
         forma001Editar.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/001/guardar') }}',
-	@else
-		url:'{{ URL::to('ac/seguimiento/001/guardar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
-            failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
-                Ext.MessageBox.alert('Error en transacción', errores);
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('ac/seguimiento/001/guardar') }}',
+						@else
+							url:'{{ URL::to('ac/seguimiento/001/guardar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
+						failure: function(form, action) {
+							var errores = '';
+							for(datos in action.result.msg){
+								errores += action.result.msg[datos] + '<br>';
+							}
+              Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
                  if(action.result.success){
@@ -91,7 +95,7 @@ this.guardar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -100,6 +104,8 @@ this.guardar = new Ext.Button({
              }
         });
 
+			}
+			});
 
     }
 });
@@ -113,20 +119,24 @@ this.enviar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea solicitar los cambios?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+				if(boton=="yes"){
+
         forma001Editar.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/001/enviar') }}',
-	@else
-		url:'{{ URL::to('ac/seguimiento/001/enviar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('ac/seguimiento/001/enviar') }}',
+						@else
+							url:'{{ URL::to('ac/seguimiento/001/enviar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
             failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
+							var errores = '';
+							for(datos in action.result.msg){
+								errores += action.result.msg[datos] + '<br>';
+							}
                 Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
@@ -137,7 +147,7 @@ this.enviar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -146,6 +156,8 @@ this.enviar = new Ext.Button({
              }
         });
 
+			}
+			});
 
     }
 });

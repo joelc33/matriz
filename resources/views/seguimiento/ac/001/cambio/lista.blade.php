@@ -1,10 +1,10 @@
 <script type="text/javascript">
 Ext.ns("forma001ListaCambio");
-function change(val){
-	if(val==true){
-	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Procesado</span>'+'</div></tpl>';
+function changeEstatus( in_001, de_estatus){
+	if(in_001==true){
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> '+de_estatus+'</span>'+'</div></tpl>';
 	}else{
-	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> '+de_estatus+'</span>'+'</div></tpl>';
 	}
 return val;
 };
@@ -107,7 +107,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
     {header: 'Fecha', width:140,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
-    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_001'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, dataIndex: 'estatus'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -202,6 +202,12 @@ getLista: function(){
 						name: 'periodo',
 						convert: function(v, r) {
 								return r.fe_inicio + ' - ' + r.fe_fin;
+						}
+				},
+				{
+						name: 'estatus',
+						convert: function(v, r) {
+								return changeEstatus( r.in_001, r.de_estatus);
 						}
 				}
 	    ]
