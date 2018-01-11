@@ -24,11 +24,13 @@ use matriz\Http\Controllers\Controller;
 class formacincoController extends Controller
 {
   protected $tab_ac;
+  protected $tab_forma_005;
 
-  public function __construct(tab_ac $tab_ac)
+  public function __construct(tab_ac $tab_ac, tab_forma_005 $tab_forma_005)
   {
     $this->middleware('auth');
     $this->tab_ac = $tab_ac;
+    $this->tab_forma_005 = $tab_forma_005;
   }
 
   /**
@@ -296,7 +298,7 @@ class formacincoController extends Controller
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = new tab_forma_001;
+      $tabla = new tab_forma_005;
       $tabla->inst_mision = Input::get("mision");
       $tabla->inst_vision = Input::get("vision");
       $tabla->inst_objetivos = Input::get("objetivos");
@@ -318,6 +320,94 @@ class formacincoController extends Controller
         ));
           }
     }
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function listaCambio()
+  {
+    return View::make('seguimiento.ac.005.cambio.lista');
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function storeListaCambio()
+  {
+    try {
+      $start  = Input::get('start', 0);
+      $limit  = Input::get('limit', 20);
+      $variable = Input::get('variable');
+
+      $tab_forma_005 = $this->tab_forma_005
+      ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
+      ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+      ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+      ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_005.id_tab_estatus')
+      ->select( 'ac_seguimiento.tab_forma_005.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
+      't02.in_activo', 'de_estatus',
+      DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+      DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo',
+      'de_ac', 'ac_seguimiento.tab_forma_005.in_005', 't01.id_ejecutor',
+      DB::raw("to_char(ac_seguimiento.tab_forma_005.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud")  )
+      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t01.in_activo', '=', true);
+
+      $rol_planificador = array(3, 8);
+      if (in_array(Session::get('rol'), $rol_planificador)) {
+          $tab_forma_005->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+      }
+
+      if (Input::get("BuscarBy")=="true") {
+
+        if($variable!=""){
+          $tab_forma_005->where('nu_codigo', 'ILIKE', "%$variable%");
+        }
+
+        $response['success']  = 'true';
+        $response['total'] = $tab_forma_005->count();
+        $tab_forma_005->skip($start)->take($limit);
+        $response['data']  = $tab_forma_005->orderby('ac_seguimiento.tab_forma_005.id','ASC')->get()->toArray();
+      } else {
+        $response['success']  = 'true';
+        $response['total'] = $tab_forma_005->count();
+        $tab_forma_005->skip($start)->take($limit);
+        $response['data']  = $tab_forma_005->orderby('ac_seguimiento.tab_forma_005.id','ASC')->get()->toArray();
+      }
+
+      return Response::json($response, 200);
+    } catch (\Illuminate\Database\QueryException $e) {
+      return Response::json(array('success' => false, 'message' => utf8_encode( $e->getMessage())), 500);
+    }
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function detalleCambio()
+  {
+    $data = tab_forma_005::join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
+    ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+    ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+    ->join('autenticacion.tab_usuarios as t04a', 'ac_seguimiento.tab_forma_005.id_usuario_solicita', '=', 't04a.id')
+    ->leftJoin('autenticacion.tab_usuarios as t04b', 'ac_seguimiento.tab_forma_005.id_usuario_procesa', '=', 't04b.id')
+    ->select( 'ac_seguimiento.tab_forma_005.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
+    't02.in_activo', 't04a.da_login as da_login_a', 't04b.da_login as da_login_b',
+    DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_observacion',
+    'de_ac', 'ac_seguimiento.tab_forma_005.in_005', 't01.id_ejecutor',
+    DB::raw("to_char(ac_seguimiento.tab_forma_005.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud") )
+    ->where('ac_seguimiento.tab_forma_005.id', '=', Input::get('codigo'))
+    ->first();
+
+    return View::make('seguimiento.ac.005.cambio.detalle')->with('data',$data);
   }
 
 }

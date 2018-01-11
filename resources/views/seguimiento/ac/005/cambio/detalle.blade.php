@@ -25,14 +25,14 @@ this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
   /*handler:function(){
-		addTab('foma001{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/001/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
+		addTab('foma005{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/005/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}*/
 	handler:function(){
-	this.codigo  = forma001ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma001ListaCambio.main.mascara.show();
+	this.codigo  = forma005ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma005ListaCambio.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
-			 url:"{{ URL::to('seguimiento/ac/001/cambio/editar') }}/"+this.codigo,
+			 url:"{{ URL::to('seguimiento/ac/005/cambio/editar') }}/"+this.codigo,
 			 scripts: true,
 			 text: "Cargando.."
 			});
@@ -43,7 +43,7 @@ this.cerrar = new Ext.Button({
 	text:'Cerrar',
 	iconCls: 'icon-guardar',
   handler:function(){
-		addTab('foma001'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
+		addTab('foma005'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/005/datos') }}/'+this.OBJ.id,'load','icon-editar','');
 	}
 });
 
@@ -57,7 +57,7 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
-		@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.editar', 'in_habilitado' => true), Session::get('credencial') ))
+		@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
       this.editar/*,'-',this.cerrar*/
 		@endif
   ]
