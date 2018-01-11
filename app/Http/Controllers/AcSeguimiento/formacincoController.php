@@ -7,12 +7,14 @@ use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_ac_ae_partida;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
+use matriz\Models\AcSegto\tab_forma_005;
 use View;
 use Validator;
 use Input;
 use Response;
 use DB;
 use Session;
+use Auth;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -124,7 +126,7 @@ class formacincoController extends Controller
        'created_at', 'updated_at', 'id_tab_lapso', 'id_tab_origen', 'pp_anual',
        'tp_indicador', 'nb_indicador_gestion', 'de_valor_obtenido',
        'de_valor_objetivo', 'nu_cumplimiento', 'de_indicador_descripcion',
-       'de_formula' )
+       'de_formula', 'in_bloquear_005', 'de_observacion_005' )
     ->where('id', '=', $id)
     ->first();
 
@@ -196,6 +198,96 @@ class formacincoController extends Controller
       $tabla->nu_cumplimiento = Input::get("cumplimiento");
       $tabla->de_indicador_descripcion = Input::get("indicador");
       $tabla->de_formula = Input::get("formula");
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function enviar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar005);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find($id);
+      $tabla->in_bloquear_005 = true;
+      $tabla->de_observacion_005 = Input::get("observacion");
+      $tabla->save();
+
+      $tabla_005 = new tab_forma_005;
+      $tabla_005->id_tab_ac = $id;
+      $tabla_005->pp_anual = Input::get("programado_anual");
+      $tabla_005->tp_indicador = Input::get("tipo_indicador");
+      $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
+      $tabla_005->de_valor_obtenido = Input::get("valor_objetivo");
+      $tabla_005->de_valor_objetivo = Input::get("valor_obtenido");
+      $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
+      $tabla_005->de_indicador_descripcion = Input::get("indicador");
+      $tabla_005->de_formula = Input::get("formula");
+      $tabla_005->de_observacion = Input::get("observacion");
+      $tabla_005->in_005 = false;
+      $tabla_005->id_usuario_solicita = Auth::user()->id;
+      $tabla_005->in_activo = true;
+      $tabla_005->id_tab_estatus = 5;
+      $tabla_005->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Datos enviados con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_001;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
       $tabla->save();
 
       DB::commit();

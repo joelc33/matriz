@@ -245,6 +245,7 @@ class acController extends Controller
       $tabla->nu_po_beneficiar = $tab_ac->nu_po_beneficiar;
       $tabla->nu_em_previsto = $tab_ac->nu_em_previsto;
       $tabla->tx_re_esperado = $tab_ac->tx_re_esperado;
+      $tabla->pp_anual = $tab_ac->tx_pr_objetivo;
       $tabla->id_tab_lapso = $data->id;
       $tabla->id_tab_origen = 1;
       $tabla->in_activo = 'TRUE';
