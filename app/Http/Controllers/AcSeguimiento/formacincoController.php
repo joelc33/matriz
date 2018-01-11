@@ -130,6 +130,19 @@ class formacincoController extends Controller
     ->where('id', '=', $id)
     ->first();
 
+    if (tab_forma_005::where('id_tab_ac', '=', $id)
+    ->where('id_tab_estatus', '=', 5)
+    ->where('in_005', '=', false)->exists()) {
+
+      $data = tab_forma_005::select( 'id', 'id_tab_ac', 'pp_anual', 'tp_indicador', 'nb_indicador_gestion',
+       'de_valor_obtenido', 'de_valor_objetivo', 'nu_cumplimiento', 'de_indicador_descripcion',
+       'de_formula', 'in_005', 'de_observacion as de_observacion_005', 'id_usuario_solicita', 'id_usuario_procesa',
+       'id_tab_estatus', 'in_activo as in_bloquear_005' )
+      ->where('id_tab_ac', '=', $id)
+      ->first();
+
+    }
+
     return View::make('seguimiento.ac.005.datos.editar')->with('data',$data);
   }
 
