@@ -66,11 +66,13 @@ function reporte_proyecto_ubicacion() {
 		->join('t39_proyecto_acc_espec as t39','t39.co_proyecto_acc_espec','=','t67.co_proyecto_acc_espec')
 		->join('t26_proyectos as t26','t26.id_proyecto','=','t39.id_proyecto')
 		->join('mantenimiento.tab_ejecutores as t24','t24.id','=','t39.co_ejecutores')
+		->join('mantenimiento.tab_ejecutores as t24a','t24a.id_ejecutor','=','t26.id_ejecutor')
 		->join('mantenimiento.tab_municipio_detalle as t13','t13.id','=','t68_metas_detalle.co_municipio')
 		->join('mantenimiento.tab_fuente_financiamiento as t06','t06.id','=','t68_metas_detalle.co_fuente')
 		->select( 't26.id_proyecto', DB::raw('t26.nombre as de_proyecto'),
 		DB::raw("t39.tx_codigo ||' - '|| t39.descripcion as de_ae"),
-		DB::raw(" t24.id_ejecutor||' - '|| tx_ejecutor as ejecutor"),
+		DB::raw("t24.id_ejecutor||' - '|| t24.tx_ejecutor as ejecutor"),
+		DB::raw("t24a.tx_ejecutor as ejecutor_a"),
 		DB::raw("t67.codigo ||' - '|| t67.nb_meta as de_actividad"),
 		'de_municipio', 'mo_presupuesto', 'de_fuente_financiamiento')
 		//->where('t68_metas_detalle.co_municipio', '=', $_GET['id_tab_municipio'])
@@ -86,8 +88,11 @@ function reporte_proyecto_ubicacion() {
 		 	return $query->where('t68_metas_detalle.co_fuente', '=', $_GET['fuente_financiamiento']);
  		})
 		->when($_GET['ejecutor'], function ($query) {
-			return $query->where('t26.id_ejecutor', '=', $_GET['ejecutor']);
+			return $query->where('t24.id_ejecutor', '=', $_GET['ejecutor']);
 		})
+		/*->when($_GET['ejecutor'], function ($query) {
+			return $query->where('t26.id_ejecutor', '=', $_GET['ejecutor']);
+		})*/
 		->orderBy(DB::raw('id_proyecto', 'tx_codigo', 't67.codigo'), 'ASC')
 		->get();
 
@@ -109,7 +114,7 @@ $htmlUbicacion.='</th>
 </tr>';
 $htmlUbicacion.='
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">COD. PROYECTO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">COD. PROYECTO EJEC.</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">DESCRIPCION PROYECTO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">ACCION ESPECIFICA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 15%;">ENTE EJECUTOR RESPONSABLE</th>
@@ -130,7 +135,7 @@ $htmlUbicacion.='
 
 			$htmlUbicacion.='
 			<tr style="font-size:7px" nobr="true">
-				<td style="width: 10%;">'.$value->id_proyecto.'</td>
+				<td style="width: 10%;">'.$value->id_proyecto.' - '.$value->ejecutor_a.'</td>
 				<td style="width: 15%;" align="justify">'.$value->de_proyecto.'</td>
 				<td style="width: 15%;" align="justify">'.$value->de_ae.'</td>
 				<td style="width: 15%;" align="justify">'.$value->ejecutor.'</td>
