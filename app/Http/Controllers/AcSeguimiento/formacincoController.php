@@ -141,6 +141,8 @@ class formacincoController extends Controller
        'de_formula', 'in_005', 'de_observacion as de_observacion_005', 'id_usuario_solicita', 'id_usuario_procesa',
        'id_tab_estatus', 'in_activo as in_bloquear_005' )
       ->where('id_tab_ac', '=', $id)
+      ->where('id_tab_estatus', '=', 5)
+      ->where('in_005', '=', false)
       ->first();
 
     }
@@ -425,6 +427,173 @@ class formacincoController extends Controller
     ->first();
 
     return View::make('seguimiento.ac.005.cambio.editar')->with('data',$data);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function aprobar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar005);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find(Input::get("ac"));
+      $tabla->pp_anual = Input::get("programado_anual");
+      $tabla->tp_indicador = Input::get("tipo_indicador");
+      $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
+      $tabla->de_valor_obtenido = Input::get("valor_objetivo");
+      $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+      $tabla->nu_cumplimiento = Input::get("cumplimiento");
+      $tabla->de_indicador_descripcion = Input::get("indicador");
+      $tabla->de_formula = Input::get("formula");
+      $tabla->de_observacion = Input::get("observacion");
+      $tabla->in_005 = true;
+      $tabla->save();
+
+      $tabla_005 = tab_forma_005::find($id);
+      $tabla_005->in_005 = true;
+      $tabla_005->id_tab_estatus = 6;
+      $tabla_005->id_usuario_procesa = Auth::user()->id;
+      $tabla_005->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Datos aprobados con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_005;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function negar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_ac::$validarEditar005);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_ac::find(Input::get("ac"));
+      $tabla->in_005 = false;
+      $tabla->in_bloquear_005 = false;
+      $tabla->save();
+
+      $tabla_005 = tab_forma_005::find($id);
+      $tabla_005->in_005 = true;
+      $tabla_005->id_tab_estatus = 7;
+      $tabla_005->id_usuario_procesa = Auth::user()->id;
+      $tabla_005->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Solicitud procesada con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_005;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
   }
 
 }

@@ -123,6 +123,20 @@ class formaunoController extends Controller
     ->where('id', '=', $id)
     ->first();
 
+    if (tab_forma_001::where('id_tab_ac', '=', $id)
+    ->where('id_tab_estatus', '=', 5)
+    ->where('in_001', '=', false)->exists()) {
+
+      $data = tab_forma_001::select( 'id', 'id_tab_ac', 'inst_mision', 'inst_vision', 'inst_objetivos',
+       'in_001', 'created_at', 'updated_at', 'de_observacion', 'id_usuario_solicita',
+       'id_usuario_procesa', 'id_tab_estatus', 'in_activo as in_bloquear_001' )
+      ->where('id_tab_ac', '=', $id)
+      ->where('id_tab_estatus', '=', 5)
+      ->where('in_001', '=', false)
+      ->first();
+
+    }
+
     //return View::make('seguimiento.ac.001.datos.lista')->with('data',$data);
     return View::make('seguimiento.ac.001.datos.editar')->with('data',$data);
   }
