@@ -16,58 +16,123 @@ this._token = new Ext.form.Hidden({
 	value:'{{ csrf_token() }}'
 });
 
-this.inst_mision = new Ext.form.TextArea({
-	fieldLabel: '1.4.1. MISION',
-	name: 'mision',
-	value:this.OBJ.inst_mision,
+this.de_programado_anual = new Ext.form.TextArea({
+	fieldLabel: 'PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL',
+	name: 'programado_anual',
+	value:this.OBJ.pp_anual,
 	allowBlank: false,
 	width:400,
 	height: 100,
-	maxLength: 6000,
+	maxLength: 3000,
 	/*readOnly:this.OBJ.in_bloquear_005,
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+	readOnly:true,
+	style:'background:#f2d7d5;'
 });
 
-this.inst_vision = new Ext.form.TextArea({
-	fieldLabel: '1.4.2. VISION',
-	name: 'vision',
-	value:this.OBJ.inst_vision,
-	allowBlank: false,
+this.tp_indicador = new Ext.form.TextField({
+	fieldLabel:'INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD)',
+	name:'tipo_indicador',
+	value:this.OBJ.tp_indicador,
 	width:400,
-	height: 100,
-	maxLength: 6000,
+	maxLength: 600,
+	allowBlank:false,
 	/*readOnly:this.OBJ.in_bloquear_005,
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+	readOnly:true,
+	style:'background:#f2d7d5;'
 });
 
-this.inst_objetivos = new Ext.form.TextArea({
-	fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-	name: 'objetivos',
-	value:this.OBJ.inst_objetivos,
-	allowBlank: false,
+this.nb_indicador = new Ext.form.TextField({
+	fieldLabel:'NOMBRE DEL INDICADOR',
+	name:'nombre_indicador',
+	value:this.OBJ.nb_indicador_gestion,
 	width:400,
-	height: 100,
-	maxLength: 6000,
+	maxLength: 600,
+	allowBlank:false,
 	/*readOnly:this.OBJ.in_bloquear_005,
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.valor_objetivo = new Ext.form.TextField({
+	fieldLabel:'VALOR OBJETIVO',
+	name:'valor_objetivo',
+	value:this.OBJ.de_valor_objetivo,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.valor_obtenido = new Ext.form.TextField({
+	fieldLabel:'VALOR OBTENIDO',
+	name:'valor_obtenido',
+	value:this.OBJ.de_valor_obtenido,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.nu_cumplimiento = new Ext.form.NumberField({
+	fieldLabel:'CUMPLIMIENTO %',
+	name:'cumplimiento',
+	value:this.OBJ.nu_cumplimiento,
+	allowBlank:false,
+	width:100,
+	minLength : 0,
+	maxLength: 18,
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.de_indicador = new Ext.form.TextField({
+	fieldLabel:'DESCRIPCIÓN DEL INDICADOR',
+	name:'indicador',
+	value:this.OBJ.de_indicador_descripcion,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.de_formula = new Ext.form.TextField({
+	fieldLabel:'FÓRMULA',
+	name:'formula',
+	value:this.OBJ.de_formula,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
+	readOnly:true,
+	style:'background:#f2d7d5;'
 });
 
 this.de_observacion = new Ext.form.TextField({
-	fieldLabel:'Observacion',
+	fieldLabel:'OBSERVACION',
 	name:'observacion',
 	value:this.OBJ.de_observacion,
 	allowBlank:false,
 	width:400,
 	/*readOnly:this.OBJ.in_bloquear_005,
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+	readOnly:true,
+	style:'background:#f2d7d5;'
 });
 
 this.guardar = new Ext.Button({
@@ -193,15 +258,20 @@ this.formPanel_ = new Ext.form.FormPanel({
 	items:[
 		this._token,
     this.id_tab_ac,
-		this.inst_mision,
-		this.inst_vision,
-		this.inst_objetivos,
+		this.de_programado_anual,
+		this.tp_indicador,
+		this.nb_indicador,
+		this.valor_objetivo,
+		this.valor_obtenido,
+		this.nu_cumplimiento,
+		this.de_indicador,
+		this.de_formula,
 		this.de_observacion
 	]
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'F005: MARCO NORMATIVO INSTITUCIONAL',
+    title:'F005: INDICADORES DE GESTIÓN',
     modal:true,
     constrain:true,
 width:614,

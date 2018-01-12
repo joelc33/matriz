@@ -410,4 +410,21 @@ class formacincoController extends Controller
     return View::make('seguimiento.ac.005.cambio.detalle')->with('data',$data);
   }
 
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function datosCambio($id)
+  {
+    $data = tab_forma_005::select( 'id', 'id_tab_ac', 'pp_anual', 'tp_indicador', 'nb_indicador_gestion',
+       'de_valor_obtenido', 'de_valor_objetivo', 'nu_cumplimiento', 'de_indicador_descripcion',
+       'de_formula', 'in_005', 'de_observacion', 'id_usuario_solicita', 'id_usuario_procesa',
+       'id_tab_estatus', 'in_activo')
+    ->where('id', '=', $id)
+    ->first();
+
+    return View::make('seguimiento.ac.005.cambio.editar')->with('data',$data);
+  }
+
 }
