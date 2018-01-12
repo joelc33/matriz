@@ -212,12 +212,12 @@ width:614,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.cambio.aprobar', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_001==false)
 					this.guardar,'-',
 				@endif
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.cambio.negar', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_001==false)
 					this.negar,'-',
 				@endif

@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns("forma001EditarCambio");
-forma001EditarCambio.main = {
+Ext.ns("forma005EditarCambio");
+forma005EditarCambio.main = {
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
@@ -24,8 +24,8 @@ this.inst_mision = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 6000,
-	/*readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
   readOnly:true,
   style:'background:#f2d7d5;'
 });
@@ -38,8 +38,8 @@ this.inst_vision = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 6000,
-	/*readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
   readOnly:true,
   style:'background:#f2d7d5;'
 });
@@ -52,8 +52,8 @@ this.inst_objetivos = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 6000,
-	/*readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
   readOnly:true,
   style:'background:#f2d7d5;'
 });
@@ -64,8 +64,8 @@ this.de_observacion = new Ext.form.TextField({
 	value:this.OBJ.de_observacion,
 	allowBlank:false,
 	width:400,
-	/*readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
+	/*readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''*/
   readOnly:true,
   style:'background:#f2d7d5;'
 });
@@ -75,7 +75,7 @@ this.guardar = new Ext.Button({
     iconCls: 'icon-fin',
     handler:function(){
 
-        if(!forma001EditarCambio.main.formPanel_.getForm().isValid()){
+        if(!forma005EditarCambio.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
@@ -83,12 +83,12 @@ this.guardar = new Ext.Button({
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea aprobar los cambios solicitados?<br><b>Nota:</b> No se podran modificar los cambios.', function(boton){
 				if(boton=="yes"){
 
-        forma001EditarCambio.main.formPanel_.getForm().submit({
+        forma005EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}',
+							url:'{{ URL::to('seguimiento/ac/005/cambio/aprobar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/ac/005/cambio/aprobar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -111,8 +111,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma001ListaCambio.main.store_lista.load();
-                 forma001EditarCambio.main.winformPanel_.close();
+                 forma005ListaCambio.main.store_lista.load();
+                 forma005EditarCambio.main.winformPanel_.close();
              }
         });
 
@@ -127,7 +127,7 @@ this.negar = new Ext.Button({
     iconCls: 'icon-cancelar',
     handler:function(){
 
-        if(!forma001EditarCambio.main.formPanel_.getForm().isValid()){
+        if(!forma005EditarCambio.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
@@ -135,12 +135,12 @@ this.negar = new Ext.Button({
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea negar los cambios solicitados?<br><b>Nota:</b> El Ejecutor tendra que solicitar de nuevo los cambios.', function(boton){
 				if(boton=="yes"){
 
-        forma001EditarCambio.main.formPanel_.getForm().submit({
+        forma005EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}',
+							url:'{{ URL::to('seguimiento/ac/005/cambio/negar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/ac/005/cambio/negar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -163,8 +163,8 @@ this.negar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma001ListaCambio.main.store_lista.load();
-                 forma001EditarCambio.main.winformPanel_.close();
+                 forma005ListaCambio.main.store_lista.load();
+                 forma005EditarCambio.main.winformPanel_.close();
              }
         });
 
@@ -178,7 +178,7 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        forma001EditarCambio.main.winformPanel_.close();
+        forma005EditarCambio.main.winformPanel_.close();
     }
 });
 
@@ -201,7 +201,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'F001: MARCO NORMATIVO INSTITUCIONAL',
+    title:'F005: MARCO NORMATIVO INSTITUCIONAL',
     modal:true,
     constrain:true,
 width:614,
@@ -212,13 +212,13 @@ width:614,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_001==false)
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.cambio.aprobar', 'in_habilitado' => true), Session::get('credencial') ))
+				@if($data->in_005==false)
 					this.guardar,'-',
 				@endif
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_001==false)
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.cambio.negar', 'in_habilitado' => true), Session::get('credencial') ))
+				@if($data->in_005==false)
 					this.negar,'-',
 				@endif
 			@endif
@@ -227,8 +227,8 @@ width:614,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma001ListaCambio.main.mascara.hide();
+forma005ListaCambio.main.mascara.hide();
 }
 };
-Ext.onReady(forma001EditarCambio.main.init, forma001EditarCambio.main);
+Ext.onReady(forma005EditarCambio.main.init, forma005EditarCambio.main);
 </script>

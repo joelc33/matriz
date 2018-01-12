@@ -50,7 +50,9 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
+		@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
       this.editar/*,'-',this.cerrar*/
+		@endif
   ]
 });
 
