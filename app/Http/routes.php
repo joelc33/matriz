@@ -550,3 +550,15 @@ Route::group(['namespace' => 'AcSeguimiento'], function(){
 		Route::post('detalle', 'ejecucionController@detalle');
 	});
 });
+//*Modulos de Proyectos Seguimiento*/
+Route::group(['namespace' => 'PrSeguimiento'], function(){
+	//*Modulo de Proyectos*/
+	Route::group(['prefix' => 'proyecto/seguimiento'], function(){
+		Route::get('lista', 'proyectoController@lista');
+		Route::post('storeLista', 'proyectoController@storeLista');
+		Route::get('nuevo', 'proyectoController@nuevo');
+		Route::post('disponible', 'proyectoController@disponible');
+		Route::post('guardar', 'proyectoController@guardar');
+		Route::post('detalle', 'proyectoController@detalle');
+	});
+});
