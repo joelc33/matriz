@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("forma005Lista");
+Ext.ns("prforma005Lista");
 function change(val){
 	if(val==true){
 	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
@@ -16,7 +16,7 @@ function movimiento(val){
 	}
 return val;
 };
-forma005Lista.main = {
+prforma005Lista.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -32,9 +32,9 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			this.codigo  = prforma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+				url: '{{ URL::to('reporte/proyecto/seguimiento/ficha') }}/'+this.codigo
 			});
     }
 });
@@ -69,10 +69,10 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		forma005Lista.main.store_lista.baseParams={};
-		forma005Lista.main.store_lista.baseParams.paginar = 'si';
-		forma005Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		forma005Lista.main.store_lista.load();
+		prforma005Lista.main.store_lista.baseParams={};
+		prforma005Lista.main.store_lista.baseParams.paginar = 'si';
+		prforma005Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		prforma005Lista.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -84,12 +84,12 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			forma005Lista.main.store_lista.baseParams={}
-			forma005Lista.main.store_lista.baseParams.BuscarBy = true;
-			forma005Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			forma005Lista.main.store_lista.baseParams[this.paramName] = v;
-			forma005Lista.main.store_lista.baseParams.paginar = 'si';
-			forma005Lista.main.store_lista.load();
+			prforma005Lista.main.store_lista.baseParams={}
+			prforma005Lista.main.store_lista.baseParams.BuscarBy = true;
+			prforma005Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			prforma005Lista.main.store_lista.baseParams[this.paramName] = v;
+			prforma005Lista.main.store_lista.baseParams.paginar = 'si';
+			prforma005Lista.main.store_lista.load();
 		}
 	}
 });
@@ -103,7 +103,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.ficha', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.005.ficha', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.ficha,'-',
 			@endif
 				this.buscador
@@ -114,14 +114,14 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'periodo'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
-    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
+    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_proyecto'},
     {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_005'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma005Lista.main.ficha.enable();
+			prforma005Lista.main.ficha.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -137,7 +137,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				rowselect: function(sm, row, rec) {
 					var msg = Ext.get('detalle');
 					msg.load({
-									url: '{{ URL::to('ac/seguimiento/005/detalle') }}',
+									url: '{{ URL::to('proyecto/seguimiento/005/detalle') }}',
 									scripts: true,
 									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
 									text: 'Cargando...'
@@ -154,11 +154,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 /*Evento Doble Click*/
 this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	panel_detalle.toggleCollapse(true);
-	this.record = forma005Lista.main.store_lista.getAt(row);
+	this.record = prforma005Lista.main.store_lista.getAt(row);
 	this.codigo = this.record.data["id"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
-	    url: '{{ URL::to('ac/seguimiento/005/detalle') }}',
+	    url: '{{ URL::to('proyecto/seguimiento/005/detalle') }}',
 	    scripts: true,
 	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
 	    text: "Cargando..."
@@ -174,14 +174,14 @@ this.panel = new Ext.Panel({
 	]
 });
 
-this.panel.render("contenedorforma005Lista");
+this.panel.render("contenedorprforma005Lista");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma005Lista.main.ficha.disable();
+prforma005Lista.main.ficha.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -189,7 +189,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-	    url:'{{ URL::to('ac/seguimiento/005/storeLista') }}',
+	    url:'{{ URL::to('proyecto/seguimiento/005/storeLista') }}',
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
@@ -197,7 +197,7 @@ getLista: function(){
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
-		    {name: 'de_ac'},
+		    {name: 'de_proyecto'},
 				{name: 'in_005'},
 				{
 						name: 'ejecutor',
@@ -216,7 +216,7 @@ getLista: function(){
     return this.store;
 }
 };
-Ext.onReady(forma005Lista.main.init, forma005Lista.main);
+Ext.onReady(prforma005Lista.main.init, prforma005Lista.main);
 </script>
-<div id="contenedorforma005Lista"></div>
-<div id="formularioacseguimiento"></div>
+<div id="contenedorprforma005Lista"></div>
+<div id="formularioprseguimiento"></div>

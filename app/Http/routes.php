@@ -580,4 +580,29 @@ Route::group(['namespace' => 'PrSeguimiento'], function(){
 		Route::post('aprobar/{id}', 'formaunoController@aprobar');
 		Route::post('negar/{id}', 'formaunoController@negar');
 	});
+	//*Modulo de Accion Centralizada Forma 005*/
+	Route::group(['prefix' => 'proyecto/seguimiento/005'], function(){
+		Route::get('lista', 'formacincoController@lista');
+		Route::post('storeLista', 'formacincoController@storeLista');
+		Route::post('detalle', 'formacincoController@detalle');
+		Route::get('editar/{id}', 'formacincoController@datos');
+		Route::post('guardar', 'formacincoController@guardar');
+		Route::post('guardar/{id}', 'formacincoController@guardar');
+		Route::post('enviar/{id}', 'formacincoController@enviar');
+	});
+	//*Modulo de Accion Centralizada Forma 005*/
+	Route::group(['prefix' => 'seguimiento/proyecto/005/cambio'], function(){
+		Route::get('lista', 'formacincoController@listaCambio');
+		Route::post('storeLista', 'formacincoController@storeListaCambio');
+		Route::post('detalle', 'formacincoController@detalleCambio');
+		Route::get('editar/{id}', 'formacincoController@datosCambio');
+		Route::post('aprobar/{id}', 'formacincoController@aprobar');
+		Route::post('negar/{id}', 'formacincoController@negar');
+	});
+	//*Modulo de Accion Centralizada Ejecucion*/
+	Route::group(['prefix' => 'proyecto/seguimiento/ejecucion'], function(){
+		Route::get('lista', 'ejecucionController@lista');
+		Route::post('storeLista', 'ejecucionController@storeLista');
+		Route::post('detalle', 'ejecucionController@detalle');
+	});
 });

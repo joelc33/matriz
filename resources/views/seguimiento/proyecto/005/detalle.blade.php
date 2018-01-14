@@ -6,7 +6,7 @@ init: function(){
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 this.datos2 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+'</p>';
-this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_ac+'</p>';
+this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_proyecto+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 
 this.fieldset2 = new Ext.form.FieldSet({
@@ -18,14 +18,14 @@ this.editar = new Ext.Button({
 	text:'Datos',
 	iconCls: 'icon-editar',
   /*handler:function(){
-		addTab('foma005{!! $data['nu_codigo'] !!}','F005 - A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('ac/seguimiento/005/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
+		addTab('foma005{!! $data['nu_codigo'] !!}','F005 - A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('proyecto/seguimiento/005/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}*/
 	handler:function(){
 	this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	forma005Lista.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
-			 url:"{{ URL::to('ac/seguimiento/005/editar') }}/"+this.codigo,
+			 url:"{{ URL::to('proyecto/seguimiento/005/editar') }}/"+this.codigo,
 			 scripts: true,
 			 text: "Cargando.."
 			});
@@ -36,7 +36,7 @@ this.cerrar = new Ext.Button({
 	text:'Cerrar',
 	iconCls: 'icon-guardar',
   handler:function(){
-		addTab('foma005'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/005/datos') }}/'+this.OBJ.id,'load','icon-editar','');
+		addTab('foma005'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('proyecto/seguimiento/005/datos') }}/'+this.OBJ.id,'load','icon-editar','');
 	}
 });
 
@@ -50,7 +50,7 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
-		@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
+		@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
       this.editar/*,'-',this.cerrar*/
 		@endif
   ]
