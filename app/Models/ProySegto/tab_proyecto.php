@@ -16,4 +16,22 @@ class tab_proyecto extends Model
 		"ejercicio" => "required|numeric",
 		"proyecto" => "required|numeric"
 	);
+
+	public static $validarEditar = array(
+		"objetivo" => "required",
+		"descripcion" => "required",
+		"observacion" => "required"
+	);
+
+	public static $validarEditar005 = array(
+		"programado_anual" => "required",
+		"tipo_indicador" => "required",
+		"nombre_indicador" => "required",
+		"valor_objetivo" => "required",
+		"valor_obtenido" => "required",
+		"cumplimiento" => "required",
+		"indicador" => "required",
+		"formula" => "required"
+	);
+
 }

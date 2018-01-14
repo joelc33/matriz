@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns("forma001Editar");
-forma001Editar.main = {
+Ext.ns("prforma001Editar");
+prforma001Editar.main = {
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
@@ -12,37 +12,25 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
-this.inst_mision = new Ext.form.TextArea({
-	fieldLabel: '1.4.1. MISION',
-	name: 'mision',
-	value:this.OBJ.inst_mision,
-	allowBlank: false,
-	width:400,
-	height: 100,
-	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
-});
-
-this.inst_vision = new Ext.form.TextArea({
-	fieldLabel: '1.4.2. VISION',
-	name: 'vision',
-	value:this.OBJ.inst_vision,
-	allowBlank: false,
-	width:400,
-	height: 100,
-	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
-});
-
-this.inst_objetivos = new Ext.form.TextArea({
-	fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-	name: 'objetivos',
-	value:this.OBJ.inst_objetivos,
+this.de_objetivo = new Ext.form.TextArea({
+	fieldLabel: '1.7. OBJETIVO GENERAL DEL PROYECTO',
+	name: 'objetivo',
+	value:this.OBJ.de_objetivo,
 	allowBlank: false,
 	width:400,
 	height: 200,
+	maxLength: 6000,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+});
+
+this.de_proyecto = new Ext.form.TextArea({
+	fieldLabel: '1.10. DESCRIPCIÓN DEL PROYECTO',
+	name: 'descripcion',
+	value:this.OBJ.de_proyecto,
+	allowBlank: false,
+	width:400,
+	height: 100,
 	maxLength: 6000,
 	readOnly:this.OBJ.in_bloquear_001,
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
@@ -63,7 +51,7 @@ this.guardar = new Ext.Button({
     iconCls: 'icon-guardar',
     handler:function(){
 
-        if(!forma001Editar.main.formPanel_.getForm().isValid()){
+        if(!prforma001Editar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
@@ -71,12 +59,12 @@ this.guardar = new Ext.Button({
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar si hacer cambios?<br><b>Nota:</b> No se podra modificar el contenido.', function(boton){
 				if(boton=="yes"){
 
-        forma001Editar.main.formPanel_.getForm().submit({
+        prforma001Editar.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('ac/seguimiento/001/guardar') }}',
+							url:'{{ URL::to('proyecto/seguimiento/001/guardar') }}',
 						@else
-							url:'{{ URL::to('ac/seguimiento/001/guardar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('proyecto/seguimiento/001/guardar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -99,8 +87,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma001Lista.main.store_lista.load();
-                 forma001Editar.main.winformPanel_.close();
+                 prforma001Lista.main.store_lista.load();
+                 prforma001Editar.main.winformPanel_.close();
              }
         });
 
@@ -115,7 +103,7 @@ this.enviar = new Ext.Button({
     iconCls: 'icon-report',
     handler:function(){
 
-        if(!forma001Editar.main.formPanel_.getForm().isValid()){
+        if(!prforma001Editar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
@@ -123,12 +111,12 @@ this.enviar = new Ext.Button({
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea solicitar los cambios?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
 				if(boton=="yes"){
 
-        forma001Editar.main.formPanel_.getForm().submit({
+        prforma001Editar.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('ac/seguimiento/001/enviar') }}',
+							url:'{{ URL::to('proyecto/seguimiento/001/enviar') }}',
 						@else
-							url:'{{ URL::to('ac/seguimiento/001/enviar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('proyecto/seguimiento/001/enviar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -151,8 +139,8 @@ this.enviar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma001Lista.main.store_lista.load();
-                 forma001Editar.main.winformPanel_.close();
+                 prforma001Lista.main.store_lista.load();
+                 prforma001Editar.main.winformPanel_.close();
              }
         });
 
@@ -166,7 +154,7 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        forma001Editar.main.winformPanel_.close();
+        prforma001Editar.main.winformPanel_.close();
     }
 });
 
@@ -180,9 +168,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-		this.inst_mision,
-		this.inst_vision,
-		this.inst_objetivos,
+		this.de_objetivo,
+		this.de_proyecto,
 		this.de_observacion
 	]
 });
@@ -199,12 +186,12 @@ width:614,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.001.enviar', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_bloquear_001==false)
 					this.enviar,'-',
 				@endif
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.001.guardar', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_bloquear_001==false)
 					this.guardar,'-',
 				@endif
@@ -214,8 +201,8 @@ width:614,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma001Lista.main.mascara.hide();
+prforma001Lista.main.mascara.hide();
 }
 };
-Ext.onReady(forma001Editar.main.init, forma001Editar.main);
+Ext.onReady(prforma001Editar.main.init, prforma001Editar.main);
 </script>

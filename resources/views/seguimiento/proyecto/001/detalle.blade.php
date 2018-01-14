@@ -21,8 +21,8 @@ this.editar = new Ext.Button({
 		addTab('foma001{!! $data['nu_codigo'] !!}','A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('proyecto/seguimiento/001/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}*/
 	handler:function(){
-	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma001Lista.main.mascara.show();
+	this.codigo  = prforma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	prforma001Lista.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
 			 url:"{{ URL::to('proyecto/seguimiento/001/editar') }}/"+this.codigo,

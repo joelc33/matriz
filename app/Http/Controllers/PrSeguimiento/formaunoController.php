@@ -121,7 +121,7 @@ class formaunoController extends Controller
        'fe_inicio', 'fe_fin', 'de_objetivo', 'de_proyecto', 'id_tab_situacion_presupuestaria',
        'mo_proyecto', 'clase_sector', 'clase_subsector', 'plan_operativo', 'id_tab_estatus',
        'in_activo', 'created_at', 'updated_at', 'id_tab_lapso', 'id_tab_origen',
-       'in_001', 'in_005', 'in_bloquear_001', 'in_bloquear_005' )
+       'in_001', 'in_005', 'in_bloquear_001', 'in_bloquear_005', 'de_observacion_001' )
     ->where('id', '=', $id)
     ->first();
 
@@ -129,10 +129,10 @@ class formaunoController extends Controller
     ->where('id_tab_estatus', '=', 5)
     ->where('in_001', '=', false)->exists()) {
 
-      $data = tab_forma_001::select( 'id', 'id_tab_proyecto', 'inst_mision', 'inst_vision', 'inst_objetivos',
-       'in_001', 'created_at', 'updated_at', 'de_observacion', 'id_usuario_solicita',
+      $data = tab_forma_001::select( 'id', 'id_tab_proyecto', 'de_objetivo', 'de_proyecto', 'in_001',
+       'created_at', 'updated_at', 'de_observacion as de_observacion_001', 'id_usuario_solicita',
        'id_usuario_procesa', 'id_tab_estatus', 'in_activo as in_bloquear_001' )
-      ->where('id_tab_ac', '=', $id)
+      ->where('id_tab_proyecto', '=', $id)
       ->where('id_tab_estatus', '=', 5)
       ->where('in_001', '=', false)
       ->first();
@@ -140,6 +140,177 @@ class formaunoController extends Controller
     }
 
     return View::make('seguimiento.proyecto.001.datos.editar')->with('data',$data);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function guardar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_proyecto::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_proyecto::find($id);
+      /*$tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");*/
+      $tabla->in_001 = true;
+      $tabla->in_bloquear_001 = true;
+      $tabla->de_observacion_001 = Input::get("observacion");
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_proyecto::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_proyecto;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function enviar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_proyecto::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_proyecto::find($id);
+      $tabla->in_bloquear_001 = true;
+      $tabla->de_observacion_001 = Input::get("observacion");
+      $tabla->save();
+
+      $tabla_001 = new tab_forma_001;
+      $tabla_001->id_tab_proyecto = $id;
+      $tabla_001->de_objetivo = Input::get("objetivo");
+      $tabla_001->de_proyecto = Input::get("descripcion");
+      $tabla_001->de_observacion = Input::get("observacion");
+      $tabla_001->in_001 = false;
+      $tabla_001->id_usuario_solicita = Auth::user()->id;
+      $tabla_001->in_activo = true;
+      $tabla_001->id_tab_estatus = 5;
+      $tabla_001->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Datos enviados con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_proyecto::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_forma_001;
+      $tabla->inst_mision = Input::get("mision");
+      $tabla->inst_vision = Input::get("vision");
+      $tabla->inst_objetivos = Input::get("objetivos");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function listaCambio()
+  {
+    return View::make('seguimiento.proyecto.001.cambio.lista');
   }
 
 }
