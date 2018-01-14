@@ -61,9 +61,9 @@ this.id_tab_ejecutores = new Ext.form.ComboBox({
 	fieldLabel:'Proyecto',
 	store: this.storeCO_AC,
 	typeAhead: true,
-	valueField: 'id',
+	valueField: 'co_proyectos',
 	displayField:'codigo',
-	hiddenName:'ac',
+	hiddenName:'proyecto',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -214,7 +214,7 @@ getStoreCO_AC:function(){
           url:'{{ URL::to('proyecto/seguimiento/disponible') }}',
           root:'data',
           fields:[
-              {name: 'id'},
+              {name: 'co_proyectos'},
               {name: 'codigo'},
               {name: 'de_nombre'},
 							{name: 'tx_ejecutor'}

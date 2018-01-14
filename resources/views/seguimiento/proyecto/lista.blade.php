@@ -115,7 +115,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'periodo'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
-    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_proyecto'},
+    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_nombre'},
     {header: '% Ejecutado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
@@ -198,7 +198,7 @@ getLista: function(){
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
-		    {name: 'de_proyecto'},
+		    {name: 'de_nombre'},
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {
