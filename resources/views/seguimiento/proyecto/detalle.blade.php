@@ -1,12 +1,12 @@
 <script type="text/javascript">
-Ext.ns('acseguimientoDetalle');
-acseguimientoDetalle.main = {
+Ext.ns('proyectoseguimientoDetalle');
+proyectoseguimientoDetalle.main = {
 init: function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 this.datos2 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+'</p>';
-this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_ac+'</p>';
+this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_proyecto+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 
 this.fieldset2 = new Ext.form.FieldSet({
@@ -43,11 +43,11 @@ this.formPanel_ = new Ext.form.FormPanel({
   ]
 });
 
-this.formPanel_.render('acseguimientoDetalle');
+this.formPanel_.render('proyectoseguimientoDetalle');
 }
 };
-Ext.onReady(acseguimientoDetalle.main.init, acseguimientoDetalle.main);
+Ext.onReady(proyectoseguimientoDetalle.main.init, proyectoseguimientoDetalle.main);
 </script>
-<div id="acseguimientoDetalle"></div>
+<div id="proyectoseguimientoDetalle"></div>
 <div id="formularioacseguimiento"></div>
 <div id="formularioDeposito"></div>

@@ -148,14 +148,14 @@ class proyectoController extends Controller
     if($id!=''||$id!=null){
 
        try {
-      $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
+      $validator= Validator::make(Input::all(), tab_proyecto::$validarEditar);
       if ($validator->fails()){
         return Response::json(array(
           'success' => false,
           'msg' => $validator->getMessageBag()->toArray()
         ));
       }
-      $tabla = tab_ac::find($id);
+      $tabla = tab_proyecto::find($id);
       $tabla->co_aplicacion = Input::get("codigo");
       $tabla->de_aplicacion = Input::get("aplicacion");
       $tabla->save();
@@ -277,6 +277,25 @@ class proyectoController extends Controller
         ));
           }
     }
+  }
+
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function detalle()
+  {
+    $data = tab_proyecto::join('mantenimiento.tab_ejecutores as t01', 'proyecto_seguimiento.tab_proyecto.id_tab_ejecutores', '=', 't01.id')
+    ->join('mantenimiento.tab_lapso as t02', 'proyecto_seguimiento.tab_proyecto.id_tab_lapso', '=', 't02.id')
+    ->select( 'proyecto_seguimiento.tab_proyecto.id', 'tx_ejecutor', 'proyecto_seguimiento.tab_proyecto.id_tab_ejecutores',
+    'proyecto_seguimiento.tab_proyecto.in_activo',
+    DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+    DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_nombre as de_proyecto' )
+    ->where('proyecto_seguimiento.tab_proyecto.id', '=', Input::get('codigo'))
+    ->first();
+
+    return View::make('seguimiento.proyecto.detalle')->with('data',$data);
   }
 
 }
