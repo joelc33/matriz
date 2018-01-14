@@ -162,7 +162,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Agregar Accion Especifica',
+    title:'Formulario: Agregar Accion Centralizada',
     modal:true,
     constrain:true,
 width:514,

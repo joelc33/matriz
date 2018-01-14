@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns("acseguimientoEditar");
-acseguimientoEditar.main = {
+Ext.ns("proyectoseguimientoEditar");
+proyectoseguimientoEditar.main = {
 init:function(){
 
 this.storeCO_EJERCICIO = this.getStoreCO_EJERCICIO();
@@ -43,7 +43,7 @@ this.id_tab_ejercicio = new Ext.form.ComboBox({
 	allowBlank:false,
 	listeners:{
 						change: function(){
-								acseguimientoEditar.main.storeCO_AC.load({
+								proyectoseguimientoEditar.main.storeCO_AC.load({
 										params: { periodo:this.getValue(), _token: '{{ csrf_token() }}'}
 								})
 						}
@@ -58,7 +58,7 @@ this.storeCO_EJERCICIO.load();
 });
 
 this.id_tab_ejecutores = new Ext.form.ComboBox({
-	fieldLabel:'Accion Centralizada',
+	fieldLabel:'Proyecto',
 	store: this.storeCO_AC,
 	typeAhead: true,
 	valueField: 'id',
@@ -67,12 +67,12 @@ this.id_tab_ejecutores = new Ext.form.ComboBox({
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
-	emptyText:'Accion Centralizada..',
+	emptyText:'Proyecto...',
   itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for=".">'+
     '<div class="search-item">'+
       '<div style="margin: 4px;" class="x-boundlist-item">'+
-      '<div><b>A.C: {codigo}</b></div>'+
+      '<div><b>PROYECTO: {codigo}</b></div>'+
       '<div style="font-size: xx-small; color: grey;">({de_nombre})</div>'+
 			'<div style="font-size: xx-small; color: blue;">{tx_ejecutor}</div>'+
       '</div>'+
@@ -97,16 +97,16 @@ this.guardar = new Ext.Button({
     iconCls: 'icon-guardar',
     handler:function(){
 
-        if(!acseguimientoEditar.main.formPanel_.getForm().isValid()){
+        if(!proyectoseguimientoEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
-        acseguimientoEditar.main.formPanel_.getForm().submit({
+        proyectoseguimientoEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/guardar') }}',
+		url:'{{ URL::to('proyecto/seguimiento/guardar') }}',
 	@else
-		url:'{{ URL::to('ac/seguimiento/guardar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('proyecto/seguimiento/guardar') }}/{!! $data->id !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',
@@ -129,8 +129,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 acseguimientoLista.main.store_lista.load();
-                 acseguimientoEditar.main.winformPanel_.close();
+                 proyectoseguimientoLista.main.store_lista.load();
+                 proyectoseguimientoEditar.main.winformPanel_.close();
              }
         });
 
@@ -142,7 +142,7 @@ this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
     handler:function(){
-        acseguimientoEditar.main.winformPanel_.close();
+        proyectoseguimientoEditar.main.winformPanel_.close();
     }
 });
 
@@ -162,7 +162,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Agregar Accion Especifica',
+    title:'Formulario: Agregar Proyecto',
     modal:true,
     constrain:true,
 width:514,
@@ -173,7 +173,7 @@ width:514,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.guardar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.guardar,
 			@endif
         this.salir
@@ -181,7 +181,7 @@ width:514,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-acseguimientoLista.main.mascara.hide();
+proyectoseguimientoLista.main.mascara.hide();
 },
 getStoreCO_EJERCICIO:function(){
       this.store = new Ext.data.JsonStore({
@@ -211,7 +211,7 @@ getStoreCO_EJERCICIO:function(){
 },
 getStoreCO_AC:function(){
       this.store = new Ext.data.JsonStore({
-          url:'{{ URL::to('ac/seguimiento/disponible') }}',
+          url:'{{ URL::to('proyecto/seguimiento/disponible') }}',
           root:'data',
           fields:[
               {name: 'id'},
@@ -228,5 +228,5 @@ getStoreCO_AC:function(){
       return this.store;
 }
 };
-Ext.onReady(acseguimientoEditar.main.init, acseguimientoEditar.main);
+Ext.onReady(proyectoseguimientoEditar.main.init, proyectoseguimientoEditar.main);
 </script>
