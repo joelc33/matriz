@@ -561,4 +561,23 @@ Route::group(['namespace' => 'PrSeguimiento'], function(){
 		Route::post('guardar', 'proyectoController@guardar');
 		Route::post('detalle', 'proyectoController@detalle');
 	});
+	//*Modulo de Proyecto Forma 001*/
+	Route::group(['prefix' => 'proyecto/seguimiento/001'], function(){
+		Route::get('lista', 'formaunoController@lista');
+		Route::post('storeLista', 'formaunoController@storeLista');
+		Route::post('detalle', 'formaunoController@detalle');
+		Route::get('editar/{id}', 'formaunoController@datos');
+		Route::post('guardar', 'formaunoController@guardar');
+		Route::post('guardar/{id}', 'formaunoController@guardar');
+		Route::post('enviar/{id}', 'formaunoController@enviar');
+	});
+	//*Modulo de Proyecto Forma 001*/
+	Route::group(['prefix' => 'seguimiento/proyecto/001/cambio'], function(){
+		Route::get('lista', 'formaunoController@listaCambio');
+		Route::post('storeLista', 'formaunoController@storeListaCambio');
+		Route::post('detalle', 'formaunoController@detalleCambio');
+		Route::get('editar/{id}', 'formaunoController@datosCambio');
+		Route::post('aprobar/{id}', 'formaunoController@aprobar');
+		Route::post('negar/{id}', 'formaunoController@negar');
+	});
 });
