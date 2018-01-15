@@ -10,7 +10,7 @@ this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_pro
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 
 this.fieldset2 = new Ext.form.FieldSet({
-	title: 'Datos de la Accion Centralizada',
+	title: 'Datos del Proyecto',
 	html: this.datos2
 });
 

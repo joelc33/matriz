@@ -18,7 +18,7 @@ this.de_objetivo = new Ext.form.TextArea({
 	value:this.OBJ.de_objetivo,
 	allowBlank: false,
 	width:400,
-	height: 200,
+	height: 100,
 	maxLength: 6000,
 	readOnly:this.OBJ.in_bloquear_001,
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
