@@ -10,7 +10,7 @@ this.storeCO_PERIODO = this.getStoreCO_PERIODO();
 this.multiselecPeriodo = new Ext.ux.Multiselect({
 		fieldLabel: 'Periodo',
 		name: 'periodo',
-		id: 'periodo',
+		id: 'periodoAC',
 		valueField: 'id',
 		displayField: 'rango',
 		//iconCls:'icon-multiSel',
@@ -22,7 +22,7 @@ this.multiselecPeriodo = new Ext.ux.Multiselect({
 				text: 'Limpiar Selección',
 				iconCls:'icon-limpiar',
 				handler: function(){
-								parametroSeguimientoAC.main.formpanel.getForm().findField('periodo').reset();
+								parametroSeguimientoAC.main.formpanel.getForm().findField('periodoAC').reset();
 						}
 		}],
 		ddReorder: true
