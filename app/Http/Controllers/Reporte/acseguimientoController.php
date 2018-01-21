@@ -63,6 +63,17 @@ class acseguimientoController extends Controller
   {
     $this->middleware('auth');
   }
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function reporte()
+	{
+			return View::make('reporte.seguimiento.ac');
+	}
+
     /**
      * Display a listing of the resource.
      *
@@ -72,7 +83,7 @@ class acseguimientoController extends Controller
     {
 
 
-      
+
       $pdf = new PDFseguimientoAC('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
       $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
       $pdf->SetAuthor('Yoser Perez');
