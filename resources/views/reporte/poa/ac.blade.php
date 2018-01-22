@@ -152,6 +152,13 @@ this.botones = new this.GrupoBotones({
 									handler: this.onExportarResponsableTodo
 								},
 							@endif
+							@if( in_array( array( 'de_privilegio' => 'ac.poa.exportar.todo', 'in_habilitado' => true), Session::get('credencial') ))
+								{
+									text:'Exportar POA',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportarPoaTodo
+								},
+							@endif
 							/*{
 								text:'Limpiar',  // Limpiar campos del formulario
 								iconCls:'icon-limpiar',
@@ -253,6 +260,11 @@ onExportarResponsableTodo : function() {
 onResumenAc : function() {
 	bajar.load({
 		url: '{{ URL::to('reporte/poa/ac/resumen') }}'
+	});
+},
+onExportarPoaTodo : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/poa/ac/todo') }}'
 	});
 },
 onLimpiar: function(){
