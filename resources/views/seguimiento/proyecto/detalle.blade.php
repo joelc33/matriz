@@ -22,7 +22,7 @@ this.deposito = new Ext.Button({
 		acseguimientoLista.main.mascara.show();
 		this.msg = Ext.get('formularioDeposito');
 		this.msg.load({
-			url:"{{ URL::to('seguimiento/ac/cerrar') }}/"+nu_serial,
+			url:"{{ URL::to('seguimiento/proyecto/cerrar') }}/"+nu_serial,
 			scripts: true,
 			text: "Cargando.."
 		});

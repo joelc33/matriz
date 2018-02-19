@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("forma005ListaCambio");
+Ext.ns("prforma005ListaCambio");
 function changeEstatus( in_005, de_estatus){
 	if(in_005==true){
 	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> '+de_estatus+'</span>'+'</div></tpl>';
@@ -8,7 +8,7 @@ function changeEstatus( in_005, de_estatus){
 	}
 return val;
 };
-forma005ListaCambio.main = {
+prforma005ListaCambio.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -24,9 +24,9 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma005ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			this.codigo  = prforma005ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+				url: '{{ URL::to('reporte/proyecto/seguimiento/ficha') }}/'+this.codigo
 			});
     }
 });
@@ -61,10 +61,10 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		forma005ListaCambio.main.store_lista.baseParams={};
-		forma005ListaCambio.main.store_lista.baseParams.paginar = 'si';
-		forma005ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		forma005ListaCambio.main.store_lista.load();
+		prforma005ListaCambio.main.store_lista.baseParams={};
+		prforma005ListaCambio.main.store_lista.baseParams.paginar = 'si';
+		prforma005ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		prforma005ListaCambio.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -76,12 +76,12 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			forma005ListaCambio.main.store_lista.baseParams={}
-			forma005ListaCambio.main.store_lista.baseParams.BuscarBy = true;
-			forma005ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			forma005ListaCambio.main.store_lista.baseParams[this.paramName] = v;
-			forma005ListaCambio.main.store_lista.baseParams.paginar = 'si';
-			forma005ListaCambio.main.store_lista.load();
+			prforma005ListaCambio.main.store_lista.baseParams={}
+			prforma005ListaCambio.main.store_lista.baseParams.BuscarBy = true;
+			prforma005ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			prforma005ListaCambio.main.store_lista.baseParams[this.paramName] = v;
+			prforma005ListaCambio.main.store_lista.baseParams.paginar = 'si';
+			prforma005ListaCambio.main.store_lista.load();
 		}
 	}
 });
@@ -113,7 +113,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma005ListaCambio.main.ficha.enable();
+			prforma005ListaCambio.main.ficha.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -129,7 +129,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				rowselect: function(sm, row, rec) {
 					var msg = Ext.get('detalle');
 					msg.load({
-									url: '{{ URL::to('seguimiento/ac/005/cambio/detalle') }}',
+									url: '{{ URL::to('seguimiento/proyecto/005/cambio/detalle') }}',
 									scripts: true,
 									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
 									text: 'Cargando...'
@@ -146,11 +146,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 /*Evento Doble Click*/
 this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	panel_detalle.toggleCollapse(true);
-	this.record = forma005ListaCambio.main.store_lista.getAt(row);
+	this.record = prforma005ListaCambio.main.store_lista.getAt(row);
 	this.codigo = this.record.data["id"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
-	    url: '{{ URL::to('seguimiento/ac/005/cambio/detalle') }}',
+	    url: '{{ URL::to('seguimiento/proyecto/005/cambio/detalle') }}',
 	    scripts: true,
 	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
 	    text: "Cargando..."
@@ -166,14 +166,14 @@ this.panel = new Ext.Panel({
 	]
 });
 
-this.panel.render("contenedorforma005ListaCambio");
+this.panel.render("contenedorprforma005ListaCambio");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma005ListaCambio.main.ficha.disable();
+prforma005ListaCambio.main.ficha.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -181,7 +181,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-	    url:'{{ URL::to('seguimiento/ac/005/cambio/storeLista') }}',
+	    url:'{{ URL::to('seguimiento/proyecto/005/cambio/storeLista') }}',
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
@@ -215,7 +215,7 @@ getLista: function(){
     return this.store;
 }
 };
-Ext.onReady(forma005ListaCambio.main.init, forma005ListaCambio.main);
+Ext.onReady(prforma005ListaCambio.main.init, prforma005ListaCambio.main);
 </script>
-<div id="contenedorforma005ListaCambio"></div>
+<div id="contenedorprforma005ListaCambio"></div>
 <div id="formularioacseguimiento"></div>

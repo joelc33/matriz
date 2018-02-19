@@ -129,9 +129,9 @@ this.guardar = new Ext.Button({
         forma005Editar.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-						url:'{{ URL::to('ac/seguimiento/005/enviar') }}',
+						url:'{{ URL::to('proyecto/seguimiento/005/enviar') }}',
 						@else
-						url:'{{ URL::to('ac/seguimiento/005/enviar') }}/{!! $data->id !!}',
+						url:'{{ URL::to('proyecto/seguimiento/005/enviar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -154,7 +154,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma005Lista.main.store_lista.load();
+                 prforma005Lista.main.store_lista.load();
                  forma005Editar.main.winformPanel_.close();
              }
         });
@@ -217,7 +217,7 @@ this.winformPanel_ = new Ext.Window({
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma005Lista.main.mascara.hide();
+prforma005Lista.main.mascara.hide();
 }
 };
 Ext.onReady(forma005Editar.main.init, forma005Editar.main);

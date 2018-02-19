@@ -1,6 +1,6 @@
 <script type="text/javascript">
-Ext.ns('forma005ListaDetalle');
-forma005ListaDetalle.main = {
+Ext.ns('prforma005ListaDetalle');
+prforma005ListaDetalle.main = {
 init: function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
@@ -21,8 +21,8 @@ this.editar = new Ext.Button({
 		addTab('foma005{!! $data['nu_codigo'] !!}','F005 - A.C: {!! $data['nu_codigo'] !!}','{{ URL::to('proyecto/seguimiento/005/datos') }}/'+{!! $data['id'] !!},'load','icon-editar','');
 	}*/
 	handler:function(){
-	this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma005Lista.main.mascara.show();
+	this.codigo  = prforma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	prforma005Lista.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
 			 url:"{{ URL::to('proyecto/seguimiento/005/editar') }}/"+this.codigo,
@@ -50,17 +50,17 @@ this.formPanel_ = new Ext.form.FormPanel({
   this.fieldset2
   ],
   tbar:[
-		@if( in_array( array( 'de_privilegio' => 'proyectoseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
+		@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.editar', 'in_habilitado' => true), Session::get('credencial') ))
       this.editar/*,'-',this.cerrar*/
 		@endif
   ]
 });
 
-this.formPanel_.render('forma005ListaDetalle');
+this.formPanel_.render('prforma005ListaDetalle');
 }
 };
-Ext.onReady(forma005ListaDetalle.main.init, forma005ListaDetalle.main);
+Ext.onReady(prforma005ListaDetalle.main.init, prforma005ListaDetalle.main);
 </script>
-<div id="forma005ListaDetalle"></div>
+<div id="prforma005ListaDetalle"></div>
 <div id="formularioacseguimiento"></div>
 <div id="formularioEditar{!! $data['id'] !!}"></div>
