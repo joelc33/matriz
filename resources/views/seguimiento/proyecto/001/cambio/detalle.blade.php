@@ -8,7 +8,7 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 this.datos2 = '<p class="registro_detalle"><b>Fecha de Solicitud: </b>'+this.OBJ.fe_solicitud+'</p>';
 this.datos2 += '<p class="registro_detalle"><b>Ejecutor: </b>'+this.OBJ.tx_ejecutor+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Código: </b>'+this.OBJ.nu_codigo+'</p>';
-this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_ac+'</p>';
+this.datos2 +='<p class="registro_detalle"><b>Descripcion: </b>'+this.OBJ.de_nombre+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Periodo de Seguimiento: </b>'+this.OBJ.fe_inicio+' - '+this.OBJ.fe_fin+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Obervacion: </b>'+this.OBJ.de_observacion+'</p>';
 this.datos2 +='<p class="registro_detalle"><b>Usuario: </b>'+this.OBJ.da_login_a+'</p>';
@@ -32,7 +32,7 @@ this.editar = new Ext.Button({
 	forma001ListaCambio.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
-			 url:"{{ URL::to('seguimiento/ac/001/cambio/editar') }}/"+this.codigo,
+			 url:"{{ URL::to('seguimiento/proyecto/001/cambio/editar') }}/"+this.codigo,
 			 scripts: true,
 			 text: "Cargando.."
 			});
@@ -43,7 +43,7 @@ this.cerrar = new Ext.Button({
 	text:'Cerrar',
 	iconCls: 'icon-guardar',
   handler:function(){
-		addTab('foma001'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('ac/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
+		addTab('foma001'+this.OBJ.nu_codigo,'A.C: '+this.OBJ.nu_codigo,'{{ URL::to('proyecto/seguimiento/001/datos') }}/'+this.OBJ.id,'load','icon-editar','');
 	}
 });
 

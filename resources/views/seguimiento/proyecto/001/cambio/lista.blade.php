@@ -26,7 +26,7 @@ this.ficha= new Ext.Button({
     handler:function(){
 			this.codigo  = forma001ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+				url: '{{ URL::to('reporte/proyecto/seguimiento/ficha') }}/'+this.codigo
 			});
     }
 });
@@ -129,7 +129,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				rowselect: function(sm, row, rec) {
 					var msg = Ext.get('detalle');
 					msg.load({
-									url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
+									url: '{{ URL::to('seguimiento/proyecto/001/cambio/detalle') }}',
 									scripts: true,
 									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
 									text: 'Cargando...'
@@ -150,7 +150,7 @@ this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	this.codigo = this.record.data["id"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
-	    url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
+	    url: '{{ URL::to('seguimiento/proyecto/001/cambio/detalle') }}',
 	    scripts: true,
 	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
 	    text: "Cargando..."
@@ -166,7 +166,7 @@ this.panel = new Ext.Panel({
 	]
 });
 
-this.panel.render("contenedorforma001ListaCambio");
+this.panel.render("contenedorforma001ListaCambioPR");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
@@ -181,7 +181,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-	    url:'{{ URL::to('seguimiento/ac/001/cambio/storeLista') }}',
+	    url:'{{ URL::to('seguimiento/proyecto/001/cambio/storeLista') }}',
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
@@ -217,5 +217,5 @@ getLista: function(){
 };
 Ext.onReady(forma001ListaCambio.main.init, forma001ListaCambio.main);
 </script>
-<div id="contenedorforma001ListaCambio"></div>
+<div id="contenedorforma001ListaCambioPR"></div>
 <div id="formularioacseguimiento"></div>

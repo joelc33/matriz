@@ -6,9 +6,9 @@ init:function(){
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 //<token>
-this.id_tab_ac = new Ext.form.Hidden({
-	name:'ac',
-	value:this.OBJ.id_tab_ac
+this.id_tab_proyecto = new Ext.form.Hidden({
+	name:'proyecto',
+	value:this.OBJ.id_tab_proyecto
 });
 //</token>
 this._token = new Ext.form.Hidden({
@@ -16,10 +16,10 @@ this._token = new Ext.form.Hidden({
 	value:'{{ csrf_token() }}'
 });
 
-this.inst_mision = new Ext.form.TextArea({
-	fieldLabel: '1.4.1. MISION',
-	name: 'mision',
-	value:this.OBJ.inst_mision,
+this.de_objetivo = new Ext.form.TextArea({
+	fieldLabel: '1.7. OBJETIVO GENERAL DEL PROYECTO',
+	name: 'objetivo',
+	value:this.OBJ.de_objetivo,
 	allowBlank: false,
 	width:400,
 	height: 100,
@@ -30,24 +30,10 @@ this.inst_mision = new Ext.form.TextArea({
   style:'background:#f2d7d5;'
 });
 
-this.inst_vision = new Ext.form.TextArea({
-	fieldLabel: '1.4.2. VISION',
-	name: 'vision',
-	value:this.OBJ.inst_vision,
-	allowBlank: false,
-	width:400,
-	height: 100,
-	maxLength: 6000,
-	/*readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
-});
-
-this.inst_objetivos = new Ext.form.TextArea({
-	fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-	name: 'objetivos',
-	value:this.OBJ.inst_objetivos,
+this.de_proyecto = new Ext.form.TextArea({
+	fieldLabel: '1.10. DESCRIPCIÓN DEL PROYECTO',
+	name: 'descripcion',
+	value:this.OBJ.de_proyecto,
 	allowBlank: false,
 	width:400,
 	height: 100,
@@ -86,9 +72,9 @@ this.guardar = new Ext.Button({
         forma001EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}',
+							url:'{{ URL::to('seguimiento/proyecto/001/cambio/aprobar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/001/cambio/aprobar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/proyecto/001/cambio/aprobar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -138,9 +124,9 @@ this.negar = new Ext.Button({
         forma001EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}',
+							url:'{{ URL::to('seguimiento/proyecto/001/cambio/negar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/001/cambio/negar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/proyecto/001/cambio/negar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -192,10 +178,9 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-    this.id_tab_ac,
-		this.inst_mision,
-		this.inst_vision,
-		this.inst_objetivos,
+    this.id_tab_proyecto,
+		this.de_objetivo,
+		this.de_proyecto,
 		this.de_observacion
 	]
 });
