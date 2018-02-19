@@ -6,9 +6,9 @@ init:function(){
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 //<token>
-this.id_tab_ac = new Ext.form.Hidden({
-	name:'ac',
-	value:this.OBJ.id_tab_ac
+this.id_tab_proyecto = new Ext.form.Hidden({
+	name:'proyecto',
+	value:this.OBJ.id_tab_proyecto
 });
 //</token>
 this._token = new Ext.form.Hidden({
@@ -151,9 +151,9 @@ this.guardar = new Ext.Button({
         forma005EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/005/cambio/aprobar') }}',
+							url:'{{ URL::to('seguimiento/proyecto/005/cambio/aprobar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/005/cambio/aprobar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/proyecto/005/cambio/aprobar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -176,7 +176,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma005ListaCambio.main.store_lista.load();
+                 prforma005ListaCambio.main.store_lista.load();
                  forma005EditarCambio.main.winformPanel_.close();
              }
         });
@@ -203,9 +203,9 @@ this.negar = new Ext.Button({
         forma005EditarCambio.main.formPanel_.getForm().submit({
 						method:'POST',
 						@if(empty($data->id))
-							url:'{{ URL::to('seguimiento/ac/005/cambio/negar') }}',
+							url:'{{ URL::to('seguimiento/proyecto/005/cambio/negar') }}',
 						@else
-							url:'{{ URL::to('seguimiento/ac/005/cambio/negar') }}/{!! $data->id !!}',
+							url:'{{ URL::to('seguimiento/proyecto/005/cambio/negar') }}/{!! $data->id !!}',
 						@endif
 						waitMsg: 'Enviando datos, por favor espere..',
 						waitTitle:'Enviando',
@@ -228,7 +228,7 @@ this.negar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma005ListaCambio.main.store_lista.load();
+                 prforma005ListaCambio.main.store_lista.load();
                  forma005EditarCambio.main.winformPanel_.close();
              }
         });
@@ -257,7 +257,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-    this.id_tab_ac,
+    this.id_tab_proyecto,
 		this.de_programado_anual,
 		this.tp_indicador,
 		this.nb_indicador,
@@ -297,7 +297,7 @@ width:614,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma005ListaCambio.main.mascara.hide();
+prforma005ListaCambio.main.mascara.hide();
 }
 };
 Ext.onReady(forma005EditarCambio.main.init, forma005EditarCambio.main);
