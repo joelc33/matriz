@@ -353,15 +353,25 @@ class formadosController extends Controller
         ));
       }
       $tabla = tab_meta_fisica::find($id);
-      $tabla->nu_meta_modificada = Input::get("meta_modificada");
-      $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
-      $tabla->nu_obtenido = Input::get("obtenido");
-      $tabla->nu_corte = Input::get("corte");
-      $tabla->nb_responsable = Input::get("responsable");
-      $tabla->id_tab_municipio_detalle = Input::get("municipio");
-      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->in_bloquear_002 = true;
+      $tabla->de_observacion_002 = Input::get("observacion");
       $tabla->in_cargado = true;
       $tabla->save();
+
+      $tabla_002 = new tab_forma_002;
+      $tabla_002->id_tab_meta_fisica = $id;
+      $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
+      $tabla_002->nu_meta_actualizada = Input::get("meta_actualizada");
+      $tabla_002->nu_obtenido = Input::get("obtenido");
+      $tabla_002->nu_corte = Input::get("corte");
+      $tabla_002->nb_responsable = Input::get("responsable");
+      $tabla_002->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla_002->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla_002->in_002 = false;
+      $tabla_002->id_usuario_solicita = Auth::user()->id;
+      $tabla_002->in_activo = true;
+      $tabla_002->id_tab_estatus = 5;
+      $tabla_002->save();
 
       DB::commit();
       return Response::json(array(
