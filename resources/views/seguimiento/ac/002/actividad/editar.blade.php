@@ -243,6 +243,58 @@ this.guardar = new Ext.Button({
     }
 });
 
+this.enviar = new Ext.Button({
+    text:'Enviar Cambios',
+    iconCls: 'icon-report',
+    handler:function(){
+
+        if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
+            Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+            return false;
+        }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea solicitar los cambios?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+				if(boton=="yes"){
+
+        forma002ActividadEditar.main.formPanel_.getForm().submit({
+		method:'POST',
+	@if(empty($data->id))
+		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}',
+	@else
+		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}/{!! $data->id !!}',
+	@endif
+		waitMsg: 'Enviando datos, por favor espere..',
+		waitTitle:'Enviando',
+            failure: function(form, action) {
+		var errores = '';
+		for(datos in action.result.msg){
+			errores += action.result.msg[datos] + '<br>';
+		}
+                Ext.MessageBox.alert('Error en transacción', errores);
+            },
+            success: function(form, action) {
+                 if(action.result.success){
+                     Ext.MessageBox.show({
+                         title: 'Mensaje',
+                         msg: action.result.msg,
+                         closable: false,
+                         icon: Ext.MessageBox.INFO,
+                         resizable: false,
+			 animEl: document.body,
+                         buttons: Ext.MessageBox.OK
+                     });
+                 }
+                 forma002ActividadLista.main.store_lista.load();
+                 forma002ActividadEditar.main.winformPanel_.close();
+             }
+        });
+
+			}
+			});
+
+    }
+});
+
 this.salir = new Ext.Button({
     text:'Salir',
 //    iconCls: 'icon-cancelar',
@@ -279,7 +331,7 @@ width:814,
     ],
     buttons:[
 			@if( in_array( array( 'de_privilegio' => 'aplicacion.guardar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.guardar,
+				this.enviar,
 			@endif
         this.salir
     ],

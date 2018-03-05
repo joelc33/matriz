@@ -383,7 +383,7 @@ class formaunoController extends Controller
     ->select( 'proyecto_seguimiento.tab_forma_001.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
     't02.in_activo', 't04a.da_login as da_login_a', 't04b.da_login as da_login_b',
     DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_observacion',
+    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'proyecto_seguimiento.tab_forma_001.de_observacion',
     'proyecto_seguimiento.tab_forma_001.de_proyecto', 'proyecto_seguimiento.tab_forma_001.in_001', 't01.id_ejecutor', 'de_nombre',
     DB::raw("to_char(proyecto_seguimiento.tab_forma_001.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud") )
     ->where('proyecto_seguimiento.tab_forma_001.id', '=', Input::get('codigo'))

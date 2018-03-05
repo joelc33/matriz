@@ -68,7 +68,7 @@ this.guardar = new Ext.Button({
             return false;
         }
 
-				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar si hacer cambios?<br><b>Nota:</b> No se podra modificar el contenido.', function(boton){
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar sin hacer cambios?<br><b>Nota:</b> No se podra modificar el contenido.', function(boton){
 				if(boton=="yes"){
 
         forma001Editar.main.formPanel_.getForm().submit({

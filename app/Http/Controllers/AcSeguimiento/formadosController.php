@@ -333,5 +333,88 @@ class formadosController extends Controller
     }
   }
 
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function enviar($id = NULL)
+  {
+  DB::beginTransaction();
+    if($id!=''||$id!=null){
+
+       try {
+      $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditar);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = tab_meta_fisica::find($id);
+      $tabla->nu_meta_modificada = Input::get("meta_modificada");
+      $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
+      $tabla->nu_obtenido = Input::get("obtenido");
+      $tabla->nu_corte = Input::get("corte");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->in_cargado = true;
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Editado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+
+    }else{
+
+       try {
+      $validator = Validator::make(Input::all(), tab_meta_fisica::$validarCrear);
+      if ($validator->fails()){
+        return Response::json(array(
+          'success' => false,
+          'msg' => $validator->getMessageBag()->toArray()
+        ));
+      }
+      $tabla = new tab_meta_fisica;
+      $tabla->nu_meta_modificada = Input::get("meta_modificada");
+      $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
+      $tabla->nu_obtenido = Input::get("obtenido");
+      $tabla->nu_corte = Input::get("corte");
+      $tabla->nb_responsable = Input::get("responsable");
+      $tabla->id_tab_municipio_detalle = Input::get("municipio");
+      $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+      $tabla->in_activo = 'TRUE';
+      $tabla->save();
+
+      DB::commit();
+      return Response::json(array(
+        'success' => true,
+        'msg' => 'Registro Guardado con Exito!'
+      ));
+
+          }catch (\Illuminate\Database\QueryException $e)
+          {
+        DB::rollback();
+        return Response::json(array(
+          'success' => false,
+          'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+        ));
+          }
+    }
+  }
+
 
 }

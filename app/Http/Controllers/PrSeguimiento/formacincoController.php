@@ -122,7 +122,9 @@ class formacincoController extends Controller
        'fe_inicio', 'fe_fin', 'de_objetivo', 'de_proyecto', 'id_tab_situacion_presupuestaria',
        'mo_proyecto', 'clase_sector', 'clase_subsector', 'plan_operativo', 'id_tab_estatus',
        'in_activo', 'created_at', 'updated_at', 'id_tab_lapso', 'id_tab_origen',
-       'in_001', 'in_005', 'in_bloquear_001', 'in_bloquear_005' )
+       'in_001', 'in_005', 'in_bloquear_001', 'in_bloquear_005', 'pp_anual', 'tp_indicador', 'nb_indicador_gestion',
+       'de_valor_obtenido', 'de_valor_objetivo', 'nu_cumplimiento', 'de_indicador_descripcion',
+       'de_formula', 'de_observacion_005' )
     ->where('id', '=', $id)
     ->first();
 
@@ -397,7 +399,7 @@ class formacincoController extends Controller
     ->select( 'proyecto_seguimiento.tab_forma_005.id', 'tx_ejecutor', 't01.id_tab_ejecutores',
     't02.in_activo', 't04a.da_login as da_login_a', 't04b.da_login as da_login_b',
     DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'de_observacion',
+    DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"), 'nu_codigo', 'proyecto_seguimiento.tab_forma_005.de_observacion',
     'de_nombre as de_proyecto', 'proyecto_seguimiento.tab_forma_005.in_005', 't01.id_ejecutor',
     DB::raw("to_char(proyecto_seguimiento.tab_forma_005.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud") )
     ->where('proyecto_seguimiento.tab_forma_005.id', '=', Input::get('codigo'))
