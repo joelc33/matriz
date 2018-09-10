@@ -605,7 +605,7 @@ class Crawler extends \SplObjectStorage
                 }
             }
 
-            $data[] = $count > 1 ? $elements : $elements[0];
+            $data[] = 1 === $count ? $elements[0] : $elements;
         }
 
         return $data;
@@ -1039,8 +1039,6 @@ class Crawler extends \SplObjectStorage
      */
     private function createSubCrawler($nodes)
     {
-        $crawler = new static($nodes, $this->uri, $this->baseHref);
-
-        return $crawler;
+        return new static($nodes, $this->uri, $this->baseHref);
     }
 }

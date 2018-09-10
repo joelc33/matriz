@@ -95,14 +95,19 @@ class JasperPHP
             $command .= " -P";
             foreach ($parameters as $key => $value)
             {
-                $command .= " " . $key . "=" . $value;
+                if( is_string($value) )
+                    $command .= " $key=\"$value\"";
+                else
+                    $command .= " $key=$value";
             }
         }
 
         if( count($db_connection) > 0 )
         {
             $command .= " -t " . $db_connection['driver'];
-            $command .= " -u " . $db_connection['username'];
+
+            if( isset($db_connection['username']) && !empty($db_connection['username']) )
+                $command .= " -u " . $db_connection['username'];
 
             if( isset($db_connection['password']) && !empty($db_connection['password']) )
                 $command .= " -p " . $db_connection['password'];
@@ -127,10 +132,10 @@ class JasperPHP
 
             if ( isset($db_connection['db_sid']) && !empty($db_connection['db_sid']) )
                 $command .= ' --db-sid ' . $db_connection['db_sid'];
-           
+
             if ( isset($db_connection['json_query']) && !empty($db_connection['json_query']) )
                 $command .= ' --json-query ' . $db_connection['json_query'];
-            
+
             if ( isset($db_connection['data_file']) && !empty($db_connection['data_file']) )
                 $command .= ' --data-file ' . $db_connection['data_file'];
 
@@ -182,10 +187,9 @@ class JasperPHP
 
         if( $return_var != 0 && isset($output[0]) )
             throw new \Exception($output[0], 1);
-        
         elseif( $return_var != 0 ) 
             throw new \Exception("Your report has an error and couldn't be processed! Try to output the command using the function `output();` and run it manually in the console.", 1);
-        
+
         return $output;
     }
 }

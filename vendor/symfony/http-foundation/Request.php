@@ -130,7 +130,7 @@ class Request
     public $headers;
 
     /**
-     * @var string|resource
+     * @var string|resource|false|null
      */
     protected $content;
 
@@ -207,13 +207,13 @@ class Request
     protected static $requestFactory;
 
     /**
-     * @param array           $query      The GET parameters
-     * @param array           $request    The POST parameters
-     * @param array           $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
-     * @param array           $cookies    The COOKIE parameters
-     * @param array           $files      The FILES parameters
-     * @param array           $server     The SERVER parameters
-     * @param string|resource $content    The raw body data
+     * @param array                $query      The GET parameters
+     * @param array                $request    The POST parameters
+     * @param array                $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
+     * @param array                $cookies    The COOKIE parameters
+     * @param array                $files      The FILES parameters
+     * @param array                $server     The SERVER parameters
+     * @param string|resource|null $content    The raw body data
      */
     public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
@@ -225,13 +225,13 @@ class Request
      *
      * This method also re-initializes all properties.
      *
-     * @param array           $query      The GET parameters
-     * @param array           $request    The POST parameters
-     * @param array           $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
-     * @param array           $cookies    The COOKIE parameters
-     * @param array           $files      The FILES parameters
-     * @param array           $server     The SERVER parameters
-     * @param string|resource $content    The raw body data
+     * @param array                $query      The GET parameters
+     * @param array                $request    The POST parameters
+     * @param array                $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
+     * @param array                $cookies    The COOKIE parameters
+     * @param array                $files      The FILES parameters
+     * @param array                $server     The SERVER parameters
+     * @param string|resource|null $content    The raw body data
      */
     public function initialize(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
@@ -294,13 +294,13 @@ class Request
      * The information contained in the URI always take precedence
      * over the other information (server and parameters).
      *
-     * @param string $uri        The URI
-     * @param string $method     The HTTP method
-     * @param array  $parameters The query (GET) or request (POST) parameters
-     * @param array  $cookies    The request cookies ($_COOKIE)
-     * @param array  $files      The request files ($_FILES)
-     * @param array  $server     The server parameters ($_SERVER)
-     * @param string $content    The raw body data
+     * @param string               $uri        The URI
+     * @param string               $method     The HTTP method
+     * @param array                $parameters The query (GET) or request (POST) parameters
+     * @param array                $cookies    The request cookies ($_COOKIE)
+     * @param array                $files      The request files ($_FILES)
+     * @param array                $server     The server parameters ($_SERVER)
+     * @param string|resource|null $content    The raw body data
      *
      * @return static
      */
@@ -496,9 +496,21 @@ class Request
             return trigger_error($e, E_USER_ERROR);
         }
 
+        $cookieHeader = '';
+        $cookies = array();
+
+        foreach ($this->cookies as $k => $v) {
+            $cookies[] = $k.'='.$v;
+        }
+
+        if (!empty($cookies)) {
+            $cookieHeader = 'Cookie: '.implode('; ', $cookies)."\r\n";
+        }
+
         return
             sprintf('%s %s %s', $this->getMethod(), $this->getRequestUri(), $this->server->get('SERVER_PROTOCOL'))."\r\n".
-            $this->headers."\r\n".
+            $this->headers.
+            $cookieHeader."\r\n".
             $content;
     }
 
@@ -510,7 +522,7 @@ class Request
      */
     public function overrideGlobals()
     {
-        $this->server->set('QUERY_STRING', static::normalizeQueryString(http_build_query($this->query->all(), null, '&')));
+        $this->server->set('QUERY_STRING', static::normalizeQueryString(http_build_query($this->query->all(), '', '&')));
 
         $_GET = $this->query->all();
         $_POST = $this->request->all();
@@ -569,7 +581,7 @@ class Request
     public static function setTrustedHosts(array $hostPatterns)
     {
         self::$trustedHostPatterns = array_map(function ($hostPattern) {
-            return sprintf('#%s#i', $hostPattern);
+            return sprintf('{%s}i', $hostPattern);
         }, $hostPatterns);
         // we need to reset trusted hosts on trusted host patterns change
         self::$trustedHosts = array();
@@ -1310,7 +1322,7 @@ class Request
      *
      * @param string $format The format
      *
-     * @return string The associated mime type (null if not found)
+     * @return string|null The associated mime type (null if not found)
      */
     public function getMimeType($format)
     {
@@ -1700,18 +1712,7 @@ class Request
     {
         $requestUri = '';
 
-        if ($this->headers->has('X_ORIGINAL_URL')) {
-            // IIS with Microsoft Rewrite Module
-            $requestUri = $this->headers->get('X_ORIGINAL_URL');
-            $this->headers->remove('X_ORIGINAL_URL');
-            $this->server->remove('HTTP_X_ORIGINAL_URL');
-            $this->server->remove('UNENCODED_URL');
-            $this->server->remove('IIS_WasUrlRewritten');
-        } elseif ($this->headers->has('X_REWRITE_URL')) {
-            // IIS with ISAPI_Rewrite
-            $requestUri = $this->headers->get('X_REWRITE_URL');
-            $this->headers->remove('X_REWRITE_URL');
-        } elseif ('1' == $this->server->get('IIS_WasUrlRewritten') && '' != $this->server->get('UNENCODED_URL')) {
+        if ('1' == $this->server->get('IIS_WasUrlRewritten') && '' != $this->server->get('UNENCODED_URL')) {
             // IIS7 with URL Rewrite: make sure we get the unencoded URL (double slash problem)
             $requestUri = $this->server->get('UNENCODED_URL');
             $this->server->remove('UNENCODED_URL');
