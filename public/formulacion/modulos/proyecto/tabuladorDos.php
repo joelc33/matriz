@@ -256,6 +256,7 @@ this.co_area_estrategica = new Ext.form.ComboBox({
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_area_estrategica}</div></div></tpl>'),
 	resizable:true,
+	style:'background-color:#c9c9c9;',
 	//allowBlank:false,
 	//listWidth: '800',
 	listeners:{
@@ -266,6 +267,8 @@ this.co_area_estrategica = new Ext.form.ComboBox({
             }
         }
 });
+
+tabuladorDos.main.co_area_estrategica.disable();
 
 this.storeCO_AREA_ESTRATEGICA.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
@@ -308,6 +311,7 @@ this.co_ambito_zulia = new Ext.form.ComboBox({
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_ambito_zulia}</div></div></tpl>'),
 	resizable:true,
+	style:'background-color:#c9c9c9;',
 	//allowBlank:false,
 	//listWidth: '800',
 	listeners:{
@@ -321,6 +325,8 @@ this.co_ambito_zulia = new Ext.form.ComboBox({
             }
         }
 });
+
+tabuladorDos.main.co_ambito_zulia.disable();
 
 if(this.OBJ.co_ambito_zulia){
 	this.storeCO_OBJETIVO_ZULIA.load({
@@ -362,9 +368,12 @@ this.co_objetivo_zulia = new Ext.form.ComboBox({
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_objetivo_zulia}</div></div></tpl>'),
 	resizable:true,
+	style:'background-color:#c9c9c9;',
 	//listWidth: '800',
 	//allowBlank:false
 });
+
+tabuladorDos.main.co_objetivo_zulia.disable();
 
 this.co_macroproblema = new Ext.form.ComboBox({
 	fieldLabel:'2.5.4. MACRO PROBLEMA',
@@ -386,6 +395,7 @@ this.co_macroproblema = new Ext.form.ComboBox({
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_macroproblema}</div></div></tpl>'),
 	resizable:true,
+	style:'background-color:#c9c9c9;',
 	//allowBlank:false,
 	//listWidth: '800',
 	listeners:{
@@ -403,6 +413,8 @@ this.co_macroproblema = new Ext.form.ComboBox({
 	value:  this.OBJ.co_macroproblema,
 	objStore: this.storeCO_MACROPROBLEMA
 });*/
+
+tabuladorDos.main.co_macroproblema.disable();
 
 if(this.OBJ.co_macroproblema){
 	this.storeCO_NODO.load({
@@ -438,9 +450,12 @@ this.co_nodo = new Ext.ux.form.SuperBoxSelect({
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_nodo}</div></div></tpl>'),
 	hideOnSelect:false,
 	resizable:true,
+	style:'background-color:#c9c9c9;',
 	//listWidth: '750',
 	//allowBlank:false
 });
+
+tabuladorDos.main.co_nodo.disable();
 
 this.fieldset2 = new Ext.form.FieldSet({
     	title: '2.5. OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA',
