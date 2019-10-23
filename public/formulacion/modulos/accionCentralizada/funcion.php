@@ -246,7 +246,7 @@ EOT;
 						//ajustes de plantilla
 						//filas
 						$inicio = 10;
-						$fin = 1924;
+						$fin = 1973;
 						//columnas
 						$codigo_desde = 0;
 						$codigo_hasta = 3;

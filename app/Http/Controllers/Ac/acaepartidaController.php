@@ -175,7 +175,7 @@ class acaepartidaController extends Controller
 
               //empieza  lectura vertical
               $start_v=10;
-              $end_v=1923;
+              $end_v=1973;
 
               for($v=$start_v; $v<=$end_v; $v++){
                 //empieza lectura horizontal
