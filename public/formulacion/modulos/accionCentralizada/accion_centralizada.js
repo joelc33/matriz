@@ -820,6 +820,8 @@
                 selectOnFocus: true,
                 mode: 'local',
                 hideOnSelect: false,
+                readOnly: true,
+                style: 'background-color:#c9c9c9;'
             });
 
             var combos_n = [{
@@ -869,7 +871,7 @@
             var cbxs = [];
             var cbxs_n = [];
 
-            var crearCreaCombos = function( combos ) {
+            var crearCreaCombosNac = function( combos ) {
                 return function(e){
                     self['st_' + e.valor] = Ext.create({
                         xtype: 'jsonstore',
@@ -896,9 +898,38 @@
                 };
             };
 
+            var crearCreaCombos = function( combos ) {
+                return function(e){
+                    self['st_' + e.valor] = Ext.create({
+                        xtype: 'jsonstore',
+                        url: e.url,
+                        root: 'data',
+                        fields: [e.mostrar, e.valor]
+                    });
+                    var combo = Ext.create({
+                        xtype: 'combo',
+                        store: self['st_' + e.valor],
+                        fieldLabel: e.nombre.toUpperCase(),
+                        valueField: e.valor,
+                        displayField: e.mostrar,
+                        hiddenName: e.valor,
+                        autoSelect: true,
+                        forceSelection: true,
+                        allowBlank: false,
+                        emptyText: 'Seleccione ' + e.nombre,
+                        triggerAction: 'all',
+                        mode: 'local',
+                        readOnly: true,
+                        style: 'background-color:#c9c9c9;'
+                    });
+                    self['co_'+ e.valor] = combo;
+                    combos.push(combo);
+                };
+            };
+
             //crea los combos y stores
             combos.forEach(crearCreaCombos(cbxs));
-            combos_n.forEach(crearCreaCombos(cbxs_n));
+            combos_n.forEach(crearCreaCombosNac(cbxs_n));
 
             cbxs.push(this.co_co_nodo);
 
