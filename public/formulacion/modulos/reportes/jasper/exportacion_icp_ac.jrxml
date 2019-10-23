@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exportacion_icp_ac" pageWidth="1236" pageHeight="595000" orientation="Landscape" columnWidth="1196" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d669bfe2-b682-4c8a-8907-750d8b471a96">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exportacion_icp_ac" pageWidth="1336" pageHeight="595000" orientation="Landscape" columnWidth="1296" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d669bfe2-b682-4c8a-8907-750d8b471a96">
 	<property name="ireport.zoom" value="1.1000000000000003"/>
-	<property name="ireport.x" value="134"/>
+	<property name="ireport.x" value="772"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<parameter name="id_ejercicio" class="java.lang.String">
@@ -24,7 +24,8 @@
 	ma.ej_ae as ae_ej_id,
 	t24a.tx_ejecutor as ae_ej_nombre,
 	t009.de_inicial,
-	sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo
+	sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo,
+    	t24a.id_tab_ambito_ejecutor as ambito
 from mantenimiento.tab_ejercicio_fiscal as t25
 	join mapa_acs as ma on ma.ef = t25.id
 	join t46_acciones_centralizadas as t46
@@ -76,6 +77,7 @@ order by 1, 2, 3, 4, 6;]]>
 	<field name="ae_ej_nombre" class="java.lang.String"/>
 	<field name="de_inicial" class="java.lang.String"/>
 	<field name="fondo" class="java.lang.String"/>
+	<field name="ambito" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -236,7 +238,7 @@ order by 1, 2, 3, 4, 6;]]>
 				<textFieldExpression><![CDATA["Nombre de la AE"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="1196" height="26" uuid="d772c028-97a3-4a10-b881-cad70742dc71"/>
+				<reportElement x="0" y="0" width="1247" height="26" uuid="d772c028-97a3-4a10-b881-cad70742dc71"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
@@ -312,12 +314,26 @@ order by 1, 2, 3, 4, 6;]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Fondo"]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1158" y="40" width="89" height="20" uuid="5bb1fa31-797e-4c29-8554-e623b682f612"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ambito"]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<detail>
 		<band height="22" splitType="Prevent">
 			<frame>
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1196" height="22" isPrintWhenDetailOverflows="true" uuid="a0d70705-d05a-4282-a519-61f1e78eb15b"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1296" height="22" isPrintWhenDetailOverflows="true" uuid="a0d70705-d05a-4282-a519-61f1e78eb15b"/>
 				<elementGroup>
 					<textField isStretchWithOverflow="true">
 						<reportElement stretchType="RelativeToTallestObject" x="61" y="0" width="61" height="22" uuid="58c25667-5599-4b83-b553-0ea6f451ecfe"/>
@@ -366,6 +382,18 @@ order by 1, 2, 3, 4, 6;]]>
 						</box>
 						<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{ae_nombre}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement stretchType="RelativeToTallestObject" x="441" y="0" width="182" height="22" uuid="6d31ca24-ec6e-4653-8bb3-8533214b0f96"/>
+						<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+							<pen lineWidth="0.0"/>
+							<topPen lineWidth="0.25"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{de_partida}]]></textFieldExpression>
 					</textField>
 					<textField isStretchWithOverflow="true">
 						<reportElement stretchType="RelativeToTallestObject" x="305" y="0" width="61" height="22" uuid="2a8c37d4-6a18-4d05-a918-49e5bf0a7122"/>
@@ -496,22 +524,22 @@ order by 1, 2, 3, 4, 6;]]>
 							<bottomPen lineWidth="0.0"/>
 							<rightPen lineWidth="1.0"/>
 						</box>
-						<textElement textAlignment="Right" verticalAlignment="Middle"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{de_inicial}]]></textFieldExpression>
 					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement stretchType="RelativeToTallestObject" x="1158" y="0" width="89" height="22" uuid="7f82069a-054c-4146-b2e0-9914f28a21d6"/>
+						<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+							<pen lineWidth="0.0"/>
+							<topPen lineWidth="0.25"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{ambito}]]></textFieldExpression>
+					</textField>
 				</elementGroup>
-				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" x="441" y="0" width="182" height="22" uuid="6d31ca24-ec6e-4653-8bb3-8533214b0f96"/>
-					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
-						<pen lineWidth="0.0"/>
-						<topPen lineWidth="0.25"/>
-						<leftPen lineWidth="0.0"/>
-						<bottomPen lineWidth="0.0"/>
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{de_partida}]]></textFieldExpression>
-				</textField>
 			</frame>
 		</band>
 	</detail>
