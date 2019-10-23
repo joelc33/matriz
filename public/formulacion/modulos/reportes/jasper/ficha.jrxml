@@ -108,7 +108,7 @@
 		<band height="52">
 			<image scaleImage="RetainShape" isUsingCache="true">
 				<reportElement x="2" y="11" width="589" height="39" uuid="cc6c7c5e-96cc-43e3-9245-0db069b7a976"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"cintillo_2017.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"cintillo_"+$P{id_ejercicio}+".jpg"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
