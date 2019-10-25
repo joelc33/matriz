@@ -251,7 +251,8 @@ getLista: function(){
     },
     {name: 'ejercicio',
         convert: function(v, r) {
-            return r.id_tab_ejercicio_fiscal.replace('{','').replace('}','');
+            //return r.id_tab_ejercicio_fiscal.replace('{','').replace('}','');
+            return r.id_tab_ejercicio_fiscal;
         }
     }
            ]
