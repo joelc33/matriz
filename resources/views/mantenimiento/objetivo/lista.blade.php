@@ -199,6 +199,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
     {header: 'Descripcion', width:600,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'tx_descripcion'},
+    {header: 'Ejercicio', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejercicio'},
     {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
     ],
     stripeRows: true,
@@ -242,9 +243,15 @@ getLista: function(){
     {name: 'nu_codigo'},
 		{name: 'tx_descripcion'},
     {name: 'in_activo'},
+    {name: 'id_tab_ejercicio_fiscal'},
     {name: 'nombre',
         convert: function(v, r) {
             return r.nu_codigo + ' - ' + r.tx_descripcion;
+        }
+    },
+    {name: 'ejercicio',
+        convert: function(v, r) {
+            return r.id_tab_ejercicio_fiscal.replace('{','').replace('}','');
         }
     }
            ]

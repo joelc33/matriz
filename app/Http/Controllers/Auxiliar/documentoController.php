@@ -150,6 +150,7 @@ class documentoController extends Controller
       $response['data']  = tab_planes::select('co_objetivo_historico','tx_descripcion')
       ->where('nu_nivel', '=', 1)
       ->where('in_activo', '=', true)
+      ->whereRaw(''.Session::get('ejercicio').' = ANY (id_tab_ejercicio_fiscal)')
       ->orderby('co_objetivo_historico','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
@@ -166,6 +167,7 @@ class documentoController extends Controller
       ->where('co_objetivo_historico', '=', Input::get('co_objetivo_historico'))
       ->where('nu_nivel', '=', 2)
       ->where('in_activo', '=', true)
+      ->whereRaw(''.Session::get('ejercicio').' = ANY (id_tab_ejercicio_fiscal)')
       ->orderby('co_objetivo_nacional','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
@@ -183,6 +185,7 @@ class documentoController extends Controller
       ->where('co_objetivo_nacional', '=', Input::get('co_objetivo_nacional'))
       ->where('nu_nivel', '=', 3)
       ->where('in_activo', '=', true)
+      ->whereRaw(''.Session::get('ejercicio').' = ANY (id_tab_ejercicio_fiscal)')
       ->orderby('co_objetivo_estrategico','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
@@ -201,6 +204,7 @@ class documentoController extends Controller
       ->where('co_objetivo_estrategico', '=', Input::get('co_objetivo_estrategico'))
       ->where('nu_nivel', '=', 4)
       ->where('in_activo', '=', true)
+      ->whereRaw(''.Session::get('ejercicio').' = ANY (id_tab_ejercicio_fiscal)')
       ->orderby('co_objetivo_estrategico','ASC')->get()->toArray();
       return Response::json($response, 200);
     }
