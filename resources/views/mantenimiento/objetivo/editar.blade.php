@@ -5,6 +5,8 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+this.storeCO_EJERCICIO = this.getStoreCO_EJERCICIO();
+
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -81,6 +83,34 @@ this.tx_descripcion = new Ext.form.TextArea({
 	height:100,
 });
 
+this.id_tab_ejercicio_fiscal = new Ext.ux.form.SuperBoxSelect({
+	fieldLabel:'Ejercicio Fiscal',
+	store: this.storeCO_EJERCICIO,
+	typeAhead: true,
+	xtype:'superboxselect',
+	allowQueryAll : false,
+	valueField: 'id',
+	displayField:'id',
+	hiddenName:'id_tab_ejercicio_fiscal[]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Ejercicio',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{id}</div></div></tpl>'),
+	hideOnSelect:false,
+	resizable:true,
+});
+
+this.storeCO_EJERCICIO.load({
+	callback: function(){
+		objetivoEditar.main.id_tab_ejercicio_fiscal.setValue(objetivoEditar.main.OBJ.id_tab_ejercicio_fiscal.replace('{','').replace('}',''));
+	}
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -151,7 +181,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.co_objetivo_estrategico,
 		this.co_objetivo_general,
 		this.nu_nivel,
-		this.tx_descripcion
+		this.tx_descripcion,
+		this.id_tab_ejercicio_fiscal
 	]
 });
 
@@ -176,6 +207,21 @@ width:614,
 });
 this.winformPanel_.show();
 objetivoLista.main.mascara.hide();
+},
+getStoreCO_EJERCICIO:function(){
+    this.store = new Ext.data.JsonStore({
+		url:'{{ URL::to('ejercicio/lista') }}',
+    	root:'data',
+    	fields:[
+        	{name: 'id'}
+        ],
+        listeners : {
+            exception : function(proxy, response, operation) {
+                Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+            }
+        }
+    });
+    return this.store;
 }
 };
 Ext.onReady(objetivoEditar.main.init, objetivoEditar.main);

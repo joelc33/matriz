@@ -94,7 +94,7 @@ class objetivoController extends Controller
   {
     $data = tab_planes::select('id', 'co_objetivo_historico', 'co_objetivo_nacional', 'co_objetivo_estrategico',
      'co_objetivo_general', 'nu_nivel', 'tx_codigo', 'nu_codigo', 'tx_descripcion',
-     'in_activo')
+     'in_activo', 'id_tab_ejercicio_fiscal')
     ->where('id', '=', $id)
     ->first();
     return View::make('mantenimiento.objetivo.editar')->with('data',$data);
@@ -119,6 +119,17 @@ class objetivoController extends Controller
               'msg' => $validator->getMessageBag()->toArray()
             ));
           }
+
+          $ejercicio = Input::get('id_tab_ejercicio_fiscal');
+          // Can't save a null value
+          if (!$ejercicio) {
+            $ejercicio = [];
+          }
+
+          $ejercicio = json_encode($ejercicio);
+          $ejercicio = "'".preg_replace("#^\[(.*)\]$#", '{\1}', $ejercicio)."'";
+          $ejercicio = DB::raw($ejercicio);
+
           $tabla = tab_planes::find($id);
           $tabla->co_objetivo_historico = Input::get("objetivo_historico");
           $tabla->co_objetivo_nacional = Input::get("objetivo_nacional");
@@ -128,6 +139,7 @@ class objetivoController extends Controller
           $tabla->tx_codigo = Input::get("codigo");
           $tabla->nu_codigo = Input::get("objetivo_historico").'.'.Input::get("objetivo_nacional").'.'.Input::get("objetivo_estrategico").'.'.Input::get("objetivo_general");
           $tabla->tx_descripcion = Input::get("descripcion");
+          $tabla->id_tab_ejercicio_fiscal = $ejercicio;
           $tabla->save();
 
           DB::commit();
