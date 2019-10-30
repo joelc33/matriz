@@ -915,7 +915,7 @@
                         hiddenName: e.valor,
                         autoSelect: true,
                         forceSelection: true,
-                        allowBlank: false,
+                        //allowBlank: false,
                         emptyText: 'Seleccione ' + e.nombre,
                         triggerAction: 'all',
                         mode: 'local',
