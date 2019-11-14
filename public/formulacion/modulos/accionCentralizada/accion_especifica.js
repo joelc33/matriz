@@ -201,11 +201,15 @@
                 xtype: 'jsonstore',
                 url: 'formulacion/modulos/usuario/funcion.php?op=5',
                 root: 'data',
-                fields: [{
-                    name: 'id_ejecutor'
-                }, {
-                    name: 'tx_ejecutor'
-                }]
+                fields: [
+                    { name: 'id_ejecutor'},
+                    { name: 'tx_ejecutor'},
+                    { name: 'de_ejecutor',
+                        convert: function(v, r) {
+                            return r.id_ejecutor + ' - ' + r.tx_ejecutor;
+                        }
+					}
+                ]
             });
 
             this.store_accion = new Ext.data.JsonStore({
@@ -315,7 +319,11 @@
                     hiddenName: 'id_ejecutor',
                     allowBlank: false,
                     valueField: 'id_ejecutor',
-                    displayField: 'tx_ejecutor',
+                    //displayField: 'tx_ejecutor',
+                    displayField: 'de_ejecutor',
+                    resizable:true,
+                    itemSelector: 'div.search-item',
+                    tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_ejecutor}</div></div></tpl>'),
                     forceSelection: true,
                     typeAhead: true,
                     triggerAction: 'all',

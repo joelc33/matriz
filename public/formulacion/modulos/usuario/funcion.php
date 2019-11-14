@@ -139,14 +139,14 @@ A partir de este momento, con la utilización de su usuario y contraseña usted 
 		"data"		=> $data
 	));
 }elseif($_GET["op"]==5){
-	$sql = "SELECT * FROM mantenimiento.tab_ejecutores where mantenimiento.sp_in_ejecutor( id, ".$_SESSION['ejercicio_fiscal'].") is true;";       
+	$sql = "SELECT * FROM mantenimiento.tab_ejecutores where mantenimiento.sp_in_ejecutor( id, ".$_SESSION['ejercicio_fiscal'].") is true order by id_ejecutor ASC;";       
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){
 		array_push($data,array(
 			"co_ejecutores"		=> $row["id"],
+			"id_ejecutor"	=> $row["id_ejecutor"],
 			"tx_ejecutor"	=> $row["tx_ejecutor"], 
-			"id_ejecutor"	=> $row["id_ejecutor"], 
 		));
 	}
 	echo json_encode(
