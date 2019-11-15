@@ -847,16 +847,6 @@
             }];
 
             var combos = [{
-                nombre: 'Área Estratégica',
-                url: 'auxiliar/plan/area',
-                valor: 'co_area_estrategica',
-                mostrar: 'tx_descripcion'
-            }, {
-                nombre: 'Ámbito',
-                url: 'auxiliar/plan/ambito',
-                valor: 'co_ambito_zulia',
-                mostrar: 'tx_descripcion',
-            }, {
                 nombre: 'Objetivo',
                 url: 'auxiliar/plan/objetivo',
                 valor: 'co_objetivo_zulia',
@@ -868,10 +858,23 @@
                 mostrar: 'tx_descripcion'
             }];
 
+            var combos_z = [{
+                nombre: 'Área Estratégica',
+                url: 'auxiliar/plan/area',
+                valor: 'co_area_estrategica',
+                mostrar: 'tx_descripcion'
+            }, {
+                nombre: 'Ámbito',
+                url: 'auxiliar/plan/ambito',
+                valor: 'co_ambito_zulia',
+                mostrar: 'tx_descripcion',
+            }];
+
             var cbxs = [];
+            var cbxs_z = [];
             var cbxs_n = [];
 
-            var crearCreaCombosNac = function( combos ) {
+            var crearCreaCombosNac = function( combos_n ) {
                 return function(e){
                     self['st_' + e.valor] = Ext.create({
                         xtype: 'jsonstore',
@@ -894,7 +897,7 @@
                         mode: 'local'
                     });
                     self['co_'+ e.valor] = combo;
-                    combos.push(combo);
+                    combos_n.push(combo);
                 };
             };
 
@@ -929,6 +932,7 @@
 
             //crea los combos y stores
             combos.forEach(crearCreaCombos(cbxs));
+            combos_z.forEach(crearCreaCombosNac(cbxs_z));
             combos_n.forEach(crearCreaCombosNac(cbxs_n));
 
             cbxs.push(this.co_co_nodo);
@@ -1062,7 +1066,10 @@
                     items: cbxs_n
                 }, {
                     title: 'OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA',
-                    items: cbxs
+                    items: [
+                        cbxs_z,
+                        cbxs
+                    ] 
                 }]
             });
 
