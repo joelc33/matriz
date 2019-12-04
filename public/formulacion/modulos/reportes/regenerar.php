@@ -93,44 +93,43 @@ order by ejercicio
 EOT;*/
 
             $sql = <<<EOT
-            insert into mapa_acs(
-            id_ac, ef, se, ss, ac, ae, pro, sub, act, ej_ac, ej_ae, edo_reg
-            ) select t46.id, t25.id as ejercicio,
-                t18a.co_sector as sector,
-                '' as ss,
-                t46.id_accion,
-                t53.nu_numero,
-                ((t46.id_accion + 50))::character(2) AS proyecto,
-                '00'::character(2) AS subproyecto,
-                lpad(rank() OVER (PARTITION BY ROW(t25.id, t18a.co_sector, t52.id) ORDER BY ROW(t25.id, t18a.co_sector, t52.id, t46.id_ejecutor, t47.id_ejecutor, t53.nu_numero))::text, 2, '0'::text) AS actividad,
-                t46.id_ejecutor,
-                t47.id_ejecutor,
-                true
-            from mantenimiento.tab_ejercicio_fiscal as t25
-                join t46_acciones_centralizadas as t46 on t46.id_ejercicio = t25.id
-                join mantenimiento.tab_ac_predefinida as t52 on t52.id = t46.id_accion
-                join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
-                join t18_sectores as t18 on t18.co_sectores = t46.id_subsector
-                join t18_sectores as t18a on t18.co_sector = t18a.co_sector
-                    and (t18a.co_sub_sector is null or t18a.co_sub_sector = '')
-                join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
-                join mantenimiento.tab_ejecutores as t24a on t24a.id_ejecutor = t47.id_ejecutor
-                join mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
-                    and t53.id_padre = t52.id
-            where --t25.in_activo and
-                t46.edo_reg
-                and t47.edo_reg
-                and t24.in_activo
-                and t24a.in_activo
-                and t18.edo_reg
-                and t18a.edo_reg
-            order by ejercicio
-                , t24.id_ejecutor::integer
-                , t18a.co_sector::integer
-                , t46.id_accion
-                , t53.nu_numero;
-            EOT;
-
+insert into mapa_acs(
+  id_ac, ef, se, ss, ac, ae, pro, sub, act, ej_ac, ej_ae, edo_reg
+) select t46.id, t25.id as ejercicio,
+t18a.co_sector as sector,
+'' as ss,
+t46.id_accion,
+t53.nu_numero,
+((t46.id_accion + 50))::character(2) AS proyecto,
+'00'::character(2) AS subproyecto,
+lpad(rank() OVER (PARTITION BY ROW(t25.id, t18a.co_sector, t52.id) ORDER BY ROW(t25.id, t18a.co_sector, t52.id, t46.id_ejecutor, t47.id_ejecutor, t53.nu_numero))::text, 2, '0'::text) AS actividad,
+t46.id_ejecutor,
+t47.id_ejecutor,
+true
+from mantenimiento.tab_ejercicio_fiscal as t25
+join t46_acciones_centralizadas as t46 on t46.id_ejercicio = t25.id
+join mantenimiento.tab_ac_predefinida as t52 on t52.id = t46.id_accion
+join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
+join t18_sectores as t18 on t18.co_sectores = t46.id_subsector
+join t18_sectores as t18a on t18.co_sector = t18a.co_sector
+    and (t18a.co_sub_sector is null or t18a.co_sub_sector = '')
+join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
+join mantenimiento.tab_ejecutores as t24a on t24a.id_ejecutor = t47.id_ejecutor
+join mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
+    and t53.id_padre = t52.id
+where --t25.in_activo and
+t46.edo_reg
+and t47.edo_reg
+and t24.in_activo
+and t24a.in_activo
+and t18.edo_reg
+and t18a.edo_reg
+order by ejercicio
+, t24.id_ejecutor::integer
+, t18a.co_sector::integer
+, t46.id_accion
+, t53.nu_numero;
+EOT;
             $res = $comunes->EjecutarQuery( $sql2 );
             $res = $comunes->EjecutarQuery( $sql );
             $paraTransaccion->CompleteTrans();
