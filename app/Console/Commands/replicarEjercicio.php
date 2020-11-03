@@ -8,8 +8,7 @@ use matriz\Models\Ac\t50_ac_localizacion;
 use matriz\Models\Ac\tab_ac_responsable;
 use matriz\Models\Ac\tab_ac_ae;
 use matriz\Models\Ac\tab_ac_ae_partida;
-use matriz\Models\Proyecto\tab_proyecto;
-use matriz\Models\Proyecto\tab_proyecto_ae_partida;
+use matriz\Models\Ac\t56_ac_ae_fuente;
 use DB;
 //*******************************//
 use Illuminate\Console\Command;
@@ -198,6 +197,45 @@ class replicarEjercicio extends Command
                     $replica_ac_ae->id_tab_ejecutor = $lista_ac_ae->id_tab_ejecutor;
                     $replica_ac_ae->in_definitivo = $lista_ac_ae->in_definitivo;
                     $replica_ac_ae->save();
+
+                    $t56_ac_ae_fuente = t56_ac_ae_fuente::select( 'id_ac', 'id_ae', 'id_tipo_fondo', 'monto')
+                    ->where('id_ac', '=', $lista_ac->id )
+                    ->where('id_ae', '=', $lista_ac_ae->id_accion )
+                    ->orderby('id_ac','ASC')
+                    ->get();
+
+                    foreach ($t56_ac_ae_fuente as $lista_ac_ae_fuente){
+                        $replica_ac_ae_fuente = new t56_ac_ae_fuente;
+                        $replica_ac_ae_fuente->id_ac = $replica_tab_ac->id;
+                        $replica_ac_ae_fuente->id_ae = $lista_ac_ae_fuente->id_ae;
+                        $replica_ac_ae_fuente->id_tipo_fondo = $lista_ac_ae_fuente->id_tipo_fondo;
+                        $replica_ac_ae_fuente->monto = $lista_ac_ae_fuente->monto;
+                        $replica_ac_ae_fuente->save();
+                    }
+
+                    $tab_ac_ae_partida = tab_ac_ae_partida::select( 'id_accion_centralizada', 'id_accion', 'co_partida', 'monto', 'edo_reg', 
+                    'fecha_creacion', 'fecha_actualizacion', 'id_tab_ejercicio_fiscal', 
+                    'nu_aplicacion', 'de_denominacion')
+                    ->where('id_accion_centralizada', '=', $lista_ac->id )
+                    ->where('id_accion', '=', $lista_ac_ae->id_accion )
+                    ->orderby('id_accion_centralizada','ASC')
+                    ->get();
+
+                    foreach ($tab_ac_ae_partida as $lista_ac_ae_partida){
+                        $replica_ac_ae_partida = new tab_ac_ae_partida;
+                        $replica_ac_ae_partida->id_accion_centralizada = $replica_tab_ac->id;
+                        $replica_ac_ae_partida->id_accion = $lista_ac_ae_partida->id_accion;
+                        $replica_ac_ae_partida->co_partida = $lista_ac_ae_partida->co_partida;
+                        $replica_ac_ae_partida->monto = $lista_ac_ae_partida->monto;
+                        $replica_ac_ae_partida->edo_reg = $lista_ac_ae_partida->edo_reg;
+                        //$replica_ac_ae_partida->fecha_creacion = $lista_ac_ae_partida->fecha_creacion;
+                        //$replica_ac_ae_partida->fecha_actualizacion = $lista_ac_ae_partida->fecha_actualizacion;
+                        $replica_ac_ae_partida->id_tab_ejercicio_fiscal = $ejercicio_replica;
+                        $replica_ac_ae_partida->nu_aplicacion = $lista_ac_ae_partida->nu_aplicacion;
+                        $replica_ac_ae_partida->de_denominacion = $lista_ac_ae_partida->de_denominacion;
+                        $replica_ac_ae_partida->save();
+                    }
+
                 }
 
                 DB::commit();
