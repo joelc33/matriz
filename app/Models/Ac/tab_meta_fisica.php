@@ -11,4 +11,18 @@ class tab_meta_fisica extends Model
 
 	//Todos los modelos deben extender la clase Eloquent
 	protected $table = 't69_metas_ac';
+
+	protected $primaryKey = 'co_metas';
+
+	public $incrementing = true;
+
+	/**
+	 * The name of the "created at" column.
+	 */
+	const CREATED_AT = 'fecha_creacion';
+
+	/**
+	 * The name of the "updated at" column.
+	 */
+	const UPDATED_AT = 'fecha_actualizacion';
 }

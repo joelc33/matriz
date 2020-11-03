@@ -9,6 +9,8 @@ use matriz\Models\Ac\tab_ac_responsable;
 use matriz\Models\Ac\tab_ac_ae;
 use matriz\Models\Ac\tab_ac_ae_partida;
 use matriz\Models\Ac\t56_ac_ae_fuente;
+use matriz\Models\Ac\tab_meta_fisica;
+use matriz\Models\Ac\tab_meta_financiera;
 use DB;
 //*******************************//
 use Illuminate\Console\Command;
@@ -234,6 +236,53 @@ class replicarEjercicio extends Command
                         $replica_ac_ae_partida->nu_aplicacion = $lista_ac_ae_partida->nu_aplicacion;
                         $replica_ac_ae_partida->de_denominacion = $lista_ac_ae_partida->de_denominacion;
                         $replica_ac_ae_partida->save();
+                    }
+
+                    $tab_meta_fisica = tab_meta_fisica::select( 'co_metas', 'id_accion_centralizada', 'co_ac_acc_espec', 'codigo', 'nb_meta', 
+                    'co_unidades_medida', 'tx_prog_anual', 'fecha_inicio', 'fecha_fin', 'nb_responsable', 
+                    'fecha_creacion', 'fecha_actualizacion', 'edo_reg')
+                    ->where('id_accion_centralizada', '=', $lista_ac->id )
+                    ->where('co_ac_acc_espec', '=', $lista_ac_ae->id_accion )
+                    ->orderby('co_metas','ASC')
+                    ->get();
+
+                    foreach ($tab_meta_fisica as $lista_meta_fisica){
+                        $replica_meta_fisica = new tab_meta_fisica;
+                        $replica_meta_fisica->id_accion_centralizada = $replica_tab_ac->id;
+                        $replica_meta_fisica->co_ac_acc_espec = $lista_meta_fisica->co_ac_acc_espec;
+                        $replica_meta_fisica->codigo = $lista_meta_fisica->codigo;
+                        $replica_meta_fisica->nb_meta = $lista_meta_fisica->nb_meta;
+                        $replica_meta_fisica->co_unidades_medida = $lista_meta_fisica->co_unidades_medida;
+                        $replica_meta_fisica->tx_prog_anual = $lista_meta_fisica->tx_prog_anual;
+                        $replica_meta_fisica->fecha_inicio = $fecha_ini;
+                        $replica_meta_fisica->fecha_fin = $fecha_fin;
+                        $replica_meta_fisica->nb_responsable = $lista_meta_fisica->nb_responsable;
+                        //$replica_meta_fisica->fecha_creacion = $lista_meta_fisica->fecha_creacion;
+                        //$replica_meta_fisica->fecha_actualizacion = $lista_meta_fisica->fecha_actualizacion;
+                        $replica_meta_fisica->edo_reg = $lista_meta_fisica->edo_reg;
+                        $replica_meta_fisica->save();
+
+                        $tab_meta_financiera = tab_meta_financiera::select( 'co_metas_detalle', 'co_metas', 'co_municipio', 'co_parroquia', 'mo_presupuesto', 
+                        'co_partida', 'co_fuente', 'fecha_creacion', 'fecha_actualizacion', 'edo_reg')
+                        ->where('co_metas', '=', $lista_meta_fisica->co_metas )
+                        ->orderby('co_metas_detalle','ASC')
+                        ->get();
+
+                        foreach ($tab_meta_financiera as $lista_meta_financiera){
+                            $replica_meta_financiera = new tab_meta_financiera;
+                            $replica_meta_financiera->co_metas = $replica_meta_fisica->co_metas;
+                            $replica_meta_financiera->co_municipio = $lista_meta_financiera->co_municipio;
+                            $replica_meta_financiera->co_parroquia = $lista_meta_financiera->co_parroquia;
+                            $replica_meta_financiera->mo_presupuesto = $lista_meta_financiera->mo_presupuesto;
+                            $replica_meta_financiera->co_partida = $lista_meta_financiera->co_partida;
+                            $replica_meta_financiera->co_fuente = $lista_meta_financiera->co_fuente;
+                            //$replica_meta_financiera->fecha_creacion = $lista_meta_financiera->fecha_creacion;
+                            //$replica_meta_financiera->fecha_actualizacion = $lista_meta_financiera->fecha_actualizacion;
+                            $replica_meta_financiera->edo_reg = $lista_meta_financiera->edo_reg;
+                            $replica_meta_financiera->save();
+
+                        }
+
                     }
 
                 }
