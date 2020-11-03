@@ -24,7 +24,7 @@ class compilarPassword extends Command
      *
      * @var string
      */
-    protected $description = 'Comando para hacar Hash a todas las contraseñas.';
+    protected $description = 'Comando para hacer Hash a todas las contraseñas.';
 
     /**
      * Create a new command instance.

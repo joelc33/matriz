@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Inspire::class,
-        \matriz\Console\Commands\compilarPassword::class
+        \matriz\Console\Commands\compilarPassword::class,
+        \matriz\Console\Commands\replicarEjercicio::class
     ];
 
     /**
