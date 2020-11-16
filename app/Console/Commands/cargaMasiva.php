@@ -70,8 +70,8 @@ class cargaMasiva extends Command
                 ->where('id', $lista->id)
                 ->update(['nu_ac' => $codigo_ac]);
 
-                $update = tab_partida_importar::where('ejercicio_fiscal', $ejercicio)->
-                update(['in_cargado' => false]);
+                $update = tab_partida_importar::where('ejercicio_fiscal', $ejercicio)
+                ->update(['in_cargado' => false]);
 
                 DB::commit();
 
@@ -106,11 +106,15 @@ class cargaMasiva extends Command
 
             }
 
-            $tab_partida_importar = tab_partida_importar::select('id_accion_centralizada', 'nu_ac', 'codigo_partida', 'ejercicio_fiscal', 'descripcion_partida', 
+            $tab_partida_importar = tab_partida_importar::select('id_accion_centralizada', 'codigo_ae', 'codigo_partida', 'ejercicio_fiscal', 'descripcion_partida', 
             DB::raw('sum(monto_partida) as monto_partida') )
+            /*->join('tab_ac_ae_predefinida as t02', function ($j) {
+                $j->on('t02.id_padre','=','tab_partida_importar.nu_ac')
+                  ->on('t02.nu_numero','=','tab_partida_importar.codigo_ae');
+            })*/
             ->groupBy('ejercicio_fiscal')
             ->groupBy('id_accion_centralizada')
-            ->groupBy('nu_ac')
+            ->groupBy('codigo_ae')
             ->groupBy('codigo_partida')
             ->groupBy('descripcion_partida')
             ->orderBy('id_accion_centralizada','ASC')
@@ -120,7 +124,7 @@ class cargaMasiva extends Command
 
                 $replica_ac_ae_partida = new tab_ac_ae_partida;
                 $replica_ac_ae_partida->id_accion_centralizada = $lista_ac_ae_partida->id_accion_centralizada;
-                $replica_ac_ae_partida->id_accion = $lista_ac_ae_partida->nu_ac;
+                $replica_ac_ae_partida->id_accion = $lista_ac_ae_partida->codigo_ae;
                 $replica_ac_ae_partida->co_partida = trim($lista_ac_ae_partida->codigo_partida);
                 $replica_ac_ae_partida->monto = $lista_ac_ae_partida->monto_partida;
                 $replica_ac_ae_partida->edo_reg = true;
