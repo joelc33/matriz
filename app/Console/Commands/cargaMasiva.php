@@ -58,7 +58,8 @@ class cargaMasiva extends Command
             'codigo_ac', 'descripcion_ac', 'codigo_ae', 'descripcion_ae', 'codigo_partida', 
             'descripcion_partida', 'monto_partida', 'in_cargado', 'created_at', 'updated_at', 
             'id_accion_centralizada', 'nu_ac', 'id_accion')
-            ->where('ejercicio_fiscal', $ejercicio)
+            ->where('ejercicio_fiscal', '=', $ejercicio)
+            ->where('in_ejecutar', '=', true)
             ->orderby('id','ASC')
             ->get();
 
@@ -78,10 +79,14 @@ class cargaMasiva extends Command
 
             foreach ($tab_partida_importar as $lista){
 
-                $tab_ac = tab_ac::where('id_ejercicio', $lista->ejercicio_fiscal)
-                ->where('id_accion', $lista->nu_ac)
-                ->where('id_ejecutor', trim($lista->codigo_ejecutor))
+                $tab_ac = tab_ac::where('id_ejercicio', '=', $lista->ejercicio_fiscal)
+                ->where('id_accion', '=', $lista->nu_ac)
+                ->where('id_ejecutor', '=', trim($lista->codigo_ejecutor))
                 ->first();
+
+                if(empty($tab_ac)){
+                    $this->info('Registro: '.$lista->id.' error.');
+                }
 
                 $update = tab_partida_importar::where('id', $lista->id)
                 ->update(['id_accion_centralizada' => $tab_ac->id]);
@@ -97,6 +102,8 @@ class cargaMasiva extends Command
                 $j->on('t02.id_padre','=','tab_partida_importar.nu_ac')
                   ->on('t02.nu_numero','=','tab_partida_importar.codigo_ae');
             })
+            ->where('ejercicio_fiscal', '=', $ejercicio)
+            ->where('in_ejecutar', '=', true)
             ->orderBy('id_accion_centralizada','ASC')
             ->get();
 
@@ -124,6 +131,8 @@ class cargaMasiva extends Command
 
             $tab_partida_importar = tab_partida_importar::select( 'ejercicio_fiscal', 'id_accion_centralizada', 'id_accion', 'codigo_partida',  'descripcion_partida', 
             DB::raw('sum(monto_partida) as monto_partida') )
+            ->where('ejercicio_fiscal', '=', $ejercicio)
+            ->where('in_ejecutar', '=', true)
             ->groupBy('ejercicio_fiscal')
             ->groupBy('id_accion_centralizada')
             ->groupBy('id_accion')
