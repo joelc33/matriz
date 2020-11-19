@@ -2,6 +2,7 @@
 
 namespace matriz\Console\Commands;
 //*******agregar esta linea******//
+use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae;
 use matriz\Models\Ac\tab_ac_ae_partida;
 use DB;
@@ -64,6 +65,28 @@ class montoAcAe extends Command
             DB::commit();
 
             $this->info($contador.' .- Accion Centralizada: '.$lista->id_accion_centralizada.' AE: '.$lista->id_accion.' actualizado.');
+
+        }
+
+        $tab_ac_partida = tab_ac_ae_partida::select( 'id_accion_centralizada', 
+        DB::raw('sum(monto) as monto_ac') )
+        ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->groupBy('id_accion_centralizada')
+        ->orderBy('id_accion_centralizada','ASC')
+        ->get();
+
+        $contador = 0;
+
+        foreach ($tab_ac_partida as $lista_ac){
+
+            $contador = $contador + 1;
+
+            $update_ac = tab_ac::where('id', $lista_ac->id_accion_centralizada)
+            ->update(['monto' => $lista_ac->monto_ac, 'monto_calc' => $lista_ac->monto_ac]);
+
+            DB::commit();
+
+            $this->info($contador.' .- Accion Centralizada: '.$lista_ac->id_accion_centralizada.' actualizado.');
 
         }
 
