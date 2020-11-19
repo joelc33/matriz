@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
         Commands\Inspire::class,
         \matriz\Console\Commands\compilarPassword::class,
         \matriz\Console\Commands\replicarEjercicio::class,
-        \matriz\Console\Commands\cargaMasiva::class
+        \matriz\Console\Commands\cargaMasiva::class,
+        \matriz\Console\Commands\actualizarMeta::class
     ];
 
     /**
