@@ -128,12 +128,12 @@ items: [{
             this.reloj,'-',
             this.btnCambiarEjercicio,'-',
             this.btnSalir,'-','->',
-            {xtype: 'tbtext', text: '<span style="color:red;"><b>Sistema Nueva Etapa y Matriz de Seguimiento - Secretaría de Planificación y Estadística - Gobierno Bolivariano del Zulia.</b></span>'}
+            {xtype: 'tbtext', text: '<span style="color:red;"><b>Sistema POA y Matriz de Seguimiento.</b></span>'}
           ]
         },{
           region: 'west',
           id: 'navegador', /*see Ext.getCmp() below*/
-          title: '.::NUEVA ETAPA - {{ Session::get('ejercicio') }}::.',
+          title: '.::PLANIFICACION Y FORMULACION PRESUPUESTARIA - {{ Session::get('ejercicio') }}::.',
           iconCls: 'icon-navegacion',
           split: true,
           width: 240,

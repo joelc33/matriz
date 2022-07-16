@@ -42,7 +42,7 @@ class distribucionController extends Controller
   public function libro()
   {
     $pdf = new TCPDF('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
-    $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+    $pdf->SetCreator('Sistema POA, Yoser Perez');
     $pdf->SetAuthor('Yoser Perez');
     $pdf->SetTitle('Distribución de Presupuesto');
     $pdf->SetSubject('Distribución de Presupuesto');

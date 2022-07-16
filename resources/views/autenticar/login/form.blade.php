@@ -153,7 +153,7 @@ Ext.onReady(function(){
 	});
 
   this.login = new Ext.Window({
-							title:'Nueva Etapa - Validaci&oacute;n de Usuario',
+							title:'POA - Validaci&oacute;n de Usuario',
 							layout:'fit',
 							iconCls: 'icon-bloqueado',
 							bodyStyle:'padding:5px;',
@@ -235,7 +235,7 @@ function cambiar(){
 	});
 
 	var ventanaRecuperar = new Ext.Window({
-				title:'Nueva Etapa - Recuperar Contraseña',
+				title:'POA - Recuperar Contraseña',
 				layout:'fit',
 				iconCls: 'icon-bloqueado',
 				width:400,

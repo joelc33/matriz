@@ -177,7 +177,7 @@ class proyectoresponsableController extends Controller
 		</table>';
 
 		$pdf = new PDFresponsablePR('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
-		$pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+		$pdf->SetCreator('Sistema POA, Yoser Perez');
 		$pdf->SetAuthor('Yoser Perez');
 		$pdf->SetTitle('Ley de Presupuesto');
 		$pdf->SetSubject('Ley de Presupuesto');
@@ -301,7 +301,7 @@ class proyectoresponsableController extends Controller
     </table>';
 
     $pdf = new PDFresponsablePR('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
-    $pdf->SetCreator('Sistema Nueva Etapa, Yoser Perez');
+    $pdf->SetCreator('Sistema POA, Yoser Perez');
     $pdf->SetAuthor('Yoser Perez');
     $pdf->SetTitle('Ley de Presupuesto');
     $pdf->SetSubject('Ley de Presupuesto');
