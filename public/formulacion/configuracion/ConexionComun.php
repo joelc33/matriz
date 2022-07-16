@@ -204,11 +204,14 @@ function enviar_correo($correo,$nombre,$motivo,$cuerpo){
 function encabezado($pdf,$h,$tipo){
 	if($h=='v'){
     if($_SESSION['ejercicio_fiscal'] == 2015){
-      $pdf->Image('../../images/cintillo_2015.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      //$pdf->Image('../../images/cintillo_2015.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+	  $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2016){
-      $pdf->Image('../../images/cintillo_2016.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+      //$pdf->Image('../../images/cintillo_2016.png', 15, 3, 195, 20, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+	  $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] == 2017){
-      $pdf->Image('../../images/cintillo_2017.jpg', 15, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+      //$pdf->Image('../../images/cintillo_2017.jpg', 15, 3, 195, 16, 'JPG', '', '', true, 150, '', false, false, 0, false, false, false);
+	  $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
     }elseif($_SESSION['ejercicio_fiscal'] > 2017){
       $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
       $pdf->setXY(35,7);
