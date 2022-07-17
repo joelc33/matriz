@@ -7,6 +7,6 @@
 	<meta name="author" content="Yoser Perez">
 	<title>..::PLANIFICACION Y FORMULACION PRESUPUESTARIA | SPE::.. @yield('htmlheader_title', '')</title>
 
-	<link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}">
+	<!--<link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}">-->
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 </head>
