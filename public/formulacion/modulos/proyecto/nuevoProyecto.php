@@ -407,7 +407,7 @@ this.co_sub_sector = new Ext.form.ComboBox({
 	mode: 'local',
 	width:400,
 	resizable:true,
-	allowBlank:false
+//	allowBlank:false
 });
 
 this.fieldset2 = new Ext.form.FieldSet({

@@ -476,7 +476,7 @@ this.co_sub_sector = new Ext.form.ComboBox({
 	width:400,
 	readOnly:<?php echo $deshabilitado ?>,
 	resizable:true,
-	allowBlank:false
+//	allowBlank:false
 });
 
 this.fieldset2 = new Ext.form.FieldSet({

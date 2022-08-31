@@ -39,7 +39,7 @@ this.co_proyecto_imagen = new Ext.form.Hidden({
 
 this.imagenProyecto = new Ext.form.FieldSet({
     border:false,
-    html:'<img width="250" height="155" src="modulos/imagen/funcion.php?op=1&id_proyecto='+tabuladorCuatro.main.OBJ.id_proyecto+'&t='+new Date().getTime()+'">'
+    html:'<img width="250" height="155" src="formulacion/modulos/imagen/funcion.php?op=1&id_proyecto='+tabuladorCuatro.main.OBJ.id_proyecto+'&t='+new Date().getTime()+'">'
 });
 
 this.fotoProyecto = new Ext.ux.form.FileUploadField({
@@ -65,7 +65,7 @@ this.proyectoField = new Ext.form.FieldSet({
 
 this.imagenSatelite = new Ext.form.FieldSet({
     border:false,
-    html:'<img width="250" height="155" src="modulos/imagen/funcion.php?op=2&id_proyecto='+tabuladorCuatro.main.OBJ.id_proyecto+'&t='+new Date().getTime()+'">'
+    html:'<img width="250" height="155" src="formulacion/modulos/imagen/funcion.php?op=2&id_proyecto='+tabuladorCuatro.main.OBJ.id_proyecto+'&t='+new Date().getTime()+'">'
 });
 
 this.fotoSatelite = new Ext.ux.form.FileUploadField({

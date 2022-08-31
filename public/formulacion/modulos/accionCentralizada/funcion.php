@@ -142,11 +142,11 @@ EOT;
 			$json->assert( $fondos );
 			$fondos = json_decode( $fondos['fondos'] );
 
-			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_tipo_fondo', v::intero()->positive()->notEmpty() )
-					->attribute( 'monto', v::intero()->positive() )
-			);
-			$reglas->assert( $fondos );
+//			$reglas = v::arr()->each(
+//				v::object()->attribute( 'co_tipo_fondo', v::intero()->positive()->notEmpty() )
+//					->attribute( 'monto', v::intero()->positive() )
+//			);
+//			$reglas->assert( $fondos );
 
 			$paraTransaccion->StartTrans();
 
@@ -767,11 +767,11 @@ EOT;
 			$json->assert( $params );
 			$localidades = json_decode( $params['localidades'] );
 
-			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_municipio', v::intero()->positive()->notEmpty() )
-					->attribute( 'co_parroquia', v::intero()->positive(), false )
-			);
-			$reglas->assert( $localidades );
+//			$reglas = v::arr()->each(
+//				v::object()->attribute( 'co_municipio', v::intero()->positive()->notEmpty() )
+//					->attribute( 'co_parroquia', v::intero()->positive(), false )
+//			);
+//			$reglas->assert( $localidades );
 
 			$paraTransaccion->StartTrans();
 

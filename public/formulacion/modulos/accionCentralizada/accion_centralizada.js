@@ -820,7 +820,7 @@
                 selectOnFocus: true,
                 mode: 'local',
                 hideOnSelect: false,
-                readOnly: true,
+//                readOnly: true,
                 style: 'background-color:#c9c9c9;'
             });
 
@@ -922,7 +922,7 @@
                         emptyText: 'Seleccione ' + e.nombre,
                         triggerAction: 'all',
                         mode: 'local',
-                        readOnly: true,
+//                        readOnly: true,
                         style: 'background-color:#c9c9c9;'
                     });
                     self['co_'+ e.valor] = combo;
