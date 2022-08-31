@@ -79,7 +79,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(230);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -123,7 +123,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(230);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -364,7 +364,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(230);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1238,7 +1238,7 @@ class leyController extends Controller
         $pdf->SetY(15);
         $pdf->SetFont('','B',14);
         $pdf->SetTextColor(0,0,0);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(230);
         $pdf->SetFont('','B',12);
         //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1357,7 +1357,7 @@ class leyController extends Controller
           $pdf->SetY(15);
           $pdf->SetFont('','B',14);
           $pdf->SetTextColor(0,0,0);
-          $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(200);
           $pdf->SetFont('','B',12);
           //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1583,7 +1583,7 @@ class leyController extends Controller
           $pdf->SetY(15);
           $pdf->SetFont('','B',14);
           $pdf->SetTextColor(0,0,0);
-          $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(210);
           $pdf->SetFont('','B',12);
           //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1731,7 +1731,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(220);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1833,7 +1833,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(220);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1907,7 +1907,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(220);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
@@ -1981,7 +1981,7 @@ class leyController extends Controller
       $pdf->SetY(15);
       $pdf->SetFont('','B',14);
       $pdf->SetTextColor(0,0,0);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ZULIA', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(220);
       $pdf->SetFont('','B',12);
       //$pdf->MultiCell(190, 5, 'TITULO I', 0, 'R', 0, 0, '', '', true);
