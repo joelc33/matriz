@@ -128,7 +128,7 @@ items: [{
             this.reloj,'-',
             this.btnCambiarEjercicio,'-',
             this.btnSalir,'-','->',
-            {xtype: 'tbtext', text: '<span style="color:red;"><b>Sistema POA y Matriz de Seguimiento.</b></span>'}
+            {xtype: 'tbtext', text: '<span style="color:red;"><b>Sistema POA y Formulación.</b></span>'}
           ]
         },{
           region: 'west',

@@ -11,7 +11,23 @@ background-color:white;
 .x-window-mc {background-color : white !important;}
 </style>
 
-<script type="text/javascript">
+ <script>
+
+        $(function () {
+	    <?php
+		$backgrounds = array("imagen_2.jpg","imagen_3.jpg","imagen_4.jpg","imagen_5.jpg","imagen_6.jpg","imagen_7.jpg");
+//                $backgrounds = array("1.png","2.png","3.png","3.png");
+		$random_keys=array_rand($backgrounds,4);
+	    ?>
+	    $.backstretch([
+		"{{ asset('/images/backgrounds') }}/{{ $backgrounds[$random_keys[0]] }}",
+		"{{ asset('/images/backgrounds') }}/{{ $backgrounds[$random_keys[1]] }}",
+		"{{ asset('/images/backgrounds') }}/{{ $backgrounds[$random_keys[2]] }}",
+		"{{ asset('/images/backgrounds') }}/{{ $backgrounds[$random_keys[3]] }}"
+	    ], {duration: 3000, fade: 750});
+        });
+  </script>
+<script type="text/javascript">  
 Ext.QuickTips.init();
 Ext.form.Field.prototype.msgTarget = 'side';
 
