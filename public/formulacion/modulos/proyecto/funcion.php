@@ -53,12 +53,12 @@ if($_GET['op']==1){
 		"data"		=> $data
 	));
 }elseif($_GET['op']==4){
-	$sql = "SELECT * FROM t18_sectores where co_sector='".$_POST['co_sector']."' and nu_nivel=2 and edo_reg is true order by co_sector asc;";
+	$sql = "SELECT * FROM mantenimiento.tab_sectores where co_sector='".$_POST['co_sector']."' and nu_nivel=2 and in_activo = true order by co_sub_sector asc;";
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){
 		array_push($data,array(
-			"co_sectores" => $row["co_sectores"],
+			"co_sectores" => $row["id"],
 			"co_sub_sector"		=> $row["co_sub_sector"],
 			"tx_sub_sector"	=> $row["nu_descripcion"], 
 		));
