@@ -242,13 +242,13 @@ $html23.= '
 <th colspan="6" style="width: 52%;"><b>METAS FINANCIERAS</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 17%;">Actividad</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. Med</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Programado</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Inicio</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Termino</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;">REPONSABLE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">Munic / Parroq</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 17%;">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. MED</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PROGRAMADO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">INICIO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">TERMINO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;">RESPONSABLE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNIC / PARROQ</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">CATEGORIA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">PARTIDA</th>
@@ -280,18 +280,18 @@ foreach($this->datos_actividad as $key => $campo2){
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 17%;" colspan="1" rowspan="'.$cantidadDetalle.'" nobr="true">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
-		<td style="width: 7%;" colspan="1" rowspan="'.$cantidadDetalle.'">'.$campo2['tx_unidades_medida'].'</td>
-		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'">'.$campo2['tx_prog_anual'].'</td>
-		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'">'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
-		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'">'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
-		<td style="width: 9%;" colspan="1" rowspan="'.$cantidadDetalle.'">'.$campo2['nb_responsable'].'</td>';
+		<td style="width: 7%;" colspan="1" rowspan="'.$cantidadDetalle.'" align="center">'.$campo2['tx_unidades_medida'].'</td>
+		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'" align="center">'.$campo2['tx_prog_anual'].'</td>
+		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'" align="center">'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
+		<td style="width: 8%;" colspan="1" rowspan="'.$cantidadDetalle.'" align="center">'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
+		<td style="width: 9%;" colspan="1" rowspan="'.$cantidadDetalle.'" align="center">'.$campo2['nb_responsable'].'</td>';
 		        $this->datos_detalle = $comunes->ObtenerFilasBySqlSelect($sqlDetalle);
 			$contar=0;
 			foreach($this->datos_detalle as $key => $campo3){
 			$contar=$contar+1;
 			$html23.='
 				<td style="width: 10%;" colspan="1" rowspan="1">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
-				<td style="width: 8%;" colspan="1" rowspan="1">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
+				<td style="width: 8%;" colspan="1" rowspan="1" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
 				<td style="width: 8%;" colspan="1" rowspan="1" align="center">'.$campo['tx_categoria_ac'].'</td>
 				<td style="width: 7%;" colspan="1" rowspan="1" align="center">'.$campo3['co_partida'].'</td>
 				<td style="width: 10%;" colspan="1" rowspan="1" align="center">'.$campo3['tx_fuente'].'</td>
@@ -311,13 +311,13 @@ foreach($this->datos_actividad as $key => $campo2){
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
-		<td style="width: 7%;">'.$campo2['tx_unidades_medida'].'</td>
-		<td style="width: 8%;">'.$campo2['tx_prog_anual'].'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
-		<td style="width: 9%;" >'.$campo2['nb_responsable'].'</td>
+		<td style="width: 7%;" align="center">'.$campo2['tx_unidades_medida'].'</td>
+		<td style="width: 8%;" align="center">'.$campo2['tx_prog_anual'].'</td>
+		<td style="width: 8%;" align="center">'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
+		<td style="width: 8%;" align="center">'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
+		<td style="width: 9%;" align="center">'.$campo2['nb_responsable'].'</td>
 		<td style="width: 10%;" >'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
-		<td style="width: 8%;" >'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
+		<td style="width: 8%;" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
 		<td style="width: 8%;" align="center">'.$campo['tx_categoria_ac'].'</td>
 		<td style="width: 7%;" align="center">'.$campo3['co_partida'].'</td>
 		<td style="width: 10%;" align="center">'.$campo3['tx_fuente'].'</td>
@@ -327,11 +327,11 @@ foreach($this->datos_actividad as $key => $campo2){
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
-		<td style="width: 7%;">'.$campo2['tx_unidades_medida'].'</td>
-		<td style="width: 8%;">'.$campo2['tx_prog_anual'].'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
-		<td style="width: 9%;" >'.$campo2['nb_responsable'].'</td>
+		<td style="width: 7%;" align="center">'.$campo2['tx_unidades_medida'].'</td>
+		<td style="width: 8%;" align="center">'.$campo2['tx_prog_anual'].'</td>
+		<td style="width: 8%;" align="center">'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
+		<td style="width: 8%;" align="center">'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
+		<td style="width: 9%;" align="center">'.$campo2['nb_responsable'].'</td>
 		<td style="width: 10%;" align="center" cellpadding="6">N/A</td>
 		<td style="width: 8%;" align="center" cellpadding="6">N/A</td>
 		<td style="width: 8%;" align="center" cellpadding="6">N/A</td>
