@@ -205,7 +205,7 @@ class distribucionController extends Controller
           $pdf->SetFont('','B',7);
           $pdf->setCellHeightRatio(1.2);
 
-          $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','',6);
           $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
           $pdf->SetFont('','B',7);
@@ -310,7 +310,6 @@ class distribucionController extends Controller
           ->where('co_sector', '=', $value_distribucion_uno->co_sector)
           ->where('nu_original', '=', $value_distribucion_dos->nu_original)
           ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
-          ->distinct()        
           ->groupBy('t01.co_partida')
           ->groupBy('tx_nombre')
           ->orderBy('co_partida','ASC')
@@ -422,7 +421,7 @@ class distribucionController extends Controller
               $pdf->SetFont('','B',7);
               $pdf->setCellHeightRatio(1.2);
 
-              $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
               $pdf->SetFont('','',6);
               $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
               $pdf->SetFont('','B',7);
@@ -637,7 +636,7 @@ class distribucionController extends Controller
                 $pdf->SetFont('','B',7);
                 $pdf->setCellHeightRatio(1.2);
 
-                $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                 $pdf->SetFont('','',6);
                 $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                 $pdf->SetFont('','B',7);
@@ -858,7 +857,7 @@ class distribucionController extends Controller
                   $pdf->SetFont('','B',7);
                   $pdf->setCellHeightRatio(1.2);
 
-                  $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                   $pdf->SetFont('','',6);
                   $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                   $pdf->SetFont('','B',7);
@@ -1085,7 +1084,7 @@ class distribucionController extends Controller
                     $pdf->SetFont('','B',7);
                     $pdf->setCellHeightRatio(1.2);
 
-                    $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('','',6);
                     $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('','B',7);
@@ -1328,7 +1327,7 @@ class distribucionController extends Controller
                       $pdf->SetFont('','B',7);
                       $pdf->setCellHeightRatio(1.2);
 
-                      $pdf->MultiCell(29, 7, chr(10).'SECTOR/SUB-SECTOR', 1, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(29, 7, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
                       $pdf->SetFont('','',6);
                       $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                       $pdf->SetFont('','B',7);
