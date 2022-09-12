@@ -678,9 +678,9 @@ EOT;
 				'co_objetivo_general',
 				'co_area_estrategica',
 				'co_ambito_zulia' => 'co_ambito_estado',
-				//'co_objetivo_zulia' => 'co_objetivo_estado',
-				//'co_macroproblema',
-				//'co_nodo' => 'co_nodos',
+				'co_objetivo_zulia' => 'co_objetivo_estado',
+				'co_macroproblema',
+				'co_nodo' => 'co_nodos',
 			) );
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_accion_centralizada' => 'id'
