@@ -268,7 +268,7 @@ this.co_area_estrategica = new Ext.form.ComboBox({
         }
 });
 
-tabuladorDos.main.co_area_estrategica.disable();
+//tabuladorDos.main.co_area_estrategica.disable();
 
 this.storeCO_AREA_ESTRATEGICA.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
@@ -326,7 +326,7 @@ this.co_ambito_zulia = new Ext.form.ComboBox({
         }
 });
 
-tabuladorDos.main.co_ambito_zulia.disable();
+//tabuladorDos.main.co_ambito_zulia.disable();
 
 if(this.OBJ.co_ambito_zulia){
 	this.storeCO_OBJETIVO_ZULIA.load({
@@ -373,7 +373,7 @@ this.co_objetivo_zulia = new Ext.form.ComboBox({
 	//allowBlank:false
 });
 
-tabuladorDos.main.co_objetivo_zulia.disable();
+//tabuladorDos.main.co_objetivo_zulia.disable();
 
 this.co_macroproblema = new Ext.form.ComboBox({
 	fieldLabel:'2.5.4. MACRO PROBLEMA',
@@ -414,7 +414,7 @@ this.co_macroproblema = new Ext.form.ComboBox({
 	objStore: this.storeCO_MACROPROBLEMA
 });*/
 
-tabuladorDos.main.co_macroproblema.disable();
+//tabuladorDos.main.co_macroproblema.disable();
 
 if(this.OBJ.co_macroproblema){
 	this.storeCO_NODO.load({
@@ -455,7 +455,7 @@ this.co_nodo = new Ext.ux.form.SuperBoxSelect({
 	//allowBlank:false
 });
 
-tabuladorDos.main.co_nodo.disable();
+//tabuladorDos.main.co_nodo.disable();
 
 this.fieldset2 = new Ext.form.FieldSet({
     	title: '2.5. OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA',
