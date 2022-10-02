@@ -1,5 +1,4 @@
 <?php
-require '../../comun.php';
 $con = file_get_contents( 'archivos.json' );
 $mapa = json_decode( $con );
 $archivos = array();
