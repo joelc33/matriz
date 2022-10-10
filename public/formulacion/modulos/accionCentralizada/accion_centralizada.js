@@ -868,6 +868,11 @@
                 url: 'auxiliar/plan/ambito',
                 valor: 'co_ambito_zulia',
                 mostrar: 'tx_descripcion',
+            }, {
+                nombre: 'LÍNEA MATRIZ',
+                url: 'auxiliar/plan/nudo',
+                valor: 'co_nodo',
+                mostrar: 'tx_descripcion',
             }];
 
             var cbxs = [];
@@ -935,7 +940,7 @@
             combos_z.forEach(crearCreaCombosNac(cbxs_z));
             combos_n.forEach(crearCreaCombosNac(cbxs_n));
 
-            cbxs.push(this.co_co_nodo);
+//            cbxs.push(this.co_co_nodo);
 
             var ajusta = function(cbx, dep) {
                 self['st_' + dep].on('beforeload', function(st, op) {
@@ -983,7 +988,7 @@
             ajusta('co_area_estrategica', 'co_ambito_zulia');
             ajusta('co_ambito_zulia', 'co_objetivo_zulia');
             ajusta('co_ambito_zulia', 'co_macroproblema');
-            ajusta('co_macroproblema', 'co_nodo');
+            ajusta('co_ambito_zulia', 'co_nodo');
 
             self.co_co_area_estrategica.on('change', function(){
                 [
@@ -997,12 +1002,13 @@
                 ].forEach(borrar);
                 self.st_co_objetivo_zulia.load();
                 self.st_co_macroproblema.load();
+                self.st_co_nodo.load();
             });
             self.co_co_macroproblema.on('change', function(){
                 [
                     'co_nodo'
                 ].forEach(borrar);
-                self.st_co_nodo.load();
+//                self.st_co_nodo.load();
             });
 
             this.forma = Ext.create({

@@ -39,7 +39,7 @@ this.co_macroproblema = new Ext.form.NumberField({
 });
 
 this.co_nodo = new Ext.form.NumberField({
-	fieldLabel:'Nodo',
+	fieldLabel:'Línea Matriz',
 	name:'nodo',
 	value:this.OBJ.co_nodo,
 	width:100

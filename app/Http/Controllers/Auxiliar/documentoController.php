@@ -281,7 +281,7 @@ class documentoController extends Controller
     {
       $response['success']  = 'true';
       $response['data']  = tab_planes_zulia::select('co_nodo','tx_descripcion')
-      ->where('co_macroproblema', '=', Input::get('co_macroproblema'))
+      ->where('co_ambito_zulia', '=', Input::get('co_ambito_zulia'))
       ->where('nu_nivel', '=', 4)
       ->where('in_activo', '=', true)
       ->orderby('co_nodo','ASC')->get()->toArray();
