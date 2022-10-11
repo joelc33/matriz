@@ -1004,12 +1004,12 @@
                 self.st_co_macroproblema.load();
                 self.st_co_nodo.load();
             });
-            self.co_co_macroproblema.on('change', function(){
-                [
-                    'co_nodo'
-                ].forEach(borrar);
-//                self.st_co_nodo.load();
-            });
+//            self.co_co_macroproblema.on('change', function(){
+//                [
+//                    'co_nodo'
+//                ].forEach(borrar);
+////                self.st_co_nodo.load();
+//            });
 
             this.forma = Ext.create({
                 xtype: 'form',

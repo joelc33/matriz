@@ -471,7 +471,7 @@ if($_GET['op']==1){
 		"data"		=> $data
 	));
 }elseif($_GET['op']==25){
-	$sql = "SELECT * FROM t45_planes_zulia where co_macroproblema='".$_POST['co_macroproblema']."' and nu_nivel=4 and edo_reg is true order by co_nodo asc;";
+	$sql = "SELECT * FROM t45_planes_zulia where co_ambito_zulia='".$_POST['co_ambito_zulia']."' and nu_nivel=4 and edo_reg is true order by co_nodo asc;";
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){

@@ -321,7 +321,10 @@ this.co_ambito_zulia = new Ext.form.ComboBox({
                 }),
                 tabuladorDos.main.storeCO_MACROPROBLEMA.load({
                     params: {co_ambito_zulia:this.getValue()}
-                })
+                }),
+                tabuladorDos.main.storeCO_NODO.load({
+                    params: {co_ambito_zulia:this.getValue()}
+                })                        
             }
         }
 });
@@ -342,6 +345,13 @@ if(this.OBJ.co_ambito_zulia){
 	});
 }
 
+if(this.OBJ.co_ambito_zulia){
+	this.storeCO_NODO.load({
+		params: {co_ambito_zulia:this.OBJ.co_ambito_zulia},
+		callback: function(){tabuladorDos.main.co_nodo.setValue(tabuladorDos.main.OBJ.co_nodo);}
+	});
+}
+
 this.co_ambito_zulia.on('beforeselect',function(cmb,record,index){
         	this.co_objetivo_zulia.clearValue();
         	this.co_macroproblema.clearValue();
@@ -349,7 +359,7 @@ this.co_ambito_zulia.on('beforeselect',function(cmb,record,index){
 },this);
 
 this.co_objetivo_zulia = new Ext.form.ComboBox({
-	fieldLabel:'2.5.3. OBJETIVO ESTRATEGICO',
+	fieldLabel:'2.5.4. OBJETIVO ESTRATEGICO',
 	store: this.storeCO_OBJETIVO_ZULIA,
 	typeAhead: true,
 	valueField: 'co_objetivo_zulia',
@@ -376,7 +386,7 @@ this.co_objetivo_zulia = new Ext.form.ComboBox({
 //tabuladorDos.main.co_objetivo_zulia.disable();
 
 this.co_macroproblema = new Ext.form.ComboBox({
-	fieldLabel:'2.5.4. MACRO PROBLEMA',
+	fieldLabel:'2.5.5. MACRO PROBLEMA',
 	store: this.storeCO_MACROPROBLEMA,
 	typeAhead: true,
 	valueField: 'co_macroproblema',
@@ -398,13 +408,13 @@ this.co_macroproblema = new Ext.form.ComboBox({
 	style:'background-color:#c9c9c9;',
 	//allowBlank:false,
 	//listWidth: '800',
-	listeners:{
-            change: function(){
-                tabuladorDos.main.storeCO_NODO.load({
-                    params: {co_macroproblema:this.getValue()}
-                })
-            }
-        }
+//	listeners:{
+//            change: function(){
+//                tabuladorDos.main.storeCO_NODO.load({
+//                    params: {co_macroproblema:this.getValue()}
+//                })
+//            }
+//        }
 });
 
 /*this.storeCO_MACROPROBLEMA.load();
@@ -416,44 +426,68 @@ this.co_macroproblema = new Ext.form.ComboBox({
 
 //tabuladorDos.main.co_macroproblema.disable();
 
-if(this.OBJ.co_macroproblema){
-	this.storeCO_NODO.load({
-		params: {co_macroproblema:this.OBJ.co_macroproblema},
-		callback: function(){tabuladorDos.main.co_nodo.setValue(tabuladorDos.main.OBJ.co_nodo);}
-	});
-}
+//if(this.OBJ.co_macroproblema){
+//	this.storeCO_NODO.load({
+//		params: {co_macroproblema:this.OBJ.co_macroproblema},
+//		callback: function(){tabuladorDos.main.co_nodo.setValue(tabuladorDos.main.OBJ.co_nodo);}
+//	});
+//}
 
-this.co_macroproblema.on('beforeselect',function(cmb,record,index){
-        	this.co_nodo.clearValue();
-},this);
+//this.co_macroproblema.on('beforeselect',function(cmb,record,index){
+//        	this.co_nodo.clearValue();
+//},this);
 
-this.co_nodo = new Ext.ux.form.SuperBoxSelect({
-	fieldLabel:'2.5.5. NUDOS CRITICOS',
+
+this.co_nodo = new Ext.form.ComboBox({
+	fieldLabel:'2.5.3. LÍNEA MATRIZ',
 	store: this.storeCO_NODO,
 	typeAhead: true,
-	xtype:'superboxselect',
-	allowQueryAll : false,
 	valueField: 'co_nodo',
 	displayField:'tx_nodo',
 	hiddenName:'co_nodo[]',
-	//readOnly:(this.OBJ.co_nodo!='')?true:false,
-	//style:(this.OBJ.co_nodo!='')?'background:#c9c9c9;':'',
+	//readOnly:(this.OBJ.co_macroproblema!='')?true:false,
+	//style:(this.OBJ.co_macroproblema!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
-	emptyText:'Seleccione Nudo',
+	emptyText:'Seleccione Línea Matriz',
 	selectOnFocus: true,
 	mode: 'local',
 	width:500,
 	readOnly:<?php echo $deshabilitado ?>,
 	itemSelector: 'div.search-item',
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_nodo}</div></div></tpl>'),
-	hideOnSelect:false,
 	resizable:true,
 	style:'background-color:#c9c9c9;',
-	//listWidth: '750',
-	//allowBlank:false
 });
+
+//this.co_nodo = new Ext.ux.form.SuperBoxSelect({
+//	fieldLabel:'2.5.5. NUDOS CRITICOS',
+//	store: this.storeCO_NODO,
+//	typeAhead: true,
+//	xtype:'superboxselect',
+//	allowQueryAll : false,
+//	valueField: 'co_nodo',
+//	displayField:'tx_nodo',
+//	hiddenName:'co_nodo[]',
+//	//readOnly:(this.OBJ.co_nodo!='')?true:false,
+//	//style:(this.OBJ.co_nodo!='')?'background:#c9c9c9;':'',
+//	forceSelection:true,
+//	resizable:true,
+//	triggerAction: 'all',
+//	emptyText:'Seleccione Nudo',
+//	selectOnFocus: true,
+//	mode: 'local',
+//	width:500,
+//	readOnly:<?php echo $deshabilitado ?>,
+//	itemSelector: 'div.search-item',
+//	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_nodo}</div></div></tpl>'),
+//	hideOnSelect:false,
+//	resizable:true,
+//	style:'background-color:#c9c9c9;',
+//	//listWidth: '750',
+//	//allowBlank:false
+//});
 
 //tabuladorDos.main.co_nodo.disable();
 
@@ -463,9 +497,10 @@ this.fieldset2 = new Ext.form.FieldSet({
         items:[
 		this.co_area_estrategica,
 		this.co_ambito_zulia,
+                this.co_nodo,
 		this.co_objetivo_zulia,
-		this.co_macroproblema,
-		this.co_nodo
+		this.co_macroproblema
+
 		]
 });
 
