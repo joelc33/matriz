@@ -492,7 +492,7 @@ this.co_nodo = new Ext.form.ComboBox({
 //tabuladorDos.main.co_nodo.disable();
 
 this.fieldset2 = new Ext.form.FieldSet({
-    	title: '2.5. OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA',
+    	title: '2.5. OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA (LÍNEA MATRIZ 2022-2025)',
 	autoWidth:true,
         items:[
 		this.co_area_estrategica,

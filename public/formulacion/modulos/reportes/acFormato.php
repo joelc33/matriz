@@ -211,7 +211,7 @@ $html1 = '
 <td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$campo['tx_macroproblema'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2"><b>PDEZ/NUDO CRITICO:</b> '.$campo['tx_nodos'].'</td>
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$campo['tx_nodos'].'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$campo['tx_objetivo_institucional'].'</td>
