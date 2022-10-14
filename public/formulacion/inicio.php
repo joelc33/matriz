@@ -229,8 +229,8 @@ function logOut(){
 </head>
 <div id="header">
 	<div style="background-color:white; padding-left:0px; padding-right:0px; padding-bottom:0px;">
-	<img height="58" src="images/izquierda.png"> 
-	<img height="58" align="right" src="images/derecha.png">
+<!--	<img height="58" src="images/izquierda.png"> 
+	<img height="58" align="right" src="images/derecha.png">-->
 	</div>
 </div>
 <body style="background: #FFFFFF">
