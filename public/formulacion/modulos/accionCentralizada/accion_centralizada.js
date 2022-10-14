@@ -899,6 +899,8 @@
                         allowBlank: false,
                         emptyText: 'Seleccione ' + e.nombre,
                         triggerAction: 'all',
+                        itemSelector: 'div.search-item',
+                        tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{'+e.mostrar+'}</div></div></tpl>'),                        
                         mode: 'local'
                     });
                     self['co_'+ e.valor] = combo;
@@ -927,6 +929,8 @@
                         emptyText: 'Seleccione ' + e.nombre,
                         triggerAction: 'all',
                         mode: 'local',
+                        itemSelector: 'div.search-item',
+                        tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{'+e.mostrar+'}</div></div></tpl>'),                          
 //                        readOnly: true,
                         style: 'background-color:#c9c9c9;'
                     });
