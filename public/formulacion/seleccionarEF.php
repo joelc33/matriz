@@ -91,8 +91,8 @@ function  ArmaOpcion(){
         .x-window-mc {background-color : white !important;}
     </style>
 	<div style="background-color:white; padding-left:0px; padding-right:0px; padding-bottom:0px;">
-	<img height="75" src="images/izquierda.png">
-	<img height="75" align="right" src="images/derecha.png">
+<!--	<img height="75" src="images/izquierda.png">
+	<img height="75" align="right" src="images/derecha.png">-->
 	</div>
 	<div id="loading-mask" style=""></div>
   	<div id="loading">
@@ -252,7 +252,7 @@ setTimeout(function(){
             Acceso para usuarios registrados
           </div>
            <div id="principal" align="center" style="padding-bottom: 1%">
-                 <img src="images/logo.jpg" width="150" style="position: absolute; top: 40%; left: 6px;" />
+                 <!--<img src="images/logo.jpg" width="150" style="position: absolute; top: 40%; left: 6px;" />-->
             </div>
        </div>
   </body>
