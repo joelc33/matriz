@@ -68,7 +68,7 @@ class MYPDF extends TCPDF {
 		inner join t20_planes as t20c on t49.co_objetivo_general=t20c.co_objetivo_general and t49.co_objetivo_estrategico=t20c.co_objetivo_estrategico and t49.co_objetivo_historico=t20c.co_objetivo_historico and t49.co_objetivo_nacional=t20c.co_objetivo_nacional and t20c.nu_nivel = 4 and t20c.edo_reg is true
 		inner join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
 		inner join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
-		inner join vista_cn_actividad_ac as v1 on v1.id_accion_centralizada=t47.id_accion_centralizada and v1.co_ac_acc_espec=t47.id_accion
+		left join vista_cn_actividad_ac as v1 on v1.id_accion_centralizada=t47.id_accion_centralizada and v1.co_ac_acc_espec=t47.id_accion
 		left join t45_planes_zulia as t45 on t49.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
 		left join t45_planes_zulia as t45a on t49.co_area_estrategica=t45a.co_area_estrategica and t49.co_ambito_estado=t45a.co_ambito_zulia and t45a.nu_nivel = 1
 		left join t45_planes_zulia as t45b on t49.co_ambito_estado=t45b.co_ambito_zulia and t49.co_macroproblema=t45b.co_macroproblema and t45b.nu_nivel = 3 and t45b.edo_reg = true
