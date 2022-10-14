@@ -852,7 +852,7 @@
                 valor: 'co_objetivo_zulia',
                 mostrar: 'tx_descripcion'
             }, {
-                nombre: 'Macroproblema',
+                nombre: 'Problema',
                 url: 'auxiliar/plan/macroproblema',
                 valor: 'co_macroproblema',
                 mostrar: 'tx_descripcion'

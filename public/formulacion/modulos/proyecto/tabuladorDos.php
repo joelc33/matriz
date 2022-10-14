@@ -386,7 +386,7 @@ this.co_objetivo_zulia = new Ext.form.ComboBox({
 //tabuladorDos.main.co_objetivo_zulia.disable();
 
 this.co_macroproblema = new Ext.form.ComboBox({
-	fieldLabel:'2.5.5. MACRO PROBLEMA',
+	fieldLabel:'2.5.5. PROBLEMA',
 	store: this.storeCO_MACROPROBLEMA,
 	typeAhead: true,
 	valueField: 'co_macroproblema',
