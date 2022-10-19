@@ -291,7 +291,7 @@ foreach($this->datos_actividad as $key => $campo2){
 			foreach($this->datos_detalle as $key => $campo3){
 			$contar=$contar+1;
 			$html23.='
-				<td style="width: 10%;" colspan="1" rowspan="1">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
+				<td style="width: 10%;" colspan="1" rowspan="1" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
 				<td style="width: 8%;" colspan="1" rowspan="1" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
 				<td style="width: 8%;" colspan="1" rowspan="1" align="center">'.$campo['tx_categoria_ac'].'</td>
 				<td style="width: 7%;" colspan="1" rowspan="1" align="center">'.$campo3['co_partida'].'</td>
