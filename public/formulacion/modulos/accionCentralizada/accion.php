@@ -26,7 +26,7 @@ monto, t18.co_sector, fecha_inicio, fecha_fin, t52.nombre,
 inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, tx_pr_objetivo,
 (t46.id_estatus = 3) as bloqueado
 FROM t46_acciones_centralizadas as t46
-JOIN t18_sectores as t18 on t46.id_subsector = t18.co_sectores
+JOIN mantenimiento.tab_sectores as t18 on t46.id_subsector = t18.co_sectores
 JOIN mantenimiento.tab_ejecutores as t24 on t46.id_ejecutor = t24.id_ejecutor
 JOIN t52_ac_predefinidas as t52 on t52.id = t46.id_accion
 EOT;
