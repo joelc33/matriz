@@ -866,7 +866,7 @@ EOT;
 			$existe->assert( $pk );
 
 			$res = $comunes->EjecutarQuery(<<<EOT
-select t56.id_tipo_fondo, t61.de_tipo_fondo, t56.monto
+select t56.id_tipo_fondo, t61.de_tipo_fondo as tx_tipo_fondo, t56.monto
 from t56_ac_ae_fuente as t56
 	join mantenimiento.tab_tipo_fondo as t61 on t61.id = t56.id_tipo_fondo
 where t56.id_ac = ? and t56.id_ae = ?;
