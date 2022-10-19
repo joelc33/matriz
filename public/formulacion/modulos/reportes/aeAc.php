@@ -335,8 +335,8 @@ foreach($this->datos_actividad as $key => $campo2){
 		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
 		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
 		<td style="width: 9%;" >'.$campo2['nb_responsable'].'</td>
-		<td style="width: 10%;" >'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
-		<td style="width: 8%;" >'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
+		<td style="width: 10%;" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
+		<td style="width: 8%;" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
 		<td style="width: 8%;" align="center">'.$campo['tx_categoria_ac'].'</td>
 		<td style="width: 7%;" align="center">'.$campo3['co_partida'].'</td>
 		<td style="width: 10%;" align="center">'.$campo3['tx_fuente'].'</td>
