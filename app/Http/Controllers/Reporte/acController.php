@@ -619,4 +619,234 @@ public function ubicacionTodo()
     
   }
 
+
+    /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
+  public function exportacion_icp_ac()
+  {
+
+    DB::beginTransaction();
+
+		try {
+
+      $consulta = DB::select('select t25.id as ejercicio,
+        t24.id_ejecutor as ejecutor,
+        ma.se as sector,
+        ma.pro as proyecto,
+        ma.sub as subproyecto,
+        --ma.act as actividad,
+        t53.numero as actividad,
+        t54.co_partida as partida,
+        tx_nombre as de_partida,
+        t54.monto,
+        t52.nombre as ac_nombre,
+        t24.tx_ejecutor as ac_ej_nombre,
+        t53.nombre as ae_nombre,
+        ma.ej_ae as ae_ej_id,
+        t24a.tx_ejecutor as ae_ej_nombre,
+        t009.de_inicial,
+        sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo,
+            t24a.id_tab_ambito_ejecutor as ambito
+      from mantenimiento.tab_ejercicio_fiscal as t25
+        join mapa_acs as ma on ma.ef = t25.id
+        join t46_acciones_centralizadas as t46
+          on ma.ac = t46.id_accion
+          and ma.ej_ac = t46.id_ejecutor
+          and ma.se = (
+            select co_sector
+            from t18_sectores
+            where co_sectores = t46.id_subsector
+              and edo_reg
+          )
+        join t47_ac_accion_especifica as t47
+          on t46.id = t47.id_accion_centralizada
+          and ma.ej_ae = t47.id_ejecutor
+          and t47.id_accion = (
+            select id
+            from t53_ac_ae_predefinidas
+            where padre = ma.ac
+              and numero = ma.ae
+          )
+        join t54_ac_ae_partidas as t54 on t46.id = t54.id_accion_centralizada and t47.id_accion = t54.id_accion
+        join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
+        join mantenimiento.tab_ejecutores as t24a on t24a.id_ejecutor = t47.id_ejecutor
+        join t52_ac_predefinidas as t52 on t52.id = ma.ac
+        join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion and t53.padre = t52.id
+        join mantenimiento.tab_partidas as tabp on tabp.co_partida = t54.co_partida and tabp.id_tab_ejercicio_fiscal = t25.id
+        join mantenimiento.tab_tipo_ejecutor as t009 on t24a.id_tab_tipo_ejecutor = t009.id
+      where 	ma.edo_reg
+        and t46.edo_reg
+        and t47.edo_reg
+        and t24.in_activo
+        and t25.id::text = :anio
+        and t54.id_tab_ejercicio_fiscal::text = :anio
+      order by 1, 2, 3, 4, 6;', 
+    array('anio' => Session::get('ejercicio')));
+
+    	// Instantiate a new PHPExcel object
+			$objPHPExcel = new PHPExcel();
+			// Set properties
+			$objPHPExcel->getProperties()->setCreator("Yoser Perez");
+			$objPHPExcel->getProperties()->setLastModifiedBy("SPE");
+			$objPHPExcel->getProperties()->setTitle("Listado de Responsables");
+			$objPHPExcel->getProperties()->setSubject("Reporte");
+			$objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+			// Set the active Excel worksheet to sheet 0
+			$objPHPExcel->setActiveSheetIndex(0);
+			// Rename sheet
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(10);
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(10);
+			//$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->setTitle('ac_'.Session::get('ejercicio').'_exportacion_icp_ac');
+			$objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray(
+					array(
+						'font'    => array(
+							'bold'      => true
+						),
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+						),
+						'borders' => array(
+							'top'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						),
+						'fill' => array(
+							'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+								'rotation'   => 90,
+							'startcolor' => array(
+								'argb' => 'FFA0A0A0'
+							),
+							'endcolor'   => array(
+								'argb' => 'FFFFFFFF'
+							)
+						)
+					)
+			);
+			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+					array(
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+						),
+						'borders' => array(
+							'left'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						)
+					)
+			);
+
+			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+					array(
+						'alignment' => array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+						)
+					)
+			);
+
+			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+					array(
+						'borders' => array(
+							'right'     => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						)
+					)
+			);
+			// Initialise the Excel row number
+			$rowCount = 2;
+			// Iterate through each result from the SQL query in turn
+			// We fetch each database result row into $row in turn
+
+			$objPHPExcel->setActiveSheetIndex(0)
+			->setCellValue('A1', 'Ejecutor de la AE')
+			->setCellValue('B1', 'Proyecto')
+			->setCellValue('C1', 'Nombre de la AC')
+			->setCellValue('D1', 'Actividad')
+			->setCellValue('E1', 'Monto Registrado')
+			->setCellValue('F1', 'Ejercicio')
+			->setCellValue('G1', 'Subproyecto')
+			->setCellValue('H1', 'Sector')
+      ->setCellValue('I1', 'Nombre del Ejecutor de la AC')
+      ->setCellValue('J1', 'Ejecutor')
+      ->setCellValue('K1', 'Nombre de la AE')
+      ->setCellValue('L1', 'Ejecutor')
+      ->setCellValue('M1', 'Partida')
+      ->setCellValue('N1', 'Nombre Partida')
+      ->setCellValue('O1', 'Nombre del Ejecutor de la AE')
+      ->setCellValue('P1', 'Tipo Ejecutor')
+      ->setCellValue('Q1', 'Fondo')
+      ->setCellValue('R1', 'Ambito');
+
+      foreach ($consulta as $key => $value) {
+        // Set thin black border outline around column
+        $styleThinBlackBorderOutline = array(
+          'borders' => array(
+            'outline' => array(
+              'style' => PHPExcel_Style_Border::BORDER_THIN,
+              'color' => array('argb' => 'FF000000'),
+            ),
+          ),
+        );
+        $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray($styleThinBlackBorderOutline);
+        // Set cell An to the "name" column from the database (assuming you have a column called name)
+        //    where n is the Excel row number (ie cell A1 in the first row)
+        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->ac_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, (string)$value->actividad, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->monto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->ejercicio, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->subproyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->sector, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->ac_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->ae_ej_id, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->ae_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->partida, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N'.$rowCount, $value->de_partida, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->de_inicial, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('R'.$rowCount, $value->ambito, PHPExcel_Cell_DataType::TYPE_STRING);
+
+        // Increment the Excel row counter
+        $rowCount++;
+    }
+
+      // Make bold cells
+			$objPHPExcel->getActiveSheet()->getStyle('A1:R1')->getFont()->setBold(true);
+
+      // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			// We'll be outputting an excel file
+			header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			// It will be called file.xls
+			header('Content-Disposition: attachment; filename="exportacion_icp_ac_'.Session::get('ejercicio').'_'.date("H:i:s").'.xlsx"');
+			$objWriter->save('php://output');
+
+		}catch (\Illuminate\Database\QueryException $e)
+		{
+			DB::rollback();
+			header('Content-Type: text/html');
+			echo json_encode(array(
+				'success' => false,
+				'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+				//'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
+			));
+		}
+
+  }
+
 }

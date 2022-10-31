@@ -10,6 +10,12 @@ try {
 		throw new Exception( 'no hay nombre de reporte' );
 	} 
 
+	if ( trim($nom) == 'exportacion_icp_ac') {
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+		header("Location: ".$actual_link."/reporte/poa/ac/exportacion/ic/pac");
+		die();
+	}
+
 	$con = file_get_contents( 'jasper/mapa_'.$_SESSION['ejercicio_fiscal'].'.json' );
 	$mapa = json_decode( $con, true );
 	$reportes = array_filter( $mapa['reportes'],
