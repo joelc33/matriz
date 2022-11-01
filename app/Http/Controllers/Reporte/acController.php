@@ -707,9 +707,9 @@ public function ubicacionTodo()
 			$objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(10);
 			//$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
 			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-			$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(40);
 			$objPHPExcel->getActiveSheet()->setTitle('ac_'.Session::get('ejercicio').'_exportacion_icp_ac');
-			$objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray(
 					array(
 						'font'    => array(
 							'bold'      => true
@@ -734,7 +734,7 @@ public function ubicacionTodo()
 						)
 					)
 			);
-			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('Q1')->applyFromArray(
 					array(
 						'alignment' => array(
 							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -747,7 +747,7 @@ public function ubicacionTodo()
 					)
 			);
 
-			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('Q1')->applyFromArray(
 					array(
 						'alignment' => array(
 							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -755,7 +755,7 @@ public function ubicacionTodo()
 					)
 			);
 
-			$objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('Q1')->applyFromArray(
 					array(
 						'borders' => array(
 							'right'     => array(
@@ -770,24 +770,23 @@ public function ubicacionTodo()
 			// We fetch each database result row into $row in turn
 
 			$objPHPExcel->setActiveSheetIndex(0)
-			->setCellValue('A1', 'Ejecutor de la AE')
-			->setCellValue('B1', 'Proyecto')
-			->setCellValue('C1', 'Nombre de la AC')
-			->setCellValue('D1', 'Actividad')
-			->setCellValue('E1', 'Monto Registrado')
-			->setCellValue('F1', 'Ejercicio')
-			->setCellValue('G1', 'Subproyecto')
-			->setCellValue('H1', 'Sector')
-      ->setCellValue('I1', 'Nombre del Ejecutor de la AC')
-      ->setCellValue('J1', 'Ejecutor')
+			->setCellValue('A1', 'Ejercicio')
+			->setCellValue('B1', 'Ejecutor')
+			->setCellValue('C1', 'Sector')
+			->setCellValue('D1', 'Proyecto')
+			->setCellValue('E1', 'Subproyecto')
+			->setCellValue('F1', 'Actividad')
+			->setCellValue('G1', 'Partida')
+			->setCellValue('H1', 'Nombre Partida')
+      ->setCellValue('I1', 'Monto Registrado')
+      ->setCellValue('J1', 'Nombre de la AC')
       ->setCellValue('K1', 'Nombre de la AE')
-      ->setCellValue('L1', 'Ejecutor')
-      ->setCellValue('M1', 'Partida')
-      ->setCellValue('N1', 'Nombre Partida')
-      ->setCellValue('O1', 'Nombre del Ejecutor de la AE')
-      ->setCellValue('P1', 'Tipo Ejecutor')
-      ->setCellValue('Q1', 'Fondo')
-      ->setCellValue('R1', 'Ambito');
+      ->setCellValue('L1', 'Nombre del Ejecutor de la AC')
+      ->setCellValue('M1', 'Ejecutor de la AE')
+      ->setCellValue('N1', 'Nombre del Ejecutor de la AE')
+      ->setCellValue('O1', 'Tipo Ejecutor')
+      ->setCellValue('P1', 'Fondo')
+      ->setCellValue('Q1', 'Ambito');
 
       foreach ($consulta as $key => $value) {
         // Set thin black border outline around column
@@ -799,34 +798,38 @@ public function ubicacionTodo()
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($styleThinBlackBorderOutline);
         // Set cell An to the "name" column from the database (assuming you have a column called name)
         //    where n is the Excel row number (ie cell A1 in the first row)
-        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->ac_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, (string)$value->actividad, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->monto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
-        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->ejercicio, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->subproyecto, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->sector, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->ac_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->ae_ej_id, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->ejercicio, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->sector, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->subproyecto, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, (string)$value->actividad, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->partida, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->de_partida, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->monto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->ac_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->ae_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->partida, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('N'.$rowCount, $value->de_partida, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('O'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->de_inicial, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('R'.$rowCount, $value->ambito, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->ac_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->ae_ej_id, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O'.$rowCount, $value->de_inicial, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $value->ambito, PHPExcel_Cell_DataType::TYPE_STRING);
 
         // Increment the Excel row counter
         $rowCount++;
     }
 
+      $objPHPExcel->getActiveSheet()->getStyle('B1:B'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+      $objPHPExcel->getActiveSheet()->getStyle('C1:C'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+      $objPHPExcel->getActiveSheet()->getStyle('M1:M'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+      $objPHPExcel->getActiveSheet()->getStyle('Q1:Q'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
       // Make bold cells
-			$objPHPExcel->getActiveSheet()->getStyle('A1:R1')->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
 
       // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
 			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
