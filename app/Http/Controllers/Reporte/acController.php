@@ -656,10 +656,10 @@ public function ubicacionTodo()
           on ma.ac = t46.id_accion
           and ma.ej_ac = t46.id_ejecutor
           and ma.se = (
-            select co_sector
-            from t18_sectores
-            where co_sectores = t46.id_subsector
-              and edo_reg
+            select co_sector 
+            from mantenimiento.tab_sectores
+            where id = t46.id_subsector
+              and in_activo is true
           )
         join t47_ac_accion_especifica as t47
           on t46.id = t47.id_accion_centralizada
@@ -806,7 +806,7 @@ public function ubicacionTodo()
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->sector, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->proyecto, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->subproyecto, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, (string)$value->actividad, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, (string)str_pad($value->actividad, 2, "0", STR_PAD_LEFT), PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->partida, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->de_partida, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->monto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
