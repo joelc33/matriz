@@ -59,8 +59,8 @@ class MYPDF extends TCPDF {
 		from t46_acciones_centralizadas as t46
 		join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
 		join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
-		inner join t18_sectores as t18a on t46.id_subsector=t18a.co_sectores
-		inner join t18_sectores as t18b on t18a.co_sector = t18b.co_sector and t18b.nu_nivel = 1
+		inner join mantenimiento.tab_sectores as t18a on t46.id_subsector=t18a.id
+		inner join mantenimiento.tab_sectores as t18b on t18a.co_sector = t18b.co_sector and t18b.nu_nivel = 1
 		inner join t49_ac_planes as t49 on t46.id=t49.id_accion_centralizada
 		inner join t20_planes as t20 on t49.co_objetivo_historico=t20.co_objetivo_historico and t20.nu_nivel = 1
 		inner join t20_planes as t20a on t49.co_objetivo_nacional=t20a.co_objetivo_nacional and t49.co_objetivo_historico=t20a.co_objetivo_historico and t20a.nu_nivel = 2
