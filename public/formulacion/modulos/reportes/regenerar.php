@@ -110,9 +110,8 @@ from mantenimiento.tab_ejercicio_fiscal as t25
 join t46_acciones_centralizadas as t46 on t46.id_ejercicio = t25.id
 join mantenimiento.tab_ac_predefinida as t52 on t52.id = t46.id_accion
 join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
-join t18_sectores as t18 on t18.co_sectores = t46.id_subsector
-join t18_sectores as t18a on t18.co_sector = t18a.co_sector
-    and (t18a.co_sub_sector is null or t18a.co_sub_sector = '')
+join mantenimiento.tab_sectores as t18a on t46.id_subsector=t18a.id
+join mantenimiento.tab_sectores as t18b on t18a.co_sector = t18b.co_sector and t18b.nu_nivel = 1                    
 join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
 join mantenimiento.tab_ejecutores as t24a on t24a.id_ejecutor = t47.id_ejecutor
 join mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_accion
