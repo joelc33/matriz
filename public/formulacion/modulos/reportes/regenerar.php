@@ -121,8 +121,7 @@ t46.edo_reg
 and t47.edo_reg
 and t24.in_activo
 and t24a.in_activo
-and t18.edo_reg
-and t18a.edo_reg
+and t18a.in_activo
 order by ejercicio
 , t24.id_ejecutor::integer
 , t18a.co_sector::integer
