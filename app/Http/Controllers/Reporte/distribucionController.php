@@ -173,7 +173,7 @@ class distribucionController extends Controller
         ->where('ef_uno', '=', $ejercicio)
         ->where('co_sector', '=', $value_distribucion_uno->co_sector)
         ->where('nu_original', '=', $value_distribucion_dos->nu_original)
-        ->where('id_ejecutor', '=', '0001')
+        //->where('id_ejecutor', '=', '0001')
         ->groupBy('co_sector')
         ->groupBy('tx_descripcion')
         ->groupBy('id_ejecutor')
