@@ -173,7 +173,7 @@ class distribucionController extends Controller
         ->where('ef_uno', '=', $ejercicio)
         ->where('co_sector', '=', $value_distribucion_uno->co_sector)
         ->where('nu_original', '=', $value_distribucion_dos->nu_original)
-        //->where('id_ejecutor', '=', '0002')
+        //->where('id_ejecutor', '=', '0001')
         ->groupBy('co_sector')
         ->groupBy('tx_descripcion')
         ->groupBy('id_ejecutor')
@@ -1221,7 +1221,7 @@ class distribucionController extends Controller
                   ->orderBy('co_partida','ASC')
                   ->get();
 
-                  foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
+                  /*foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
 
                     $pdf->SetFont('','',5);
                     $pdf->MultiCell(6, 5, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
@@ -1243,7 +1243,7 @@ class distribucionController extends Controller
                     ->orderBy('nu_ae','ASC')
                     ->get();
 
-                    foreach($distribucion_ae as $key => $value_distribucion_ae){
+                    /*foreach($distribucion_ae as $key => $value_distribucion_ae){
 
                       $distribucion_ae_partida = vista_distribucion_presupuesto::
                       join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
@@ -1281,7 +1281,7 @@ class distribucionController extends Controller
                       if ($i == 0){
                         $pdf->MultiCell(19, 5, '', 0, 'C', 0, 0, '', '', true);
                       }
-                    }
+                    }*/
 
                     /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1289,7 +1289,7 @@ class distribucionController extends Controller
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
                     //$pdf->ln(4);
 
-                    $condicionPartida = strlen($value_distribucion_ocho->de_denominacion);
+                    /*$condicionPartida = strlen($value_distribucion_ocho->de_denominacion);
                     if ($condicionPartida >= 60) {
                       $pdf->ln(4);
                     }else {
@@ -1429,7 +1429,7 @@ class distribucionController extends Controller
 
                     }
 
-                  }
+                  }*/
 
                 }
 
