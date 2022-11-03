@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
         \matriz\Console\Commands\replicarEjercicio::class,
         \matriz\Console\Commands\cargaMasiva::class,
         \matriz\Console\Commands\actualizarMeta::class,
-        \matriz\Console\Commands\montoAcAe::class
+        \matriz\Console\Commands\montoAcAe::class,
+        \matriz\Console\Commands\generarReporteDistribucion::class
     ];
 
     /**

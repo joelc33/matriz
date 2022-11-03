@@ -649,7 +649,8 @@ public function ubicacionTodo()
         t24a.tx_ejecutor as ae_ej_nombre,
         t009.de_inicial,
         sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo,
-            t24a.id_tab_ambito_ejecutor as ambito
+        t24a.id_tab_ambito_ejecutor as ambito,
+        tae24a.de_ambito_ejecutor
       from mantenimiento.tab_ejercicio_fiscal as t25
         join mapa_acs as ma on ma.ef = t25.id
         join t46_acciones_centralizadas as t46
@@ -677,6 +678,7 @@ public function ubicacionTodo()
         join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion and t53.padre = t52.id
         join mantenimiento.tab_partidas as tabp on tabp.co_partida = t54.co_partida and tabp.id_tab_ejercicio_fiscal = t25.id
         join mantenimiento.tab_tipo_ejecutor as t009 on t24a.id_tab_tipo_ejecutor = t009.id
+        left join mantenimiento.tab_ambito_ejecutor as tae24a on t24a.id_tab_ambito_ejecutor = tae24a.id
       where 	ma.edo_reg
         and t46.edo_reg
         and t47.edo_reg
@@ -708,6 +710,7 @@ public function ubicacionTodo()
 			//$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
 			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
 			$objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(40);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
 			$objPHPExcel->getActiveSheet()->setTitle('ac_'.Session::get('ejercicio').'_exportacion_icp_ac');
 			$objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray(
 					array(
@@ -801,6 +804,9 @@ public function ubicacionTodo()
         $objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($styleThinBlackBorderOutline);
         // Set cell An to the "name" column from the database (assuming you have a column called name)
         //    where n is the Excel row number (ie cell A1 in the first row)
+
+        $ambito = $value->ambito.' - '.trim($value->de_ambito_ejecutor);
+
         $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->ejercicio, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->sector, PHPExcel_Cell_DataType::TYPE_STRING);
@@ -817,7 +823,7 @@ public function ubicacionTodo()
         $objPHPExcel->getActiveSheet()->SetCellValue('N'.$rowCount, $value->ae_ej_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('O'.$rowCount, $value->de_inicial, PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $value->ambito, PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $ambito, PHPExcel_Cell_DataType::TYPE_STRING);
 
         // Increment the Excel row counter
         $rowCount++;
