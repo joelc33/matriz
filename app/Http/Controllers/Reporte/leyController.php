@@ -43,12 +43,15 @@ class leyController extends Controller
      */
     public function libro()
     {
+
+      $ejercicio = Session::get("ejercicio");
+
       $pdf = new TCPDF('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
       $pdf->SetCreator('Sistema POA, Yoser Perez');
       $pdf->SetAuthor('Yoser Perez');
       $pdf->SetTitle('Ley de Presupuesto');
       $pdf->SetSubject('Ley de Presupuesto');
-      $pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+      $pdf->SetKeywords('Ley de Presupuesto, PDF, Zulia, SPE, '.$ejercicio.'');
       $pdf->SetMargins(15,10,10);
       $pdf->SetTopMargin(10);
       $pdf->SetPrintHeader(false);
@@ -163,7 +166,7 @@ class leyController extends Controller
       $pdf->MultiCell(90, 5, 'PRESUPUESTO DE INGRESOS', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLÍVARES) ', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -202,7 +205,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->ln(-221);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
@@ -211,8 +214,8 @@ class leyController extends Controller
       $presupuesto_uno = tab_presupuesto_ingreso::
       join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
       ->select( 't01.co_partida', 'tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
-      ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
       ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
       ->groupBy('t01.co_partida')
       ->groupBy('tx_nombre')
@@ -238,9 +241,9 @@ class leyController extends Controller
         join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 3)'))
         ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 5)'))
         ->select( 't02.co_partida', 't02.tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
-        ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
         ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
         ->where('t01.co_partida', '=', $value_presupuesto_uno->co_partida)
         ->groupBy('t02.co_partida')
@@ -265,10 +268,10 @@ class leyController extends Controller
           ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 5)'))
           ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(mantenimiento.tab_presupuesto_ingreso.nu_partida::character varying, 7)'))
           ->select( 't03.co_partida', 't03.tx_nombre',  DB::raw('sum(mo_partida) as mo_partida') )
-          ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-          ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-          ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-          ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('mantenimiento.tab_presupuesto_ingreso.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('mantenimiento.tab_presupuesto_ingreso.in_activo', '=', TRUE)
           ->where('t01.co_partida', '=', $value_presupuesto_uno->co_partida)
           ->where('t02.co_partida', '=', $value_presupuesto_dos->co_partida)
@@ -292,7 +295,7 @@ class leyController extends Controller
 
             $presupuesto_cuatro = tab_presupuesto_ingreso::
             select( 'nu_partida as co_partida', 'de_partida as tx_nombre',  'mo_partida' )
-            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where('in_activo', '=', TRUE)
             ->where(DB::raw('left(nu_partida::character varying, 7)::numeric'), '=', $value_presupuesto_tres->co_partida)
             ->orderBy('nu_partida','ASC')
@@ -403,7 +406,7 @@ class leyController extends Controller
       $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -437,7 +440,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->ln(-221);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
@@ -445,7 +448,8 @@ class leyController extends Controller
 
       $categoria_uno = vista_distribucion_presupuesto::
       select( 'co_sector', 'tx_descripcion')
-      ->where('ef_uno', '=', Session::get('ejercicio'))
+      ->where('ef_uno', '=', $ejercicio)
+      ->where('id_tab_tipo_ejecutor', '=', 1)
       ->groupBy('co_sector')
       ->groupBy('tx_descripcion')
       ->orderBy('co_sector','ASC')
@@ -463,8 +467,9 @@ class leyController extends Controller
 
         $categoria_dos = vista_distribucion_presupuesto::
         select( 'nu_original', 'de_nombre')
-        ->where('ef_uno', '=', Session::get('ejercicio'))
+        ->where('ef_uno', '=', $ejercicio)
         ->where('co_sector', '=', $value_categoria_uno->co_sector)
+        ->where('id_tab_tipo_ejecutor', '=', 1)
         ->groupBy('nu_original')
         ->groupBy('de_nombre')
         ->orderBy('nu_original','ASC')
@@ -508,7 +513,7 @@ class leyController extends Controller
             $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
             $pdf->ln(8);
             $pdf->SetFont('','B',8);
-            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->ln(-10);
             $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -542,7 +547,7 @@ class leyController extends Controller
             $pdf->SetFont('','',7);
             $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
             $pdf->ln(-221);
             $pdf->ln(2);
             $pdf->SetFont('','',7);
@@ -552,9 +557,10 @@ class leyController extends Controller
 
           $categoria_tres = vista_distribucion_presupuesto::
           select('nu_ae', 'de_ae')
-          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('ef_uno', '=', $ejercicio)
           ->where('co_sector', '=', $value_categoria_uno->co_sector)
           ->where('nu_original', '=', $value_categoria_dos->nu_original)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
           ->groupBy('nu_ae')
           ->groupBy('de_ae')
           ->orderBy('nu_ae','ASC')
@@ -572,10 +578,11 @@ class leyController extends Controller
 
             $categoria_cuatro = vista_distribucion_presupuesto::
             select('tx_ejecutor')
-            ->where('ef_uno', '=', Session::get('ejercicio'))
+            ->where('ef_uno', '=', $ejercicio)
             ->where('co_sector', '=', $value_categoria_uno->co_sector)
             ->where('nu_original', '=', $value_categoria_dos->nu_original)
             ->where('nu_ae', '=', $value_categoria_tres->nu_ae)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
             ->groupBy('tx_ejecutor')
             ->orderBy('tx_ejecutor','ASC')
             ->get();
@@ -617,7 +624,7 @@ class leyController extends Controller
                 $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
                 $pdf->ln(8);
                 $pdf->SetFont('','B',8);
-                $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->ln(-10);
                 $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -651,7 +658,7 @@ class leyController extends Controller
                 $pdf->SetFont('','',7);
                 $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                 $pdf->ln(-221);
                 $pdf->ln(2);
                 $pdf->SetFont('','',7);
@@ -735,7 +742,7 @@ class leyController extends Controller
               $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(8);
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(-10);
               $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -769,7 +776,7 @@ class leyController extends Controller
               $pdf->SetFont('','',7);
               $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
               $pdf->ln(-221);
               $pdf->ln(2);
               $pdf->SetFont('','',7);
@@ -808,7 +815,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLIVARES)', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -841,7 +848,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->ln(-221);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
@@ -851,7 +858,8 @@ class leyController extends Controller
 
       $lista_credito_uno = vista_distribucion_presupuesto::
       select( 'co_sector', 'tx_descripcion', DB::raw('sum(monto) as mo_partida'))
-      ->where('ef_uno', '=', Session::get('ejercicio'))
+      ->where('ef_uno', '=', $ejercicio)
+      ->where('id_tab_tipo_ejecutor', '=', 1)
       ->groupBy('co_sector')
       ->groupBy('tx_descripcion')
       ->orderBy('co_sector','ASC')
@@ -869,8 +877,9 @@ class leyController extends Controller
 
         $lista_credito_dos = vista_distribucion_presupuesto::
         select( 'nu_original', 'de_nombre', DB::raw('sum(monto) as mo_partida'))
-        ->where('ef_uno', '=', Session::get('ejercicio'))
+        ->where('ef_uno', '=', $ejercicio)
         ->where('co_sector', '=', $value_credito_uno->co_sector)
+        ->where('id_tab_tipo_ejecutor', '=', 1)
         ->groupBy('nu_original')
         ->groupBy('de_nombre')
         ->orderBy('nu_original','ASC')
@@ -924,7 +933,7 @@ class leyController extends Controller
             $pdf->setCellHeightRatio(2);
             $pdf->ln(8);
             $pdf->SetFont('','B',8);
-            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(90, 5, '(EN BOLIVARES)', 0, 'C', 0, 0, '', '', true);
             $pdf->ln(-10);
             $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -957,7 +966,7 @@ class leyController extends Controller
             $pdf->SetFont('','',7);
             $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
             $pdf->ln(-221);
             $pdf->ln(2);
             $pdf->SetFont('','',7);
@@ -1010,7 +1019,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLIVARES)', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1030,7 +1039,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->ln(-221);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
@@ -1041,8 +1050,9 @@ class leyController extends Controller
       $partida_credito_uno = vista_distribucion_presupuesto::
       join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
       ->select( 't01.co_partida', 'tx_nombre', DB::raw('sum(monto) as mo_partida'))
-      ->where('ef_uno', '=', Session::get('ejercicio'))
-      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('ef_uno', '=', $ejercicio)
+      ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->where('id_tab_tipo_ejecutor', '=', 1)
       ->groupBy('t01.co_partida')
       ->groupBy('tx_nombre')
       ->orderBy('t01.co_partida','ASC')
@@ -1090,7 +1100,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1101,8 +1111,8 @@ class leyController extends Controller
       $pdf->MultiCell(20, 20, chr(10).chr(10).'TIPO DE PERSONAL', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(0);
       $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 5, Session::get("ejercicio")-1, 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 5, Session::get("ejercicio"), 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(88, 5, $ejercicio-1, 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(88, 5, $ejercicio, 1, 'C', 0, 0, '', '', true);
       $pdf->ln(5);
       $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(88, 5, 'EN BOLIVARES ANUALES', 1, 'C', 0, 0, '', '', true);
@@ -1156,7 +1166,7 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->ln(-222);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
@@ -1165,7 +1175,7 @@ class leyController extends Controller
       /*$clasificador_tipo = tab_clasificador_tipo::
       join('mantenimiento.tab_tipo_personal as t01', 't01.id', '=', 'mantenimiento.tab_clasificador_tipo.id_tab_tipo_personal')
       ->select( 'nu_codigo', 'de_tipo_personal')
-      //->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      //->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
       ->where('id_tab_ejercicio_fiscal', '=', 2017)
       ->orderBy('nu_codigo','ASC')
       ->get();*/
@@ -1210,7 +1220,7 @@ class leyController extends Controller
       $objetivos = tab_objetivo_sectorial::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'mantenimiento.tab_objetivo_sectorial.id_tab_sectores')
   		->select( 'mantenimiento.tab_objetivo_sectorial.id', 'id_tab_ejercicio_fiscal',
       'id_tab_sectores', 'de_objetivo_sectorial', 'tx_codigo', 'tx_descripcion' )
-  		->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+  		->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
   		->orderBy('tx_codigo','ASC')
   		->get();
 
@@ -1277,7 +1287,7 @@ class leyController extends Controller
         $pdf->MultiCell(90, 5, chr(10).'OBJETIVOS SECTORIALES', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(8);
         $pdf->SetFont('','B',8);
-        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(-10);
         $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1302,7 +1312,7 @@ class leyController extends Controller
         $pdf->SetFont('','',7);
         $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
         $pdf->ln(-222);
         $pdf->ln(2);
         $pdf->SetFont('','',7);
@@ -1328,7 +1338,7 @@ class leyController extends Controller
         ->join('mantenimiento.tab_ejecutores as t02', 't02.id_ejecutor', '=', 'public.t26_proyectos.id_ejecutor')
         ->select( 'id_proyecto', 'nombre', 'clase_sector', 'tx_descripcion',
         'public.t26_proyectos.id_ejecutor', 'tx_ejecutor' ,'public.t26_proyectos.descripcion')
-        ->where('id_ejercicio', '=', Session::get('ejercicio'))
+        ->where('id_ejercicio', '=', $ejercicio)
         ->where('clase_sector', '=', $value->tx_codigo)
         ->where('edo_reg', '=', TRUE)
         ->orderBy('id_proyecto','ASC')
@@ -1398,7 +1408,7 @@ class leyController extends Controller
           $pdf->MultiCell(90, 5, 'DESCRIPCIÓN DEL PROYECTO Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(8);
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(-10);
           $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1435,7 +1445,7 @@ class leyController extends Controller
           $pdf->SetFont('','',7);
           $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->ln(-207);
           $pdf->ln(2);
           $pdf->SetFont('','',7);
@@ -1471,7 +1481,7 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(2);
           $pdf->ln(8);
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(90, 5, '(EN BOLÍVARES) ', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(-10);
           $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1505,7 +1515,7 @@ class leyController extends Controller
           $pdf->SetFont('','',7);
           $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->ln(-219);
           $pdf->ln(2);
           $pdf->SetFont('','',7);
@@ -1517,7 +1527,7 @@ class leyController extends Controller
           ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.t42_proyecto_acc_espec_partida.co_partida, 3)'))
           ->select( DB::raw('t02.co_partida as partida'), 'tx_nombre',
           DB::raw('sum(public.t42_proyecto_acc_espec_partida.nu_monto) as mo_partida'))
-          ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('t01.id_proyecto', '=', $value_pr->id_proyecto)
           ->where('public.t42_proyecto_acc_espec_partida.edo_reg', '=', TRUE)
           ->where('t01.edo_reg', '=', TRUE)
@@ -1556,7 +1566,7 @@ class leyController extends Controller
         $ac_lista = tab_ac::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'public.t46_acciones_centralizadas.id_subsector')
         ->join('mantenimiento.tab_ac_predefinida as t02', 't02.id', '=', 'public.t46_acciones_centralizadas.id_accion')
         ->select( 'id_accion', 'de_nombre', 'nu_original', 'co_sector' )
-        ->where('id_ejercicio', '=', Session::get('ejercicio'))
+        ->where('id_ejercicio', '=', $ejercicio)
         ->where('co_sector', '=', $value->tx_codigo)
         ->groupBy('id_accion')
         ->groupBy('de_nombre')
@@ -1626,7 +1636,7 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(2);
           $pdf->ln(8);
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(90, 5, '(EN BOLÍVARES) ', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(-10);
           $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1660,7 +1670,7 @@ class leyController extends Controller
           $pdf->SetFont('','',7);
           $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->ln(-219);
           $pdf->ln(2);
           $pdf->SetFont('','',7);
@@ -1671,7 +1681,7 @@ class leyController extends Controller
           ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
           //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
           ->select( 'co_sector', 't01.id_accion', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 'tx_nombre', DB::raw('sum(t01.monto) as mo_partida') )
-          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
+          ->where('t01.id_ejercicio', '=', $ejercicio)
           ->where('t01.id_accion', '=', $value_ac->id_accion)
           ->where('t02.co_sector', '=', $value_ac->co_sector)
           ->groupBy('co_sector')
@@ -1772,7 +1782,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1790,6 +1800,13 @@ class leyController extends Controller
       $pdf->SetFont('','B',7);
       $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
+
+      $pdf->ln(230);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-230);
 
       /*$tabla_obra_lista = '
       <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
@@ -1868,7 +1885,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1887,6 +1904,12 @@ class leyController extends Controller
       $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
 
+      $pdf->ln(230);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-230);
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
@@ -1929,6 +1952,13 @@ class leyController extends Controller
       $pdf->SetLineWidth(0.150);
       $pdf->setCellHeightRatio(2);
 
+      $pdf->ln(230);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-230);
+
       $pdf->AddPage();
 
       $pdf->SetFont('','B',8);
@@ -1942,7 +1972,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1961,6 +1991,12 @@ class leyController extends Controller
       $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
 
+      $pdf->ln(230);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-230);
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
@@ -2017,7 +2053,7 @@ class leyController extends Controller
       $pdf->setCellHeightRatio(2);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(-10);
       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -2060,6 +2096,12 @@ class leyController extends Controller
       $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->ln(212);
+      $pdf->SetFont('','',7);
+      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+      $pdf->ln(-212);
       $pdf->ln(2);
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(0.8);
@@ -2073,10 +2115,10 @@ class leyController extends Controller
       ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
       ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
       ->select( 't02.co_sector', 't04.tx_descripcion', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
-      ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-      ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-      ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-      ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+      ->where('t01.id_ejercicio', '=', $ejercicio)
+      ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
       ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
       ->groupBy('t02.co_sector')
       ->groupBy('t04.tx_descripcion')
@@ -2085,10 +2127,10 @@ class leyController extends Controller
 
       $ac_transferencia_uno = vista_relacion_transferencia::
       select( 'co_sector', 'tx_descripcion', DB::raw('sum(monto) as mo_partida') )
-      ->where('ef_uno', '=', Session::get('ejercicio'))
-      ->where('ef_dos', '=', Session::get('ejercicio'))
-      ->where('ef_tres', '=', Session::get('ejercicio'))
-      ->where('ef_cuatro', '=', Session::get('ejercicio'))
+      ->where('ef_uno', '=', $ejercicio)
+      ->where('ef_dos', '=', $ejercicio)
+      ->where('ef_tres', '=', $ejercicio)
+      ->where('ef_cuatro', '=', $ejercicio)
       ->groupBy('co_sector')
       ->groupBy('tx_descripcion')
       ->orderBy('co_sector','ASC')
@@ -2120,10 +2162,10 @@ class leyController extends Controller
         ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
         ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
         ->select( 't03.nu_original', 't03.de_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
-        ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-        ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('t01.id_ejercicio', '=', $ejercicio)
+        ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
         ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
         ->where('t02.co_sector', '=', $value_transferencia->co_sector)
         ->groupBy('t03.nu_original')
@@ -2133,10 +2175,10 @@ class leyController extends Controller
 
         $ac_transferencia_dos = vista_relacion_transferencia::
         select( 'nu_original', 'de_nombre', DB::raw('sum(monto) as mo_partida') )
-        ->where('ef_uno', '=', Session::get('ejercicio'))
-        ->where('ef_dos', '=', Session::get('ejercicio'))
-        ->where('ef_tres', '=', Session::get('ejercicio'))
-        ->where('ef_cuatro', '=', Session::get('ejercicio'))
+        ->where('ef_uno', '=', $ejercicio)
+        ->where('ef_dos', '=', $ejercicio)
+        ->where('ef_tres', '=', $ejercicio)
+        ->where('ef_cuatro', '=', $ejercicio)
         ->where('co_sector', '=', $value_transferencia->co_sector)
         ->groupBy('nu_original')
         ->groupBy('de_nombre')
@@ -2210,7 +2252,7 @@ class leyController extends Controller
             $pdf->setCellHeightRatio(2);
             $pdf->ln(8);
             $pdf->SetFont('','B',8);
-            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
             $pdf->ln(-10);
             $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -2253,6 +2295,12 @@ class leyController extends Controller
             $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->ln(212);
+            $pdf->SetFont('','',7);
+            $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+            $pdf->ln(-212);
             $pdf->ln(2);
             $pdf->SetFont('','',7);
             $pdf->setCellHeightRatio(0.8);
@@ -2271,10 +2319,10 @@ class leyController extends Controller
           ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
           ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
           ->select( 't05.co_partida', 't05.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
-          ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-          ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-          ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-          ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('t01.id_ejercicio', '=', $ejercicio)
+          ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
           ->where('t02.co_sector', '=', $value_transferencia->co_sector)
           ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
@@ -2286,11 +2334,11 @@ class leyController extends Controller
           $ac_transferencia_tres = vista_relacion_transferencia::
           join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
           ->select( 't05.co_partida', 'np_uno as tx_nombre', DB::raw('sum(monto) as mo_partida') )
-          ->where('ef_uno', '=', Session::get('ejercicio'))
-          ->where('ef_dos', '=', Session::get('ejercicio'))
-          ->where('ef_tres', '=', Session::get('ejercicio'))
-          ->where('ef_cuatro', '=', Session::get('ejercicio'))
-          ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('ef_uno', '=', $ejercicio)
+          ->where('ef_dos', '=', $ejercicio)
+          ->where('ef_tres', '=', $ejercicio)
+          ->where('ef_cuatro', '=', $ejercicio)
+          ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('co_sector', '=', $value_transferencia->co_sector)
           ->where('nu_original', '=', $value_transferencia_dos->nu_original)
           ->groupBy('t05.co_partida')
@@ -2352,7 +2400,7 @@ class leyController extends Controller
               $pdf->setCellHeightRatio(2);
               $pdf->ln(8);
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(-10);
               $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -2399,6 +2447,13 @@ class leyController extends Controller
               $pdf->SetFont('','',7);
               $pdf->setCellHeightRatio(0.8);
 
+              $pdf->ln(212);
+              $pdf->SetFont('','',7);
+              $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+              $pdf->ln(-212);
+
             }
 
             /*$ac_transferencia_cuatro = tab_ac_ae_partida::
@@ -2410,10 +2465,10 @@ class leyController extends Controller
             ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
             ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
             ->select( 't06.co_partida', 't06.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
-            ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-            ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t01.id_ejercicio', '=', $ejercicio)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
             ->where('t02.co_sector', '=', $value_transferencia->co_sector)
             ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
@@ -2427,12 +2482,12 @@ class leyController extends Controller
             join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
             ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 5)'))
             ->select( 't06.co_partida', 'np_dos as tx_nombre', DB::raw('sum(monto) as mo_partida') )
-            ->where('ef_uno', '=', Session::get('ejercicio'))
-            ->where('ef_dos', '=', Session::get('ejercicio'))
-            ->where('ef_tres', '=', Session::get('ejercicio'))
-            ->where('ef_cuatro', '=', Session::get('ejercicio'))
-            ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ef_uno', '=', $ejercicio)
+            ->where('ef_dos', '=', $ejercicio)
+            ->where('ef_tres', '=', $ejercicio)
+            ->where('ef_cuatro', '=', $ejercicio)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where('co_sector', '=', $value_transferencia->co_sector)
             ->where('nu_original', '=', $value_transferencia_dos->nu_original)
             ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
@@ -2476,10 +2531,10 @@ class leyController extends Controller
               ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 5)'))
               ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 7)'))
               ->select( 't07.co_partida', 't07.tx_nombre', DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
-              ->where('t01.id_ejercicio', '=', Session::get('ejercicio'))
-              ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('t01.id_ejercicio', '=', $ejercicio)
+              ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
               ->where(DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'), '=', '407')
               ->where('t02.co_sector', '=', $value_transferencia->co_sector)
               ->where('t03.nu_original', '=', $value_transferencia_dos->nu_original)
@@ -2495,13 +2550,13 @@ class leyController extends Controller
               ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 5)'))
               ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 7)'))
               ->select( 't07.co_partida', 'np_tres as tx_nombre', DB::raw('sum(monto) as mo_partida') )
-              ->where('ef_uno', '=', Session::get('ejercicio'))
-              ->where('ef_dos', '=', Session::get('ejercicio'))
-              ->where('ef_tres', '=', Session::get('ejercicio'))
-              ->where('ef_cuatro', '=', Session::get('ejercicio'))
-              ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t06.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t07.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('ef_uno', '=', $ejercicio)
+              ->where('ef_dos', '=', $ejercicio)
+              ->where('ef_tres', '=', $ejercicio)
+              ->where('ef_cuatro', '=', $ejercicio)
+              ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
               ->where('co_sector', '=', $value_transferencia->co_sector)
               ->where('nu_original', '=', $value_transferencia_dos->nu_original)
               ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
@@ -2575,7 +2630,7 @@ class leyController extends Controller
                   $pdf->setCellHeightRatio(2);
                   $pdf->ln(8);
                   $pdf->SetFont('','B',8);
-                  $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
                   $pdf->ln(-10);
                   $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -2622,6 +2677,13 @@ class leyController extends Controller
                   $pdf->SetFont('','',7);
                   $pdf->setCellHeightRatio(0.8);
 
+                  $pdf->ln(212);
+                  $pdf->SetFont('','',7);
+                  $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+                  $pdf->ln(-212);
+
                 }
 
               }
@@ -2649,6 +2711,6 @@ class leyController extends Controller
 
       //Cierre de Reporte
       $pdf->lastPage();
-      $pdf->output('LEY_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+      $pdf->output('LEY_DE_PRESUPUESTO_'.$ejercicio.'_'.date("H:i:s").'.pdf', 'D');
     }
 }

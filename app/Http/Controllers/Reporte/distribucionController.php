@@ -41,12 +41,15 @@ class distribucionController extends Controller
    */
   public function libro()
   {
+
+    $ejercicio = Session::get("ejercicio");
+
     $pdf = new TCPDF('P', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
     $pdf->SetCreator('Sistema POA, Yoser Perez');
     $pdf->SetAuthor('Yoser Perez');
     $pdf->SetTitle('Distribución de Presupuesto');
     $pdf->SetSubject('Distribución de Presupuesto');
-    $pdf->SetKeywords('Distribución de Presupuesto, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+    $pdf->SetKeywords('Distribución de Presupuesto, PDF, Zulia, SPE, '.$ejercicio.'');
     $pdf->SetMargins(15,10,10);
     $pdf->SetTopMargin(10);
     $pdf->SetPrintHeader(false);
@@ -57,7 +60,8 @@ class distribucionController extends Controller
 
     $distribucion_uno = vista_distribucion_presupuesto::
     select( 'co_sector', 'tx_descripcion' )
-    ->where('ef_uno', '=', Session::get('ejercicio'))
+    ->where('ef_uno', '=', $ejercicio)
+    ->where('id_tab_tipo_ejecutor', '=', 1)
     ->groupBy('co_sector')
     ->groupBy('tx_descripcion')
     ->orderBy('co_sector','ASC')
@@ -111,8 +115,9 @@ class distribucionController extends Controller
 
       $distribucion_dos = vista_distribucion_presupuesto::
       select( 'nu_original', 'de_nombre' )
-      ->where('ef_uno', '=', Session::get('ejercicio'))
+      ->where('ef_uno', '=', $ejercicio)
       ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+      ->where('id_tab_tipo_ejecutor', '=', 1)
       ->groupBy('nu_original')
       ->groupBy('de_nombre')
       ->orderBy('nu_original','ASC')
@@ -167,10 +172,11 @@ class distribucionController extends Controller
 
         $distribucion_tres = vista_distribucion_presupuesto::
         select( 'co_sector', 'tx_descripcion', 'id_ejecutor', 'tx_ejecutor', 'nu_original', 'de_nombre' )
-        ->where('ef_uno', '=', Session::get('ejercicio'))
+        ->where('ef_uno', '=', $ejercicio)
         ->where('co_sector', '=', $value_distribucion_uno->co_sector)
         ->where('nu_original', '=', $value_distribucion_dos->nu_original)
-        //->where('id_ejecutor', '=', '0002')
+        //->where('id_ejecutor', '=', '0001')
+        ->where('id_tab_tipo_ejecutor', '=', 1)
         ->groupBy('co_sector')
         ->groupBy('tx_descripcion')
         ->groupBy('id_ejecutor')
@@ -197,7 +203,7 @@ class distribucionController extends Controller
           $pdf->setCellHeightRatio(2);
           $pdf->ln(8);
           $pdf->SetFont('','B',8);
-          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
           $pdf->ln(-10);
           $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -258,10 +264,11 @@ class distribucionController extends Controller
 
           $distribucion_ae = vista_distribucion_presupuesto::
           select( 'nu_ae', 'de_ae' )
-          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('ef_uno', '=', $ejercicio)
           ->where('co_sector', '=', $value_distribucion_uno->co_sector)
           ->where('nu_original', '=', $value_distribucion_dos->nu_original)
           ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
           ->groupBy('nu_ae')
           ->groupBy('de_ae')
           ->orderBy('nu_ae','ASC')
@@ -296,7 +303,7 @@ class distribucionController extends Controller
           $pdf->SetFont('','',7);
           $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
           $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-          $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
           $pdf->ln(-208);
           $pdf->ln(2);
           $pdf->SetFont('','',7);
@@ -305,11 +312,12 @@ class distribucionController extends Controller
           $distribucion_cuatro = vista_distribucion_presupuesto::
           join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
           ->select( 't01.co_partida', 'tx_nombre',  DB::raw('sum(monto) as mo_partida') )
-          ->where('ef_uno', '=', Session::get('ejercicio'))
-          ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+          ->where('ef_uno', '=', $ejercicio)
+          ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('co_sector', '=', $value_distribucion_uno->co_sector)
           ->where('nu_original', '=', $value_distribucion_dos->nu_original)
           ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
           ->groupBy('t01.co_partida')
           ->groupBy('tx_nombre')
           ->orderBy('co_partida','ASC')
@@ -335,10 +343,11 @@ class distribucionController extends Controller
 
             $distribucion_ae = vista_distribucion_presupuesto::
             select( 'nu_ae', 'de_ae' )
-            ->where('ef_uno', '=', Session::get('ejercicio'))
+            ->where('ef_uno', '=', $ejercicio)
             ->where('co_sector', '=', $value_distribucion_uno->co_sector)
             ->where('nu_original', '=', $value_distribucion_dos->nu_original)
             ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
             ->groupBy('nu_ae')
             ->groupBy('de_ae')
             ->orderBy('nu_ae','ASC')
@@ -349,13 +358,14 @@ class distribucionController extends Controller
               $distribucion_ae_partida = vista_distribucion_presupuesto::
               join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
               ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-              ->where('ef_uno', '=', Session::get('ejercicio'))
-              ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('ef_uno', '=', $ejercicio)
+              ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
               ->where('co_sector', '=', $value_distribucion_uno->co_sector)
               ->where('nu_original', '=', $value_distribucion_dos->nu_original)
               ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
               ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
               ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+              ->where('id_tab_tipo_ejecutor', '=', 1)
               ->groupBy('nu_ae')
               ->orderBy('nu_ae','ASC')
               ->get();
@@ -413,7 +423,7 @@ class distribucionController extends Controller
               $pdf->setCellHeightRatio(2);
               $pdf->ln(8);
               $pdf->SetFont('','B',8);
-              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
               $pdf->ln(-10);
               $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -474,10 +484,11 @@ class distribucionController extends Controller
 
               $distribucion_ae = vista_distribucion_presupuesto::
               select( 'nu_ae', 'de_ae' )
-              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('ef_uno', '=', $ejercicio)
               ->where('co_sector', '=', $value_distribucion_uno->co_sector)
               ->where('nu_original', '=', $value_distribucion_dos->nu_original)
               ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+              ->where('id_tab_tipo_ejecutor', '=', 1)
               ->groupBy('nu_ae')
               ->groupBy('de_ae')
               ->orderBy('nu_ae','ASC')
@@ -512,7 +523,7 @@ class distribucionController extends Controller
               $pdf->SetFont('','',7);
               $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
               $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+              $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
               $pdf->ln(-208);
               $pdf->ln(2);
               $pdf->SetFont('','',7);
@@ -524,13 +535,14 @@ class distribucionController extends Controller
             join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
             ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
             ->select( 't02.co_partida', 't02.tx_nombre',  DB::raw('sum(monto) as mo_partida') )
-            ->where('ef_uno', '=', Session::get('ejercicio'))
-            ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ef_uno', '=', $ejercicio)
+            ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where('co_sector', '=', $value_distribucion_uno->co_sector)
             ->where('nu_original', '=', $value_distribucion_dos->nu_original)
             ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
             ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
             ->groupBy('t02.co_partida')
             ->groupBy('t02.tx_nombre')
             ->orderBy('co_partida','ASC')
@@ -549,10 +561,11 @@ class distribucionController extends Controller
 
               $distribucion_ae = vista_distribucion_presupuesto::
               select( 'nu_ae', 'de_ae' )
-              ->where('ef_uno', '=', Session::get('ejercicio'))
+              ->where('ef_uno', '=', $ejercicio)
               ->where('co_sector', '=', $value_distribucion_uno->co_sector)
               ->where('nu_original', '=', $value_distribucion_dos->nu_original)
               ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+              ->where('id_tab_tipo_ejecutor', '=', 1)
               ->groupBy('nu_ae')
               ->groupBy('de_ae')
               ->orderBy('nu_ae','ASC')
@@ -564,15 +577,16 @@ class distribucionController extends Controller
                 join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
                 ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
                 ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-                ->where('ef_uno', '=', Session::get('ejercicio'))
-                ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                ->where('ef_uno', '=', $ejercicio)
+                ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
                 ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                 ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                 ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
                 ->where('nu_ae', '=', $value_distribucion_ae->nu_ae)
                 ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
                 ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+                ->where('id_tab_tipo_ejecutor', '=', 1)
                 ->groupBy('nu_ae')
                 ->orderBy('nu_ae','ASC')
                 ->get();
@@ -628,7 +642,7 @@ class distribucionController extends Controller
                 $pdf->setCellHeightRatio(2);
                 $pdf->ln(8);
                 $pdf->SetFont('','B',8);
-                $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
                 $pdf->ln(-10);
                 $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -689,10 +703,11 @@ class distribucionController extends Controller
 
                 $distribucion_ae = vista_distribucion_presupuesto::
                 select( 'nu_ae', 'de_ae' )
-                ->where('ef_uno', '=', Session::get('ejercicio'))
+                ->where('ef_uno', '=', $ejercicio)
                 ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                 ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                 ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                ->where('id_tab_tipo_ejecutor', '=', 1)
                 ->groupBy('nu_ae')
                 ->groupBy('de_ae')
                 ->orderBy('nu_ae','ASC')
@@ -727,7 +742,7 @@ class distribucionController extends Controller
                 $pdf->SetFont('','',7);
                 $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                 $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                 $pdf->ln(-208);
                 $pdf->ln(2);
                 $pdf->SetFont('','',7);
@@ -740,15 +755,16 @@ class distribucionController extends Controller
               ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
               ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
               ->select( 't03.co_partida', 't03.tx_nombre',  DB::raw('sum(monto) as mo_partida') )
-              ->where('ef_uno', '=', Session::get('ejercicio'))
-              ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-              ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+              ->where('ef_uno', '=', $ejercicio)
+              ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
               ->where('co_sector', '=', $value_distribucion_uno->co_sector)
               ->where('nu_original', '=', $value_distribucion_dos->nu_original)
               ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
               ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
               ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+              ->where('id_tab_tipo_ejecutor', '=', 1)
               ->groupBy('t03.co_partida')
               ->groupBy('t03.tx_nombre')
               ->orderBy('co_partida','ASC')
@@ -767,10 +783,11 @@ class distribucionController extends Controller
 
                 $distribucion_ae = vista_distribucion_presupuesto::
                 select( 'nu_ae', 'de_ae' )
-                ->where('ef_uno', '=', Session::get('ejercicio'))
+                ->where('ef_uno', '=', $ejercicio)
                 ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                 ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                 ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                ->where('id_tab_tipo_ejecutor', '=', 1)
                 ->groupBy('nu_ae')
                 ->groupBy('de_ae')
                 ->orderBy('nu_ae','ASC')
@@ -783,10 +800,10 @@ class distribucionController extends Controller
                   ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
                   ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
                   ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-                  ->where('ef_uno', '=', Session::get('ejercicio'))
-                  ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('ef_uno', '=', $ejercicio)
+                  ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                   ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
@@ -794,6 +811,7 @@ class distribucionController extends Controller
                   ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
                   ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
                   ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->groupBy('nu_ae')
                   ->orderBy('nu_ae','ASC')
                   ->get();
@@ -849,7 +867,7 @@ class distribucionController extends Controller
                   $pdf->setCellHeightRatio(2);
                   $pdf->ln(8);
                   $pdf->SetFont('','B',8);
-                  $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
                   $pdf->ln(-10);
                   $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -910,10 +928,11 @@ class distribucionController extends Controller
 
                   $distribucion_ae = vista_distribucion_presupuesto::
                   select( 'nu_ae', 'de_ae' )
-                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('ef_uno', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                   ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->groupBy('nu_ae')
                   ->groupBy('de_ae')
                   ->orderBy('nu_ae','ASC')
@@ -948,7 +967,7 @@ class distribucionController extends Controller
                   $pdf->SetFont('','',7);
                   $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                   $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                   $pdf->ln(-208);
                   $pdf->ln(2);
                   $pdf->SetFont('','',7);
@@ -962,17 +981,18 @@ class distribucionController extends Controller
                 ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
                 ->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'))
                 ->select( 't04.co_partida', 't04.tx_nombre',  DB::raw('sum(monto) as mo_partida') )
-                ->where('ef_uno', '=', Session::get('ejercicio'))
-                ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                ->where('t04.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                ->where('ef_uno', '=', $ejercicio)
+                ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                ->where('t04.id_tab_ejercicio_fiscal', '=', $ejercicio)
                 ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                 ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                 ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
                 ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
                 ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
                 ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
+                ->where('id_tab_tipo_ejecutor', '=', 1)
                 ->groupBy('t04.co_partida')
                 ->groupBy('t04.tx_nombre')
                 ->orderBy('co_partida','ASC')
@@ -991,10 +1011,11 @@ class distribucionController extends Controller
 
                   $distribucion_ae = vista_distribucion_presupuesto::
                   select( 'nu_ae', 'de_ae' )
-                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('ef_uno', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                   ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->groupBy('nu_ae')
                   ->groupBy('de_ae')
                   ->orderBy('nu_ae','ASC')
@@ -1008,11 +1029,11 @@ class distribucionController extends Controller
                     ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
                     ->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'))
                     ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-                    ->where('ef_uno', '=', Session::get('ejercicio'))
-                    ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                    ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                    ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                    ->where('t04.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                    ->where('ef_uno', '=', $ejercicio)
+                    ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                    ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                    ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                    ->where('t04.id_tab_ejercicio_fiscal', '=', $ejercicio)
                     ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                     ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                     ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
@@ -1021,6 +1042,7 @@ class distribucionController extends Controller
                     ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
                     ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
                     ->where('t04.co_partida', '=', $value_distribucion_siete->co_partida)
+                    ->where('id_tab_tipo_ejecutor', '=', 1)
                     ->groupBy('nu_ae')
                     ->orderBy('nu_ae','ASC')
                     ->get();
@@ -1076,7 +1098,7 @@ class distribucionController extends Controller
                     $pdf->setCellHeightRatio(2);
                     $pdf->ln(8);
                     $pdf->SetFont('','B',8);
-                    $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
                     $pdf->ln(-10);
                     $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1137,10 +1159,11 @@ class distribucionController extends Controller
 
                     $distribucion_ae = vista_distribucion_presupuesto::
                     select( 'nu_ae', 'de_ae' )
-                    ->where('ef_uno', '=', Session::get('ejercicio'))
+                    ->where('ef_uno', '=', $ejercicio)
                     ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                     ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                     ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                    ->where('id_tab_tipo_ejecutor', '=', 1)
                     ->groupBy('nu_ae')
                     ->groupBy('de_ae')
                     ->orderBy('nu_ae','ASC')
@@ -1175,7 +1198,7 @@ class distribucionController extends Controller
                     $pdf->SetFont('','',7);
                     $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                     $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                     $pdf->ln(-208);
                     $pdf->ln(2);
                     $pdf->SetFont('','',7);
@@ -1190,12 +1213,12 @@ class distribucionController extends Controller
                   ->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'))
                   ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 12)'))
                   ->select( 't05.co_partida', 't05.tx_nombre',  DB::raw('sum(monto) as mo_partida') )
-                  ->where('ef_uno', '=', Session::get('ejercicio'))
-                  ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t04.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                  ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                  ->where('ef_uno', '=', $ejercicio)
+                  ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t04.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                  ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                   ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
@@ -1203,6 +1226,7 @@ class distribucionController extends Controller
                   ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
                   ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
                   ->where('t04.co_partida', '=', $value_distribucion_siete->co_partida)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->groupBy('t05.co_partida')
                   ->groupBy('t05.tx_nombre')
                   ->orderBy('co_partida','ASC')
@@ -1210,15 +1234,16 @@ class distribucionController extends Controller
 
                   $distribucion_ocho = vista_distribucion_presupuesto::
                   select( 'co_partida', 'de_denominacion',  'monto' )
-                  ->where('ef_uno', '=', Session::get('ejercicio'))
+                  ->where('ef_uno', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                   ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
                   ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)::numeric'), '=', $value_distribucion_siete->co_partida)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->orderBy('co_partida','ASC')
                   ->get();
 
-                  foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
+                  /*foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
 
                     $pdf->SetFont('','',5);
                     $pdf->MultiCell(6, 5, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
@@ -1231,16 +1256,17 @@ class distribucionController extends Controller
 
                     $distribucion_ae = vista_distribucion_presupuesto::
                     select( 'nu_ae', 'de_ae' )
-                    ->where('ef_uno', '=', Session::get('ejercicio'))
+                    ->where('ef_uno', '=', $ejercicio)
                     ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                     ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                     ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                    ->where('id_tab_tipo_ejecutor', '=', 1)
                     ->groupBy('nu_ae')
                     ->groupBy('de_ae')
                     ->orderBy('nu_ae','ASC')
                     ->get();
 
-                    foreach($distribucion_ae as $key => $value_distribucion_ae){
+                    /*foreach($distribucion_ae as $key => $value_distribucion_ae){
 
                       $distribucion_ae_partida = vista_distribucion_presupuesto::
                       join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
@@ -1249,12 +1275,12 @@ class distribucionController extends Controller
                       ->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 9)'))
                       ->join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 12)'))
                       ->select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-                      ->where('ef_uno', '=', Session::get('ejercicio'))
-                      ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                      ->where('t02.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                      ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                      ->where('t04.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-                      ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                      ->where('ef_uno', '=', $ejercicio)
+                      ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                      ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                      ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                      ->where('t04.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                      ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
                       ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                       ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                       ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
@@ -1264,6 +1290,7 @@ class distribucionController extends Controller
                       ->where('t03.co_partida', '=', $value_distribucion_seis->co_partida)
                       ->where('t04.co_partida', '=', $value_distribucion_siete->co_partida)
                       ->where('t05.co_partida', '=', $value_distribucion_ocho->co_partida)
+                      ->where('id_tab_tipo_ejecutor', '=', 1)
                       ->groupBy('nu_ae')
                       ->orderBy('nu_ae','ASC')
                       ->get();
@@ -1278,7 +1305,7 @@ class distribucionController extends Controller
                       if ($i == 0){
                         $pdf->MultiCell(19, 5, '', 0, 'C', 0, 0, '', '', true);
                       }
-                    }
+                    }*/
 
                     /*$pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1286,7 +1313,7 @@ class distribucionController extends Controller
                     $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
                     //$pdf->ln(4);
 
-                    $condicionPartida = strlen($value_distribucion_ocho->de_denominacion);
+                    /*$condicionPartida = strlen($value_distribucion_ocho->de_denominacion);
                     if ($condicionPartida >= 60) {
                       $pdf->ln(4);
                     }else {
@@ -1319,7 +1346,7 @@ class distribucionController extends Controller
                       $pdf->setCellHeightRatio(2);
                       $pdf->ln(8);
                       $pdf->SetFont('','B',8);
-                      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                       $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
                       $pdf->ln(-10);
                       $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
@@ -1380,10 +1407,11 @@ class distribucionController extends Controller
 
                       $distribucion_ae = vista_distribucion_presupuesto::
                       select( 'nu_ae', 'de_ae' )
-                      ->where('ef_uno', '=', Session::get('ejercicio'))
+                      ->where('ef_uno', '=', $ejercicio)
                       ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                       ->where('nu_original', '=', $value_distribucion_dos->nu_original)
                       ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+                      ->where('id_tab_tipo_ejecutor', '=', 1)
                       ->groupBy('nu_ae')
                       ->groupBy('de_ae')
                       ->orderBy('nu_ae','ASC')
@@ -1418,7 +1446,7 @@ class distribucionController extends Controller
                       $pdf->SetFont('','',7);
                       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-                      $pdf->MultiCell(16, 5, 'GEZ: '.Session::get('ejercicio'), 0, 'L', 0, 0, '', '', true);
+                      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                       $pdf->ln(-208);
                       $pdf->ln(2);
                       $pdf->SetFont('','',7);
@@ -1426,7 +1454,7 @@ class distribucionController extends Controller
 
                     }
 
-                  }
+                  }*/
 
                 }
 
@@ -1451,10 +1479,11 @@ class distribucionController extends Controller
 
           $distribucion_ae_partida = vista_distribucion_presupuesto::
           select('nu_ae', DB::raw('sum(monto) as mo_partida') )
-          ->where('ef_uno', '=', Session::get('ejercicio'))
+          ->where('ef_uno', '=', $ejercicio)
           ->where('co_sector', '=', $value_distribucion_uno->co_sector)
           ->where('nu_original', '=', $value_distribucion_dos->nu_original)
           ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
           ->groupBy('nu_ae')
           ->orderBy('nu_ae','ASC')
           ->get();
@@ -1489,7 +1518,7 @@ class distribucionController extends Controller
 
     //Cierre de Reporte
     $pdf->lastPage();
-    $pdf->output('DISTRIBUCION_DE_PRESUPUESTO_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+    $pdf->output('DISTRIBUCION_DE_PRESUPUESTO_'.$ejercicio.'_'.date("H:i:s").'.pdf', 'D');
 
   }
 }
