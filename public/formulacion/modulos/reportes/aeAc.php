@@ -426,7 +426,7 @@ $html6 = '
 <table border="0.1" style="width:100%" style="font-size:7px" cellpadding="3">
 <tbody>
 <tr nobr="true">
-<td colspan="11" align="left"><b>RESULTADOS ESPERADOS:</b></td>
+<td colspan="11" align="left"><b>RESULTADOS ESPERADOS:</b>'.$campo['tx_re_esperado'].'</td>
 </tr>
 </tbody>
 </table>
