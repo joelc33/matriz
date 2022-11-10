@@ -261,13 +261,13 @@ $html23.= '
 <th colspan="6" style="width: 52%;"><b>METAS FINANCIERAS</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 17%;">Actividad</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. Med</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Programado</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Inicio</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">Termino</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;">REPONSABLE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">Munic / Parroq</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 17%;">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. MED</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PROGRAMADO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">INICIO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">TERMINO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;">RESPONSABLE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNIC / PARROQ</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">CATEGORIA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">PARTIDA</th>
