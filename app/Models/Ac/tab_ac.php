@@ -66,4 +66,9 @@ class tab_ac extends Model
 		"tx_re_esperado" => "required|min:1|max:1200"
 	);
 
+	public static $cerrarAc = array(
+		"id"  => "required|numeric|exists:t46_acciones_centralizadas,id",
+		"valido" => "integer|in:1"
+	);
+
 }
