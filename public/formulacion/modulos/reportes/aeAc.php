@@ -329,13 +329,13 @@ foreach($this->datos_actividad as $key => $campo2){
 	foreach($this->datos_detalle as $key => $campo3){
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
-		<td style="width: 7%;">'.$campo2['tx_unidades_medida'].'</td>
-		<td style="width: 8%;">'.$campo2['tx_prog_anual'].'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
-		<td style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
-		<td style="width: 9%;" >'.$campo2['nb_responsable'].'</td>
-		<td style="width: 10%;" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
+		<td align="center" style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
+		<td align="center" style="width: 7%;">'.$campo2['tx_unidades_medida'].'</td>
+		<td align="center" style="width: 8%;">'.$campo2['tx_prog_anual'].'</td>
+		<td align="center" style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
+		<td align="center" style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
+		<td align="center" style="width: 9%;" >'.$campo2['nb_responsable'].'</td>
+		<td align="center" style="width: 10%;" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
 		<td style="width: 8%;" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
 		<td style="width: 8%;" align="center">'.$campo['tx_categoria_ac'].'</td>
 		<td style="width: 7%;" align="center">'.$campo3['co_partida'].'</td>
@@ -398,10 +398,10 @@ $html4 = '
 <tr nobr="true">
 <td rowspan="2" colspan="6" align="right"><b>SUBTOTAL '.$datosEnunciadoSUBTOTAL.'</b></td>
 <td rowspan="2" colspan="2" align="left"><b>'.$this->formatoDinero($acumulador_ac_a).'</b></td>
-<td colspan="3" align="left" style="font-size:6px">POBLACION A BENEFICIAR: '.$this->monto_alcance[0]['nu_beneficiarios'].'</td>
+<td colspan="3" align="left" style="font-size:6px">POBLACION A BENEFICIAR: '.$campo['nu_po_beneficiar'].'</td>
 </tr>
 <tr nobr="true">
-<td colspan="3" align="left" style="font-size:6px">EMPLEOS PREVISTOS: '.$this->monto_alcance[0]['nu_empleos'].'</td>
+<td colspan="3" align="left" style="font-size:6px">EMPLEOS PREVISTOS: '.$campo['nu_em_previsto'].'</td>
 </tr>
 </tbody>
 </table>
