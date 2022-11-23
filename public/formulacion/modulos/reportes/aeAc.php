@@ -246,6 +246,9 @@ $html1 = '
 <td style="width: 80%;"><b>ACCION E.:</b> '.$campo['tx_codigo_ae'].' - '.$campo['tx_nombre_ae'].'</td>
 <td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$campo['id_ejecutor_ae'].' </td>
 </tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$campo['tx_pr_objetivo'].'</td>
+</tr>
 </tbody>
 </table>
 ';
@@ -329,7 +332,7 @@ foreach($this->datos_actividad as $key => $campo2){
 	foreach($this->datos_detalle as $key => $campo3){
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td align="center" style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
+		<td style="width: 17%;">'.$campo2['codigo'].' - '.$campo2['nb_meta'].'</td>
 		<td align="center" style="width: 7%;">'.$campo2['tx_unidades_medida'].'</td>
 		<td align="center" style="width: 8%;">'.$campo2['tx_prog_anual'].'</td>
 		<td align="center" style="width: 8%;" >'.trim(date_format(date_create($campo2["fecha_inicio"]),'d/m/Y')).'</td>
