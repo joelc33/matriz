@@ -13,6 +13,7 @@ use matriz\Models\Proyecto\tab_proyecto;
 use matriz\Models\Proyecto\tab_proyecto_ae_partida;
 use matriz\Models\Proyecto\vista_relacion_transferencia;
 use matriz\Models\Proyecto\vista_distribucion_presupuesto;
+use matriz\Models\Mantenimiento\tab_escala_salarial;
 use View;
 use Input;
 use Response;
@@ -1478,6 +1479,47 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(1);
 
+      $escala_salarial = tab_escala_salarial::
+      where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->orderBy('id','ASC')
+      ->get();
+
+      $total_mo_sexo_m = 0;
+      $total_mo_sexo_f = 0;
+      $total_mo_sexo_mf = 0;
+      $total_mo_todo = 0;
+
+      $pdf->SetFont('','', 8);
+
+      foreach ($escala_salarial as $key => $value_escala_salarial) {
+
+        $total_sexo_mf = $value_escala_salarial->nu_masculino + $value_escala_salarial->nu_femenino;
+
+        $pdf->MultiCell(20, 215, $value_escala_salarial->de_grupo, 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(88, 215, $value_escala_salarial->de_escala_salarial, 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(24, 215, number_format($total_sexo_mf, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(20, 215, number_format($value_escala_salarial->mo_escala_salarial, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+        $pdf->ln(6);
+
+        $total_mo_sexo_m = $total_mo_sexo_m + $value_escala_salarial->nu_masculino;
+        $total_mo_sexo_f = $total_mo_sexo_f + $value_escala_salarial->nu_femenino;
+        $total_mo_sexo_mf = $total_mo_sexo_m + $total_mo_sexo_f;
+        $total_mo_todo = $total_mo_todo + $value_escala_salarial->mo_escala_salarial;
+
+      }
+
+      $pdf->SetFont('','B',8);
+      $pdf->setCellHeightRatio(1.5);
+      $pdf->SetY(262);
+      $pdf->MultiCell(108, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
+      $pdf->SetFont('', 'B', 8);
+      $pdf->MultiCell(22, 6, number_format($total_mo_sexo_m, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(22, 6, number_format($total_mo_sexo_f, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(24, 6, number_format($total_mo_sexo_mf, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, number_format($total_mo_todo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
       /******Inicio de Objetivos Sectoriales******/
 
