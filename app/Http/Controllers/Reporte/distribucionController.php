@@ -79,7 +79,7 @@ class distribucionController extends Controller
 
       /******Portada Titulo I*********/
       $pdf->SetAlpha(0.3);
-      $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+      $pdf->Image(public_path().'/images/escudo_zulia.png', 15, 40, 190, 190, 'PNG', '', '', false, 170, '', false, false, 0);
       $pdf->ln(30);
       $pdf->setAlpha(1);
       $pdf->SetFont('','',8);
@@ -135,7 +135,7 @@ class distribucionController extends Controller
 
         /******Portada Titulo I*********/
         $pdf->SetAlpha(0.3);
-        $pdf->Image(public_path().'/images/mapa_bandera.jpg', 20, 40, 190, 190, 'JPG', '', '', false, 170, '', false, false, 0);
+        $pdf->Image(public_path().'/images/escudo_zulia.png', 15, 40, 190, 190, 'PNG', '', '', false, 170, '', false, false, 0);
         $pdf->ln(30);
         $pdf->setAlpha(1);
         $pdf->SetFont('','',8);
