@@ -16,17 +16,17 @@ class tab_escala_salarial extends Model
 		"tipo_empleado" => "required|integer",
 		"grupo" => "required|min:1|max:10",
 		"escala_salarial" => "required|min:1|max:600",
-		"masculino" => "required|integer",
-		"femenino" => "required|integer",
-		"sueldo" => "required|numeric|min:0",
+		//"masculino" => "required|integer",
+		//"femenino" => "required|integer",
+		//"sueldo" => "required|numeric|min:0",
 	);
 
 	public static $validarEditar = array(
 		"tipo_empleado" => "required|integer",
 		"grupo" => "required|min:1|max:10",
 		"escala_salarial" => "required|min:1|max:600",
-		"masculino" => "required|integer",
-		"femenino" => "required|integer",
-		"sueldo" => "required|numeric|min:0",
+		//"masculino" => "required|integer",
+		//"femenino" => "required|integer",
+		//"sueldo" => "required|numeric|min:0",
 	);
 }
