@@ -19,7 +19,7 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
-this.id_tab_ejercicio_fiscal = new Ext.form.ComboBox({
+/*this.id_tab_ejercicio_fiscal = new Ext.form.ComboBox({
 	fieldLabel:'Ejercicio',
 	store: this.storeCO_EF,
 	typeAhead: true,
@@ -45,6 +45,16 @@ this.storeCO_EF.load();
 	objCMB: this.id_tab_ejercicio_fiscal,
 	value:  this.OBJ.id_tab_ejercicio_fiscal,
 	objStore: this.storeCO_EF
+});*/
+
+this.id_tab_ejercicio_fiscal = new Ext.form.NumberField({
+	fieldLabel:'Ejercicio',
+	name:'ejercicio_fiscal',
+	value:this.OBJ.id_tab_ejercicio_fiscal,
+	allowBlank:false,
+	width:100,
+	minLength : 0,
+	maxLength: 4,
 });
 
 this.id_tab_tipo_personal = new Ext.form.ComboBox({

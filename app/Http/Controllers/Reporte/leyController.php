@@ -1107,11 +1107,13 @@ class leyController extends Controller
       $pdf->ln(19);
       $pdf->setCellHeightRatio(1.2);
 
+      $ejercicio_anterior = $ejercicio-1;
+
       $pdf->SetFont('','B',8);
       $pdf->MultiCell(20, 20, chr(10).chr(10).'TIPO DE PERSONAL', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(0);
       $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 5, $ejercicio-1, 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(88, 5, $ejercicio_anterior, 1, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(88, 5, $ejercicio, 1, 'C', 0, 0, '', '', true);
       $pdf->ln(5);
       $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1172,25 +1174,210 @@ class leyController extends Controller
       $pdf->SetFont('','',7);
       $pdf->setCellHeightRatio(1);
 
-      /*$clasificador_tipo = tab_clasificador_tipo::
-      join('mantenimiento.tab_tipo_personal as t01', 't01.id', '=', 'mantenimiento.tab_clasificador_tipo.id_tab_tipo_personal')
-      ->select( 'nu_codigo', 'de_tipo_personal')
-      //->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
-      ->where('id_tab_ejercicio_fiscal', '=', 2017)
-      ->orderBy('nu_codigo','ASC')
-      ->get();*/
-
       $tipo_personal = tab_tipo_personal::select( 'id', 'nu_codigo', 'de_tipo_personal', 'id_padre')
       ->orderBy('nu_codigo','ASC')
       ->get();
+
+      //**anio anterior***//
+      $total_masculino_ant = 0;
+      $total_femenino_ant = 0;
+      $total_mf_ant = 0;
+      $total_mo_sueldo_ant = 0;
+      $total_mo_compensacion_ant = 0;
+      $total_mo_primas_ant = 0;
+      $total_sueldo_todo_ant = 0;
+
+      //**anio actual***//
+
+      $total_masculino = 0;
+      $total_femenino = 0;
+      $total_mf = 0;
+      $total_mo_sueldo = 0;
+      $total_mo_compensacion = 0;
+      $total_mo_primas = 0;
+      $total_sueldo_todo = 0;
 
       foreach ($tipo_personal as $key => $value_tipo_personal) {
 
         $pdf->SetFont('','',5);
         if($value_tipo_personal->id_padre==0){
+
           $pdf->writeHTMLCell(20,5, '', '', '<u><b>'.trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal).'</b></u>', 0, 0, 0, true, 'L', true);
+
+          $clasificador_tipo = tab_clasificador_tipo::
+          where('id_tab_ejercicio_fiscal', '=', $ejercicio_anterior)
+          ->where('id_tab_tipo_personal', '=', $value_tipo_personal->id)
+          ->orderBy('id','ASC')
+          ->get();
+
+          if(!$clasificador_tipo->isEmpty()){
+
+            foreach ($clasificador_tipo as $key => $value_clasificador_tipo) {
+              $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
+              $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
+  
+              $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
+              $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
+              $total_mf_ant = $total_mf_ant + $total_sexo;
+              $total_mo_sueldo_ant = $total_mo_sueldo_ant + $value_clasificador_tipo->mo_sueldo;
+              $total_mo_compensacion_ant = $total_mo_compensacion_ant + $value_clasificador_tipo->mo_compensacion;
+              $total_mo_primas_ant = $total_mo_primas_ant + $value_clasificador_tipo->mo_primas;
+              $total_sueldo_todo_ant = $total_sueldo_todo_ant + $total_sueldo;
+  
+            }
+
+          }else{
+
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+
+          }
+
+          $clasificador_tipo = tab_clasificador_tipo::
+          where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('id_tab_tipo_personal', '=', $value_tipo_personal->id)
+          ->orderBy('id','ASC')
+          ->get();
+
+          if(!$clasificador_tipo->isEmpty()){
+
+            foreach ($clasificador_tipo as $key => $value_clasificador_tipo) {
+
+              $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
+              $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
+
+              $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
+              $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
+              $total_mf = $total_mf + $total_sexo;
+              $total_mo_sueldo = $total_mo_sueldo + $value_clasificador_tipo->mo_sueldo;
+              $total_mo_compensacion = $total_mo_compensacion + $value_clasificador_tipo->mo_compensacion;
+              $total_mo_primas = $total_mo_primas + $value_clasificador_tipo->mo_primas;
+              $total_sueldo_todo = $total_sueldo_todo + $total_sueldo;
+
+            }
+
+          }else{
+
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+
+          }
+
         }else{
+
           $pdf->MultiCell(20, 5, trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal), 0, 'L', 0, 0, '', '', true);
+
+          $clasificador_tipo = tab_clasificador_tipo::
+            where('id_tab_ejercicio_fiscal', '=', $ejercicio_anterior)
+            ->where('id_tab_tipo_personal', '=', $value_tipo_personal->id)
+            ->orderBy('id','ASC')
+            ->get();
+
+            if(!$clasificador_tipo->isEmpty()){
+  
+              foreach ($clasificador_tipo as $key => $value_clasificador_tipo) {
+
+                $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
+                $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
+
+                $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
+                $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
+                $total_mf_ant = $total_mf_ant + $total_sexo;
+                $total_mo_sueldo_ant = $total_mo_sueldo_ant + $value_clasificador_tipo->mo_sueldo;
+                $total_mo_compensacion_ant = $total_mo_compensacion_ant + $value_clasificador_tipo->mo_compensacion;
+                $total_mo_primas_ant = $total_mo_primas_ant + $value_clasificador_tipo->mo_primas;
+                $total_sueldo_todo_ant = $total_sueldo_todo_ant + $total_sueldo;
+
+              }
+
+            }else{
+
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+
+            }
+  
+            $clasificador_tipo = tab_clasificador_tipo::
+            where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('id_tab_tipo_personal', '=', $value_tipo_personal->id)
+            ->orderBy('id','ASC')
+            ->get();
+
+            if(!$clasificador_tipo->isEmpty()){
+  
+              foreach ($clasificador_tipo as $key => $value_clasificador_tipo) {
+
+                $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
+                $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
+
+                $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
+                $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
+                $total_mf = $total_mf + $total_sexo;
+                $total_mo_sueldo = $total_mo_sueldo + $value_clasificador_tipo->mo_sueldo;
+                $total_mo_compensacion = $total_mo_compensacion + $value_clasificador_tipo->mo_compensacion;
+                $total_mo_primas = $total_mo_primas + $value_clasificador_tipo->mo_primas;
+                $total_sueldo_todo = $total_sueldo_todo + $total_sueldo;
+    
+              }
+
+            }else{
+
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+
+            }
         }
         $pdf->ln(10);
 
@@ -1199,21 +1386,22 @@ class leyController extends Controller
       $pdf->SetFont('','B',8);
       $pdf->setCellHeightRatio(1.5);
       $pdf->SetY(262);
-      $pdf->MultiCell(20, 5, 'TOTALES', 1, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(15, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(18, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(5, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(15, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(18, 5, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 5, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
+      $pdf->SetFont('', 'B', 5);
+      $pdf->MultiCell(5, 6, number_format($total_masculino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 6, number_format($total_femenino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 6, number_format($total_mf_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, number_format($total_mo_sueldo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(15, 6, number_format($total_mo_compensacion_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(18, 6, number_format($total_mo_primas_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, number_format($total_sueldo_todo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 6, number_format($total_masculino, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 6, number_format($total_femenino, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(5, 6, number_format($total_mf, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, number_format($total_mo_sueldo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(15, 6, number_format($total_mo_compensacion, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(18, 6, number_format($total_mo_primas, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 6, number_format($total_sueldo_todo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
       /******Inicio de Objetivos Sectoriales******/
 
