@@ -109,13 +109,13 @@ class escalasalarialController extends Controller
        * @param  int  $id
        * @return Response
        */
-      public function guardar($id = NULL)
+      public function guardar(Request $request, $id = NULL)
       {
       DB::beginTransaction();
         if($id!=''||$id!=null){
 
            try {
-          $validator= Validator::make(Input::all(), tab_escala_salarial::$validarEditar);
+          $validator= Validator::make($request->all(), tab_escala_salarial::$validarEditar);
           if ($validator->fails()){
             return Response::json(array(
               'success' => false,
@@ -123,12 +123,12 @@ class escalasalarialController extends Controller
             ));
           }
           $tabla = tab_escala_salarial::find($id);
-          $tabla->id_tab_tipo_empleado = Input::get("tipo_empleado");
-          $tabla->de_grupo = Input::get("grupo");
-          $tabla->de_escala_salarial = Input::get("escala_salarial");
-          $tabla->nu_masculino = Input::get("masculino");
-          $tabla->nu_femenino = Input::get("femenino");
-          $tabla->mo_escala_salarial = Input::get("sueldo");
+          $tabla->id_tab_tipo_empleado = $request->get("tipo_empleado");
+          $tabla->de_grupo = $request->get("grupo");
+          $tabla->de_escala_salarial = $request->get("escala_salarial");
+          $tabla->nu_masculino = (float)$request->get("masculino");
+          $tabla->nu_femenino = (float)$request->get("femenino");
+          $tabla->mo_escala_salarial = (float)$request->get("sueldo");
           $tabla->save();
 
           DB::commit();
@@ -149,7 +149,7 @@ class escalasalarialController extends Controller
         }else{
 
            try {
-          $validator = Validator::make(Input::all(), tab_escala_salarial::$validarCrear);
+          $validator = Validator::make($request->all(), tab_escala_salarial::$validarCrear);
           if ($validator->fails()){
             return Response::json(array(
               'success' => false,
@@ -158,12 +158,12 @@ class escalasalarialController extends Controller
           }
           $tabla = new tab_escala_salarial;
           $tabla->id_tab_ejercicio_fiscal = Session::get('ejercicio');
-          $tabla->id_tab_tipo_empleado = Input::get("tipo_empleado");
-          $tabla->de_grupo = Input::get("grupo");
-          $tabla->de_escala_salarial = Input::get("escala_salarial");
-          $tabla->nu_masculino = Input::get("masculino");
-          $tabla->nu_femenino = Input::get("femenino");
-          $tabla->mo_escala_salarial = Input::get("sueldo");
+          $tabla->id_tab_tipo_empleado = $request->get("tipo_empleado");
+          $tabla->de_grupo = $request->get("grupo");
+          $tabla->de_escala_salarial = $request->get("escala_salarial");
+          $tabla->nu_masculino = (float)$request->get("masculino");
+          $tabla->nu_femenino = (float)$request->get("femenino");
+          $tabla->mo_escala_salarial = (float)$request->get("sueldo");
           $tabla->in_activo = 'TRUE';
           $tabla->save();
 

@@ -78,33 +78,33 @@ this.nu_masculino = new Ext.form.NumberField({
 	fieldLabel:'Total Masculino',
 	name:'masculino',
 	value:this.OBJ.nu_masculino,
-	allowBlank:false,
+	//allowBlank:false,
 	width:100,
 	minLength : 0,
 	maxLength: 18,
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
+	//autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
 });
 
 this.nu_femenino = new Ext.form.NumberField({
 	fieldLabel:'Total Femenino',
 	name:'femenino',
 	value:this.OBJ.nu_femenino,
-	allowBlank:false,
+	//allowBlank:false,
 	width:100,
 	minLength : 0,
 	maxLength: 18,
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
+	//autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
 });
 
 this.mo_sueldo = new Ext.form.NumberField({
 	fieldLabel:'Total Sueldo',
 	name:'sueldo',
 	value:this.OBJ.mo_escala_salarial,
-	allowBlank:false,
+	//allowBlank:false,
 	width:200,
 	minLength : 0,
 	maxLength: 22,
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 22},
+	//autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 22},
 });
 
 this.guardar = new Ext.Button({
