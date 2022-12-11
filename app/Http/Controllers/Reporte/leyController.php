@@ -135,7 +135,7 @@ class leyController extends Controller
       $pdf->writeHTML('<b><u>TITULO II<u/></b>', true, false, true, false, 'R');
       $pdf->ln(1);
       //$pdf->setTextShadow(array('enabled'=>true, 'depth_w'=>1, 'depth_h'=>1, 'color'=>array(255,0,0), 'opacity'=>1, 'blend_mode'=>'Normal'));
-      $pdf->MultiCell(195, 5, 'PRESUPUESTO DE INGRESOS', 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(195, 5, 'PRESUPUESTO DE RECURSOS', 0, 'R', 0, 0, '', '', true);
       $pdf->ln(10);
       // set border width
       $pdf->SetLineWidth(0.508);
@@ -165,7 +165,7 @@ class leyController extends Controller
       $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->setCellHeightRatio(2);
       $pdf->SetFont('','B',11);
-      $pdf->MultiCell(90, 5, 'PRESUPUESTO DE INGRESOS', 0, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(90, 5, 'PRESUPUESTO DE RECURSOS', 0, 'C', 0, 0, '', '', true);
       $pdf->ln(8);
       $pdf->SetFont('','B',8);
       $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
@@ -1395,13 +1395,16 @@ class leyController extends Controller
       $pdf->MultiCell(5, 6, number_format($total_masculino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(5, 6, number_format($total_femenino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(5, 6, number_format($total_mf_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->SetFont('', 'B', 8);
       $pdf->MultiCell(20, 6, number_format($total_mo_sueldo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(15, 6, number_format($total_mo_compensacion_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(18, 6, number_format($total_mo_primas_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(20, 6, number_format($total_sueldo_todo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->SetFont('', 'B', 5);
       $pdf->MultiCell(5, 6, number_format($total_masculino, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(5, 6, number_format($total_femenino, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(5, 6, number_format($total_mf, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+      $pdf->SetFont('', 'B', 8);
       $pdf->MultiCell(20, 6, number_format($total_mo_sueldo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(15, 6, number_format($total_mo_compensacion, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       $pdf->MultiCell(18, 6, number_format($total_mo_primas, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
@@ -1986,12 +1989,22 @@ class leyController extends Controller
           $ac_lista_partida = tab_ac_ae_partida::join('public.t46_acciones_centralizadas as t01', 't01.id', '=', 'public.t54_ac_ae_partidas.id_accion_centralizada')
           ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
           ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3)'))
+          ->join('mantenimiento.tab_sectores as t04', function ($join) {
+            $join->on('t04.co_sector','=','t02.co_sector')
+                ->on('t04.nu_nivel','=', DB::raw('1'));
+          })
           //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
-          ->select( 'co_sector', 't01.id_accion', DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 'tx_nombre', DB::raw('sum(t01.monto) as mo_partida') )
+          ->select( 
+            't02.co_sector', 
+            't01.id_accion', 
+            DB::raw('left(public.t54_ac_ae_partidas.co_partida, 3) as partida'), 
+            'tx_nombre', 
+            DB::raw('sum(public.t54_ac_ae_partidas.monto) as mo_partida') )
           ->where('t01.id_ejercicio', '=', $ejercicio)
+          ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('t01.id_accion', '=', $value_ac->id_accion)
           ->where('t02.co_sector', '=', $value_ac->co_sector)
-          ->groupBy('co_sector')
+          ->groupBy('t02.co_sector')
           ->groupBy('t01.id_accion')
           ->groupBy('partida')
           ->groupBy('tx_nombre')
