@@ -14,6 +14,7 @@ use matriz\Models\Proyecto\tab_proyecto_ae_partida;
 use matriz\Models\Proyecto\vista_relacion_transferencia;
 use matriz\Models\Proyecto\vista_distribucion_presupuesto;
 use matriz\Models\Mantenimiento\tab_escala_salarial;
+use matriz\Models\Mantenimiento\tab_distribucion_municipio;
 use View;
 use Input;
 use Response;
@@ -2026,15 +2027,15 @@ class leyController extends Controller
       $pdf->SetLineWidth(0.150);
       $pdf->setCellHeightRatio(2);
 
-      $pdf->AddPage();
+      /*$pdf->AddPage();
 
-      // reset font stretching  reset font spacing
+      //reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
       $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
+      $pdf->setCellHeightRatio(2);*/
       /******Portada Titulo Sectores*********/
-      $pdf->SetAlpha(0.3);
+      /*$pdf->SetAlpha(0.3);
       $pdf->Image(public_path().'/images/escudo_zulia.png', 15, 40, 190, 190, 'PNG', '', '', false, 170, '', false, false, 0);
       $pdf->ln(30);
       $pdf->setAlpha(1);
@@ -2067,9 +2068,9 @@ class leyController extends Controller
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
       $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
+      $pdf->setCellHeightRatio(2);*/
 
-      $pdf->AddPage();
+      /*$pdf->AddPage();
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
@@ -2112,7 +2113,7 @@ class leyController extends Controller
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-      $pdf->ln(-230);
+      $pdf->ln(-230);*/
 
       /*$tabla_obra_lista = '
       <table border="0.5" style="width:100%" cellspacing="0" cellpadding="4">
@@ -2141,9 +2142,9 @@ class leyController extends Controller
 
       //$pdf->AddPage();
 
-      $pdf->AddPage();
+      /*$pdf->AddPage();
       /******Portada Titulo Sectores*********/
-      $pdf->SetAlpha(0.3);
+      /*$pdf->SetAlpha(0.3);
       $pdf->Image(public_path().'/images/escudo_zulia.png', 15, 40, 190, 190, 'PNG', '', '', false, 170, '', false, false, 0);
       $pdf->ln(30);
       $pdf->setAlpha(1);
@@ -2176,9 +2177,9 @@ class leyController extends Controller
       $pdf->setFontStretching(100);
       $pdf->setFontSpacing(0);
       $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
+      $pdf->setCellHeightRatio(2);*/
 
-      $pdf->AddPage();
+      /*$pdf->AddPage();
 
       $pdf->SetFont('','B',8);
       $pdf->setCellHeightRatio(1.2);
@@ -2219,7 +2220,7 @@ class leyController extends Controller
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
-      $pdf->setFontSpacing(1);
+      $pdf->setFontSpacing(1);*/
 
       $pdf->AddPage();
       /******Portada Titulo Sectores*********/
@@ -2258,13 +2259,6 @@ class leyController extends Controller
       $pdf->SetLineWidth(0.150);
       $pdf->setCellHeightRatio(2);
 
-      $pdf->ln(230);
-      $pdf->SetFont('','',7);
-      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-      $pdf->ln(-230);
-
       $pdf->AddPage();
 
       $pdf->SetFont('','B',8);
@@ -2288,21 +2282,89 @@ class leyController extends Controller
       $pdf->MultiCell(196, 230, '', 1, 'C', 0, 0, '', '', true);
       $pdf->ln(0);
       $pdf->SetFont('','B',7);
-      $pdf->MultiCell(40, 2, 'CODIGO', 0, 'C', 0, 0, '', '', true);
-      $pdf->SetFont('','B',10);
-      $pdf->MultiCell(116, 15, 'DENOMINACION', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(40, 15, 'MONTO', 1, 'C', 0, 0, '', '', true);
-      $pdf->ln(5);
-      $pdf->SetFont('','B',7);
-      $pdf->MultiCell(20, 10, 'SECTOR', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 2, 'PROY. Y/O A. CENTRAL', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(20, 15, chr(10).'CÓDIGO', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(46, 15, chr(10).'MUNICIPIOS', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 15, chr(10).'POBLACIÒN ULTIMO CENSO', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 15, chr(10).'45 % PARTES IGUALES', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 15, chr(10).'50% EN FUNCIÒN DE LA POBLACIÒN', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 15, chr(10).'5 % SUPERFICIE TERRITORIAL', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(30, 15, chr(10).'TOTAL SITUADO INGRESOS PROPIOS', 1, 'C', 0, 0, '', '', true);
 
-      $pdf->ln(230);
+      $pdf->ln(15);
+      $pdf->setCellHeightRatio(1);
+      $pdf->MultiCell(20, 208, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(46, 208, '', 1, 'C', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 208, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 208, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 208, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 208, '', 1, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(30, 208, '', 1, 'L', 0, 0, '', '', true);
+
+      $pdf->ln(219);
       $pdf->SetFont('','',7);
       $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
       $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
       $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-      $pdf->ln(-230);
+      $pdf->ln(-219);
+      $pdf->ln(5);
+      $pdf->SetFont('','',7);
+      $pdf->setCellHeightRatio(1);
+
+      $distribucion_municipio = tab_distribucion_municipio::join('mantenimiento.tab_municipio as t01','t01.id','=','mantenimiento.tab_distribucion_municipio.id_tab_municipio')
+      ->select( 'mantenimiento.tab_distribucion_municipio.id', 'id_tab_ejercicio_fiscal', 'id_tab_municipio', 'co_partida', 'nu_base_censo',
+      'nu_factor_poblacion', 'cuatrocinco_ppi', 'cincocero_fpp', 'superficie_km',
+      'superficie_factor', 'extension_territorio', 'mo_total', 'de_municipio' )
+      ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->orderby('de_municipio','ASC')
+      ->get();
+      
+      $contador_municipio = 0;
+      $total_nu_base_censo = 0;
+      $total_cuatrocinco_ppi = 0;
+      $total_cincocero_fpp = 0;
+      $total_superficie_km = 0;
+      $total_mo_total = 0;
+
+      $pdf->SetFont('','',8);
+
+      foreach ($distribucion_municipio as $key => $value_distribucion_municipio) {
+
+        $contador_municipio++;
+        $municipio = str_pad($contador_municipio,3, "0", STR_PAD_LEFT);
+
+        $pdf->MultiCell(20, 5, $municipio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(46, 5, $value_distribucion_municipio->de_municipio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->nu_base_censo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->cuatrocinco_ppi, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->cincocero_fpp, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->superficie_km, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(30, 5, number_format($value_distribucion_municipio->mo_total, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+        $pdf->ln(8);
+
+        $total_nu_base_censo = $total_nu_base_censo + $value_distribucion_municipio->nu_base_censo;
+        $total_cuatrocinco_ppi = $total_cuatrocinco_ppi + $value_distribucion_municipio->cuatrocinco_ppi;
+        $total_cincocero_fpp = $total_cincocero_fpp + $value_distribucion_municipio->cincocero_fpp;
+        $total_superficie_km = $total_superficie_km + $value_distribucion_municipio->superficie_km;
+        $total_mo_total = $total_mo_total + $value_distribucion_municipio->mo_total;
+
+      }
+
+      $pdf->SetFont('','B',8);
+      $pdf->setCellHeightRatio(1.5);
+      $pdf->SetY(250);
+      $pdf->MultiCell(66, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(30, 7, '', 1, 'R', 0, 0, '', '', true);
+      $pdf->ln(1);
+      $pdf->MultiCell(66, 7, 'TOTALES', 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, number_format($total_nu_base_censo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, number_format($total_cuatrocinco_ppi, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, number_format($total_cincocero_fpp, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(25, 7, number_format($total_superficie_km, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+      $pdf->MultiCell(30, 7, number_format($total_mo_total, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
       // reset font stretching  reset font spacing
       $pdf->setFontStretching(100);
