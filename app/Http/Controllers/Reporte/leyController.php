@@ -1993,6 +1993,7 @@ class leyController extends Controller
             $join->on('t04.co_sector','=','t02.co_sector')
                 ->on('t04.nu_nivel','=', DB::raw('1'));
           })
+          ->join('mantenimiento.tab_ejecutores as t05', 't05.id_ejecutor', '=', 't01.id_ejecutor')
           //->join(DB::raw('inner join mantenimiento.tab_partidas as t03 on left(public.t54_ac_ae_partidas.co_partida, 3) = t03.co_partida'))
           ->select( 
             't02.co_sector', 
@@ -2004,6 +2005,7 @@ class leyController extends Controller
           ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
           ->where('t01.id_accion', '=', $value_ac->id_accion)
           ->where('t02.co_sector', '=', $value_ac->co_sector)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
           ->groupBy('t02.co_sector')
           ->groupBy('t01.id_accion')
           ->groupBy('partida')
