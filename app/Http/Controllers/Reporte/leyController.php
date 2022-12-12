@@ -1876,9 +1876,11 @@ class leyController extends Controller
 
         $ac_lista = tab_ac::join('mantenimiento.tab_sectores as t01', 't01.id', '=', 'public.t46_acciones_centralizadas.id_subsector')
         ->join('mantenimiento.tab_ac_predefinida as t02', 't02.id', '=', 'public.t46_acciones_centralizadas.id_accion')
+        ->join('mantenimiento.tab_ejecutores as t03', 't03.id_ejecutor', '=', 'public.t46_acciones_centralizadas.id_ejecutor')        
         ->select( 'id_accion', 'de_nombre', 'nu_original', 'co_sector' )
         ->where('id_ejercicio', '=', $ejercicio)
         ->where('co_sector', '=', $value->tx_codigo)
+        ->where('id_tab_tipo_ejecutor', '=', 1)                
         ->groupBy('id_accion')
         ->groupBy('de_nombre')
         ->groupBy('nu_original')
