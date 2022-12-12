@@ -2740,9 +2740,11 @@ class leyController extends Controller
             $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(4, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->MultiCell(67, 5, $value_transferencia_tres->tx_nombre, 0, 'L', 0, 0, '', '', true);
-            $pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            //$pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
-            $pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+            //$pdf->MultiCell(25, 5, number_format($value_transferencia_tres->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
             $pdf->ln(5);
 
             $pdf->SetFont('','',7);
@@ -2884,6 +2886,13 @@ class leyController extends Controller
               $pdf->SetFont('','B',7);
               $pdf->setCellHeightRatio(1);
 
+              $nivel_tres = trim($value_transferencia_tres->co_partida);
+              $nivel_cuatro = substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3);
+
+              $partida_capital_uno = '40703';
+              $partida_capital_dos = '40701';
+              $partida_referencia = $nivel_tres.$nivel_cuatro;
+
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -2892,9 +2901,28 @@ class leyController extends Controller
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(65, 5, $value_transferencia_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
-              //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
-              $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-              $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+
+              /*if($partida_capital_uno == $partida_referencia){
+
+                //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
+                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                
+
+              }else if($partida_capital_dos == $partida_referencia){
+
+                //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
+                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+              }else{*/
+
+                //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+
+              //}
+
               $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
               $condicionPartida = strlen($value_transferencia_cuatro->tx_nombre);
@@ -2956,6 +2984,14 @@ class leyController extends Controller
                 $pdf->SetFont('','B',7);
                 $pdf->setCellHeightRatio(1);
 
+                $nivel_tres = trim($value_transferencia_tres->co_partida);
+                $nivel_cuatro = substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3);
+                $nivel_cinco = substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5);
+
+                $partida_capital_uno = '4070303';
+                $partida_capital_dos = '4070103';
+                $partida_referencia = $nivel_tres.$nivel_cuatro.$nivel_cinco;
+
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -2965,9 +3001,27 @@ class leyController extends Controller
                 $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
                 //$pdf->MultiCell(65, 5, $value_transferencia_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
                 $pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cinco->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
-                //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
-                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+
+                if($partida_capital_uno == $partida_referencia){
+
+                  //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                  $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+
+                }else if($partida_capital_dos == $partida_referencia){
+
+                  //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                  $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+
+                }else{
+
+                  //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+
+                }
+
                 //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                 $pdf->writeHTMLCell(25,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
 
