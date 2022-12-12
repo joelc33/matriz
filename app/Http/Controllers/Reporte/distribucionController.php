@@ -330,16 +330,16 @@ class distribucionController extends Controller
 
             $pdf->SetFont('','',5);
             //$pdf->MultiCell(7, 5, $value_distribucion_cuatro->co_partida, 0, 'L', 0, 0, '', '', true);
-            $pdf->writeHTMLCell(6,6, '', '', '<u><b>'.$value_distribucion_cuatro->co_partida.'</b></u>', 0, 0, 0, true, 'L', true);
-            $pdf->MultiCell(5, 6, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(5, 6, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(6, 6, '', 0, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(7, 6, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->writeHTMLCell(6,7, '', '', '<u><b>'.$value_distribucion_cuatro->co_partida.'</b></u>', 0, 0, 0, true, 'L', true);
+            $pdf->MultiCell(5, 7, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(5, 7, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(6, 7, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(7, 7, '', 0, 'C', 0, 0, '', '', true);
             //$pdf->MultiCell(83, 5, $value_distribucion_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
-            $pdf->writeHTMLCell(71,6, '', '', '<u><b>'.$value_distribucion_cuatro->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
+            $pdf->writeHTMLCell(71,7, '', '', '<u><b>'.$value_distribucion_cuatro->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
             $pdf->SetFont('','B',5);
             //$pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-            $pdf->writeHTMLCell(21,6, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
+            $pdf->writeHTMLCell(21,7, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
             $pdf->SetFont('','',5);
             //$pdf->writeHTMLCell(20,5, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
 
@@ -555,16 +555,16 @@ class distribucionController extends Controller
 
               $pdf->SetFont('','',5);
               //$pdf->MultiCell(6, 5, substr(trim($value_distribucion_cinco->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
-              $pdf->writeHTMLCell(6,6, '', '', '<u>'.substr(trim($value_distribucion_cinco->co_partida), 0, 3).'</u>', 0, 0, 0, true, 'L', true);
+              $pdf->writeHTMLCell(6,7, '', '', '<u>'.substr(trim($value_distribucion_cinco->co_partida), 0, 3).'</u>', 0, 0, 0, true, 'L', true);
               //$pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_cinco->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
-              $pdf->writeHTMLCell(5,6, '', '', '<u>'.substr(substr(trim($value_distribucion_cinco->co_partida), 0, 5), 3).'</u>', 0, 0, 0, true, 'L', true);
-              $pdf->MultiCell(5, 6, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(6, 6, '', 0, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(7, 6, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->writeHTMLCell(5,7, '', '', '<u>'.substr(substr(trim($value_distribucion_cinco->co_partida), 0, 5), 3).'</u>', 0, 0, 0, true, 'L', true);
+              $pdf->MultiCell(5, 7, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(6, 7, '', 0, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(7, 7, '', 0, 'C', 0, 0, '', '', true);
               //$pdf->MultiCell(71, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
-              $pdf->writeHTMLCell(71,6, '', '', '<u>'.$value_distribucion_cinco->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
+              $pdf->writeHTMLCell(71,7, '', '', '<u>'.$value_distribucion_cinco->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
               //$pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-              $pdf->writeHTMLCell(21,6, '', '', '<u>'.number_format($value_distribucion_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+              $pdf->writeHTMLCell(21,7, '', '', '<u>'.number_format($value_distribucion_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
 
               $distribucion_ae = vista_distribucion_presupuesto::
               select( 'nu_ae', 'de_ae' )
@@ -781,13 +781,13 @@ class distribucionController extends Controller
               foreach ($distribucion_seis as $key => $value_distribucion_seis) {
 
                 $pdf->SetFont('','',5);
-                $pdf->MultiCell(6, 6, substr(trim($value_distribucion_seis->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_seis->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_seis->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(6, 6, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(7, 6, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(71, 6, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 6, number_format($value_distribucion_seis->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(6, 7, substr(trim($value_distribucion_seis->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_seis->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_seis->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(6, 7, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(7, 7, '', 0, 'C', 0, 0, '', '', true);
+                $pdf->MultiCell(71, 7, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 7, number_format($value_distribucion_seis->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                 $distribucion_ae = vista_distribucion_presupuesto::
                 select( 'nu_ae', 'de_ae' )
@@ -1010,13 +1010,13 @@ class distribucionController extends Controller
                 foreach ($distribucion_siete as $key => $value_distribucion_siete) {
 
                   $pdf->SetFont('','',5);
-                  $pdf->MultiCell(6, 6, substr(trim($value_distribucion_siete->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_siete->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_siete->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(6, 6, substr(substr(trim($value_distribucion_siete->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(7, 6, '', 0, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(71, 6, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                  $pdf->MultiCell(20, 6, number_format($value_distribucion_siete->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(6, 7, substr(trim($value_distribucion_siete->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_siete->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_siete->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(6, 7, substr(substr(trim($value_distribucion_siete->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(7, 7, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(71, 7, $value_distribucion_siete->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(20, 7, number_format($value_distribucion_siete->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                   $distribucion_ae = vista_distribucion_presupuesto::
                   select( 'nu_ae', 'de_ae' )
@@ -1263,13 +1263,13 @@ class distribucionController extends Controller
                   foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
 
                     $pdf->SetFont('','',5);
-                    $pdf->MultiCell(6, 6, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(6, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(7, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(71, 6, $value_distribucion_ocho->de_denominacion, 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 6, number_format($value_distribucion_ocho->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(6, 7, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(5, 7, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(6, 7, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 7, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(71, 7, $value_distribucion_ocho->de_denominacion, 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(20, 7, number_format($value_distribucion_ocho->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                     $distribucion_ae = vista_distribucion_presupuesto::
                     select( 'nu_ae', 'de_ae', 'id_tab_ac_ae_predef' )
