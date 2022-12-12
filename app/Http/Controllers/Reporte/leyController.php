@@ -1832,7 +1832,7 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(1);
           $start_y = 0;
           $movimiento = 0;
-          $movimiento_capital = 0;
+          
 
           $pr_lista_partida = tab_proyecto_ae_partida::join('public.t39_proyecto_acc_espec as t01', 't01.co_proyecto_acc_espec', '=', 'public.t42_proyecto_acc_espec_partida.co_proyecto_acc_espec')
           ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.t42_proyecto_acc_espec_partida.co_partida, 3)'))
@@ -2425,7 +2425,7 @@ class leyController extends Controller
 
       $pdf->AddPage();
       $movimiento = 0;
-
+      $movimiento_capital = 0;
       $pdf->SetFont('','B',8);
       $pdf->setCellHeightRatio(1.2);
       $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
