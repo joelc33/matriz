@@ -1317,7 +1317,7 @@ class distribucionController extends Controller
                       ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
                       ->where('td_tab_ac', '=', $value_distribucion_siete->id_tab_ac)
                       ->where('id_tab_ac_ae_predefinida', '=', $value_distribucion_ae->id_tab_ac_ae_predef)
-                      ->where(DB::raw('left(co_partida::bigint::text::varchar, 9)'), '=', trim($value_distribucion_siete->co_partida))
+                      ->where(DB::raw('left(co_partida::bigint::text::varchar, 12)'), '=', trim($value_distribucion_ocho->co_partida))
                       ->orderBy('co_partida','ASC')
                       ->get();
 
