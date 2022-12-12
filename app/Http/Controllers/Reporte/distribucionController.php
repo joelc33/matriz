@@ -327,6 +327,19 @@ class distribucionController extends Controller
           $movimiento = 0;
 
           foreach ($distribucion_cuatro as $key => $value_distribucion_cuatro) {
+              
+              
+          $total_distribucion_cuatro = vista_distribucion_presupuesto::
+          join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+          ->select( DB::raw('sum(monto) as mo_partida') )
+          ->where('ef_uno', '=', $ejercicio)
+          ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+          ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+          ->where('id_tab_tipo_ejecutor', '=', 1)
+          ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 3)'), '=', trim($value_distribucion_cuatro->co_partida))
+          ->first();              
+              
 
             $pdf->SetFont('','',5);
             //$pdf->MultiCell(7, 5, $value_distribucion_cuatro->co_partida, 0, 'L', 0, 0, '', '', true);
@@ -339,7 +352,7 @@ class distribucionController extends Controller
             $pdf->writeHTMLCell(71,7, '', '', '<u><b>'.$value_distribucion_cuatro->tx_nombre.'</b></u>', 0, 0, 0, true, 'L', true);
             $pdf->SetFont('','B',5);
             //$pdf->MultiCell(20, 5, number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-            $pdf->writeHTMLCell(21,7, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 0, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
+            $pdf->writeHTMLCell(21,7, '', '', '<u><b>'.number_format($total_distribucion_cuatro->mo_partida, 0, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
             $pdf->SetFont('','',5);
             //$pdf->writeHTMLCell(20,5, '', '', '<u><b>'.number_format($value_distribucion_cuatro->mo_partida, 2, ',', '.').'</b></u>', 0, 0, 0, true, 'R', true);
 
