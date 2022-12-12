@@ -1331,7 +1331,7 @@ class distribucionController extends Controller
                   $total_distribucion_ocho = tab_ac_es_partida_desagregado::select( DB::raw('sum(mo_partida) as mo_partida') )
                   ->join('t46_acciones_centralizadas as t01', 't01.id', '=', 'tab_ac_es_partida_desagregado.td_tab_ac')
                   ->join('mantenimiento.tab_sectores as t02', 't02.id', '=', 't01.id_subsector')
-                  ->join('t46_acciones_centralizadas as t03', 't03.id', '=', 't01.id_accion')
+                  ->join('mantenimiento.tab_ac_predefinida as t03', 't03.id', '=', 't01.id_accion')
                   ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
                   ->where('co_sector', '=', $value_distribucion_uno->co_sector)
                   ->where('nu_original', '=', $value_distribucion_dos->nu_original)
