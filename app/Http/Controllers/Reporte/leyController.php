@@ -1832,6 +1832,7 @@ class leyController extends Controller
           $pdf->setCellHeightRatio(1);
           $start_y = 0;
           $movimiento = 0;
+          $movimiento_capital = 0;
 
           $pr_lista_partida = tab_proyecto_ae_partida::join('public.t39_proyecto_acc_espec as t01', 't01.co_proyecto_acc_espec', '=', 'public.t42_proyecto_acc_espec_partida.co_proyecto_acc_espec')
           ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.t42_proyecto_acc_espec_partida.co_partida, 3)'))
@@ -2890,7 +2891,8 @@ class leyController extends Controller
               $nivel_cuatro = substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3);
 
               $partida_capital_uno = '40703';
-              $partida_capital_dos = '40701';
+//              $partida_capital_dos = '40701';
+              $partida_capital_dos = '40801';
               $partida_referencia = $nivel_tres.$nivel_cuatro;
 
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -2902,12 +2904,12 @@ class leyController extends Controller
               $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(65, 5, $value_transferencia_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
 
-              /*if($partida_capital_uno == $partida_referencia){
+              if($partida_capital_uno == $partida_referencia){
 
                 //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                
+                $movimiento_capital =   $movimiento_capital + $value_transferencia_cuatro->mo_partida;
 
               }else if($partida_capital_dos == $partida_referencia){
 
@@ -2915,13 +2917,13 @@ class leyController extends Controller
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
-              }else{*/
+              }else{
 
                 //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
 
-              //}
+              }
 
               $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
@@ -3008,6 +3010,8 @@ class leyController extends Controller
                   //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                   $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                   $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+                  
+                $movimiento_capital =   $movimiento_capital + $value_transferencia_cinco->mo_partida;
 
                 }else if($partida_capital_dos == $partida_referencia){
 
@@ -3270,8 +3274,8 @@ class leyController extends Controller
         $pdf->SetY(262);
         $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
         $pdf->SetFont('','B',7);
-        $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento-$movimiento_capital, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento_capital, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
       }
 
