@@ -2881,16 +2881,18 @@ class leyController extends Controller
 
             foreach ($ac_transferencia_cuatro as $key => $value_transferencia_cuatro) {
 
-              $pdf->SetFont('','',7);
+              $pdf->SetFont('','B',7);
               $pdf->setCellHeightRatio(1);
 
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(10, 5, substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3), 0, 'C', 0, 0, '', '', true);
+              //$pdf->writeHTMLCell(10,5, '', '', '<u>'.substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3).'</u>', 0, 0, 0, true, 'C', true);
               $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(65, 5, $value_transferencia_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
+              //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
               $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
               $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
               $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
@@ -2951,19 +2953,25 @@ class leyController extends Controller
 
               foreach ($ac_transferencia_cinco as $key => $value_transferencia_cinco) {
 
-                $pdf->SetFont('','',7);
+                $pdf->SetFont('','B',7);
                 $pdf->setCellHeightRatio(1);
 
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(10, 5, substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
+                //$pdf->MultiCell(10, 5, substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5), 0, 'C', 0, 0, '', '', true);
+                $pdf->writeHTMLCell(10,5, '', '', '<u>'.substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5).'</u>', 0, 0, 0, true, 'C', true);
                 $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
-                $pdf->MultiCell(65, 5, $value_transferencia_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                //$pdf->MultiCell(65, 5, $value_transferencia_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                $pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cinco->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
+                //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->writeHTMLCell(26,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
-                $pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                //$pdf->MultiCell(25, 5, number_format($value_transferencia_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->writeHTMLCell(25,5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+
+                $pdf->SetFont('','',7);
 
                 $condicionPartida = strlen($value_transferencia_cinco->tx_nombre);
                 if ($condicionPartida >= 30) {
@@ -2971,6 +2979,126 @@ class leyController extends Controller
                 }else {
                   $pdf->ln(5);
                 }
+
+                $nivel_tres = trim($value_transferencia_tres->co_partida);
+                $nivel_cuatro = substr(substr(trim($value_transferencia_cuatro->co_partida), 0, 5), 3);
+                $nivel_cinco = substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5);
+
+                $partida_desagregado_municipio = $nivel_tres.$nivel_cuatro;
+
+                $tab_distribucion_municipio = tab_distribucion_municipio::join('mantenimiento.tab_municipio as t01','t01.id','=','mantenimiento.tab_distribucion_municipio.id_tab_municipio')
+                ->select( 'mantenimiento.tab_distribucion_municipio.id', 'co_partida', 'mo_total', 'de_municipio' )
+                ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+                ->where(DB::raw('left(co_partida::bigint::text::varchar, 5)'), '=', trim($partida_desagregado_municipio))
+                ->orderBy('de_municipio','ASC')
+                ->get();
+
+                 foreach ($tab_distribucion_municipio as $key => $value_distribucion_municipio) {
+
+                  $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(65, 5, $value_distribucion_municipio->de_municipio, 0, 'L', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->mo_total, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, number_format($value_distribucion_municipio->mo_total, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+                  $pdf->ln(5);
+
+                  $start_y = $pdf->GetY();
+
+                  if ($start_y >= 245) {
+
+                    $pdf->SetFont('','B',8);
+                    $pdf->setCellHeightRatio(1.5);
+                    $pdf->SetY(262);
+                    $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
+                    $pdf->SetFont('','B',7);
+                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+  
+                    $pdf->SetFont('','',7);
+  
+                    // reset font stretching  reset font spacing
+                    $pdf->setFontStretching(100);
+                    $pdf->setFontSpacing(0);
+                    $pdf->SetLineWidth(0.150);
+                    $pdf->setCellHeightRatio(2);
+  
+                    $pdf->AddPage();
+  
+                    $pdf->SetFont('','B',8);
+                    $pdf->setCellHeightRatio(1.2);
+                    $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->setCellHeightRatio(2);
+                    $pdf->SetFont('','B',10);
+                    $pdf->setCellHeightRatio(1);
+                    $pdf->MultiCell(90, 5, 'RELACIÓN DE TRANSFERENCIAS', 0, 'C', 0, 0, '', '', true);
+                    $pdf->setCellHeightRatio(2);
+                    $pdf->ln(8);
+                    $pdf->SetFont('','B',8);
+                    $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
+                    $pdf->ln(-10);
+                    $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->ln(19);
+                    $pdf->SetFont('','',8);
+  
+                    $pdf->MultiCell(196, 240, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->ln(0);
+                    $pdf->SetFont('','B',7);
+                    $pdf->ln(30);
+                    $pdf->StartTransform();
+                    $pdf->Rotate(90);
+                    $pdf->MultiCell(30, 10, 'SECTOR', 1, 'L', 0, 0, '', '', true);
+                    $pdf->ln(10);
+                    $pdf->MultiCell(30, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+                    $pdf->ln(10);
+                    $pdf->MultiCell(30, 10, 'PARTIDA', 1, 'L', 0, 0, '', '', true);
+                    $pdf->ln(10);
+                    $pdf->MultiCell(30, 10, 'SUB - PARTIDA GENERICA', 1, 'L', 0, 0, '', '', true);
+                    $pdf->ln(10);
+                    $pdf->MultiCell(30, 10, 'SUB - PARTIDA ESPECIFICA', 1, 'L', 0, 0, '', '', true);
+                    $pdf->ln(10);
+                    $pdf->StopTransform();
+                    $pdf->ln(-80);
+                    $pdf->SetFont('','B',8);
+                    $pdf->setCellHeightRatio(10);
+                    $pdf->MultiCell(50, 30, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(71, 30, 'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 30, 'CORRIENTES', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 30, 'CAPITAL', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 30, 'MONTO TOTAL', 1, 'C', 0, 0, '', '', true);
+                    $pdf->ln(30);
+                    $pdf->setCellHeightRatio(1);
+                    $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(10, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(71, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 205, '', 1, 'C', 0, 0, '', '', true);
+                    $pdf->ln(2);
+                    $pdf->SetFont('','',7);
+                    $pdf->setCellHeightRatio(0.8);
+  
+                    $pdf->ln(212);
+                    $pdf->SetFont('','',7);
+                    $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+                    $pdf->ln(-212);
+  
+                  }
+
+                 }
 
                 $movimiento = $movimiento + $value_transferencia_cinco->mo_partida;
 
