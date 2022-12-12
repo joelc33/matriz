@@ -1331,7 +1331,6 @@ class distribucionController extends Controller
                   $total_distribucion_ocho = tab_ac_es_partida_desagregado::select( DB::raw('sum(mo_partida) as mo_partida') )
                   ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
                   ->where(DB::raw('left(co_partida::bigint::text::varchar, 12)'), '=', trim($value_distribucion_ocho->co_partida))
-                  ->orderBy('co_partida','ASC')
                   ->first();                      
 
                     $pdf->SetFont('','',5);
