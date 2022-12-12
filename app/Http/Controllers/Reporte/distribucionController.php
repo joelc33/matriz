@@ -575,7 +575,6 @@ class distribucionController extends Controller
             ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where('co_sector', '=', $value_distribucion_uno->co_sector)
             ->where('nu_original', '=', $value_distribucion_dos->nu_original)
-            ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
             ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
             ->where('id_tab_tipo_ejecutor', '=', 1)
           ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 5)'), '=', trim($value_distribucion_cinco->co_partida))
@@ -808,6 +807,23 @@ class distribucionController extends Controller
               ->get();
 
               foreach ($distribucion_seis as $key => $value_distribucion_seis) {
+                  
+          $total_distribucion_seis = vista_distribucion_presupuesto::
+              join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+              ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
+              ->join('mantenimiento.tab_partidas as t03', 't03.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 7)'))
+              ->select( DB::raw('sum(monto) as mo_partida') )
+              ->where('ef_uno', '=', $ejercicio)
+              ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t03.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+              ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+              ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+              ->where('t02.co_partida', '=', $value_distribucion_cinco->co_partida)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
+          ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 7)'), '=', trim($value_distribucion_seis->co_partida))
+          ->first();                      
 
                 $pdf->SetFont('','',5);
                 $pdf->MultiCell(6, 7, substr(trim($value_distribucion_seis->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
@@ -816,7 +832,7 @@ class distribucionController extends Controller
                 $pdf->MultiCell(6, 7, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(7, 7, '', 0, 'C', 0, 0, '', '', true);
                 $pdf->MultiCell(71, 7, $value_distribucion_seis->tx_nombre, 0, 'L', 0, 0, '', '', true);
-                $pdf->MultiCell(20, 7, number_format($value_distribucion_seis->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(20, 7, number_format($total_distribucion_seis->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                 $distribucion_ae = vista_distribucion_presupuesto::
                 select( 'nu_ae', 'de_ae' )
