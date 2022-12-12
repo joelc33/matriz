@@ -2989,7 +2989,8 @@ class leyController extends Controller
                 $nivel_cinco = substr(substr(trim($value_transferencia_cinco->co_partida), 0, 7), 5);
 
                 $partida_capital_uno = '4070303';
-                $partida_capital_dos = '4070103';
+//                $partida_capital_dos = '4070103';
+                $partida_capital_dos = '4080103';
                 $partida_referencia = $nivel_tres.$nivel_cuatro.$nivel_cinco;
 
                 $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
