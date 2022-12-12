@@ -1262,14 +1262,14 @@ class distribucionController extends Controller
 
                   foreach ($distribucion_ocho as $key => $value_distribucion_ocho) {
 
-                    $pdf->SetFont('','',5);
-                    $pdf->MultiCell(6, 5, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(6, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(7, 5, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(71, 5, $value_distribucion_ocho->de_denominacion, 0, 'L', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, number_format($value_distribucion_ocho->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                    $pdf->SetFont('','',6);
+                    $pdf->MultiCell(6, 6, substr(trim($value_distribucion_ocho->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 5), 3), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(5, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 7), 5), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(6, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 9), 7), 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 6, substr(substr(trim($value_distribucion_ocho->co_partida), 0, 12), 9), 0, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(71, 6, $value_distribucion_ocho->de_denominacion, 0, 'L', 0, 0, '', '', true);
+                    $pdf->MultiCell(20, 6, number_format($value_distribucion_ocho->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
                     $distribucion_ae = vista_distribucion_presupuesto::
                     select( 'nu_ae', 'de_ae', 'id_tab_ac_ae_predef' )
