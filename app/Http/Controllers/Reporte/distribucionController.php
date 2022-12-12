@@ -404,7 +404,7 @@ class distribucionController extends Controller
             $pdf->MultiCell(16, 5, '', 0, 'C', 0, 0, '', '', true);*/
             //$pdf->ln(4);
 
-            $movimiento = $movimiento + $value_distribucion_cuatro->mo_partida;
+            $movimiento = $movimiento + $total_distribucion_cuatro->mo_partida;
 
             $condicionPartida = strlen($value_distribucion_cuatro->tx_nombre);
             if ($condicionPartida >= 60) {
@@ -565,6 +565,22 @@ class distribucionController extends Controller
             ->get();
 
             foreach ($distribucion_cinco as $key => $value_distribucion_cinco) {
+                
+          $total_distribucion_cinco = vista_distribucion_presupuesto::
+            join('mantenimiento.tab_partidas as t01', 't01.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 3)'))
+            ->join('mantenimiento.tab_partidas as t02', 't02.co_partida', '=', DB::raw('left(public.vista_distribucion_presupuesto.co_partida, 5)'))
+            ->select( DB::raw('sum(monto) as mo_partida') )
+            ->where('ef_uno', '=', $ejercicio)
+            ->where('t01.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('t02.id_tab_ejercicio_fiscal', '=', $ejercicio)
+            ->where('co_sector', '=', $value_distribucion_uno->co_sector)
+            ->where('nu_original', '=', $value_distribucion_dos->nu_original)
+            ->where('id_ejecutor', '=', $value_distribucion_tres->id_ejecutor)
+            ->where('t01.co_partida', '=', $value_distribucion_cuatro->co_partida)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
+          ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 5)'), '=', trim($value_distribucion_cinco->co_partida))
+          ->first();                
+                
 
               $pdf->SetFont('','',5);
               //$pdf->MultiCell(6, 5, substr(trim($value_distribucion_cinco->co_partida), 0, 3), 0, 'L', 0, 0, '', '', true);
@@ -577,7 +593,7 @@ class distribucionController extends Controller
               //$pdf->MultiCell(71, 5, $value_distribucion_cinco->tx_nombre, 0, 'L', 0, 0, '', '', true);
               $pdf->writeHTMLCell(71,7, '', '', '<u>'.$value_distribucion_cinco->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
               //$pdf->MultiCell(20, 5, number_format($value_distribucion_cinco->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-              $pdf->writeHTMLCell(21,7, '', '', '<u>'.number_format($value_distribucion_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
+              $pdf->writeHTMLCell(21,7, '', '', '<u>'.number_format($total_distribucion_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
 
               $distribucion_ae = vista_distribucion_presupuesto::
               select( 'nu_ae', 'de_ae' )
