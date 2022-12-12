@@ -2912,12 +2912,15 @@ class leyController extends Controller
               $pdf->MultiCell(6, 5, '', 0, 'C', 0, 0, '', '', true);
               $pdf->MultiCell(65, 5, $value_transferencia_cuatro->tx_nombre, 0, 'L', 0, 0, '', '', true);
 
-             /* if($partida_capital_uno == $partida_referencia){
-
+              if($partida_capital_uno == $partida_referencia){
+              if($value_transferencia->co_sector=='15' && $value_transferencia_dos->nu_original=='56'){
                 //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-               
+              }else{
+                $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);                  
+              }
 
               }else if($partida_capital_dos == $partida_referencia){
 
@@ -2925,13 +2928,13 @@ class leyController extends Controller
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
-              }else{*/
+              }else{
 
                 //$pdf->writeHTMLCell(65,5, '', '', '<u>'.$value_transferencia_cuatro->tx_nombre.'</u>', 0, 0, 0, true, 'L', true);
                 $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
 
-//              }
+              }
 
               $pdf->MultiCell(25, 5, number_format($value_transferencia_cuatro->mo_partida, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
