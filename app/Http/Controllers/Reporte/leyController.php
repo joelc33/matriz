@@ -1414,116 +1414,134 @@ class leyController extends Controller
 
       /******Inicio ENTIDAD FEDERAL POR ESCALA DE SUELDOS******/
 
-      // reset font stretching  reset font spacing
-      $pdf->setFontStretching(100);
-      $pdf->setFontSpacing(0);
-      $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
-
-      $pdf->AddPage();
-
-      // reset font stretching  reset font spacing
-      $pdf->setFontStretching(100);
-      $pdf->setFontSpacing(0);
-      $pdf->SetLineWidth(0.150);
-      $pdf->setCellHeightRatio(2);
-
-      $pdf->SetFont('','B',8);
-      $pdf->setCellHeightRatio(1.2);
-      $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->setCellHeightRatio(1.2);
-      $pdf->SetFont('','B',9);
-      $pdf->MultiCell(95, 5, 'RESUMEN DE LOS RECURSOS HUMANOS DE LA ENTIDAD FEDERAL'.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);
-      $pdf->setCellHeightRatio(2);
-      $pdf->ln(8);
-      $pdf->SetFont('','B',8);
-      $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->ln(-10);
-      $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->ln(19);
-      $pdf->setCellHeightRatio(1.2);
-
-      $pdf->SetFont('','B',8);
-      $pdf->MultiCell(20, 20, chr(10).chr(10).'GRUPO', 1, 'C', 0, 0, '', '', true);
-      $pdf->SetFont('','B',9);
-      $pdf->setFontSpacing('0.254');
-      $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);
-      $pdf->setFontSpacing('0');
-      $pdf->SetFont('','B',8);
-      $pdf->MultiCell(88, 10, chr(10).'ESTIMADO PARA '.$ejercicio, 1, 'C', 0, 0, '', '', true);
-      $pdf->ln(10);
-      $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(68, 5, 'Nº DE CARGO', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 10, chr(10).'MONTO Bs.', 1, 'C', 0, 0, '', '', true);
-      $pdf->ln(5);
-      $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(22, 5, 'Masculino', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(22, 5, 'Femenino', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(24, 5, 'Total', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->ln(5);
-      $pdf->setCellHeightRatio(1);
-      $pdf->MultiCell(20, 215, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(88, 215, '', 1, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(22, 215, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(22, 215, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(24, 215, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 215, '', 1, 'L', 0, 0, '', '', true);
-      $pdf->ln(222);
-      $pdf->SetFont('','',7);
-      $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
-      $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
-      $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-      $pdf->ln(-222);
-      $pdf->ln(2);
-      $pdf->SetFont('','',7);
-      $pdf->setCellHeightRatio(1);
-
-      $escala_salarial = tab_escala_salarial::
-      where('id_tab_ejercicio_fiscal', '=', $ejercicio)
-      ->orderBy('id','ASC')
+      $escala_salarial_grupo = tab_escala_salarial::
+      join('mantenimiento.tab_tipo_empleado as t01', 't01.id', '=', 'mantenimiento.tab_escala_salarial.id_tab_tipo_empleado')
+      ->select( 't01.id', 'de_tipo_empleado' )
+      ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+      ->groupBy('t01.id')
+      ->groupBy('de_tipo_empleado')
+      ->orderBy('t01.id','ASC')
       ->get();
 
-      $total_mo_sexo_m = 0;
-      $total_mo_sexo_f = 0;
-      $total_mo_sexo_mf = 0;
-      $total_mo_todo = 0;
+      foreach($escala_salarial_grupo as $key => $value_escala_salarial_grupo){
 
-      $pdf->SetFont('','', 8);
+          // reset font stretching  reset font spacing
+          $pdf->setFontStretching(100);
+          $pdf->setFontSpacing(0);
+          $pdf->SetLineWidth(0.150);
+          $pdf->setCellHeightRatio(2);
 
-      foreach ($escala_salarial as $key => $value_escala_salarial) {
+          $pdf->AddPage();
 
-        $total_sexo_mf = $value_escala_salarial->nu_masculino + $value_escala_salarial->nu_femenino;
+          // reset font stretching  reset font spacing
+          $pdf->setFontStretching(100);
+          $pdf->setFontSpacing(0);
+          $pdf->SetLineWidth(0.150);
+          $pdf->setCellHeightRatio(2);
 
-        $pdf->MultiCell(20, 215, $value_escala_salarial->de_grupo, 0, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(88, 215, $value_escala_salarial->de_escala_salarial, 0, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(24, 215, number_format($total_sexo_mf, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(20, 215, number_format($value_escala_salarial->mo_escala_salarial, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+          $pdf->SetFont('','B',8);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(1.2);
+          $pdf->SetFont('','B',9);
+          $pdf->MultiCell(95, 5, 'RESUMEN DE LOS RECURSOS HUMANOS DE LA ENTIDAD FEDERAL'.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);
+          $pdf->setCellHeightRatio(2);
+          $pdf->ln(8);
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->ln(-10);
+          $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(19);
+          $pdf->setCellHeightRatio(1.2);
 
-        $pdf->ln(6);
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(20, 20, chr(10).chr(10).'GRUPO', 1, 'C', 0, 0, '', '', true);
+          $pdf->SetFont('','B',9);
+          $pdf->setFontSpacing('0.254');
+          $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);
+          $pdf->setFontSpacing('0');
+          $pdf->SetFont('','B',8);
+          $pdf->MultiCell(88, 5, 'ESTIMADO PARA '.$ejercicio, 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(5);
+          $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(88, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(88, 5, $value_escala_salarial_grupo->de_tipo_empleado, 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(5);
+          $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(88, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(68, 5, 'Nº DE CARGO', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(20, 10, chr(10).'MONTO Bs.', 1, 'C', 0, 0, '', '', true);
+          $pdf->ln(5);
+          $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(88, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(22, 5, 'Masculino', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(22, 5, 'Femenino', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(24, 5, 'Total', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->ln(5);
+          $pdf->setCellHeightRatio(1);
+          $pdf->MultiCell(20, 215, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(88, 215, '', 1, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(22, 215, '', 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(22, 215, '', 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(24, 215, '', 1, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(20, 215, '', 1, 'L', 0, 0, '', '', true);
+          $pdf->ln(222);
+          $pdf->SetFont('','',7);
+          $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+          $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+          $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+          $pdf->ln(-222);
+          $pdf->ln(2);
+          $pdf->SetFont('','',7);
+          $pdf->setCellHeightRatio(1);
 
-        $total_mo_sexo_m = $total_mo_sexo_m + $value_escala_salarial->nu_masculino;
-        $total_mo_sexo_f = $total_mo_sexo_f + $value_escala_salarial->nu_femenino;
-        $total_mo_sexo_mf = $total_mo_sexo_m + $total_mo_sexo_f;
-        $total_mo_todo = $total_mo_todo + $value_escala_salarial->mo_escala_salarial;
+          $escala_salarial = tab_escala_salarial::
+          where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('id_tab_tipo_empleado', '=', $value_escala_salarial_grupo->id)
+          ->orderBy('id','ASC')
+          ->get();
+
+          $total_mo_sexo_m = 0;
+          $total_mo_sexo_f = 0;
+          $total_mo_sexo_mf = 0;
+          $total_mo_todo = 0;
+
+          $pdf->SetFont('','', 8);
+
+          foreach ($escala_salarial as $key => $value_escala_salarial) {
+
+            $total_sexo_mf = $value_escala_salarial->nu_masculino + $value_escala_salarial->nu_femenino;
+
+            $pdf->MultiCell(20, 215, $value_escala_salarial->de_grupo, 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(88, 215, $value_escala_salarial->de_escala_salarial, 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(22, 215, number_format($value_escala_salarial->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(24, 215, number_format($total_sexo_mf, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(20, 215, number_format($value_escala_salarial->mo_escala_salarial, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+
+            $pdf->ln(6);
+
+            $total_mo_sexo_m = $total_mo_sexo_m + $value_escala_salarial->nu_masculino;
+            $total_mo_sexo_f = $total_mo_sexo_f + $value_escala_salarial->nu_femenino;
+            $total_mo_sexo_mf = $total_mo_sexo_m + $total_mo_sexo_f;
+            $total_mo_todo = $total_mo_todo + $value_escala_salarial->mo_escala_salarial;
+
+          }
+
+          $pdf->SetFont('','B',8);
+          $pdf->setCellHeightRatio(1.5);
+          $pdf->SetY(262);
+          $pdf->MultiCell(108, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
+          $pdf->SetFont('', 'B', 8);
+          $pdf->MultiCell(22, 6, number_format($total_mo_sexo_m, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(22, 6, number_format($total_mo_sexo_f, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(24, 6, number_format($total_mo_sexo_mf, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+          $pdf->MultiCell(20, 6, number_format($total_mo_todo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
       }
-
-      $pdf->SetFont('','B',8);
-      $pdf->setCellHeightRatio(1.5);
-      $pdf->SetY(262);
-      $pdf->MultiCell(108, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
-      $pdf->SetFont('', 'B', 8);
-      $pdf->MultiCell(22, 6, number_format($total_mo_sexo_m, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(22, 6, number_format($total_mo_sexo_f, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(24, 6, number_format($total_mo_sexo_mf, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
-      $pdf->MultiCell(20, 6, number_format($total_mo_todo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
       /******Inicio de Objetivos Sectoriales******/
 
