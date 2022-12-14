@@ -337,7 +337,7 @@ class distribucionController extends Controller
           ->where('co_sector', '=', $value_distribucion_uno->co_sector)
           ->where('nu_original', '=', $value_distribucion_dos->nu_original)
           ->where('id_tab_tipo_ejecutor', '=', 1)
-          ->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 3)'), '=', trim($value_distribucion_cuatro->co_partida))
+          //->where(DB::raw('left(public.vista_distribucion_presupuesto.co_partida::bigint::text::varchar, 3)'), '=', trim($value_distribucion_cuatro->co_partida))
           ->first();              
               
 
