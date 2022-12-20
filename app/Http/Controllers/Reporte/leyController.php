@@ -3144,9 +3144,9 @@ class leyController extends Controller
             $pdf->SetY(262);
             $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
             $pdf->SetFont('','B',7);
-            $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-            $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, '', 1, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
             $pdf->SetFont('','',7);
 
@@ -3294,9 +3294,9 @@ class leyController extends Controller
               $pdf->SetY(262);
               $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
               $pdf->SetFont('','B',7);
-              $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-              $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, '', 1, 'R', 0, 0, '', '', true);
+              $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
               $pdf->SetFont('','',7);
 
@@ -3614,9 +3614,9 @@ class leyController extends Controller
                     $pdf->SetY(262);
                     $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
                     $pdf->SetFont('','B',7);
-                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, '', 1, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
   
                     $pdf->SetFont('','',7);
   
@@ -3854,9 +3854,9 @@ class leyController extends Controller
                   $pdf->SetY(262);
                   $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
                   $pdf->SetFont('','B',7);
-                  $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(25, 5, '', 1, 'C', 0, 0, '', '', true);
-                  $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, '', 1, 'R', 0, 0, '', '', true);
+                  $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
                   $pdf->SetFont('','',7);
 
@@ -3953,9 +3953,9 @@ class leyController extends Controller
         $pdf->SetY(262);
         $pdf->MultiCell(121, 5, 'TOTAL', 1, 'R', 0, 0, '', '', true);
         $pdf->SetFont('','B',7);
-        $pdf->MultiCell(25, 5, number_format($movimiento-$movimiento_capital, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(25, 5, number_format($movimiento_capital, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento-$movimiento_capital, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento_capital, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, number_format($movimiento, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
       }
 
       //Cierre de Reporte
