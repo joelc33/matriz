@@ -4073,6 +4073,7 @@ class leyController extends Controller
                   ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
                   ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
                   ->where('t07.co_partida', '=', $value_transferencia_cinco->co_partida)
+                  ->where('id_tab_tipo_ejecutor', '=', 1)
                   ->groupBy('public.vista_relacion_transferencia.id_ejecutor')
                   ->orderBy('public.vista_relacion_transferencia.id_ejecutor','ASC')
                   ->get();
