@@ -3398,6 +3398,7 @@ class leyController extends Controller
       ->where('id_tab_tipo_ejecutor', '=', 1)        
       ->groupBy('co_sector')
       ->groupBy('tx_descripcion')
+      ->groupBy('np_uno')
       ->orderBy('co_sector','ASC')
       ->get();
 
@@ -3445,8 +3446,10 @@ class leyController extends Controller
         ->where('ef_tres', '=', $ejercicio)
         ->where('ef_cuatro', '=', $ejercicio)
         ->where('co_sector', '=', $value_transferencia->co_sector)
+        ->where('id_tab_tipo_ejecutor', '=', 1) 
         ->groupBy('nu_original')
         ->groupBy('de_nombre')
+        ->groupBy('np_uno')
         ->orderBy('nu_original','ASC')
         ->get();
 
@@ -3612,6 +3615,7 @@ class leyController extends Controller
           ->where('ef_tres', '=', $ejercicio)
           ->where('ef_cuatro', '=', $ejercicio)
           ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+          ->where('id_tab_tipo_ejecutor', '=', 1) 
           ->where('co_sector', '=', $value_transferencia->co_sector)
           ->where('nu_original', '=', $value_transferencia_dos->nu_original)
           ->groupBy('t05.co_partida')
@@ -3766,6 +3770,7 @@ class leyController extends Controller
             ->where('co_sector', '=', $value_transferencia->co_sector)
             ->where('nu_original', '=', $value_transferencia_dos->nu_original)
             ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+            ->where('id_tab_tipo_ejecutor', '=', 1) 
             ->groupBy('t06.co_partida')
             ->groupBy('np_dos')
             ->orderBy('t06.co_partida','ASC')
@@ -3868,6 +3873,7 @@ class leyController extends Controller
               ->where('nu_original', '=', $value_transferencia_dos->nu_original)
               ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
               ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
+              ->where('id_tab_tipo_ejecutor', '=', 1) 
               ->groupBy('t07.co_partida')
               ->groupBy('np_tres')
               ->orderBy('t07.co_partida','ASC')
