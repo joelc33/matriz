@@ -4065,11 +4065,40 @@ class leyController extends Controller
 
                 if($value_transferencia_dos->nu_original == 52){
                     
+              $ac_transferencia_seis = vista_relacion_transferencia::
+              join('mantenimiento.tab_partidas as t05', 't05.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 3)'))
+              ->join('mantenimiento.tab_partidas as t06', 't06.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 5)'))
+              ->join('mantenimiento.tab_partidas as t07', 't07.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 7)'))
+              ->join('mantenimiento.tab_partidas as t08', 't08.co_partida', '=', DB::raw('left(public.vista_relacion_transferencia.co_partida, 9)'))        
+              ->select( 'id_accion','t08.co_partida', 'np_tres as tx_nombre', DB::raw('sum(monto) as mo_partida') )
+              ->where('ef_uno', '=', $ejercicio)
+              ->where('ef_dos', '=', $ejercicio)
+              ->where('ef_tres', '=', $ejercicio)
+              ->where('ef_cuatro', '=', $ejercicio)
+              ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('t08.id_tab_ejercicio_fiscal', '=', $ejercicio)
+              ->where('co_sector', '=', $value_transferencia->co_sector)
+              ->where('nu_original', '=', $value_transferencia_dos->nu_original)
+              ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
+              ->where('t06.co_partida', '=', $value_transferencia_cuatro->co_partida)
+              ->where('t07.co_partida', '=', $value_transferencia_cinco->co_partida)
+              ->where('id_tab_tipo_ejecutor', '=', 1) 
+              ->groupBy('id_accion')
+              ->groupBy('t07.co_partida')
+              ->groupBy('np_tres')
+              ->orderBy('t07.co_partida','ASC')
+              ->get();
+              
+              
+              foreach ($ac_transferencia_seis as $key => $value_transferencia_seis) {
+              
                   $ac_transferencia_cinco_detalle = tab_ac_es_partida_desagregado::select( 'co_partida', 'de_denominacion',  'mo_partida' )
                   ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
-                  ->where('td_tab_ac', '=', $value_transferencia_cinco->id_accion)
+                  ->where('td_tab_ac', '=', $value_transferencia_seis->id_accion)
                   //->where('id_tab_ac_ae_predefinida', '=', $value_distribucion_siete->id_tab_ac_ae_predef)
-                  ->where(DB::raw('left(co_partida::bigint::text::varchar, 9)'), '=', trim($value_transferencia_cinco->co_partida))
+                  ->where(DB::raw('left(co_partida::bigint::text::varchar, 9)'), '=', trim($value_transferencia_seis->co_partida))
                   ->orderBy('co_partida','ASC')
                   ->get();                   
 
@@ -4212,6 +4241,8 @@ class leyController extends Controller
   
                   }
 
+                }
+                
                 }
 
                 $filtro_codigo = [53, 56];
