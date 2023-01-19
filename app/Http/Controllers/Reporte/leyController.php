@@ -3771,8 +3771,7 @@ class leyController extends Controller
             ->where('nu_original', '=', $value_transferencia_dos->nu_original)
             ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
             ->where('id_tab_tipo_ejecutor', '=', 1) 
-            ->groupBy('t06.co_partida')
-            ->groupBy('np_dos')        
+            ->groupBy('t06.co_partida')       
             ->groupBy('np_uno')
             ->orderBy('t06.co_partida','ASC')
             ->get();
