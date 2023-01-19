@@ -3395,6 +3395,7 @@ class leyController extends Controller
       ->where('ef_dos', '=', $ejercicio)
       ->where('ef_tres', '=', $ejercicio)
       ->where('ef_cuatro', '=', $ejercicio)
+      ->where('id_tab_tipo_ejecutor', '=', 1)        
       ->groupBy('co_sector')
       ->groupBy('tx_descripcion')
       ->orderBy('co_sector','ASC')
