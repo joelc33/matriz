@@ -33,5 +33,6 @@ class VerifyCsrfToken extends BaseVerifier
         'ac/ae/partida/desagregado/storeLista',
         'proyecto/ae/partida/desagregado',
         'proyecto/ae/partida/desagregado/lista',
+        'ac/cerrar',
     ];
 }

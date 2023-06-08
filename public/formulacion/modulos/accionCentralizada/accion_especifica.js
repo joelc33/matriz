@@ -1209,7 +1209,8 @@
                     Ext.Ajax.request({
                         method: 'POST',
                         //url: 'formulacion/modulos/accionCentralizada/funcion.php',
-                        url: 'formulacion/modulos/accionCentralizada/orm.php/cerrar/ac',
+                        //url: 'formulacion/modulos/accionCentralizada/orm.php/cerrar/ac',
+                        url: 'ac/cerrar',
                         params: {
                             op: 11,
                             id_accion_centralizada: self.ac.id

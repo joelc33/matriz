@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class tab_meta_financiera extends Model
 {
-  //Nombre de la conexion que utitlizara este modelo
-	protected $connection= 'local';
+    //Nombre de la conexion que utitlizara este modelo
+    protected $connection= 'local';
 
-	//Todos los modelos deben extender la clase Eloquent
-	protected $table = 't70_metas_ac_detalle';
+    //Todos los modelos deben extender la clase Eloquent
+    protected $table = 't70_metas_ac_detalle';
 
-	protected $primaryKey = 'co_metas_detalle';
+    protected $primaryKey = 'co_metas_detalle';
 
-	public $incrementing = true;
+    public $incrementing = true;
 
-	/**
-	 * The name of the "created at" column.
-	 */
-	const CREATED_AT = 'fecha_creacion';
+    /**
+     * The name of the "created at" column.
+     */
+    public const CREATED_AT = 'fecha_creacion';
 
-	/**
-	 * The name of the "updated at" column.
-	 */
-	const UPDATED_AT = 'fecha_actualizacion';
+    /**
+     * The name of the "updated at" column.
+     */
+    public const UPDATED_AT = 'fecha_actualizacion';
 }
