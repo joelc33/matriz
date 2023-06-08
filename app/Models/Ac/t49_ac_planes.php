@@ -15,12 +15,12 @@ class t49_ac_planes extends Model
     /**
      * The name of the "created at" column.
      */
-    const CREATED_AT = 'fecha_creacion';
+    public const CREATED_AT = 'fecha_creacion';
 
     /**
      * The name of the "updated at" column.
      */
-    const UPDATED_AT = 'fecha_actualizacion';
+    public const UPDATED_AT = 'fecha_actualizacion';
 
     public $incrementing = false;
 }

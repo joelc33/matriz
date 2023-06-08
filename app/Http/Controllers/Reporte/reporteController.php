@@ -1,6 +1,7 @@
 <?php
 
 namespace matriz\Http\Controllers\Reporte;
+
 //*******agregar esta linea******//
 use View;
 use Validator;
@@ -16,19 +17,19 @@ use matriz\Http\Controllers\Controller;
 
 class reporteController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware('auth');
-  }
-  /**
-  * Display a listing of the resource.
-  *
-  * @return Response
-  */
-  public function lista()
-  {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    /**
+    * Display a listing of the resource.
+    *
+    * @return Response
+    */
+    public function lista()
+    {
 
-    $iconos = "{ title: 'Libros ".Session::get('ejercicio')."', opciones: [
+        $iconos = "{ title: 'Libros ".Session::get('ejercicio')."', opciones: [
         {
           id: 'libro_ley',
           text: 'Ley de Presupuesto.',
@@ -49,6 +50,6 @@ class reporteController extends Controller
         },
       ]}";
 
-    return View::make('reporte.libro.lista')->with('iconos',$iconos);
-  }
+        return View::make('reporte.libro.lista')->with('iconos', $iconos);
+    }
 }
