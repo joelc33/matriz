@@ -926,7 +926,8 @@ public function ubicacionTodo()
       t009.de_inicial,
       sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo,
       t24a.id_tab_ambito_ejecutor as ambito,
-      tae24a.de_ambito_ejecutor
+      tae24a.de_ambito_ejecutor,
+      tpzulia.tx_descripcion as area_estrategica
       FROM tab_ac_es_partida_desagregado AS t01
       INNER JOIN t46_acciones_centralizadas AS t46 ON t46.id = t01.td_tab_ac 
       INNER JOIN mantenimiento.tab_sectores AS tss ON tss.id = t46.id_subsector 
@@ -937,6 +938,8 @@ public function ubicacionTodo()
       INNER JOIN mantenimiento.tab_ejecutores as t24a on t24a.id_ejecutor = t47.id_ejecutor
       INNER JOIN mantenimiento.tab_tipo_ejecutor as t009 on t24a.id_tab_tipo_ejecutor = t009.id
       LEFT JOIN mantenimiento.tab_ambito_ejecutor as tae24a on t24a.id_tab_ambito_ejecutor = tae24a.id
+      LEFT JOIN t49_ac_planes as t49 on t46.id = t49.id_accion_centralizada
+      LEFT JOIN mantenimiento.tab_planes_zulia as tpzulia on tpzulia.nu_nivel = 0 AND tpzulia.co_area_estrategica = t49.co_area_estrategica
       WHERE 
       t01.id_tab_ejercicio_fiscal::text = :anio
       ORDER BY 1, 6, 7, 8 ASC;",
@@ -967,8 +970,9 @@ public function ubicacionTodo()
             $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(40);
             $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(20);
             $objPHPExcel->getActiveSheet()->setTitle('ac_ae_'.Session::get('ejercicio').'_desagregado');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('A1:S1')->applyFromArray(
                 array(
                         'font'    => array(
                             'bold'      => true
@@ -993,7 +997,7 @@ public function ubicacionTodo()
                         )
                     )
             );
-            $objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('S1')->applyFromArray(
                 array(
                         'alignment' => array(
                             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -1006,7 +1010,7 @@ public function ubicacionTodo()
                     )
             );
 
-            $objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('S1')->applyFromArray(
                 array(
                         'alignment' => array(
                             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -1014,7 +1018,7 @@ public function ubicacionTodo()
                     )
             );
 
-            $objPHPExcel->getActiveSheet()->getStyle('R1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('S1')->applyFromArray(
                 array(
                         'borders' => array(
                             'right'     => array(
@@ -1046,7 +1050,8 @@ public function ubicacionTodo()
       ->setCellValue('O1', 'Tipo Ejecutor')
       ->setCellValue('P1', 'Fondo')
       ->setCellValue('Q1', 'Ambito')
-      ->setCellValue('R1', 'Aplicacion');
+      ->setCellValue('R1', 'Aplicacion')
+      ->setCellValue('S1', 'Area Estrategica');
 
             foreach ($consulta as $key => $value) {
                 // Set thin black border outline around column
@@ -1058,7 +1063,7 @@ public function ubicacionTodo()
                     ),
                   ),
                 );
-                $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray($styleThinBlackBorderOutline);
+                $objPHPExcel->getActiveSheet()->getStyle('A1:S1')->applyFromArray($styleThinBlackBorderOutline);
                 // Set cell An to the "name" column from the database (assuming you have a column called name)
                 //    where n is the Excel row number (ie cell A1 in the first row)
 
@@ -1082,6 +1087,7 @@ public function ubicacionTodo()
                 $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
                 $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $ambito, PHPExcel_Cell_DataType::TYPE_STRING);
                 $objPHPExcel->getActiveSheet()->SetCellValue('R'.$rowCount, $value->aplicacion, PHPExcel_Cell_DataType::TYPE_STRING);
+                $objPHPExcel->getActiveSheet()->SetCellValue('S'.$rowCount, $value->area_estrategica, PHPExcel_Cell_DataType::TYPE_STRING);
 
                 // Increment the Excel row counter
                 $rowCount++;
@@ -1093,7 +1099,7 @@ public function ubicacionTodo()
             $objPHPExcel->getActiveSheet()->getStyle('R1:R'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             // Make bold cells
-            $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:S1')->getFont()->setBold(true);
 
             // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
             $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
