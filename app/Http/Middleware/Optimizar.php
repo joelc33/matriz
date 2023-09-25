@@ -13,12 +13,11 @@ class Optimizar
      * @param  \Closure  $next
      * @return mixed
      */
-     public function handle($request, Closure $next)
-     {
+    public function handle($request, Closure $next)
+    {
         $response = $next($request);
         $buffer = $response->getContent();
-        if(strpos($buffer,'<pre>') !== false)
-        {
+        if(strpos($buffer, '<pre>') !== false) {
             $replace = array(
                 '/<!--[^\[](.*?)[^\]]-->/s' => '',
                 "/<\?php/"                  => '<?php ',
@@ -27,9 +26,7 @@ class Optimizar
                 "/>\s+\n</"                 => '><',
                 "/>\n\s+</"                 => '><',
             );
-        }
-        else
-        {
+        } else {
             $replace = array(
                 '/<!--[^\[](.*?)[^\]]-->/s' => '',
                 "/<\?php/"                  => '<?php ',
@@ -44,5 +41,5 @@ class Optimizar
         $response->setContent($buffer);
         ini_set('zlib.output_compression', 'On'); // If you like to enable GZip, too!
         return $response;
-     }
+    }
 }

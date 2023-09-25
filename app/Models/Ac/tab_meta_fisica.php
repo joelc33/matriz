@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class tab_meta_fisica extends Model
 {
-  //Nombre de la conexion que utitlizara este modelo
-	protected $connection= 'local';
+    //Nombre de la conexion que utitlizara este modelo
+    protected $connection= 'local';
 
-	//Todos los modelos deben extender la clase Eloquent
-	protected $table = 't69_metas_ac';
+    //Todos los modelos deben extender la clase Eloquent
+    protected $table = 't69_metas_ac';
 
-	protected $primaryKey = 'co_metas';
+    protected $primaryKey = 'co_metas';
 
-	public $incrementing = true;
+    public $incrementing = true;
 
-	/**
-	 * The name of the "created at" column.
-	 */
-	const CREATED_AT = 'fecha_creacion';
+    /**
+     * The name of the "created at" column.
+     */
+    public const CREATED_AT = 'fecha_creacion';
 
-	/**
-	 * The name of the "updated at" column.
-	 */
-	const UPDATED_AT = 'fecha_actualizacion';
+    /**
+     * The name of the "updated at" column.
+     */
+    public const UPDATED_AT = 'fecha_actualizacion';
 }

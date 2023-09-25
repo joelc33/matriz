@@ -1,6 +1,7 @@
 <?php
 
 namespace matriz\Http\Controllers\Panel;
+
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_unidad_medida;
 use matriz\Models\Autenticacion\tab_menu;
@@ -31,8 +32,8 @@ class panelController extends Controller
     */
     public function __construct()
     {
-      $this->middleware('auth');
-      $this->middleware('optimizar');
+        $this->middleware('auth');
+        $this->middleware('optimizar');
     }
     /**
      * Display a listing of the resource.
@@ -50,12 +51,11 @@ class panelController extends Controller
         ->get();
 
         $arbol = '';
-        foreach($menu as $item){
-          $cantidad = tab_menu::sp_catidad_menu_hijo($item->id_tab_menu, Session::get('rol'));
-          if($cantidad[0]->sp_catidad_menu_hijo > 0)
-          {
+        foreach($menu as $item) {
+            $cantidad = tab_menu::sp_catidad_menu_hijo($item->id_tab_menu, Session::get('rol'));
+            if($cantidad[0]->sp_catidad_menu_hijo > 0) {
 
-                       $arbol.= "{
+                $arbol.= "{
                                  title:'<b>".$item->de_menu."</b>',
                                  autoScroll:true,
                border:false,
@@ -91,7 +91,7 @@ class panelController extends Controller
                   })]
                                 },";
 
-          }
+            }
         }
 
         $ultimo_login = tab_login_acceso::orderBy('created_at', 'desc')
@@ -99,9 +99,16 @@ class panelController extends Controller
         //->take(1)->skip(1)
         ->first();
 
-        $funcionario = tab_usuarios::select( 'inicial', 'nu_cedula', 'nb_funcionario', 'ap_funcionario',
-        't01.created_at as fe_registro',
-        'id_ejecutor' , 'tx_email', 'tx_ejecutor' )
+        $funcionario = tab_usuarios::select(
+            'inicial',
+            'nu_cedula',
+            'nb_funcionario',
+            'ap_funcionario',
+            't01.created_at as fe_registro',
+            'id_ejecutor',
+            'tx_email',
+            'tx_ejecutor'
+        )
         ->Join('mantenimiento.tab_funcionario as t01', 't01.id_tab_usuarios', '=', 'autenticacion.tab_usuarios.id')
         ->Join('mantenimiento.tab_documento as t02', 't02.id', '=', 't01.id_tab_documento')
         ->Join('mantenimiento.tab_ejecutores as t03', 't01.id_tab_ejecutores', '=', 't03.id')
@@ -116,30 +123,30 @@ class panelController extends Controller
         ->with('bandeja', $bandeja)
         ->with('funcionario', $funcionario)
         ->with('ultimo_login', $ultimo_login)
-        ->with('menu',$arbol);
+        ->with('menu', $arbol);
     }
 
-    static public function ArmaSubmenu($co_padre, $co_rol){
+    public static function ArmaSubmenu($co_padre, $co_rol)
+    {
 
-      $menu = tab_menu::select('t04.id','id_tab_menu','de_menu','de_icono','da_url','nu_margen', 'de_detalle')
-      ->join('autenticacion.tab_rol_menu as t04', 'autenticacion.tab_menu.id', '=', 't04.id_tab_menu')
-      ->where('id_padre', '=', $co_padre)
-      ->where('t04.id_tab_rol', '=', $co_rol)
-      ->where('autenticacion.tab_menu.in_estatus', '=', true)
-      ->where('t04.in_estatus', '=', true)
-      ->orderBy('nu_orden', 'ASC')->get();
+        $menu = tab_menu::select('t04.id', 'id_tab_menu', 'de_menu', 'de_icono', 'da_url', 'nu_margen', 'de_detalle')
+        ->join('autenticacion.tab_rol_menu as t04', 'autenticacion.tab_menu.id', '=', 't04.id_tab_menu')
+        ->where('id_padre', '=', $co_padre)
+        ->where('t04.id_tab_rol', '=', $co_rol)
+        ->where('autenticacion.tab_menu.in_estatus', '=', true)
+        ->where('t04.in_estatus', '=', true)
+        ->orderBy('nu_orden', 'ASC')->get();
 
-      $submenu = '';
-      foreach($menu as $items){
-        $cantidad = tab_menu::sp_catidad_menu_privilegio($items->id_tab_menu, $co_rol);
-        if($cantidad[0]->sp_catidad_menu_privilegio > 0)
-        {
-           $submenu.= "{
+        $submenu = '';
+        foreach($menu as $items) {
+            $cantidad = tab_menu::sp_catidad_menu_privilegio($items->id_tab_menu, $co_rol);
+            if($cantidad[0]->sp_catidad_menu_privilegio > 0) {
+                $submenu.= "{
                               text:'".$items->de_menu."',
                               children:[".self::ArmaSubmenu($items->id_tab_menu, $co_rol)."]
                               },";
-        }else{
-          $submenu.= "{
+            } else {
+                $submenu.= "{
             id: '".$items->id_tab_menu."',
             url: '".$items->da_url."',
             tabType:'load',
@@ -149,7 +156,7 @@ class panelController extends Controller
             qtip : '".$items->de_detalle."',
             leaf:true
           },";
-          }
+            }
         }
         return  $submenu;
     }
@@ -162,11 +169,11 @@ class panelController extends Controller
     public function bandeja()
     {
 
-      $bandeja = tab_rol::select('de_bandeja', 'de_url_bandeja', 'de_vista')
-      ->where('id', '=', Session::get('rol'))
-      ->first();
+        $bandeja = tab_rol::select('de_bandeja', 'de_url_bandeja', 'de_vista')
+        ->where('id', '=', Session::get('rol'))
+        ->first();
 
-      return View::make($bandeja->de_vista);
+        return View::make($bandeja->de_vista);
 
     }
 }
