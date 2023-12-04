@@ -1309,7 +1309,9 @@ class leyController extends Controller
                         $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', 'B', 6);
                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', '', 6);
 
 //                        $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
 //                        $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
