@@ -142,7 +142,7 @@ class MYPDF extends TCPDF {
 		$this->Write(0, $campo['tx_ejecutor'], '', 0, 'C', true, 0, false, false, 0);
 		$this->SetY(190);
 		$this->SetFont('','',11);
-		$this->Write(0, 'Maracaibo, '.'Diciembre'/*mes($campo['nu_mes_poa'])*/.' del '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
+		$this->Write(0, 'Maracaibo, '.'Diciembre'/*mes($campo['nu_mes_poa'])*/.' de '.$campo['nu_anio_poa'], '', 0, 'C', true, 0, false, false, 0);
 		$this->AddPage();
 /******Objetivos*********/
 
