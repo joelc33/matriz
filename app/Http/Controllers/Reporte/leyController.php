@@ -1217,7 +1217,9 @@ class leyController extends Controller
                         $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', 'B', 6);
                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', '', 6);                        
 
                         $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
                         $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
@@ -1259,7 +1261,9 @@ class leyController extends Controller
                         $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', 'B', 6);
                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->SetFont('', '', 6);
 
                         $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
                         $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
@@ -1307,13 +1311,13 @@ class leyController extends Controller
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
-                        $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
-                        $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
-                        $total_mf_ant = $total_mf_ant + $total_sexo;
-                        $total_mo_sueldo_ant = $total_mo_sueldo_ant + $value_clasificador_tipo->mo_sueldo;
-                        $total_mo_compensacion_ant = $total_mo_compensacion_ant + $value_clasificador_tipo->mo_compensacion;
-                        $total_mo_primas_ant = $total_mo_primas_ant + $value_clasificador_tipo->mo_primas;
-                        $total_sueldo_todo_ant = $total_sueldo_todo_ant + $total_sueldo;
+//                        $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
+//                        $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
+//                        $total_mf_ant = $total_mf_ant + $total_sexo;
+//                        $total_mo_sueldo_ant = $total_mo_sueldo_ant + $value_clasificador_tipo->mo_sueldo;
+//                        $total_mo_compensacion_ant = $total_mo_compensacion_ant + $value_clasificador_tipo->mo_compensacion;
+//                        $total_mo_primas_ant = $total_mo_primas_ant + $value_clasificador_tipo->mo_primas;
+//                        $total_sueldo_todo_ant = $total_sueldo_todo_ant + $total_sueldo;
 
                     }
 
@@ -1349,13 +1353,13 @@ class leyController extends Controller
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
 
-                        $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
-                        $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
-                        $total_mf = $total_mf + $total_sexo;
-                        $total_mo_sueldo = $total_mo_sueldo + $value_clasificador_tipo->mo_sueldo;
-                        $total_mo_compensacion = $total_mo_compensacion + $value_clasificador_tipo->mo_compensacion;
-                        $total_mo_primas = $total_mo_primas + $value_clasificador_tipo->mo_primas;
-                        $total_sueldo_todo = $total_sueldo_todo + $total_sueldo;
+//                        $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
+//                        $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
+//                        $total_mf = $total_mf + $total_sexo;
+//                        $total_mo_sueldo = $total_mo_sueldo + $value_clasificador_tipo->mo_sueldo;
+//                        $total_mo_compensacion = $total_mo_compensacion + $value_clasificador_tipo->mo_compensacion;
+//                        $total_mo_primas = $total_mo_primas + $value_clasificador_tipo->mo_primas;
+//                        $total_sueldo_todo = $total_sueldo_todo + $total_sueldo;
 
                     }
 
@@ -1375,7 +1379,7 @@ class leyController extends Controller
 
         }
 
-        $pdf->SetFont('', 'B', 8);
+        $pdf->SetFont('', 'B', 6);
         $pdf->setCellHeightRatio(1.5);
         $pdf->SetY(262);
         $pdf->MultiCell(20, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
@@ -1451,7 +1455,11 @@ class leyController extends Controller
             $pdf->MultiCell(20, 20, chr(10).chr(10).'GRUPO', 1, 'C', 0, 0, '', '', true);
             $pdf->SetFont('', 'B', 9);
             $pdf->setFontSpacing('0.254');
-            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);
+            if($value_escala_salarial_grupo->de_tipo_empleado=='OBREROS'){
+            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SALARIOS', 1, 'C', 0, 0, '', '', true);
+            }else{
+            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);    
+            }
             $pdf->setFontSpacing('0');
             $pdf->SetFont('', 'B', 8);
             $pdf->MultiCell(88, 5, 'ESTIMADO PARA '.$ejercicio, 1, 'C', 0, 0, '', '', true);
@@ -2120,7 +2128,9 @@ class leyController extends Controller
                                         $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                                        $pdf->SetFont('', 'B', 6);
                                         $pdf->MultiCell(20, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                                        $pdf->SetFont('', '', 6);
 
                                         $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
                                         $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
@@ -2336,7 +2346,11 @@ class leyController extends Controller
                             $pdf->setCellHeightRatio(2);
                             $pdf->SetFont('', 'B', 10);
                             $pdf->setCellHeightRatio(1);
-                            $pdf->MultiCell(90, 5, 'RECURSOS HUMANOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA '.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);
+                            if($value_escala_salarial_grupo->de_tipo_empleado=='OBREROS'){
+                            $pdf->MultiCell(90, 5, 'RECURSOS HUMANOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA '.chr(10).'POR ESCALA DE SALARIOS', 0, 'C', 0, 0, '', '', true);
+                            }else{
+                            $pdf->MultiCell(90, 5, 'RECURSOS HUMANOS DEL PROYECTO Y/O ACCIÓN CENTRALIZADA '.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);  
+                            }                            
                             $pdf->setCellHeightRatio(2);
                             $pdf->ln(8);
                             $pdf->SetFont('', 'B', 8);
@@ -2368,7 +2382,11 @@ class leyController extends Controller
                             $pdf->MultiCell(20, 20, chr(10).chr(10).'GRUPO', 1, 'C', 0, 0, '', '', true);
                             $pdf->SetFont('', 'B', 9);
                             $pdf->setFontSpacing('0.254');
-                            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);
+                            if($value_escala_salarial_grupo->de_tipo_empleado=='OBREROS'){
+                            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SALARIOS', 1, 'C', 0, 0, '', '', true);
+                            }else{
+                            $pdf->MultiCell(88, 20, chr(10).chr(10).'ESCALA DE SUELDOS', 1, 'C', 0, 0, '', '', true);    
+                            }                            
                             $pdf->setFontSpacing('0');
                             $pdf->SetFont('', 'B', 8);
                             $pdf->MultiCell(88, 5, 'ESTIMADO PARA '.$ejercicio, 1, 'C', 0, 0, '', '', true);
