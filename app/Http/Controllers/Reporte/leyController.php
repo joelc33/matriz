@@ -1432,7 +1432,11 @@ class leyController extends Controller
             $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
             $pdf->setCellHeightRatio(1.2);
             $pdf->SetFont('', 'B', 9);
-            $pdf->MultiCell(95, 5, 'RESUMEN DE LOS RECURSOS HUMANOS DE LA ENTIDAD FEDERAL'.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);
+            if($value_escala_salarial_grupo->de_tipo_empleado=='OBREROS'){
+            $pdf->MultiCell(95, 5, 'RESUMEN DE LOS RECURSOS HUMANOS DE LA ENTIDAD FEDERAL'.chr(10).'POR ESCALA DE SALARIOS', 0, 'C', 0, 0, '', '', true);
+            }else{
+            $pdf->MultiCell(95, 5, 'RESUMEN DE LOS RECURSOS HUMANOS DE LA ENTIDAD FEDERAL'.chr(10).'POR ESCALA DE SUELDOS', 0, 'C', 0, 0, '', '', true);    
+            }
             $pdf->setCellHeightRatio(2);
             $pdf->ln(8);
             $pdf->SetFont('', 'B', 8);
