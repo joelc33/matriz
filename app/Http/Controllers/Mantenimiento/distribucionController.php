@@ -67,7 +67,7 @@ class distribucionController extends Controller
                 'de_municipio'
             )
              ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-             ->where('in_activo', '=', true);
+             ->where('mantenimiento.tab_distribucion_municipio.in_activo', '=', true);
 
             if (Input::get("BuscarBy")=="true") {
 
