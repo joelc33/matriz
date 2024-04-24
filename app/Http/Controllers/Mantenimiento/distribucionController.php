@@ -66,7 +66,8 @@ class distribucionController extends Controller
                 'mo_total',
                 'de_municipio'
             )
-             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'));
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+             ->where('in_activo', '=', true);
 
             if (Input::get("BuscarBy")=="true") {
 
@@ -248,5 +249,49 @@ class distribucionController extends Controller
             }
         }
     }
+    
+            public function eliminar()
+        {
+            DB::beginTransaction();
+            try {
+                $tabla = tab_distribucion_municipio::find(Input::get("id"));
+                $tabla->in_activo = 'FALSE';
+                $tabla->save();
+                DB::commit();
+
+                $response['success']  = 'true';
+                $response['msg']  = 'Registro Deshabilitado con Exito!';
+                return Response::json($response, 200);
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+
+                $response['success']  = 'false';
+                $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+                return Response::json($response, 200);
+            }
+        }
+        
+        public function habilitar()
+        {
+            DB::beginTransaction();
+            try {
+                $tabla = tab_distribucion_municipio::find(Input::get("id"));
+                $tabla->in_activo = 'TRUE';
+                $tabla->save();
+                DB::commit();
+
+                $response['success']  = 'true';
+                $response['msg']  = 'Registro Habilitado con Exito!';
+                return Response::json($response, 200);
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+
+                $response['success']  = 'false';
+                $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+                return Response::json($response, 200);
+            }
+        }        
 
 }
