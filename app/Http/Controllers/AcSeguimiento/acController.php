@@ -217,6 +217,7 @@ class acController extends Controller
             ->where('id', '=', Input::get('ejercicio'))
             ->first();
 
+    
             $tab_ac = ac::join('mantenimiento.tab_ejecutores as t01', 'public.t46_acciones_centralizadas.id_ejecutor', '=', 't01.id_ejecutor')
             ->join('mantenimiento.tab_ac_predefinida as t03', 'public.t46_acciones_centralizadas.id_accion', '=', 't03.id')
             ->select(
@@ -285,6 +286,9 @@ class acController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
+                
+                
+                
                 $tabla = new tab_ac();
                 $tabla->nu_codigo = $tab_ac->codigo;
                 $tabla->id_ejecutor = $tab_ac->id_ejecutor;
@@ -358,6 +362,8 @@ class acController extends Controller
 
                     foreach ($ac_ae_partida as $arreglo_ac_ae_partida) {
 
+                        
+                        
                         $tabla_ac_ae_partida= new tab_ac_ae_partida();
                         $tabla_ac_ae_partida->id_tab_ac_ae = $tabla_ac_ae->id;
                         $tabla_ac_ae_partida->co_partida = $arreglo_ac_ae_partida->co_partida;
@@ -390,6 +396,8 @@ class acController extends Controller
                     ->where('edo_reg', '=', true)
                     ->orderby('codigo', 'ASC')
                     ->get();
+                    
+//                    var_dump($ac_ae_mf);
 
                     foreach ($ac_ae_mf as $arreglo_ac_ae_mf) {
 
