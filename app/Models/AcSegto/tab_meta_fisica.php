@@ -19,9 +19,9 @@ class tab_meta_fisica extends Model
 
     public static $validarEditar = array(
         "meta_modificada" => "required|numeric",
-        "meta_actualizada" => "required|numeric",
+//        "meta_actualizada" => "required|numeric",
         "obtenido" => "required|numeric",
-        "corte" => "required|numeric",
+//        "corte" => "required|numeric",
         "responsable" => "required",
         "municipio" => "required|numeric",
         "parroquia" => "required|numeric"

@@ -1,22 +1,14 @@
 <script type="text/javascript">
-Ext.ns("forma002Lista");
-function change(val){
-	if(val==true){
-	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
+Ext.ns("forma002ListaCambio");
+function changeEstatus( in_002, de_estatus){
+	if(in_002==true){
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> '+de_estatus+'</span>'+'</div></tpl>';
 	}else{
-	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> '+de_estatus+'</span>'+'</div></tpl>';
 	}
 return val;
 };
-function movimiento(val){
-	if(val==true){
-	    return '<span style="color:green;">Si</span>';
-	}else if(val==false){
-	    return '<span style="color:red;">No</span>';
-	}
-return val;
-};
-forma002Lista.main = {
+forma002ListaCambio.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -32,7 +24,7 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
 				url: '{{ URL::to('reporte/ac/seguimiento/ficha/002') }}/'+this.codigo
 			});
@@ -69,10 +61,10 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		forma002Lista.main.store_lista.baseParams={};
-		forma002Lista.main.store_lista.baseParams.paginar = 'si';
-		forma002Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		forma002Lista.main.store_lista.load();
+		forma002ListaCambio.main.store_lista.baseParams={};
+		forma002ListaCambio.main.store_lista.baseParams.paginar = 'si';
+		forma002ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		forma002ListaCambio.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -84,12 +76,12 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			forma002Lista.main.store_lista.baseParams={}
-			forma002Lista.main.store_lista.baseParams.BuscarBy = true;
-			forma002Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			forma002Lista.main.store_lista.baseParams[this.paramName] = v;
-			forma002Lista.main.store_lista.baseParams.paginar = 'si';
-			forma002Lista.main.store_lista.load();
+			forma002ListaCambio.main.store_lista.baseParams={}
+			forma002ListaCambio.main.store_lista.baseParams.BuscarBy = true;
+			forma002ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			forma002ListaCambio.main.store_lista.baseParams[this.paramName] = v;
+			forma002ListaCambio.main.store_lista.baseParams.paginar = 'si';
+			forma002ListaCambio.main.store_lista.load();
 		}
 	}
 });
@@ -103,7 +95,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.ficha', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.ficha,'-',
 			@endif
 				this.buscador
@@ -111,17 +103,17 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'periodo'},
-    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
-		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
-    {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
-    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_002'},
+		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
+    {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true,renderer: textoLargo, dataIndex: 'ejecutor'},
+		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
+    {header: 'Fecha', width:140,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, dataIndex: 'estatus'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma002Lista.main.ficha.enable();
+			forma002ListaCambio.main.ficha.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -137,7 +129,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				rowselect: function(sm, row, rec) {
 					var msg = Ext.get('detalle');
 					msg.load({
-									url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
+									url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
 									scripts: true,
 									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
 									text: 'Cargando...'
@@ -154,11 +146,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 /*Evento Doble Click*/
 this.gridPanel_.on('rowdblclick', function( grid, row, evt){
 	panel_detalle.toggleCollapse(true);
-	this.record = forma002Lista.main.store_lista.getAt(row);
+	this.record = forma002ListaCambio.main.store_lista.getAt(row);
 	this.codigo = this.record.data["id"];
 	this.msg = Ext.get('detalle');
 	this.msg.load({
-	    url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
+	    url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
 	    scripts: true,
 	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
 	    text: "Cargando..."
@@ -174,14 +166,14 @@ this.panel = new Ext.Panel({
 	]
 });
 
-this.panel.render("contenedorforma002Lista");
+this.panel.render("contenedorforma002ListaCambio");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma002Lista.main.ficha.disable();
+forma002ListaCambio.main.ficha.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -189,7 +181,7 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-	    url:'{{ URL::to('ac/seguimiento/002/storeLista') }}',
+	    url:'{{ URL::to('seguimiento/ac/002/cambio/storeLista') }}',
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
@@ -197,8 +189,9 @@ getLista: function(){
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
-                                {name: 'in_002'},
 		    {name: 'de_ac'},
+				{name: 'in_002'},
+				{name: 'fe_solicitud'},
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {
@@ -210,13 +203,19 @@ getLista: function(){
 						convert: function(v, r) {
 								return r.fe_inicio + ' - ' + r.fe_fin;
 						}
+				},
+				{
+						name: 'estatus',
+						convert: function(v, r) {
+								return changeEstatus( r.in_002, r.de_estatus);
+						}
 				}
 	    ]
     });
     return this.store;
 }
 };
-Ext.onReady(forma002Lista.main.init, forma002Lista.main);
+Ext.onReady(forma002ListaCambio.main.init, forma002ListaCambio.main);
 </script>
-<div id="contenedorforma002Lista"></div>
+<div id="contenedorforma002ListaCambio"></div>
 <div id="formularioacseguimiento"></div>

@@ -91,7 +91,7 @@ class acseguimientoController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-      public function ficha($id)
+      public function ficha001($id)
       {
 
           
@@ -190,5 +190,106 @@ class acseguimientoController extends Controller
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
       }
+      
+      
+      public function ficha002($id)
+      {
+
+          
+
+            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->join('t46_acciones_centralizadas as t46', function ($join) {
+            $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
+            ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
+            })                
+            ->join('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
+            ->join('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            ->select(
+            'nu_codigo',
+            'id_tab_ejecutores',
+            'id_tab_ejercicio_fiscal',
+            'tx_ejecutor',
+            't45.tx_descripcion as tx_area_estrategica',        
+            'id_tab_ac_predefinida',
+            'id_tab_sectores',
+            'id_tab_estatus',
+            'id_tab_situacion_presupuestaria',
+            'id_tab_tipo_registro',
+            'co_new_etapa',
+            'de_ac',
+            'mo_ac',
+            'mo_calculado',
+            'fe_inicio',
+            'fe_fin',
+            'ac_seguimiento.tab_ac.inst_mision',
+            'ac_seguimiento.tab_ac.inst_vision',
+            'ac_seguimiento.tab_ac.inst_objetivos',
+            'ac_seguimiento.tab_ac.nu_po_beneficiar',
+            'ac_seguimiento.tab_ac.nu_em_previsto',
+            'ac_seguimiento.tab_ac.tx_re_esperado',
+            'id_tab_lapso',
+            'in_bloquear_001',
+            'de_observacion_001'
+        )
+        ->where('ac_seguimiento.tab_ac.id', '=', $id)
+        ->first();
+          
+//          var_dump($data->nu_codigo);
+//          exit();
+          
+          /******Objetivos*********/
+
+	$htmlObjetivo = '
+<table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
+	<tr align="left">
+		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor.'</td>
+	</tr>
+	<tr align="left">
+		<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$data->tx_area_estrategica.'</td>
+	</tr>
+	<tr>
+		<td><b>MISIÓN</b></td>
+		<td><b>VISIÓN</b></td>
+	</tr>
+	<tr>
+		<td height="100" align="justify">'.$data->inst_mision.'</td>
+		<td height="100" align="justify">'.$data->inst_vision.'</td>
+	</tr>
+<thead>
+	<tr>
+		<td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
+	</tr>
+</thead>
+<tbody>
+	<tr nobr="true">
+		<td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$data->inst_objetivos).'</td>
+	</tr>
+</tbody>
+</table>';
+
+        
+
+        
+
+          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
+          $pdf->SetCreator('Sistema POA, Yoser Perez');
+          $pdf->SetAuthor('Yoser Perez');
+          $pdf->SetTitle('Seguimiento AC');
+          $pdf->SetSubject('Seguimiento AC');
+          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+          $pdf->SetMargins(10,10,10);
+          $pdf->SetTopMargin(50);
+          $pdf->SetPrintHeader(true);
+          $pdf->SetPrintFooter(true);
+          // set auto page breaks
+          $pdf->SetAutoPageBreak(true, 10);
+          $pdf->AddPage();
+          $pdf->SetFont('','',11);
+//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
+          $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
+          $pdf->lastPage();
+          $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
+      }      
 
 }

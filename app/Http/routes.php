@@ -154,7 +154,8 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('poa/ac/ubicacion/todo', 'acController@ubicacionTodo');
         Route::get('poa/ac/ubicacion/exportar', 'acController@ubicacionExportar');
         Route::get('poa/ac/ubicacion/todo/exportar', 'acController@ubicacionTodoExportar');
-        Route::get('ac/seguimiento/ficha/{id}', 'acseguimientoController@ficha');
+        Route::get('ac/seguimiento/ficha/001/{id}', 'acseguimientoController@ficha001');
+        Route::get('ac/seguimiento/ficha/002/{id}', 'acseguimientoController@ficha002');
         Route::get('ac/seguimiento', 'acseguimientoController@reporte');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');
         Route::get('poa/proyecto/todo', 'proyectoController@poaTodo');
@@ -497,7 +498,16 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::get('actividad/editar/{id}', 'formadosController@editarActividad');
         Route::post('actividad/guardar/{id}', 'formadosController@guardar');
         Route::post('actividad/enviar/{id}', 'formadosController@enviar');
-    });
+    });    
+    //*Modulo de Accion Centralizada Forma 002*/
+    Route::group(['prefix' => 'seguimiento/ac/002/cambio'], function () {
+        Route::get('lista', 'formadosController@listaCambio');
+        Route::post('storeLista', 'formadosController@storeListaCambio');
+        Route::post('detalle', 'formadosController@detalleCambio');
+        Route::get('editar/{id}', 'formadosController@datosCambio');
+        Route::post('aprobar/{id}', 'formadosController@aprobar');
+        Route::post('negar/{id}', 'formadosController@negar');
+    });    
     //*Modulo de Accion Centralizada Forma 003*/
     Route::group(['prefix' => 'ac/seguimiento/003'], function () {
         Route::get('lista', 'formatresController@lista');

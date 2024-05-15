@@ -12,6 +12,10 @@ this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+this.id_tab_meta_fisica = new Ext.form.Hidden({
+	name:'id_tab_meta_fisica',
+	value:this.OBJ.id_tab_meta_fisica
+});
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -207,28 +211,32 @@ this.fieldset2 = new Ext.form.FieldSet({
 });
 
 this.guardar = new Ext.Button({
-    text:'Guardar',
-    iconCls: 'icon-guardar',
+    text:'Aprobar',
+    iconCls: 'icon-fin',
     handler:function(){
 
         if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea aprobar los cambios solicitados?<br><b>Nota:</b> No se podran modificar los cambios.', function(boton){
+				if(boton=="yes"){
+
         forma002ActividadEditar.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}',
-	@else
-		url:'{{ URL::to('ac/seguimiento/002/actividad/guardar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/002/cambio/aprobar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/002/cambio/aprobar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
             failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
                 Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
@@ -239,22 +247,24 @@ this.guardar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadLista.main.store_lista.load();
+                 forma002ListaCambio.main.store_lista.load();
                  forma002ActividadEditar.main.winformPanel_.close();
              }
         });
 
+			}
+			});
 
     }
 });
 
-this.enviar = new Ext.Button({
-    text:'Enviar Cambios',
-    iconCls: 'icon-report',
+this.negar = new Ext.Button({
+    text:'Negar',
+    iconCls: 'icon-cancelar',
     handler:function(){
 
         if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
@@ -262,23 +272,23 @@ this.enviar = new Ext.Button({
             return false;
         }
 
-				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea solicitar los cambios?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea negar los cambios solicitados?<br><b>Nota:</b> El Ejecutor tendra que solicitar de nuevo los cambios.', function(boton){
 				if(boton=="yes"){
 
         forma002ActividadEditar.main.formPanel_.getForm().submit({
-		method:'POST',
-	@if(empty($data->id))
-		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}',
-	@else
-		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}/{!! $data->id !!}',
-	@endif
-		waitMsg: 'Enviando datos, por favor espere..',
-		waitTitle:'Enviando',
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/002/cambio/negar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/002/cambio/negar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
             failure: function(form, action) {
-		var errores = '';
-		for(datos in action.result.msg){
-			errores += action.result.msg[datos] + '<br>';
-		}
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
                 Ext.MessageBox.alert('Error en transacción', errores);
             },
             success: function(form, action) {
@@ -289,11 +299,11 @@ this.enviar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+			 								 	 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadLista.main.store_lista.load();
+                 forma002ListaCambio.main.store_lista.load();
                  forma002ActividadEditar.main.winformPanel_.close();
              }
         });
@@ -322,6 +332,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+                this.id_tab_meta_fisica,
 		this.fieldset1,
 		this.fieldset2
 	]
@@ -339,9 +350,14 @@ width:814,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.guardar', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_bloquear_002==false)
-					this.enviar,'-',
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.cambio.aprobar', 'in_habilitado' => true), Session::get('credencial') ))
+				@if($data->in_002==false)
+					this.guardar,'-',
+				@endif
+			@endif
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.cambio.negar', 'in_habilitado' => true), Session::get('credencial') ))
+				@if($data->in_002==false)
+					this.negar,'-',
 				@endif
 			@endif
         this.salir
@@ -349,7 +365,7 @@ width:814,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma002ActividadLista.main.mascara.hide();
+forma002ListaCambio.main.mascara.hide();
 },
 getStoreCO_MUNICIPIO:function(){
     this.store = new Ext.data.JsonStore({
