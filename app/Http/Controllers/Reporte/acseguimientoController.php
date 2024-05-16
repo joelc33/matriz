@@ -195,42 +195,110 @@ class acseguimientoController extends Controller
       public function ficha002($id)
       {
 
-          
+//          		$sql = "select 'AC' || t24.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac, t52.nombre, tx_ejecutor, t46.fecha_inicio, t46.fecha_fin, t46.monto,
+//	coalesce(t46.monto_calc, 0) as monto_calc, '2' as co_tipo, t46.id_ejecutor, t18b.tx_codigo as tx_sector, t46.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica,
+//        t20.tx_descripcion as tx_objetivo_historico, t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general,
+//        t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac,
+//        objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t45c.tx_descripcion as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
+//        tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac,
+//		inst_mision, inst_vision, inst_objetivos, tx_pr_objetivo, tx_re_esperado, nu_po_beneficiar, nu_em_previsto, EXTRACT(month FROM t46.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t46.fecha_actualizacion::DATE) as nu_anio_poa
+//		from t46_acciones_centralizadas as t46
+//		join t52_ac_predefinidas as t52 on t52.id = t46.id_accion
+//		join mantenimiento.tab_ejecutores as t24 on t24.id_ejecutor = t46.id_ejecutor
+//		inner join mantenimiento.tab_sectores as t18a on t46.id_subsector=t18a.id
+//		inner join mantenimiento.tab_sectores as t18b on t18a.co_sector = t18b.co_sector and t18b.nu_nivel = 1
+//		left join t49_ac_planes as t49 on t46.id=t49.id_accion_centralizada
+//		left join t20_planes as t20 on t49.co_objetivo_historico=t20.co_objetivo_historico and t20.nu_nivel = 1
+//		left join t20_planes as t20a on t49.co_objetivo_nacional=t20a.co_objetivo_nacional and t49.co_objetivo_historico=t20a.co_objetivo_historico and t20a.nu_nivel = 2
+//		left join t20_planes as t20b on t49.co_objetivo_estrategico=t20b.co_objetivo_estrategico and t49.co_objetivo_historico=t20b.co_objetivo_historico and t49.co_objetivo_nacional=t20b.co_objetivo_nacional and t20b.nu_nivel = 3
+//		left join t20_planes as t20c on t49.co_objetivo_general=t20c.co_objetivo_general and t49.co_objetivo_estrategico=t20c.co_objetivo_estrategico and t49.co_objetivo_historico=t20c.co_objetivo_historico and t49.co_objetivo_nacional=t20c.co_objetivo_nacional and t20c.nu_nivel = 4 and t20c.edo_reg is true
+//		left join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
+//		left join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
+//		left join vista_cn_actividad_ac as v1 on v1.id_accion_centralizada=t47.id_accion_centralizada and v1.co_ac_acc_espec=t47.id_accion
+//		left join t45_planes_zulia as t45 on t49.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
+//		left join t45_planes_zulia as t45a on t49.co_area_estrategica=t45a.co_area_estrategica and t49.co_ambito_estado=t45a.co_ambito_zulia and t45a.nu_nivel = 1
+//		left join t45_planes_zulia as t45b on t49.co_ambito_estado=t45b.co_ambito_zulia and t49.co_macroproblema=t45b.co_macroproblema and t45b.nu_nivel = 3 and t45b.edo_reg = true
+//                left join t45_planes_zulia as t45c on t49.co_ambito_estado=t45c.co_ambito_zulia and t49.co_nodos::integer=t45c.co_nodo and t45c.nu_nivel = 4 and t45c.edo_reg = true
+//	where t46.edo_reg is true and ".$condicionAC." t47.edo_reg is true AND t46.id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by 9, 8, 1, 17 ASC";
 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
             ->join('t46_acciones_centralizadas as t46', function ($join) {
             $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
-            })                
-            ->join('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
-            ->join('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            })
+            ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')
+            ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
+            ->leftjoin('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
+            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't47.id_accion')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
+            ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
+            ->on('t45b.edo_reg', '=', DB::raw('true'))        
+            ->on('t45b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
+            ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')       
+            ->on('t45c.edo_reg', '=', DB::raw('true'))        
+            ->on('t45c.nu_nivel', '=', DB::raw('4'));
+            })            
+            ->join('mantenimiento.tab_sectores as t18a', 't46.id_subsector', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t20_planes as t20', function ($join) {
+            $join->on('t49.co_objetivo_historico', '=', 't20.co_objetivo_historico')
+            ->on('t20.nu_nivel', '=', DB::raw('1'));
+            }) 
+            ->leftjoin('t20_planes as t20a', function ($join) {
+            $join->on('t49.co_objetivo_nacional', '=', 't20a.co_objetivo_nacional')
+            ->on('t49.co_objetivo_historico', '=', 't20a.co_objetivo_historico')        
+            ->on('t20a.nu_nivel', '=', DB::raw('2'));
+            })
+            ->leftjoin('t20_planes as t20b', function ($join) {
+            $join->on('t49.co_objetivo_estrategico', '=', 't20b.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20b.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20b.co_objetivo_nacional')        
+            ->on('t20b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t20_planes as t20c', function ($join) {
+            $join->on('t49.co_objetivo_general', '=', 't20c.co_objetivo_general')
+            ->on('t49.co_objetivo_estrategico', '=', 't20c.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20c.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20c.co_objetivo_nacional')
+            ->on('t20c.edo_reg', '=', DB::raw('true'))        
+            ->on('t20c.nu_nivel', '=', DB::raw('4'));
+            })            
             ->select(
-            'nu_codigo',
-            'id_tab_ejecutores',
-            'id_tab_ejercicio_fiscal',
+            't46.id_ejecutor',
             'tx_ejecutor',
-            't45.tx_descripcion as tx_area_estrategica',        
-            'id_tab_ac_predefinida',
-            'id_tab_sectores',
-            'id_tab_estatus',
-            'id_tab_situacion_presupuestaria',
-            'id_tab_tipo_registro',
-            'co_new_etapa',
-            'de_ac',
-            'mo_ac',
-            'mo_calculado',
-            'fe_inicio',
-            'fe_fin',
-            'ac_seguimiento.tab_ac.inst_mision',
-            'ac_seguimiento.tab_ac.inst_vision',
-            'ac_seguimiento.tab_ac.inst_objetivos',
-            'ac_seguimiento.tab_ac.nu_po_beneficiar',
-            'ac_seguimiento.tab_ac.nu_em_previsto',
-            'ac_seguimiento.tab_ac.tx_re_esperado',
-            'id_tab_lapso',
-            'in_bloquear_001',
-            'de_observacion_001'
+            't18b.tx_codigo as tx_sector',
+            't45.tx_descripcion as tx_area_estrategica',
+            't20.tx_descripcion as tx_objetivo_historico',
+            't20a.tx_descripcion as tx_objetivo_nacional',
+            't20b.tx_descripcion as tx_objetivo_estrategico',
+            't20c.tx_descripcion as tx_objetivo_general',
+            't45a.tx_descripcion as tx_ambito_estado', 
+            't45b.tx_descripcion as tx_macroproblema',
+            't45c.tx_descripcion as tx_nodos',
+            'objetivo_institucional as tx_objetivo_institucional',
+            DB::raw("'AC' || t04.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac"),
+            't52.nombre',
+            DB::raw('t53.numero::text as tx_codigo_ae'),
+            't53.nombre as tx_nombre_ae',
+            't47.id_ejecutor as id_ejecutor_ae',
+            'tx_pr_objetivo'
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();
@@ -238,37 +306,71 @@ class acseguimientoController extends Controller
 //          var_dump($data->nu_codigo);
 //          exit();
           
-          /******Objetivos*********/
-
-	$htmlObjetivo = '
-<table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
-	<tr align="left">
-		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor.'</td>
-	</tr>
-	<tr align="left">
-		<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$data->tx_area_estrategica.'</td>
-	</tr>
-	<tr>
-		<td><b>MISIÓN</b></td>
-		<td><b>VISIÓN</b></td>
-	</tr>
-	<tr>
-		<td height="100" align="justify">'.$data->inst_mision.'</td>
-		<td height="100" align="justify">'.$data->inst_vision.'</td>
-	</tr>
-<thead>
-	<tr>
-		<td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
-	</tr>
-</thead>
+$html1 = '
+<table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
-	<tr nobr="true">
-		<td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$data->inst_objetivos).'</td>
-	</tr>
+<tr style="font-size:9px">
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2" style="width: 30%;" align="justify"><b>OBJETIVO HISTORICO:</b> '.$data->tx_objetivo_historico.'</td>
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$data->tx_objetivo_nacional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$data->tx_objetivo_estrategico.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" align="justify"><b>OBJETIVO GENERAL:</b> '.$data->tx_objetivo_general.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> '.$data->tx_ambito_estado.'</td>
+<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$data->tx_macroproblema.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+</tr>
 </tbody>
-</table>';
+</table>
+';
 
-        
+$html23='';
+$html23.= '
+<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+<thead>
+<tr align="center" bgcolor="#BDBDBD">
+<th colspan="11" style="width: 100%;"><b>METAS FISICAS</b></th>
+</tr>
+<tr style="font-size:6px">
+<th align="center" bgcolor="#BDBDBD" style="width: 18%;">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. MED</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PROGRAMADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">MODIFICADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">ACTUALIZADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">INICIO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">TERMINO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">OBTENIDO AL CORTE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNIC / PARROQ</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;">RESPONSABLE</th>
+</tr>
+</thead>
+</table>
+';        
 
         
 
@@ -280,14 +382,29 @@ class acseguimientoController extends Controller
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
           $pdf->SetTopMargin(50);
-          $pdf->SetPrintHeader(true);
+          $pdf->SetPrintHeader(false);
           $pdf->SetPrintFooter(true);
           // set auto page breaks
           $pdf->SetAutoPageBreak(true, 10);
           $pdf->AddPage();
+            $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+        $pdf->setXY(30, 15);
+        $pdf->SetFont('', 'B', 11);
+        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+                $pdf->setXY(30, 20);
+        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+        $pdf->setY(30);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->Ln(5);        
+        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
+        $pdf->Ln(5);
+        $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
+        $pdf->Ln(5);
           $pdf->SetFont('','',11);
 //          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
-          $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
+          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
+          $pdf->Ln(-3);
+          $pdf->writeHTML($html23, true, false, false, false, '');
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
       }      
