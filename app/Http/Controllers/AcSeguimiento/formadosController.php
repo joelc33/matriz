@@ -541,6 +541,7 @@ class formadosController extends Controller
                 't01.id_tab_ejecutores',
                 't02.in_activo',
                 'de_estatus',
+                'id_tab_ac_ae',
                 DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',

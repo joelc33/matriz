@@ -3,10 +3,9 @@
 namespace matriz\Http\Controllers\Reporte;
 
 //*******agregar esta linea******//
-use matriz\Models\AcSegto\tab_meta_financiera;
+use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_forma_001;
 use matriz\Models\AcSegto\tab_ac;
-use matriz\Models\Ac\tab_meta_fisica;
 use View;
 use Input;
 use Response;
@@ -38,10 +37,11 @@ class PDFseguimientoAC extends TCPDF
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
         $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->Ln(5);        
+        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'MARCO NORMATIVO INSTITUCIONAL', 0, 'C', 0, 0, '', '', true);
 
         return $pdf;
     }
@@ -67,10 +67,14 @@ class PDFseguimientoAC extends TCPDF
     {
         self::encabezado($this);
     }
+    
+    
+    
+    
 }
 //*******************************//
 
-class acseguimientoController extends Controller
+class acseguimiento002Controller extends Controller
 {
     public function __construct()
     {
@@ -86,112 +90,25 @@ class acseguimientoController extends Controller
       {
           return View::make('reporte.seguimiento.ac');
       }
-
+	public function formatoPorcentaje($numero, $fractional=true){
+	    if ($fractional) {
+		$numero = sprintf('%.2f', $numero);
+	    }
+	    while (true) {
+		$replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $numero);
+		if ($replaced != $numero) {
+		    $numero = $replaced;
+		} else {
+		    break;
+		}
+	    }
+	    return $numero."%";
+	}
       /**
        * Display a listing of the resource.
        *
        * @return \Illuminate\Http\Response
-       */
-      public function ficha001($id)
-      {
-
-          
-
-            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->join('t46_acciones_centralizadas as t46', function ($join) {
-            $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
-            ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
-            })                
-            ->join('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
-            ->join('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
-            ->select(
-            'nu_codigo',
-            'id_tab_ejecutores',
-            'id_tab_ejercicio_fiscal',
-            'tx_ejecutor',
-            't45.tx_descripcion as tx_area_estrategica',        
-            'id_tab_ac_predefinida',
-            'id_tab_sectores',
-            'id_tab_estatus',
-            'id_tab_situacion_presupuestaria',
-            'id_tab_tipo_registro',
-            'co_new_etapa',
-            'de_ac',
-            'mo_ac',
-            'mo_calculado',
-            'fe_inicio',
-            'fe_fin',
-            'ac_seguimiento.tab_ac.inst_mision',
-            'ac_seguimiento.tab_ac.inst_vision',
-            'ac_seguimiento.tab_ac.inst_objetivos',
-            'ac_seguimiento.tab_ac.nu_po_beneficiar',
-            'ac_seguimiento.tab_ac.nu_em_previsto',
-            'ac_seguimiento.tab_ac.tx_re_esperado',
-            'id_tab_lapso',
-            'in_bloquear_001',
-            'de_observacion_001'
-        )
-        ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();
-          
-//          var_dump($data->nu_codigo);
-//          exit();
-          
-          /******Objetivos*********/
-
-	$htmlObjetivo = '
-<table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
-	<tr align="left">
-		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor.'</td>
-	</tr>
-	<tr align="left">
-		<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$data->tx_area_estrategica.'</td>
-	</tr>
-	<tr>
-		<td><b>MISIÓN</b></td>
-		<td><b>VISIÓN</b></td>
-	</tr>
-	<tr>
-		<td height="100" align="justify">'.$data->inst_mision.'</td>
-		<td height="100" align="justify">'.$data->inst_vision.'</td>
-	</tr>
-<thead>
-	<tr>
-		<td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
-	</tr>
-</thead>
-<tbody>
-	<tr nobr="true">
-		<td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$data->inst_objetivos).'</td>
-	</tr>
-</tbody>
-</table>';
-
-        
-
-        
-
-          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
-          $pdf->SetCreator('Sistema POA, Yoser Perez');
-          $pdf->SetAuthor('Yoser Perez');
-          $pdf->SetTitle('Seguimiento AC');
-          $pdf->SetSubject('Seguimiento AC');
-          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-          $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
-          $pdf->SetPrintHeader(true);
-          $pdf->SetPrintFooter(true);
-          // set auto page breaks
-          $pdf->SetAutoPageBreak(true, 10);
-          $pdf->AddPage();
-          $pdf->SetFont('','',11);
-//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
-          $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
-          $pdf->lastPage();
-          $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
-      }
-      
+       */      
       
       public function ficha002($id)
       {
@@ -202,7 +119,8 @@ class acseguimientoController extends Controller
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
-            ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')
+            ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
             ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
             ->leftjoin('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
             ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't47.id_accion')
@@ -268,27 +186,32 @@ class acseguimientoController extends Controller
             't45a.tx_descripcion as tx_ambito_estado', 
             't45b.tx_descripcion as tx_macroproblema',
             't45c.tx_descripcion as tx_nodos',
-            'objetivo_institucional as tx_objetivo_institucional',
+            't47.objetivo_institucional as tx_objetivo_institucional',
             DB::raw("'AC' || t04.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac"),
             't52.nombre',
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
             't47.id_ejecutor as id_ejecutor_ae',
             'tx_pr_objetivo',
-            't47.id_accion as co_ae'        
+            't47.id_accion as co_ae',
+            't21.id as id_tab_ac_ae'        
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();
-          
+        ->first();          
 
-            $actividad = tab_meta_fisica::select('co_metas', 't69_metas_ac.codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin','nb_responsable','de_unidad_medida as tx_unidades_medida')
-            ->join('mantenimiento.tab_unidad_medida as t21', 't69_metas_ac.co_unidades_medida', '=', 't21.id')             
-            ->where('id_accion_centralizada', '=', $data->id_accion_centralizada)
-            ->where('co_ac_acc_espec', '=', $data->co_ae)
-            ->where('t69_metas_ac.edo_reg', '=', true)
+            $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
+            't002.nb_responsable','de_unidad_medida as tx_unidades_medida','t002.nu_meta_modificada','de_municipio','de_parroquia',
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(t002.nu_meta_modificada,0) as nu_meta_actualizada'),'t002.nu_obtenido')
+            ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
+            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
+            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
+            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
+            })
+            ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 't002.id_tab_municipio_detalle', '=', 't64.id')
+            ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 't002.id_tab_parroquia_detalle', '=', 't65.id')            
+            ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->get();
-
           
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -370,13 +293,13 @@ $contar=$contar+1;
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
 		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
+                <td style="width: 8%;" align="center">'.$item->nu_meta_modificada.'</td>
+                <td style="width: 8%;" align="center">'.$item->nu_meta_actualizada.'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 10%;"  align="center">'.$item->tx_prog_anual.'</td>
+                <td style="width: 8%;" align="center">'.$item->nu_obtenido.'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$item->nu_meta_actualizada)*100).'</td>
+                <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
 //                				if($cantidad>$contar){
@@ -401,24 +324,12 @@ $html23.='
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
           $pdf->SetTopMargin(50);
-          $pdf->SetPrintHeader(false);
+          $pdf->SetPrintHeader(true);
           $pdf->SetPrintFooter(true);
           // set auto page breaks
           $pdf->SetAutoPageBreak(true, 10);
           $pdf->AddPage();
-            $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
-        $pdf->setXY(30, 15);
-        $pdf->SetFont('', 'B', 11);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-                $pdf->setXY(30, 20);
-        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
-        $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);        
-        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
+
           $pdf->SetFont('','',11);
 //          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');

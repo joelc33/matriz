@@ -24,9 +24,9 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma001ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			this.codigo  = forma001ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_ac');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/001') }}/'+this.codigo
 			});
     }
 });
@@ -103,6 +103,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'id_tab_ac',hidden:true, menuDisabled:true,dataIndex: 'id_tab_ac'},
 		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
@@ -185,6 +186,7 @@ getLista: function(){
 	    root:'data',
 	    fields:[
 		    {name: 'id'},
+                    {name: 'id_tab_ac'},
 				{name: 'id_ejecutor'},
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},

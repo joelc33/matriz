@@ -24,7 +24,7 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_ac_ae');
 			bajar.load({
 				url: '{{ URL::to('reporte/ac/seguimiento/ficha/002') }}/'+this.codigo
 			});
@@ -103,6 +103,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'id_tab_ac_ae',hidden:true, menuDisabled:true,dataIndex: 'id_tab_ac_ae'},
 		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true,renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
@@ -189,6 +190,7 @@ getLista: function(){
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
+                                {name: 'id_tab_ac_ae'},
 		    {name: 'de_ac'},
 				{name: 'in_002'},
 				{name: 'fe_solicitud'},

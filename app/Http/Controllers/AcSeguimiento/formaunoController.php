@@ -377,6 +377,7 @@ class formaunoController extends Controller
             ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_001.id_tab_estatus')
             ->select(
                 'ac_seguimiento.tab_forma_001.id',
+                'ac_seguimiento.tab_forma_001.id_tab_ac',
                 'tx_ejecutor',
                 't01.id_tab_ejecutores',
                 't02.in_activo',
