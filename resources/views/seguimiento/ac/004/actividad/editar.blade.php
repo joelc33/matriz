@@ -34,7 +34,7 @@ this.nb_meta = new Ext.form.TextField({
 	name:'actividad',
 	value:this.OBJ.nb_meta,
 	width:550,
-	//maxLength: 250,
+        readOnly:true,
 	allowBlank:false,
         listeners:{
             change: function(){
@@ -50,8 +50,7 @@ this.id_tab_unidad_medida = new Ext.form.ComboBox({
 	valueField: 'id',
 	displayField:'de_unidad_medida',
 	hiddenName:'unidad_medida',
-	//readOnly:(this.OBJ.co_unidades_medida!='')?true:false,
-	//style:(this.OBJ.co_unidades_medida!='')?'background:#c9c9c9;':'',
+        readOnly:true,
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -94,6 +93,7 @@ this.fecha_inicio = new Ext.form.DateField({
 	minValue:this.FECHA.fe_ini,
 	maxValue:this.FECHA.fe_fin,
 	allowBlank:false,
+        readOnly:true,
 	width:100,
 });
 
@@ -104,6 +104,7 @@ this.fecha_fin = new Ext.form.DateField({
 	minValue:this.FECHA.fe_ini,
 	maxValue:this.FECHA.fe_fin,
 	allowBlank:false,
+        readOnly:true,
 	width:100
 });
 
@@ -125,7 +126,7 @@ this.nb_responsable = new Ext.form.TextField({
 	name:'responsable',
 	value:this.OBJ.nb_responsable,
 	width:400,
-	//maxLength: 250,
+        readOnly:true,
 	allowBlank:false,
         listeners:{
             change: function(){
@@ -137,7 +138,7 @@ this.nb_responsable = new Ext.form.TextField({
 this.mo_modificado_anual = new Ext.form.NumberField({
 	fieldLabel:'METAS MODIFICADAS',
 	name:'modificado_anual',
-	value:this.OBJ.mo_modificado_anual,
+	value:this.OBJ.nu_meta_modificada,
 	//allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -155,7 +156,7 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 this.mo_actualizado_anual = new Ext.form.NumberField({
 	fieldLabel:'METAS ACTUALIZADAS',
 	name:'actualizado_anual',
-	value:this.OBJ.mo_actualizado_anual,
+	value:this.OBJ.nu_meta_actualizada,
 	//allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -400,7 +401,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     loadMask:true,
     height:300,
     tbar:[
-      this.nuevo,'-',this.editar,'-',this.eliminar,'-',this.buscador
+//      this.nuevo,'-',this.editar,'-',this.eliminar,'-',this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),

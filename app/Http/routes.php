@@ -157,6 +157,7 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/ficha/001/{id}', 'acseguimiento001Controller@ficha001');
         Route::get('ac/seguimiento/ficha/002/{id}', 'acseguimiento002Controller@ficha002');
         Route::get('ac/seguimiento/ficha/003/{id}', 'acseguimiento003Controller@ficha003');
+        Route::get('ac/seguimiento/ficha/004/{id}', 'acseguimiento004Controller@ficha004');
         Route::get('ac/seguimiento', 'acseguimientoController@reporte');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');
         Route::get('poa/proyecto/todo', 'proyectoController@poaTodo');

@@ -348,7 +348,7 @@ class formacuatroController extends Controller
             'created_at',
             'updated_at',
             'nu_meta_modificada',
-            'nu_meta_actualizada',
+            DB::raw("tx_prog_anual::numeric +  nu_meta_modificada as nu_meta_actualizada"),
             'nu_obtenido',
             'nu_corte',
             'id_tab_municipio_detalle',
