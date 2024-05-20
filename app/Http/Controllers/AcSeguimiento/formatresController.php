@@ -63,6 +63,7 @@ class formatresController extends Controller
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',
                 'de_ac',
+                'in_003',
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
@@ -380,6 +381,31 @@ class formatresController extends Controller
                 $tabla->mo_pagado = Input::get("pagado");
                 $tabla->in_cargado = true;
                 $tabla->save();
+                
+                $data = tab_meta_fisica::join('ac_seguimiento.tab_ac_ae as t05', 'tab_meta_fisica.id_tab_ac_ae', '=', 't05.id')
+                ->join('ac_seguimiento.tab_ac as t01', 't05.id_tab_ac', '=', 't01.id')
+                ->select(
+                    't01.id',
+                    'id_tab_ac_ae'    
+                )
+                ->where('tab_meta_fisica.id', '=', $tabla->id_tab_meta_fisica)
+                ->first();        
+                
+                $cant = tab_meta_fisica::join('ac_seguimiento.tab_meta_financiera as t01', 't01.id_tab_meta_fisica', '=', 'tab_meta_fisica.id')
+                ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+                ->where('t01.in_cargado', '=', false)
+                ->count(); 
+                
+//                        var_dump($cant);
+//        exit();
+                
+                if($cant==0){
+                    
+                $tabla = tab_ac::find($data->id);
+                $tabla->in_003 = true;
+                $tabla->save();
+                
+                }
 
                 DB::commit();
                 return Response::json(array(
