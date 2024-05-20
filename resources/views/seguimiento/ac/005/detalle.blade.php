@@ -25,7 +25,7 @@ this.editar = new Ext.Button({
 	forma005Lista.main.mascara.show();
 			this.msg = Ext.get('formularioEditar{!! $data['id'] !!}');
 			this.msg.load({
-			 url:"{{ URL::to('ac/seguimiento/005/editar') }}/"+this.codigo,
+			 url:"{{ URL::to('ac/seguimiento/005/datos/lista') }}/"+this.codigo,
 			 scripts: true,
 			 text: "Cargando.."
 			});

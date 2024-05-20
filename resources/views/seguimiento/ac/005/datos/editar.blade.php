@@ -10,6 +10,11 @@ this._token = new Ext.form.Hidden({
 	name:'_token',
 	value:'{{ csrf_token() }}'
 });
+
+this.id_tab_ac = new Ext.form.Hidden({
+	name:'id_tab_ac',
+	value:'{{ $data->id_tab_ac }}'
+});
 //</token>
 
 this.de_programado_anual = new Ext.form.TextArea({
@@ -20,8 +25,8 @@ this.de_programado_anual = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 3000,
-	readOnly:this.OBJ.in_bloquear_005,
-	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+	readOnly:true,
+	style:(true==true)?'background:#f2d7d5;':''
 });
 
 this.tp_indicador = new Ext.form.TextField({
@@ -154,6 +159,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
+                 forma005ListaDatos.main.store_lista.load();
                  forma005Lista.main.store_lista.load();
                  forma005Editar.main.winformPanel_.close();
              }
@@ -183,6 +189,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+                this.id_tab_ac,
 		this.de_programado_anual,
 		this.tp_indicador,
 		this.nb_indicador,
@@ -208,7 +215,7 @@ this.winformPanel_ = new Ext.Window({
     ],
     buttons:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.enviar', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_bloquear_005==false)
+				@if($data->in_005==false)
 					this.guardar,'-',
 				@endif
 			@endif
@@ -217,7 +224,7 @@ this.winformPanel_ = new Ext.Window({
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma005Lista.main.mascara.hide();
+forma005ListaDatos.main.mascara.hide();
 }
 };
 Ext.onReady(forma005Editar.main.init, forma005Editar.main);

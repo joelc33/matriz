@@ -548,10 +548,14 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     Route::group(['prefix' => 'ac/seguimiento/005'], function () {
         Route::get('lista', 'formacincoController@lista');
         Route::post('storeLista', 'formacincoController@storeLista');
+        Route::post('datos/storeListaDatos', 'formacincoController@storeListaDatos');
         Route::post('detalle', 'formacincoController@detalle');
+        Route::get('nuevo/{id}', 'formacincoController@datosNuevo');
         Route::get('editar/{id}', 'formacincoController@datos');
+        Route::get('datos/lista/{id}', 'formacincoController@datosLista');
         Route::post('guardar', 'formacincoController@guardar');
         Route::post('guardar/{id}', 'formacincoController@guardar');
+        Route::post('enviar', 'formacincoController@enviar');
         Route::post('enviar/{id}', 'formacincoController@enviar');
     });
     //*Modulo de Accion Centralizada Forma 005*/

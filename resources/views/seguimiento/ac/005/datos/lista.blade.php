@@ -1,25 +1,18 @@
 <script type="text/javascript">
-Ext.ns("aplicacionLista");
-function change(val){
-	if(val==true){
-	    return '<span style="color:green;">Activo</span>';
-	}else if(val==false){
-	    return '<span style="color:red;">Inactivo</span>';
-	}
+Ext.ns("forma005ListaDatos");
+function actividadEstado(val){
+	if(val==6){
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
+	}else{
+            if(val==5){
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
+	}else{
+        return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Negado</span>'+'</div></tpl>';
+        }
+        }
 return val;
 };
-function movimiento(val){
-	if(val==true){
-	    return '<span style="color:green;">Si</span>';
-	}else if(val==false){
-	    return '<span style="color:red;">No</span>';
-	}
-return val;
-};
-aplicacionLista.main = {
-condicion:function(codigo){
-    return (codigo=='0')?'NO':'SI';
-},
+forma005ListaDatos.main = {
 init:function(){
 //Mascara general del modulo
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
@@ -27,97 +20,37 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
-//Agregar un registro
 this.nuevo = new Ext.Button({
     text:'Nuevo',
     iconCls: 'icon-nuevo',
-    handler:function(){
-        aplicacionLista.main.mascara.show();
-        this.msg = Ext.get('formularioaplicacion');
-        this.msg.load({
-         url:"{{ URL::to('mantenimiento/aplicacion/nuevo') }}",
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
+	handler:function(){
+	this.codigo  = '{{ $id_tab_ac }}';
+	forma005ListaDatos.main.mascara.show();
+			this.msg = Ext.get('formularioEditar');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/005/nuevo') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+	}
 });
-
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Editar',
+    text:'Datos',
     iconCls: 'icon-editar',
-    handler:function(){
-	this.codigo  = aplicacionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	aplicacionLista.main.mascara.show();
-        this.msg = Ext.get('formularioaplicacion');
-        this.msg.load({
-         url:"{{ URL::to('mantenimiento/aplicacion/editar') }}/"+this.codigo,
-         scripts: true,
-         text: "Cargando.."
-        });
-    }
-});
-
-//Desabilitar un registro
-this.eliminar= new Ext.Button({
-    text:'Deshabilitar',
-    iconCls: 'icon-cancelar',
-    handler:function(){
-	this.codigo  = aplicacionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Deshabilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('mantenimiento/aplicacion/eliminar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: aplicacionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    aplicacionLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                aplicacionLista.main.mascara.hide();
-            }});
-	}});
-    }
-});
-
-this.habilitar= new Ext.Button({
-    text:'Habilitar',
-    iconCls: 'icon-fin',
-    handler:function(){
-	this.codigo  = aplicacionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Habilitar Registro?', function(boton){
-	if(boton=="yes"){
-        Ext.Ajax.request({
-            method:'POST',
-            url:'{{ URL::to('mantenimiento/aplicacion/habilitar') }}',
-            params:{
-		_token: '{{ csrf_token() }}',
-                id: aplicacionLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
-            },
-            success:function(result, request ) {
-                obj = Ext.util.JSON.decode(result.responseText);
-                if(obj.success=="true"){
-		    aplicacionLista.main.store_lista.load();
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }else{
-                    Ext.Msg.alert("Notificación",obj.msg);
-                }
-                aplicacionLista.main.mascara.hide();
-            }});
-	}});
-    }
+	handler:function(){
+	this.codigo  = forma005ListaDatos.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma005ListaDatos.main.mascara.show();
+			this.msg = Ext.get('formularioEditar');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/005/editar') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+	}
 });
 
 this.editar.disable();
-this.eliminar.disable();
-this.habilitar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -147,10 +80,11 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		aplicacionLista.main.store_lista.baseParams={};
-		aplicacionLista.main.store_lista.baseParams.paginar = 'si';
-		aplicacionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		aplicacionLista.main.store_lista.load();
+		forma005ListaDatos.main.store_lista.baseParams={};
+		forma005ListaDatos.main.store_lista.baseParams.paginar = 'si';
+		forma005ListaDatos.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+    forma005ListaDatos.main.store_lista.baseParams.id_tab_ac = '{{ $id_tab_ac }}';
+		forma005ListaDatos.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -162,12 +96,13 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			aplicacionLista.main.store_lista.baseParams={}
-			aplicacionLista.main.store_lista.baseParams.BuscarBy = true;
-			aplicacionLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			aplicacionLista.main.store_lista.baseParams[this.paramName] = v;
-			aplicacionLista.main.store_lista.baseParams.paginar = 'si';
-			aplicacionLista.main.store_lista.load();
+			forma005ListaDatos.main.store_lista.baseParams={}
+			forma005ListaDatos.main.store_lista.baseParams.BuscarBy = true;
+			forma005ListaDatos.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+      forma005ListaDatos.main.store_lista.baseParams.id_tab_ac = '{{ $id_tab_ac }}';
+			forma005ListaDatos.main.store_lista.baseParams[this.paramName] = v;
+			forma005ListaDatos.main.store_lista.baseParams.paginar = 'si';
+			forma005ListaDatos.main.store_lista.load();
 		}
 	}
 });
@@ -179,36 +114,30 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     border:false,
     loadMask:true,
     autoWidth: true,
-    autoHeight:true,
+    height:610,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.nuevo,'-',
+			@if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.nuevo,'-',
 			@endif
 			@if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.habilitar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.habilitar,'-',
-			@endif
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.deshabilitar', 'in_habilitado' => true), Session::get('credencial') ))
-				this.eliminar,'-',
-			@endif
+			@endif                        
 				this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-		{header: 'Codigo', width:100,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'co_aplicacion'},
-		{header: 'Descripcion', width:400,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_aplicacion'},
-    {header: 'Estado', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
+    {header: 'PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'pp_anual'},
+    {header: 'INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD)', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'tp_indicador'},
+    {header: 'NOMBRE DEL INDICADOR', width:220,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nb_indicador_gestion'},
+    {header: 'DESCRIPCIÓN DEL INDICADOR', width:180,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_indicador_descripcion'},
+    {header: 'Estatus', width:130,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'id_tab_estatus'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			aplicacionLista.main.editar.enable();
-			aplicacionLista.main.habilitar.enable();
-			aplicacionLista.main.eliminar.enable();
+			forma005ListaDatos.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -219,16 +148,28 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })
 });
 
-this.gridPanel_.render("contenedoraplicacionLista");
+this.winformPanel_ = new Ext.Window({
+    title:'F005: INDICADORES DE GESTIÓN',
+    modal:true,
+    constrain:true,
+    width:914,
+    frame:true,
+    closabled:true,
+    autoHeight:true,
+    items:[
+      this.gridPanel_
+    ]
+});
+this.winformPanel_.show();
+forma005Lista.main.mascara.hide();
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
+this.store_lista.baseParams.id_tab_ac = '{{ $id_tab_ac }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-aplicacionLista.main.editar.disable();
-aplicacionLista.main.habilitar.disable();
-aplicacionLista.main.eliminar.disable();
+forma005ListaDatos.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -236,19 +177,21 @@ panel_detalle.collapse();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'{{ URL::to('mantenimiento/aplicacion/storeLista') }}',
+    url:'{{ URL::to('ac/seguimiento/005/datos/storeListaDatos') }}',
     root:'data',
     fields:[
     {name: 'id'},
-		{name: 'co_aplicacion'},
-    {name: 'de_aplicacion'},
-    {name: 'in_activo'},
+    {name: 'pp_anual'},
+    {name: 'tp_indicador'},
+    {name: 'nb_indicador_gestion'},
+    {name: 'de_indicador_descripcion'},
+    {name: 'id_tab_estatus'},
+    {name: 'in_005'}
            ]
     });
     return this.store;
 }
 };
-Ext.onReady(aplicacionLista.main.init, aplicacionLista.main);
+Ext.onReady(forma005ListaDatos.main.init, forma005ListaDatos.main);
 </script>
-<div id="contenedoraplicacionLista"></div>
-<div id="formularioaplicacion"></div>
+<div id="formularioEditar"></div>

@@ -133,10 +133,10 @@ class formacincoController extends Controller
     *
     * @return Response
     */
-    public function datos($id)
+    public function datosNuevo($id)
     {
         $data = tab_ac::select(
-            'id',
+            'id as id_tab_ac',
             'nu_codigo',
             'id_tab_ejecutores',
             'id_tab_ejercicio_fiscal',
@@ -169,16 +169,18 @@ class formacincoController extends Controller
             'de_valor_objetivo',
             'nu_cumplimiento',
             'de_indicador_descripcion',
-            'de_formula',
-            'in_bloquear_005',
-            'de_observacion_005'
+            'de_formula'
         )
         ->where('id', '=', $id)
         ->first();
 
-        if (tab_forma_005::where('id_tab_ac', '=', $id)
-        ->where('id_tab_estatus', '=', 5)
-        ->where('in_005', '=', false)->exists()) {
+        return View::make('seguimiento.ac.005.datos.editar')->with('data', $data);
+    }
+
+    public function datos($id)
+    {
+
+
 
             $data = tab_forma_005::select(
                 'id',
@@ -196,18 +198,16 @@ class formacincoController extends Controller
                 'id_usuario_solicita',
                 'id_usuario_procesa',
                 'id_tab_estatus',
-                'in_activo as in_bloquear_005'
+                'in_005 as in_bloquear_005'
             )
-            ->where('id_tab_ac', '=', $id)
-            ->where('id_tab_estatus', '=', 5)
-            ->where('in_005', '=', false)
+            ->where('id', '=', $id)
             ->first();
 
-        }
+        
 
         return View::make('seguimiento.ac.005.datos.editar')->with('data', $data);
-    }
-
+    }    
+    
     /**
      * Update the specified resource in storage.
      *
@@ -309,13 +309,13 @@ class formacincoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = tab_ac::find($id);
-                $tabla->in_bloquear_005 = true;
-                $tabla->de_observacion_005 = Input::get("observacion");
-                $tabla->save();
 
-                $tabla_005 = new tab_forma_005();
-                $tabla_005->id_tab_ac = $id;
+                $tabla = tab_ac::find(Input::get("id_tab_ac"));
+                $tabla->in_005 = false;
+                $tabla->in_bloquear_005 = true;
+                $tabla->save();                
+                
+                $tabla_005 = tab_forma_005::find($id);
                 $tabla_005->pp_anual = Input::get("programado_anual");
                 $tabla_005->tp_indicador = Input::get("tipo_indicador");
                 $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
@@ -325,9 +325,7 @@ class formacincoController extends Controller
                 $tabla_005->de_indicador_descripcion = Input::get("indicador");
                 $tabla_005->de_formula = Input::get("formula");
                 $tabla_005->de_observacion = Input::get("observacion");
-                $tabla_005->in_005 = false;
                 $tabla_005->id_usuario_solicita = Auth::user()->id;
-                $tabla_005->in_activo = true;
                 $tabla_005->id_tab_estatus = 5;
                 $tabla_005->save();
 
@@ -348,24 +346,39 @@ class formacincoController extends Controller
         } else {
 
             try {
-                $validator = Validator::make(Input::all(), tab_ac::$validarCrear);
+                $validator = Validator::make(Input::all(), tab_ac::$validarEditar005);
                 if ($validator->fails()) {
                     return Response::json(array(
                       'success' => false,
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = new tab_forma_005();
-                $tabla->inst_mision = Input::get("mision");
-                $tabla->inst_vision = Input::get("vision");
-                $tabla->inst_objetivos = Input::get("objetivos");
-                $tabla->in_activo = 'TRUE';
+                $tabla = tab_ac::find(Input::get("id_tab_ac"));
+                $tabla->in_bloquear_005 = true;
+                $tabla->in_005 = false;
                 $tabla->save();
+
+                $tabla_005 = new tab_forma_005();
+                $tabla_005->id_tab_ac = Input::get("id_tab_ac");
+                $tabla_005->pp_anual = Input::get("programado_anual");
+                $tabla_005->tp_indicador = Input::get("tipo_indicador");
+                $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
+                $tabla_005->de_valor_obtenido = Input::get("valor_objetivo");
+                $tabla_005->de_valor_objetivo = Input::get("valor_obtenido");
+                $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
+                $tabla_005->de_indicador_descripcion = Input::get("indicador");
+                $tabla_005->de_formula = Input::get("formula");
+                $tabla_005->de_observacion = Input::get("observacion");
+                $tabla_005->in_005 = false;
+                $tabla_005->id_usuario_solicita = Auth::user()->id;
+                $tabla_005->in_activo = true;
+                $tabla_005->id_tab_estatus = 5;
+                $tabla_005->save();
 
                 DB::commit();
                 return Response::json(array(
                   'success' => true,
-                  'msg' => 'Registro Guardado con Exito!'
+                  'msg' => 'Registro enviados con Exito!'
                 ));
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -387,6 +400,14 @@ class formacincoController extends Controller
     {
         return View::make('seguimiento.ac.005.cambio.lista');
     }
+    
+    public function datosLista($id)
+    {
+
+
+        return View::make('seguimiento.ac.005.datos.lista')->with('id_tab_ac', $id);
+        
+    }    
 
     /**
      * Display a listing of the resource.
@@ -450,6 +471,59 @@ class formacincoController extends Controller
         }
     }
 
+    public function storeListaDatos()
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
+
+            $tab_forma_005 = $this->tab_forma_005
+            ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
+            ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+            ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+            ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_005.id_tab_estatus')
+            ->select(
+                'ac_seguimiento.tab_forma_005.id',
+                'ac_seguimiento.tab_forma_005.pp_anual',
+                'ac_seguimiento.tab_forma_005.tp_indicador',
+                'ac_seguimiento.tab_forma_005.nb_indicador_gestion',
+                'ac_seguimiento.tab_forma_005.de_indicador_descripcion',
+                'de_estatus',
+                'ac_seguimiento.tab_forma_005.id_tab_estatus',
+                'ac_seguimiento.tab_forma_005.in_005'
+            )
+            ->where('ac_seguimiento.tab_forma_005.id_tab_ac', '=', Input::get('id_tab_ac'))         
+            ->where('ac_seguimiento.tab_forma_005.in_activo', '=', true);
+
+            $rol_planificador = array(3, 8);
+            if (in_array(Session::get('rol'), $rol_planificador)) {
+                $tab_forma_005->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+            }
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_forma_005->where('nu_codigo', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_005->count();
+                $tab_forma_005->skip($start)->take($limit);
+                $response['data']  = $tab_forma_005->orderby('ac_seguimiento.tab_forma_005.id', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_005->count();
+                $tab_forma_005->skip($start)->take($limit);
+                $response['data']  = $tab_forma_005->orderby('ac_seguimiento.tab_forma_005.id', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
+        }
+    }    
+    
     /**
     * Display a listing of the resource.
     *
@@ -534,24 +608,37 @@ class formacincoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = tab_ac::find(Input::get("ac"));
-                $tabla->pp_anual = Input::get("programado_anual");
-                $tabla->tp_indicador = Input::get("tipo_indicador");
-                $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
-                $tabla->de_valor_obtenido = Input::get("valor_objetivo");
-                $tabla->de_valor_objetivo = Input::get("valor_obtenido");
-                $tabla->nu_cumplimiento = Input::get("cumplimiento");
-                $tabla->de_indicador_descripcion = Input::get("indicador");
-                $tabla->de_formula = Input::get("formula");
-                $tabla->de_observacion = Input::get("observacion");
-                $tabla->in_005 = true;
-                $tabla->save();
+//                $tabla = tab_ac::find(Input::get("ac"));
+//                $tabla->pp_anual = Input::get("programado_anual");
+//                $tabla->tp_indicador = Input::get("tipo_indicador");
+//                $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
+//                $tabla->de_valor_obtenido = Input::get("valor_objetivo");
+//                $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+//                $tabla->nu_cumplimiento = Input::get("cumplimiento");
+//                $tabla->de_indicador_descripcion = Input::get("indicador");
+//                $tabla->de_formula = Input::get("formula");
+//                $tabla->de_observacion = Input::get("observacion");
+//                $tabla->in_005 = true;
+//                $tabla->save();
 
                 $tabla_005 = tab_forma_005::find($id);
                 $tabla_005->in_005 = true;
                 $tabla_005->id_tab_estatus = 6;
                 $tabla_005->id_usuario_procesa = Auth::user()->id;
                 $tabla_005->save();
+                
+                
+                $cant = tab_forma_005::where('id_tab_ac', '=', Input::get("ac"))
+                ->whereNotIn('id_tab_estatus', [6])
+                ->count();
+                
+                if($cant==0){
+                    
+                $tabla = tab_ac::find(Input::get("ac"));
+                $tabla->in_005 = true;
+                $tabla->save();
+                
+                }                
 
                 DB::commit();
                 return Response::json(array(
@@ -620,13 +707,8 @@ class formacincoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = tab_ac::find(Input::get("ac"));
-                $tabla->in_005 = false;
-                $tabla->in_bloquear_005 = false;
-                $tabla->save();
 
                 $tabla_005 = tab_forma_005::find($id);
-                $tabla_005->in_005 = true;
                 $tabla_005->id_tab_estatus = 7;
                 $tabla_005->id_usuario_procesa = Auth::user()->id;
                 $tabla_005->save();
