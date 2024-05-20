@@ -159,7 +159,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Programado', width:120,  menuDisabled:true, sortable: true,  dataIndex: 'programado'},
     {header: 'Inicio', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_inicio'},
     {header: 'Final', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fecha_fin'},
-    {header: 'Estatus', width:130,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'in_cargado'},
+    {header: 'Estatus', width:130,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'in_004'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -217,7 +217,7 @@ getLista: function(){
 	    {name: 'fecha_inicio'},
 	    {name: 'fecha_fin'},
 	    {name: 'nb_responsable'},
-	    {name: 'in_cargado'},
+	    {name: 'in_004'},
 	    {
 	        name: 'programado',
 	        convert: function(v, r) {

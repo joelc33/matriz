@@ -64,6 +64,7 @@ class formacuatroController extends Controller
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',
                 'de_ac',
+                'in_004',
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
@@ -274,6 +275,7 @@ class formacuatroController extends Controller
                 'ac_seguimiento.tab_meta_fisica.in_activo',
                 'de_unidad_medida',
                 'in_cargado',
+                'in_004',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
             )
@@ -399,9 +401,35 @@ class formacuatroController extends Controller
                 $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
                 $tabla->de_desvio = Input::get("desvio");
-                //$tabla->in_cargado = true;
+                $tabla->in_004 = true;
                 $tabla->save();
+                
+                
+                $data = tab_meta_fisica::join('ac_seguimiento.tab_ac_ae as t05', 'tab_meta_fisica.id_tab_ac_ae', '=', 't05.id')
+                ->join('ac_seguimiento.tab_ac as t01', 't05.id_tab_ac', '=', 't01.id')
+                ->select(
+                    't01.id',
+                    'id_tab_ac_ae'    
+                )
+                ->where('tab_meta_fisica.id', '=', $id)
+                ->first();                
 
+                $cant = tab_meta_fisica::join('ac_seguimiento.tab_meta_financiera as t01', 't01.id_tab_meta_fisica', '=', 'tab_meta_fisica.id')
+                ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+                ->where('de_desvio', '=', null)
+                ->count();   
+                
+//                        var_dump($cant);
+//        exit();
+                
+                if($cant==0){
+                    
+                $tabla = tab_ac::find($data->id);
+                $tabla->in_004 = true;
+                $tabla->save();
+                
+                }                
+                
                 DB::commit();
                 return Response::json(array(
                   'success' => true,

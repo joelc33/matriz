@@ -2,9 +2,9 @@
 Ext.ns("forma004Lista");
 function change(val){
 	if(val==true){
-	    return '<span style="color:green;">Activo</span>';
-	}else if(val==false){
-	    return '<span style="color:red;">Inactivo</span>';
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
+	}else{
+	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
 	}
 return val;
 };
@@ -115,7 +115,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
     {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
-    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_activo'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_004'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -198,6 +198,7 @@ getLista: function(){
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
 		    {name: 'de_ac'},
+                    {name: 'in_004'},
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {
