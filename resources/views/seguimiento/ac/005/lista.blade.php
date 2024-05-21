@@ -34,7 +34,7 @@ this.ficha= new Ext.Button({
     handler:function(){
 			this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha') }}/'+this.codigo
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/005') }}/'+this.codigo
 			});
     }
 });
