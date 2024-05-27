@@ -41,12 +41,10 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	maxLength: 20,
 	emptyText: '0',
 	decimalPrecision: 2,
- 	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: true,
-	allowNegative: false
+	allowDecimals: true
 });
 
 this.mo_actualizado_anual = new Ext.form.NumberField({
@@ -121,7 +119,6 @@ this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos del Seguimiento',
 	items:[
 		this.mo_modificado_anual,
-		this.mo_actualizado_anual,
 		this.mo_comprometido,
 		this.mo_causado,
 		this.mo_pagado

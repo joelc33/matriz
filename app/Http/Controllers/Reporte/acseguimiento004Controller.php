@@ -43,6 +43,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'DESVIO DE LA GESTIÓN', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
+        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+        $pdf->Ln(5);        
 
         return $pdf;
     }
@@ -91,7 +93,7 @@ class acseguimiento004Controller extends Controller
       {
           return View::make('reporte.seguimiento.ac');
       }
-	public function formatoPorcentaje($numero, $fractional=true){
+	function formatoDinero($numero, $fractional=true){
 	    if ($fractional) {
 		$numero = sprintf('%.2f', $numero);
 	    }
@@ -103,7 +105,7 @@ class acseguimiento004Controller extends Controller
 		    break;
 		}
 	    }
-	    return $numero."%";
+	    return "Bs. ".$numero;
 	}
       /**
        * Display a listing of the resource.
@@ -120,6 +122,7 @@ class acseguimiento004Controller extends Controller
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
             ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
@@ -195,10 +198,16 @@ class acseguimiento004Controller extends Controller
             't47.id_ejecutor as id_ejecutor_ae',
             'tx_pr_objetivo',
             't47.id_accion as co_ae',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
             't21.id as id_tab_ac_ae'        
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();          
+        ->first();   
+            
+        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+            
+          Session::put('periodo',$periodo); 
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
@@ -225,9 +234,10 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
-<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+<td style="width: 45%;"><b>UNIDAD EJECUTORA:</b> '.$data->tx_ejecutor.'</td>
+<td style="width: 15%;"><b>COD EJECUTOR:</b> '.$data->id_ejecutor.'</td>
+<td style="width: 10%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 30%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
@@ -250,7 +260,7 @@ $html23.= '
 </tr>
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS PROGRAMADAS</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS (1ER TRIMESTRE)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS ACTUALIZADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PARTIDA PRESUPUESTARIA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO</th>

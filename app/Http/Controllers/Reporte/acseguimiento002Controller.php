@@ -42,6 +42,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
+        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+        $pdf->Ln(5);
 
         return $pdf;
     }
@@ -119,6 +121,7 @@ class acseguimiento002Controller extends Controller
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
             ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
@@ -194,14 +197,23 @@ class acseguimiento002Controller extends Controller
             't47.id_ejecutor as id_ejecutor_ae',
             'tx_pr_objetivo',
             't47.id_accion as co_ae',
-            't21.id as id_tab_ac_ae'        
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+            't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.tx_re_esperado',
+            'ac_seguimiento.tab_ac.nu_po_beneficiar',
+            'ac_seguimiento.tab_ac.nu_em_previsto'
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();          
+        ->first();    
+            
+        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+            
+          Session::put('periodo',$periodo);            
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
             't002.nb_responsable','de_unidad_medida as tx_unidades_medida','t002.nu_meta_modificada','de_municipio','de_parroquia',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(t002.nu_meta_modificada,0) as nu_meta_actualizada'),'t002.nu_obtenido')
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(t002.nu_meta_modificada,0) as nu_meta_actualizada'),DB::raw('coalesce(t002.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
             ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
             $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
@@ -212,6 +224,13 @@ class acseguimiento002Controller extends Controller
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->get();
+            
+            $obtenido = '';
+            
+            foreach($actividad as $item) {
+                
+             $obtenido.=  $item->nu_obtenido.' '.$item->tx_unidades_medida.',';
+            }
           
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -249,7 +268,8 @@ $html1 = '
 <td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$obtenido.'</td>
 </tr>
 </tbody>
 </table>
@@ -310,8 +330,22 @@ $contar=$contar+1;
 //				}
                 
           
-      }        
-//$html23.='</tr>';
+      }
+$html23.='      
+<tr style="font-size:9px">
+<td colspan="3" style="width: 40%;" align="justify"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN A BENEFICIAR:</b> '.$data->nu_po_beneficiar.'</td>
+<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN BENEFICIADA:</b> </td>
+<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS A GENERAR:</b> '.$data->nu_em_previsto.'</td>
+<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  </td>
+</tr>';   
+
 $html23.='
 </tbody>
 </table>';

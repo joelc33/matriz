@@ -43,6 +43,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'METAS FINANCIERAS', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
+        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+        $pdf->Ln(5);        
 
         return $pdf;
     }
@@ -91,7 +93,7 @@ class acseguimiento003Controller extends Controller
       {
           return View::make('reporte.seguimiento.ac');
       }
-	public function formatoPorcentaje($numero, $fractional=true){
+	function formatoDinero($numero, $fractional=true){
 	    if ($fractional) {
 		$numero = sprintf('%.2f', $numero);
 	    }
@@ -103,7 +105,7 @@ class acseguimiento003Controller extends Controller
 		    break;
 		}
 	    }
-	    return $numero."%";
+	    return "Bs. ".$numero;
 	}
       /**
        * Display a listing of the resource.
@@ -120,6 +122,7 @@ class acseguimiento003Controller extends Controller
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
             ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
@@ -195,10 +198,17 @@ class acseguimiento003Controller extends Controller
             't47.id_ejecutor as id_ejecutor_ae',
             'tx_pr_objetivo',
             't47.id_accion as co_ae',
-            't21.id as id_tab_ac_ae'        
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+            't21.id as id_tab_ac_ae',
+            DB::raw("mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac")
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();          
+        ->first();
+            
+        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+            
+          Session::put('periodo',$periodo); 
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
@@ -215,6 +225,38 @@ class acseguimiento003Controller extends Controller
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->get();
+            
+            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
+            'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
+            ->where('t03.id_ejecutor', '=', $data->id_ejecutor)
+            ->orderBy('codigo', 'ASC')
+            ->get();            
+            
+                $mo_modificado_anual_ejecutor = 0;
+                $mo_actualizado_anual_ejecutor = 0;
+                $mo_comprometido_ejecutor = 0;
+                $mo_causado_ejecutor = 0;
+                $mo_pagado_ejecutor = 0;
+                
+      foreach($actividad_ejecutor as $item) {
+                
+                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item->mo_modificado_anual;
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + $item->mo_actualizado_anual;
+                $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item->mo_comprometido;
+                $mo_causado_ejecutor = $mo_causado_ejecutor + $item->mo_causado;
+                $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item->mo_pagado;
+
+      }            
           
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -287,39 +329,82 @@ $html23.= '
        
 $html23.='
 <tbody>';
-$cantidad = $actividad->count();
 
-$contar=0;
+$mo_presupuesto = 0;
+$mo_modificado_anual = 0;
+$mo_actualizado_anual = 0;
+$mo_comprometido = 0;
+$mo_causado = 0;
+$mo_pagado = 0;
+
       foreach($actividad as $item) {
           
-//                               var_dump($item->nb_responsable);
-//          exit();
-//$contar=$contar+1;
+
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 8%;"  align="center">'.$item->mo_presupuesto.'</td>
-		<td style="width: 8%;"  align="center">'.$item->mo_modificado_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->mo_actualizado_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->mo_comprometido.'</td>                    
-		<td style="width: 8%;"  align="center">'.$item->mo_causado.'</td>
-		<td style="width: 8%;" align="center">'.$item->mo_pagado.'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
                 <td style="width: 7%;" align="center">'.$item->co_sector.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_numero.'</td>
                 <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
 		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
-//                				if($cantidad>$contar){
-//					$html23.='</tr>
-//					<tr style="font-size:6px" nobr="true">';
-//				}else{
-//					$html23.='';
-//				}
                 
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                
+
           
       }        
-//$html23.='</tr>';
+
+$html23.='      
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"><b>SUB TOTAL POR  ACCION ESPECIFICA</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"><b>SUB TOTAL POR PROYECTO Y/O ACCION CENTRALIZADA</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"> <b>TOTAL POR PROYECTO Y/O ACCION CENTRALIZADA</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"> <b>PRESUPUESTO TOTAL EJECUTOR:</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($data->mo_proyecto_ac).'</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_ejecutor).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_ejecutor).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_ejecutor).'</b></td>                    
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado_ejecutor).'</b></td>
+		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
+</tr>';
+      
 $html23.='
 </tbody>
 </table>';

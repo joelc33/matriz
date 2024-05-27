@@ -14,7 +14,6 @@ class tab_meta_financiera extends Model
 
     public static $validarEditar = array(
         "modificado_anual" => "required|numeric",
-        "actualizado_anual" => "required|numeric",
         "comprometido" => "required|numeric",
         "causado" => "required|numeric",
         "pagado" => "required|numeric"

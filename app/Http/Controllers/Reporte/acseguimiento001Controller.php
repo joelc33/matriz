@@ -42,6 +42,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'MARCO NORMATIVO INSTITUCIONAL', 0, 'C', 0, 0, '', '', true);
+        $pdf->Ln(5);
+        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);        
 
         return $pdf;
     }
@@ -105,10 +107,11 @@ class acseguimiento001Controller extends Controller
             })                
             ->join('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
             ->join('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')        
             ->select(
             'nu_codigo',
             'id_tab_ejecutores',
-            'id_tab_ejercicio_fiscal',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'tx_ejecutor',
             't45.tx_descripcion as tx_area_estrategica',        
             'id_tab_ac_predefinida',
@@ -120,8 +123,6 @@ class acseguimiento001Controller extends Controller
             'de_ac',
             'mo_ac',
             'mo_calculado',
-            'fe_inicio',
-            'fe_fin',
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
             'ac_seguimiento.tab_ac.inst_objetivos',
@@ -130,11 +131,16 @@ class acseguimiento001Controller extends Controller
             'ac_seguimiento.tab_ac.tx_re_esperado',
             'id_tab_lapso',
             'in_bloquear_001',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),        
             'de_observacion_001'
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();
-          
+            
+        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+            
+          Session::put('periodo',$periodo);
 //          var_dump($data->nu_codigo);
 //          exit();
           
@@ -176,6 +182,7 @@ class acseguimiento001Controller extends Controller
           $pdf->SetCreator('Sistema POA, Yoser Perez');
           $pdf->SetAuthor('Yoser Perez');
           $pdf->SetTitle('Seguimiento AC');
+          $pdf->SetTitle('Seguimiento AC');
           $pdf->SetSubject('Seguimiento AC');
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
@@ -185,8 +192,8 @@ class acseguimiento001Controller extends Controller
           // set auto page breaks
           $pdf->SetAutoPageBreak(true, 10);
           $pdf->AddPage();
+//          $pdf->encabezado($pdf,$data);
           $pdf->SetFont('','',11);
-//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
           $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');

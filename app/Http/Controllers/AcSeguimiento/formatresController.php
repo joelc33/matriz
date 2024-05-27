@@ -375,7 +375,7 @@ class formatresController extends Controller
                 }
                 $tabla = tab_meta_financiera::find($id);
                 $tabla->mo_modificado_anual = Input::get("modificado_anual");
-                $tabla->mo_actualizado_anual = Input::get("actualizado_anual");
+                $tabla->mo_actualizado_anual = $tabla->mo_presupuesto + Input::get("modificado_anual");
                 $tabla->mo_comprometido = Input::get("comprometido");
                 $tabla->mo_causado = Input::get("causado");
                 $tabla->mo_pagado = Input::get("pagado");

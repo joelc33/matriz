@@ -43,6 +43,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'INDICADORES DE GESTIÓN', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
+        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+        $pdf->Ln(5);        
 
         return $pdf;
     }
@@ -120,6 +122,7 @@ class acseguimiento005Controller extends Controller
             ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
             ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
@@ -195,11 +198,16 @@ class acseguimiento005Controller extends Controller
             't47.id_ejecutor as id_ejecutor_ae',
             'tx_pr_objetivo',
             't47.id_accion as co_ae',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
             't21.id as id_tab_ac_ae'        
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();          
                     
+        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+            
+          Session::put('periodo',$periodo);             
 
             $actividad = tab_forma_005::join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
             ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
@@ -245,7 +253,7 @@ class acseguimiento005Controller extends Controller
           $pdf->Ln(-3);
 
 
-          
+         if($actividad->count()>0){ 
       foreach($actividad as $item) {
           
 $pdf->AddPage();
@@ -307,7 +315,9 @@ $html1 = '
 ';
         $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');  
       }        
-
+         }else{
+             $pdf->AddPage();
+         }
 
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
