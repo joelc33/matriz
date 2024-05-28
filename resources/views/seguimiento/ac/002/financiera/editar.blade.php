@@ -66,14 +66,24 @@ this.storeCO_ESTADO.load();
 	objStore: this.storeCO_ESTADO
 });
 
-if(this.OBJ.id_tab_estado){
+this.storeCO_ESTADO.on('load', function(){
+  metafinancieraEditar.main.id_tab_estado.setValue(23);
+  try{
+          metafinancieraEditar.main.id_tab_estado.selectByValue(23);
+
+    }
+    catch(err){
+    }
+});
+
+
 	this.storeCO_MUNICIPIO.load({
-		params: {estado:this.OBJ.id_tab_estado, _token:'{{ csrf_token() }}'},
+		params: {estado:23, _token:'{{ csrf_token() }}'},
 		callback: function(){
 			metafinancieraEditar.main.id_tab_municipio_detalle.setValue(metafinancieraEditar.main.OBJ.id_tab_municipio_detalle);
 		}
 	});
-}
+
 
 this.id_tab_estado.on('beforeselect',function(cmb,record,index){
         	this.id_tab_municipio_detalle.clearValue();
