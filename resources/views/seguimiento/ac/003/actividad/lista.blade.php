@@ -18,6 +18,20 @@ this.store_lista = this.getLista();
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+
+this.nuevo= new Ext.Button({
+    text:'Nueva Actividad',
+    iconCls: 'icon-nuevo',
+    handler:function(){
+	forma003ActividadLista.main.mascara.show();
+        this.msg = Ext.get('forma003Actividad');
+        this.msg.load({
+         url:"{{ URL::to('ac/seguimiento/003/actividad/nuevo') }}/{{ $data['id'] }}",
+         scripts: true,
+         text: "Cargando.."
+        });
+    }
+});
 //Editar un registro
 this.editar= new Ext.Button({
     text:'Datos',
@@ -101,6 +115,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     height:510,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
+				this.nuevo,'-',
+			@endif
+                        @if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
 			@endif
 				this.buscador

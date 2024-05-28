@@ -455,5 +455,23 @@ class formatresController extends Controller
             }
         }
     }
+    
+    public function nuevoActividad($id)
+    {
+        $fechaI = '01-01-'.Session::get('ejercicio');
+        $fechaF = '31-12-'.Session::get('ejercicio');
+
+        $data = json_encode(array(
+          "id_tab_ac_ae" => $id,
+          "fe_ini" => $fechaI,
+          "fe_fin" => $fechaF
+        ));
+
+        $limite = json_encode(array('fe_ini' => $fechaI, 'fe_fin' => $fechaF ));
+
+        return View::make('seguimiento.ac.003.actividad.nuevo')
+        ->with('data', $data)
+        ->with('fecha', $limite);
+    }    
 
 }

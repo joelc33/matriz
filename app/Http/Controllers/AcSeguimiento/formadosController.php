@@ -6,6 +6,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_002;
 use View;
 use Validator;
@@ -304,7 +305,25 @@ class formadosController extends Controller
             return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 200);
         }
     }
+    
+    
+    public function nuevoActividad($id)
+    {
+        $fechaI = '01-01-'.Session::get('ejercicio');
+        $fechaF = '31-12-'.Session::get('ejercicio');
 
+        $data = json_encode(array(
+          "id_tab_ac_ae" => $id,
+          "fe_ini" => $fechaI,
+          "fe_fin" => $fechaF
+        ));
+
+        $limite = json_encode(array('fe_ini' => $fechaI, 'fe_fin' => $fechaF ));
+
+        return View::make('seguimiento.ac.002.actividad.nuevo')
+        ->with('data', $data)
+        ->with('fecha', $limite);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -348,45 +367,9 @@ class formadosController extends Controller
     public function guardar($id = null)
     {
         DB::beginTransaction();
-        if($id!=''||$id!=null) {
 
             try {
-                $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditar);
-                if ($validator->fails()) {
-                    return Response::json(array(
-                      'success' => false,
-                      'msg' => $validator->getMessageBag()->toArray()
-                    ));
-                }
-                $tabla = tab_meta_fisica::find($id);
-                $tabla->nu_meta_modificada = Input::get("meta_modificada");
-                $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
-                $tabla->nu_obtenido = Input::get("obtenido");
-                $tabla->nu_corte = Input::get("corte");
-                $tabla->nb_responsable = Input::get("responsable");
-                $tabla->id_tab_municipio_detalle = Input::get("municipio");
-                $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
-                $tabla->in_cargado = true;
-                $tabla->save();
-
-                DB::commit();
-                return Response::json(array(
-                  'success' => true,
-                  'msg' => 'Registro Editado con Exito!'
-                ));
-
-            } catch (\Illuminate\Database\QueryException $e) {
-                DB::rollback();
-                return Response::json(array(
-                  'success' => false,
-                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
-                ));
-            }
-
-        } else {
-
-            try {
-                $validator = Validator::make(Input::all(), tab_meta_fisica::$validarCrear);
+                $validator = Validator::make(Input::all(), tab_meta_fisica::$validarCrearMeta);
                 if ($validator->fails()) {
                     return Response::json(array(
                       'success' => false,
@@ -394,15 +377,36 @@ class formadosController extends Controller
                     ));
                 }
                 $tabla = new tab_meta_fisica();
-                $tabla->nu_meta_modificada = Input::get("meta_modificada");
-                $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
-                $tabla->nu_obtenido = Input::get("obtenido");
-                $tabla->nu_corte = Input::get("corte");
+                $tabla->id_tab_ac_ae = Input::get("ac_ae");
+                $tabla->nb_meta = Input::get("actividad");
+                $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
+                $tabla->tx_prog_anual = Input::get("programado_anual");
+                $tabla->fecha_inicio = Input::get("fecha_inicio");
+                $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
-                $tabla->id_tab_municipio_detalle = Input::get("municipio");
-                $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
-                $tabla->in_activo = 'TRUE';
+                $tabla->id_tab_origen = 2;
+                $tabla->in_cargado = false;
+                $tabla->in_activo = true;
                 $tabla->save();
+                
+                $detalle = json_decode(Input::get("json_detalle"),true); 
+                
+                foreach ($detalle as $lista){
+                    
+                $tab_meta_financiera = new tab_meta_financiera();
+                $tab_meta_financiera->id_tab_meta_fisica = $tabla->id;
+                $tab_meta_financiera->id_tab_municipio_detalle = $lista['co_municipio'];
+                $tab_meta_financiera->id_tab_parroquia_detalle = $lista['co_parroquia'];
+                $tab_meta_financiera->mo_presupuesto = $lista['mo_presupuesto'];
+                $tab_meta_financiera->co_partida = $lista['co_partida'];
+                $tab_meta_financiera->id_tab_fuente_financiamiento = $lista['co_fuente_financiamiento'];
+                $tab_meta_financiera->id_tab_origen = 2;
+                $tab_meta_financiera->in_cargado = false;
+                $tab_meta_financiera->in_activo = true;
+                $tab_meta_financiera->save();    
+                }                
+                
+                
 
                 DB::commit();
                 return Response::json(array(
@@ -417,8 +421,9 @@ class formadosController extends Controller
                   'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
                 ));
             }
-        }
     }
+    
+    
 
     /**
      * Update the specified resource in storage.
@@ -515,6 +520,7 @@ class formadosController extends Controller
             }
         }
     }
+    
     
         public function listaCambio()
     {
@@ -756,6 +762,17 @@ class formadosController extends Controller
             }
 
         } 
+    }
+
+    public function nuevoFinanciera($id)
+    {
+
+        $data = tab_meta_fisica::select('id as id_tab_meta_fisica', 'id_tab_ac_ae')
+        ->where('id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.002.financiera.editar')
+        ->with('data', $data);
     }    
     
 }
