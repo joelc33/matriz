@@ -346,10 +346,10 @@ $html23.='
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->$resultado.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$resultado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->$observacion.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$observacion.'</td>
 </tr>';   
 
 $html23.='
