@@ -214,7 +214,7 @@ class acseguimiento002Controller extends Controller
           Session::put('periodo',$periodo);            
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
-            't002.nb_responsable','de_unidad_medida as tx_unidades_medida','t002.nu_meta_modificada','de_municipio','de_parroquia',
+            't002.nb_responsable','de_unidad_medida as tx_unidades_medida','t002.nu_meta_modificada','de_municipio','de_parroquia','t002.resultado','t002.observacion',
             DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(t002.nu_meta_modificada,0) as nu_meta_actualizada'),DB::raw('coalesce(t002.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
             ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
@@ -228,10 +228,14 @@ class acseguimiento002Controller extends Controller
             ->get();
             
             $obtenido = '';
+             $resultado = '';
+              $observacion = '';
             
             foreach($actividad as $item) {
                 
              $obtenido.=  $item->nu_obtenido.' '.$item->tx_unidades_medida.',';
+             $resultado.=  $item->resultado.'-';
+             $observacion.=  $item->observacion.'-';
             }
           
 $html1 = '
@@ -342,10 +346,10 @@ $html23.='
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->nu_em_generado.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->$resultado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  </td>
+<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->$observacion.'</td>
 </tr>';   
 
 $html23.='
