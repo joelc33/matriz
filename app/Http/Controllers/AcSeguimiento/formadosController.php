@@ -8,6 +8,7 @@ use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_002;
+use matriz\Models\AcSegto\tab_ac_ae_partida;
 use View;
 use Validator;
 use Input;
@@ -347,6 +348,8 @@ class formadosController extends Controller
             'nu_meta_actualizada',
             'nu_obtenido',
             'nu_corte',
+            'resultado',
+            'observacion',                
             'id_tab_municipio_detalle',
             'id_tab_parroquia_detalle',
             'in_bloquear_002'    
@@ -380,7 +383,7 @@ class formadosController extends Controller
                 $tabla->id_tab_ac_ae = Input::get("ac_ae");
                 $tabla->nb_meta = Input::get("actividad");
                 $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
-                $tabla->tx_prog_anual = Input::get("programado_anual");
+                $tabla->tx_prog_anual = 0;
                 $tabla->fecha_inicio = Input::get("fecha_inicio");
                 $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
@@ -451,6 +454,8 @@ class formadosController extends Controller
                 $tabla->nb_responsable = Input::get("responsable");
                 $tabla->id_tab_municipio_detalle = Input::get("municipio");
                 $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+                $tabla->resultado = Input::get("resultado");
+                $tabla->observacion = Input::get("observacion");               
                 $tabla->in_cargado = true;
                 $tabla->id_tab_estatus = 1;
                 $tabla->save();
@@ -458,9 +463,9 @@ class formadosController extends Controller
                 $tabla_002 = new tab_forma_002();
                 $tabla_002->id_tab_meta_fisica = $id;
                 $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
-//                $tabla_002->nu_meta_actualizada = Input::get("meta_actualizada");
+                $tabla_002->resultado = Input::get("resultado");
                 $tabla_002->nu_obtenido = Input::get("obtenido");
-//                $tabla_002->nu_corte = Input::get("corte");
+                $tabla_002->observacion = Input::get("observacion");
                 $tabla_002->nb_responsable = Input::get("responsable");
                 $tabla_002->id_tab_municipio_detalle = Input::get("municipio");
                 $tabla_002->id_tab_parroquia_detalle = Input::get("parroquia");
@@ -641,6 +646,8 @@ class formadosController extends Controller
             't02.nu_meta_actualizada',
             't02.nu_obtenido',
             't02.nu_corte',
+            't02.resultado',
+            't02.observacion',                
             't02.in_002',    
             't02.id_tab_municipio_detalle',
             't02.id_tab_parroquia_detalle',
@@ -773,6 +780,17 @@ class formadosController extends Controller
 
         return View::make('seguimiento.ac.002.financiera.editar')
         ->with('data', $data);
+    }  
+    
+    public function partida()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_ac_ae_partida::select(DB::raw('left(co_partida, 3) as co_partida'))
+        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+        ->where('in_activo', '=', true)
+        ->groupBy(DB::raw('1'))
+        ->orderby('co_partida', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
     }    
     
 }

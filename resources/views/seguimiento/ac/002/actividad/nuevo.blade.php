@@ -96,7 +96,7 @@ this.storeCO_UNIDADES_MEDIDA.load();
 this.tx_prog_anual = new Ext.form.NumberField({
 	fieldLabel:'PROGRAMADO ANUAL',
 	name:'programado_anual',
-	value:this.OBJ.tx_prog_anual,
+	value:'0',
 	allowBlank:false,
 	width:200,
 	maxLength: 8,
@@ -107,6 +107,7 @@ this.tx_prog_anual = new Ext.form.NumberField({
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
 	allowDecimals: false,
+        readOnly:true,
 	allowNegative: false
 });
 
@@ -267,7 +268,7 @@ this.fieldset1 = new Ext.form.FieldSet({
         items:[
 		this.nb_meta,
 		this.id_tab_unidad_medida,
-		this.tx_prog_anual,
+//		this.tx_prog_anual,
 		this.comFechaInCul,
 		this.nb_responsable
 		]

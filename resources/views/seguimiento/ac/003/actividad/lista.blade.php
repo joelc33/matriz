@@ -129,7 +129,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 		{header: 'Actividad', width:250,  menuDisabled:true, sortable: true, dataIndex: 'actividad'},
     {header: 'Fuente Financimiento', width:220,  menuDisabled:true, sortable: true,  dataIndex: 'de_fuente_financiamiento'},
     {header: 'Presupuesto Anual', width:120,  menuDisabled:true, sortable: true, renderer: formatoNumero, dataIndex: 'mo_presupuesto'},
-		{header: 'Categoria', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'categoria'},
+		{header: 'Categoria', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'categoria'},
     {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'in_cargado'},
     ],
     stripeRows: true,
@@ -188,7 +188,7 @@ getLista: function(){
     {
         name: 'categoria',
         convert: function(v, r) {
-            return r.co_sector + '.' + r.nu_original + '.' + r.nu_numero + '.' + r.co_partida;
+            return r.co_sector + '.' + r.nu_original + '.00.0' + r.nu_numero + '.' + r.co_partida;
         }
     },
     {

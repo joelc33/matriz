@@ -16,7 +16,7 @@ this.datos1 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.codigo+'</
 this.datos1 +='<p class="registro_detalle"><b>Actividad: </b>'+this.OBJ.nb_meta+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Fecha Programada: </b>'+this.OBJ.fecha_inicio+' - '+this.OBJ.fecha_fin+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Presupuesto Programado Anual: </b>'+formatoNumero(this.OBJ.mo_presupuesto)+'</p>';
-this.datos1 +='<p class="registro_detalle"><b>Categoria: </b>'+this.OBJ.co_sector + '.' + this.OBJ.nu_original + '.' + this.OBJ.nu_numero + '.' + this.OBJ.co_partida+'</p>';
+this.datos1 +='<p class="registro_detalle"><b>Categoria: </b>'+this.OBJ.co_sector + '.' + this.OBJ.nu_original + '.00.0' + this.OBJ.nu_numero + '.' + this.OBJ.co_partida+'</p>';
 
 this.fieldset1 = new Ext.form.FieldSet({
 	title: 'Datos de la Actividad',

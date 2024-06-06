@@ -503,6 +503,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('actividad/guardar', 'formadosController@guardar');
         Route::post('actividad/enviar/{id}', 'formadosController@enviar');
         Route::get('actividad/financiera/nuevo/{id}', 'formadosController@nuevoFinanciera');
+        Route::post('actividad/financiera/partida', 'formadosController@partida');
     });    
     //*Modulo de Accion Centralizada Forma 002*/
     Route::group(['prefix' => 'seguimiento/ac/002/cambio'], function () {

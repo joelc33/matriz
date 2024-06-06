@@ -196,22 +196,31 @@ this.mo_presupuesto = new Ext.form.NumberField({
 	allowDecimals: false
 });
 
-this.co_partida = new Ext.form.NumberField({
+this.co_partida = new Ext.form.ComboBox({
 	fieldLabel:'PARTIDA',
-	name:'co_partida',
-	value:this.OBJ.co_partida,
-	allowBlank:false,
-	width:200,
-	minLength : 1,
-	maxLength: 20,
-	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 20},
-//	blankText: '0.00',
-	//decimalPrecision: 2,
-	allowNegative: false,
-   	//style: 'text-align: right',
-//	emptyText: '0.00',
-	decimalPrecision: 0,
-	allowDecimals: false
+	store: this.storeCO_PARTIDA,
+	typeAhead: true,
+	valueField: 'co_partida',
+	displayField:'co_partida',
+	hiddenName:'co_partida',
+	//readOnly:(this.OBJ.co_partida!='')?true:false,
+	//style:(this.OBJ.co_partida!='')?'background:#c9c9c9;':'',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Partida',
+	selectOnFocus: true,
+	mode: 'local',
+	width:300,
+	resizable:true,
+	allowBlank:false
+});
+
+this.storeCO_PARTIDA.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_partida,
+	value:  this.OBJ.co_partida,
+	objStore: this.storeCO_PARTIDA
 });
 
 
@@ -332,7 +341,7 @@ getStoreCO_PARROQUIA:function(){
 },
 getStoreCO_PARTIDA:function(){
     this.store = new Ext.data.JsonStore({
-        url:'{{ URL::to('ac/seguimiento/004/actividad/financiera/partida') }}',
+        url:'{{ URL::to('ac/seguimiento/002/actividad/financiera/partida') }}',
         root:'data',
 				baseParams:{
 					ac_ae:{{ $data->id_tab_ac_ae }},

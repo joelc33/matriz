@@ -176,6 +176,10 @@ class formaunoController extends Controller
                 'de_observacion',
                 'id_usuario_solicita',
                 'id_usuario_procesa',
+                'nu_po_beneficiar',
+                'nu_em_previsto',
+                'nu_po_beneficiada',
+                'nu_em_generado',                    
                 'id_tab_estatus',
                 'in_activo as in_bloquear_001'
             )
@@ -215,7 +219,8 @@ class formaunoController extends Controller
                 $tabla->inst_objetivos = Input::get("objetivos");*/
                 $tabla->in_001 = true;
                 $tabla->in_bloquear_001 = true;
-                $tabla->de_observacion_001 = Input::get("observacion");
+                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
+                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
 
                 DB::commit();
@@ -286,7 +291,8 @@ class formaunoController extends Controller
                 }
                 $tabla = tab_ac::find($id);
                 $tabla->in_bloquear_001 = true;
-                $tabla->de_observacion_001 = Input::get("observacion");
+                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
+                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
 
                 $tabla_001 = new tab_forma_001();
@@ -294,11 +300,14 @@ class formaunoController extends Controller
                 $tabla_001->inst_mision = Input::get("mision");
                 $tabla_001->inst_vision = Input::get("vision");
                 $tabla_001->inst_objetivos = Input::get("objetivos");
-                $tabla_001->de_observacion = Input::get("observacion");
                 $tabla_001->in_001 = false;
                 $tabla_001->id_usuario_solicita = Auth::user()->id;
                 $tabla_001->in_activo = true;
                 $tabla_001->id_tab_estatus = 5;
+                $tabla_001->nu_po_beneficiar = Input::get("nu_po_beneficiar");
+                $tabla_001->nu_em_previsto = Input::get("nu_em_previsto");                
+                $tabla_001->nu_po_beneficiada = Input::get("nu_po_beneficiada");
+                $tabla_001->nu_em_generado = Input::get("nu_em_generado");
                 $tabla_001->save();
 
                 DB::commit();
@@ -474,6 +483,10 @@ class formaunoController extends Controller
             'created_at',
             'updated_at',
             'de_observacion',
+            'nu_po_beneficiar',
+            'nu_em_previsto',
+            'nu_po_beneficiada',
+            'nu_em_generado',                
             'id_usuario_solicita',
             'id_usuario_procesa'
         )

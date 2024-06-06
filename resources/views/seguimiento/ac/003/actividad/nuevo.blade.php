@@ -267,7 +267,7 @@ this.fieldset1 = new Ext.form.FieldSet({
         items:[
 		this.nb_meta,
 		this.id_tab_unidad_medida,
-		this.tx_prog_anual,
+//		this.tx_prog_anual,
 		this.comFechaInCul,
 		this.nb_responsable
 		]

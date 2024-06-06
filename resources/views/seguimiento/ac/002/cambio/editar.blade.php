@@ -123,6 +123,25 @@ this.nb_responsable = new Ext.form.TextField({
 	allowBlank:false
 });
 
+this.resultado = new Ext.form.TextField({
+	fieldLabel:'RESULTADOS OBTENIDOS',
+	name:'resultado',
+	value:this.OBJ.resultado,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_002,
+	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',        
+	allowBlank:false
+});
+
+this.de_observacion = new Ext.form.TextField({
+	fieldLabel:'Observacion',
+	name:'observacion',
+	value:this.OBJ.observacion,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_002,
+	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',          
+});
+
 this.id_tab_municipio_detalle = new Ext.form.ComboBox({
 	fieldLabel:'LOCALIZACIÓN',
 	store: this.storeCO_MUNICIPIO,
@@ -204,9 +223,9 @@ this.fieldset2 = new Ext.form.FieldSet({
 		this.id_tab_municipio_detalle,
 		this.id_tab_parroquia_detalle,
 		this.nu_meta_moificada,
-//		this.nu_meta_actualizada,
-		this.nu_obtenido
-//		this.nu_corte
+		this.nu_obtenido,
+                this.resultado,
+		this.de_observacion
 	]
 });
 

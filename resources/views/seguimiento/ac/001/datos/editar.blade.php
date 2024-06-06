@@ -48,10 +48,40 @@ this.inst_objetivos = new Ext.form.TextArea({
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
-this.de_observacion = new Ext.form.TextField({
-	fieldLabel:'Observacion',
-	name:'observacion',
-	value:this.OBJ.de_observacion_001,
+this.nu_po_beneficiar = new Ext.form.TextField({
+	fieldLabel:'Poblacion a boneficiar',
+	name:'nu_po_beneficiar',
+	value:this.OBJ.nu_po_beneficiar,
+	allowBlank:false,
+	width:400,
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.nu_em_previsto = new Ext.form.TextField({
+	fieldLabel:'Empleos a Generar',
+	name:'nu_em_previsto',
+	value:this.OBJ.nu_em_previsto,
+	allowBlank:false,
+	width:400,
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.nu_po_beneficiada = new Ext.form.TextField({
+	fieldLabel:'Poblacion Beneficiada',
+	name:'nu_po_beneficiada',
+	value:this.OBJ.nu_po_beneficiada,
+	allowBlank:false,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_001,
+	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+});
+
+this.nu_em_generado = new Ext.form.TextField({
+	fieldLabel:'Empleos Generados',
+	name:'nu_em_generado',
+	value:this.OBJ.nu_em_generado,
 	allowBlank:false,
 	width:400,
 	readOnly:this.OBJ.in_bloquear_001,
@@ -183,7 +213,10 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.inst_mision,
 		this.inst_vision,
 		this.inst_objetivos,
-		this.de_observacion
+		this.nu_po_beneficiar,
+                this.nu_em_previsto,
+                this.nu_po_beneficiada,
+                this.nu_em_generado
 	]
 });
 
