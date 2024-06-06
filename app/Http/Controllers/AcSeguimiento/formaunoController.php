@@ -151,6 +151,8 @@ class formaunoController extends Controller
             'inst_objetivos',
             'nu_po_beneficiar',
             'nu_em_previsto',
+            'nu_po_beneficiada',
+            'nu_em_generado',                  
             'tx_re_esperado',
             'in_activo',
             'id_tab_lapso',
