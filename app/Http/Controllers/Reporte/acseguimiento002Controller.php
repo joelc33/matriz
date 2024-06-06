@@ -202,7 +202,9 @@ class acseguimiento002Controller extends Controller
             't21.id as id_tab_ac_ae',
             'ac_seguimiento.tab_ac.tx_re_esperado',
             'ac_seguimiento.tab_ac.nu_po_beneficiar',
-            'ac_seguimiento.tab_ac.nu_em_previsto'
+            'ac_seguimiento.tab_ac.nu_em_previsto',
+            'ac_seguimiento.tab_ac.nu_po_beneficiada',
+            'ac_seguimiento.tab_ac.nu_em_generado'                    
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();    
@@ -335,12 +337,12 @@ $html23.='
 <tr style="font-size:9px">
 <td colspan="3" style="width: 40%;" align="justify"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
 <td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN A BENEFICIAR:</b> '.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN BENEFICIADA:</b> </td>
+<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN BENEFICIADA:</b> '.$data->nu_po_beneficiada.'</td>
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS A GENERAR:</b> '.$data->nu_em_previsto.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> </td>
+<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> </td>
+<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  </td>
