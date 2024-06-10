@@ -1361,7 +1361,7 @@ EOT;
  
 
 				$sql = <<<EOT
-SELECT nu_codigo
+SELECT nu_codigo,id
 FROM ac_seguimiento.tab_ac
 WHERE id = ? and in_activo is true LIMIT 1;
 EOT;

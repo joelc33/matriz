@@ -491,7 +491,7 @@
                                             });
                                             if ( !self.ac.id ) {
                                                 window.tabpanel.remove(99);
-                                             window.addTab('','EDITAR A.C: '+self.ac.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+self.ac.id);
+                                             window.addTab('','EDITAR A.C: '+action.result.data.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+action.result.data.id);
                                              
                                             }
                                         } else {
