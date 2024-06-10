@@ -490,8 +490,9 @@
                                                 buttons: Ext.MessageBox.OK
                                             });
                                             if ( !self.ac.id ) {
-                                                this.panelCambio = Ext.getCmp('tabpanel');
-						this.panelCambio.remove('36');
+                                                window.tabpanel.remove(99);
+                                             window.addTab('','EDITAR A.C: '+self.ac.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+self.ac.id);
+                                             
                                             }
                                         } else {
                                             Ext.MessageBox.alert('Error en transacción',action.result.msg);
