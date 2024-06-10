@@ -37,7 +37,7 @@ this.nueva = new Ext.Button({
 	text:'Agregar AC',
 	iconCls: 'icon-nuevo',
         handler:function(){
-            addTab('','Agregar AC','formulacion/modulos/seguimiento_ac/editar.php','load','icon-nuevo','');
+            addTab('99','Agregar AC','formulacion/modulos/seguimiento_ac/editar.php','load','icon-nuevo','');
 	}
 });
 
