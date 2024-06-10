@@ -40,56 +40,21 @@
 
             this.store_accion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    /*url: 'formulacion/modulos/accionCentralizada/orm.php/tipo/accion',*/
-                    url: 'auxiliar/accion/tipo',
-                    /*method: 'POST'*/
+                    url: 'formulacion/modulos/seguimiento_ac/funcion.php'
                 }),
-                /*baseParams: {
-                    op: 1
-                },*/
+                baseParams: {
+                    op: 2
+                },
                 root: 'data',
                 fields: [
                     'id', {
-                        name: 'nombre',
+                        name: 'de_nombre',
                         convert: function(v, r) {
                             return r.id + ' - ' + r.de_nombre;
                         }
-                    },
-		                'de_accion'
+                    }
                 ]
             });
-            
-	    this.accion_id = new Ext.form.ComboBox({
-		fieldLabel:'1.2. TIPO DE ACCIÓN',
-		store: this.store_accion,
-		typeAhead: true,
-		valueField: 'id',
-		displayField:'nombre',
-		hiddenName:'id_accion',
-		forceSelection:true,
-		resizable:true,
-		triggerAction: 'all',
-		emptyText: 'Seleccione el tipo de Acción Centralizada',
-		selectOnFocus: true,
-                readOnly: ac.id?true:false,
-		mode: 'local',
-		width:400,
-		allowBlank:false,
-		onSelect: function(record){
-			self.accion_id.setValue(record.data.id);
-			self.de_accion.setValue(record.data.de_accion);
-			this.collapse();
-		}
-	    });
-
-	    this.de_accion = new Ext.form.TextArea({
-		fieldLabel: '1.3. DESCRIPCIÓN',
-		name: 'descripcion',
-		allowBlank: false,
-		height: 100,
-                readOnly: true,
-		maxLength: 1200
-	    });            
 
             this.store_ejecutor = new Ext.data.JsonStore({
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
@@ -97,63 +62,8 @@
 		baseParams: {
                     op: 3
                 },
-                fields: ['id_ejecutor', 'tx_ejecutor', 'inst_mision', 'inst_vision', 'inst_objetivos']
+                fields: ['id_ejecutor', 'tx_ejecutor']
             });
-            this.store_ejecutor.load({
-                        callback: function(r, op, scs) {
-                        self.id_ejecutor.setValue(r[0].data.id_ejecutor);
-			self.inst_mision.setValue(r[0].data.inst_mision);
-                        self.inst_vision.setValue(r[0].data.inst_vision);
-                        self.inst_objetivos.setValue(r[0].data.inst_objetivos);
-                        }
-                    });                      
-
-	    this.id_ejecutor = new Ext.form.ComboBox({
-                    fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
-                    store: this.store_ejecutor,
-                    valueField: 'id_ejecutor',
-                    displayField: 'tx_ejecutor',
-                    hiddenName: 'id_ejecutores',
-                    emptyText: 'Seleccione Unidad Ejecutora',
-                    allowBlank: false,
-                    forceSelection: true,
-                    readOnly: true, 
-                    resizable: true,
-                    triggerAction: 'all',
-                    mode: 'local',
-                       onSelect: function(record){
-			self.id_ejecutor.setValue(record.data.id_ejecutor);
-			self.inst_mision.setValue(record.data.inst_mision);
-                        self.inst_vision.setValue(record.data.inst_vision);
-                        self.inst_objetivos.setValue(record.data.inst_objetivos);
-			this.collapse();
-		}
-	    });
-                       
-            
-	    this.inst_mision = new Ext.form.TextArea({
-                    fieldLabel: '1.4.1. MISION',
-                    name: 'inst_mision',
-                    allowBlank: false,
-                    height: 60,
-                    maxLength: 600
-	    });
-            
-	    this.inst_vision = new Ext.form.TextArea({
-                    fieldLabel: '1.4.2. VISION',
-                    name: 'inst_vision',
-                    allowBlank: false,
-                    height: 60,
-                    maxLength: 600
-	    });
-            
-	    this.inst_objetivos = new Ext.form.TextArea({
-                    fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-                    name: 'inst_objetivos',
-                    allowBlank: false,
-                    height: 100,
-                    maxLength: 3000
-	    });            
 
             this.store_situacion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
@@ -211,8 +121,7 @@
                     name: 'co_sistema',
                     readOnly: true,
                     style: 'background:#c9c9c9;'
-                },this.accion_id
-                /*{
+                }, {
                     xtype: 'combo',
                     store: this.store_accion,
                     fieldLabel: '1.2. TIPO DE ACCIÓN',
@@ -224,7 +133,7 @@
                     allowBlank: false,
                     emptyText: 'Seleccione el tipo de Acción Centralizada',
                     triggerAction: 'all',
-                    mode: 'local'                   
+                    mode: 'local'
                 }, {
                     xtype: 'textarea',
                     fieldLabel: '1.3. DESCRIPCIÓN',
@@ -232,12 +141,7 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 200
-                }*/,this.de_accion,
-                    this.id_ejecutor,
-                    this.inst_mision,
-                    this.inst_vision,
-                    this.inst_objetivos
-                   /* {
+                }, {
                     xtype: 'combo',
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
                     store: this.store_ejecutor,
@@ -276,7 +180,7 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 3000
-                }*/]
+                }]
             });
 
             this.co_sector = new Ext.form.ComboBox({
@@ -411,7 +315,7 @@
                         minLength: 1,
                         maxLength: 12,
                         allowNegative: false,
-                        emptyText: '00',
+                        emptyText: '0',
 		    }, {
 			xtype: 'numberfield',
 			fieldLabel: '1.9.2. EMPLEOS PREVISTOS',
@@ -421,17 +325,10 @@
                         minLength: 1,
                         maxLength: 12,
                         allowNegative: false,
-                        emptyText: '00',
+                        emptyText: '0',
 		    }, {
 			xtype: 'textarea',
-			fieldLabel: '1.9.3. PRODUCTO PROGRAMADO DEL OBJETIVO',
-			name: 'tx_pr_objetivo',
-			allowBlank: false,
-			height: 60,
-			maxLength: 600
-                    },{
-			xtype: 'textarea',
-			fieldLabel: '1.9.4. RESULTADOS ESPERADOS',
+			fieldLabel: '1.9.3. RESULTADOS ESPERADOS',
 			name: 'tx_re_esperado',
 			allowBlank: false,
 			height: 60,
@@ -446,6 +343,7 @@
                 deferredRender: false,
                 autoWidth: true,
                 autoHeight: true,
+		border: false,
                 padding: '10px',
                 labelWidth: 200,
                 labelSeparator: '',
@@ -463,7 +361,8 @@
                         handler: function() {
                             var forma = self.getForm();
                             if (!forma.isValid()) {
-                                Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
+                                Ext.Msg.alert("Alerta",
+                                    "Debe ingresar los campos en rojo");
                                 return false;
                             }
                             var enviarCambios = function() {
@@ -476,7 +375,8 @@
                                     waitMsg: 'Enviando datos, por favor espere..',
                                     waitTitle: 'Enviando',
                                     failure: function(form, action) {
-                                        Ext.MessageBox.alert('Error en transacción', action.result.msg);
+                                        Ext.MessageBox.alert('Error en transacción',
+                                            action.result.msg);
                                     },
                                     success: function(form, action) {
                                         if (action.result.success) {
@@ -489,16 +389,16 @@
                                                 animEl: document.body,
                                                 buttons: Ext.MessageBox.OK
                                             });
-                                            if ( !self.ac.id ) {
-                                                this.panelCambio = Ext.getCmp('tabpanel');
-						this.panelCambio.remove('36');
-                                            }
+                                            //FIXME no...
+                                            listaAcS.main.store_lista.reload();
                                         } else {
-                                            Ext.MessageBox.alert('Error en transacción',action.result.msg);
+                                            Ext.MessageBox.alert('Error en transacción',
+                                                action.result.msg);
                                         }
                                     }
                                 });
                             };
+
                             if (!!ac.id && (forma.getValues().id_accion !== ac.id_accion)) {
                                 Ext.Msg.confirm('Atención',
                                     'Cambiar el Tipo de Acción de la AC, implica borrar'
@@ -519,10 +419,10 @@
             }, config);
 
             this.callParent(arguments);
-            
+
             if ( self.ac.bloqueado ) {
                 Reingsys.util.deshabilitarForma(self);
-            }            
+            }
 
             var intermedio = function(nombre) {
                 return function(cb) {
@@ -535,13 +435,10 @@
             };
 
             this.on('beforerender', function() {
-                if ( self.ac.id ) {
                 self.crearTabsAdicionales();
-               }                
-               
                 async.parallel([
                         intermedio( 'accion'),
-//                        intermedio( 'ejecutor'),
+                        intermedio( 'ejecutor'),
                         intermedio( 'situacion'),
                         function(cb) {
                             async.series([
@@ -589,7 +486,7 @@
         },
         crearTabsAdicionales: function() {
             var i, lista;
-
+            if (!!this.ac.nu_codigo && !this.detalles) {
                 lista = [{
                     xtype: 'accion_centralizada_vinculos',
                     title: '2. VINCULACIÓN CON LOS PLANES'
@@ -610,7 +507,8 @@
                         })
                     ));
                 }
-
+                this.detalles = true;
+            }
         }
     });
 
@@ -731,7 +629,7 @@
                                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                                 params: {
                                     op: 23,
-                                    id_accion_centralizada: self.ac.id,
+                                    id_accion_centralizada: self.ac.nu_codigo,
                                     up: self.actualizar
                                 },
                                 waitMsg: 'Enviando datos, por favor espere..',
@@ -784,7 +682,7 @@
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 params: {
                     op: 22,
-                    id: self.ac.id,
+                    id: self.ac.nu_codigo,
                 },
                 success: function(result) {
                     var obj = Ext.util.JSON.decode(result.responseText);
@@ -812,16 +710,13 @@
 
             this.st_co_nodo = Ext.create({
                 xtype: 'jsonstore',
-                url: 'auxiliar/plan/nudo',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 root: 'data',
+		baseParams: {
+			op: 16
+		},
                 fields: [
-                    'co_nodo', 'tx_descripcion',
-                    {
-                        name: 'de_nodo',
-                        convert: function(v, r) {
-                            return r.co_nodo + ' - ' + r.tx_descripcion;
-                        }
-                    }
+                    'co_nodo', 'tx_nodo'
                 ]
             });
 
@@ -832,80 +727,83 @@
                 typeAhead: true,
                 allowQueryAll : false,
                 valueField: 'co_nodo',
-                displayField: 'de_nodo',
+                displayField: 'tx_nodo',
                 hiddenName: 'co_nodo[]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
                 emptyText: 'Seleccione Nodo',
                 selectOnFocus: true,
+		itemSelector: 'div.search-item',
+		tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_nodo}</div></div></tpl>'),
                 mode: 'local',
                 hideOnSelect: false,
-//                readOnly: true,
-                style: 'background-color:#c9c9c9;'
             });
 
             var combos_n = [{
                 nombre: 'Objetivo Histórico',
-                url: 'auxiliar/objetivo/historico',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+		op: 8,
                 valor: 'co_objetivo_historico',
-                mostrar: 'tx_descripcion'
+                mostrar: 'tx_objetivo_historico'
             },{
                 nombre: 'Objetivo Nacional',
-                url: 'auxiliar/objetivo/nacional',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 valor: 'co_objetivo_nacional',
-                mostrar:'tx_descripcion'
+		op: 9,
+                mostrar:'tx_objetivo_nacional'
             },{
                 nombre: 'Objetivo Estratégico',
-                url: 'auxiliar/objetivo/estrategico',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 valor: 'co_objetivo_estrategico',
-                mostrar: 'tx_descripcion'
+		op: 10,
+                mostrar: 'tx_objetivo_estrategico'
             },{
                 nombre: 'Objetivo General',
-                url: 'auxiliar/objetivo/general',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 valor: 'co_objetivo_general',
-                mostrar: 'tx_descripcion'
+		op: 11,
+                mostrar: 'tx_objetivo_general'
             }];
 
             var combos = [{
-                nombre: 'Objetivo',
-                url: 'auxiliar/plan/objetivo',
-                valor: 'co_objetivo_zulia',
-                mostrar: 'tx_descripcion'
-            }, {
-                nombre: 'Problema',
-                url: 'auxiliar/plan/macroproblema',
-                valor: 'co_macroproblema',
-                mostrar: 'tx_descripcion'
-            }];
-
-            var combos_z = [{
                 nombre: 'Área Estratégica',
-                url: 'auxiliar/plan/area',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 valor: 'co_area_estrategica',
-                mostrar: 'tx_descripcion'
+		op: 12,
+                mostrar: 'tx_area_estrategica'
             }, {
                 nombre: 'Ámbito',
-                url: 'auxiliar/plan/ambito',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 valor: 'co_ambito_zulia',
-                mostrar: 'tx_descripcion',
+		op: 13,
+                mostrar: 'tx_ambito_zulia',
             }, {
-                nombre: 'LÍNEA MATRIZ',
-                url: 'auxiliar/plan/nudo',
-                valor: 'co_nodo',
-                mostrar: 'tx_descripcion',
+                nombre: 'Objetivo',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+                valor: 'co_objetivo_zulia',
+		op: 14,
+                mostrar: 'tx_objetivo_zulia'
+            }, {
+                nombre: 'Macroproblema',
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+                valor: 'co_macroproblema',
+		op: 15,
+                mostrar: 'tx_macroproblema'
             }];
 
             var cbxs = [];
-            var cbxs_z = [];
             var cbxs_n = [];
 
-            var crearCreaCombosNac = function( combos_n ) {
+            var crearCreaCombos = function( combos ) {
                 return function(e){
                     self['st_' + e.valor] = Ext.create({
                         xtype: 'jsonstore',
                         url: e.url,
                         root: 'data',
+	                baseParams: {
+                    		op: e.op
+                	},
                         fields: [e.mostrar, e.valor]
                     });
                     var combo = Ext.create({
@@ -919,41 +817,10 @@
                         forceSelection: true,
                         allowBlank: false,
                         emptyText: 'Seleccione ' + e.nombre,
+			itemSelector: 'div.search-item',
+			tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{'+e.mostrar+'}</div></div></tpl>'),
                         triggerAction: 'all',
-                        itemSelector: 'div.search-item',
-                        tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{'+e.mostrar+'}</div></div></tpl>'),                        
                         mode: 'local'
-                    });
-                    self['co_'+ e.valor] = combo;
-                    combos_n.push(combo);
-                };
-            };
-
-            var crearCreaCombos = function( combos ) {
-                return function(e){
-                    self['st_' + e.valor] = Ext.create({
-                        xtype: 'jsonstore',
-                        url: e.url,
-                        root: 'data',
-                        fields: [e.mostrar, e.valor]
-                    });
-                    var combo = Ext.create({
-                        xtype: 'combo',
-                        store: self['st_' + e.valor],
-                        fieldLabel: e.nombre.toUpperCase(),
-                        valueField: e.valor,
-                        displayField: e.mostrar,
-                        hiddenName: e.valor,
-                        autoSelect: true,
-                        forceSelection: true,
-                        //allowBlank: false,
-                        emptyText: 'Seleccione ' + e.nombre,
-                        triggerAction: 'all',
-                        mode: 'local',
-                        itemSelector: 'div.search-item',
-                        tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{'+e.mostrar+'}</div></div></tpl>'),                          
-//                        readOnly: true,
-                        style: 'background-color:#c9c9c9;'
                     });
                     self['co_'+ e.valor] = combo;
                     combos.push(combo);
@@ -962,10 +829,9 @@
 
             //crea los combos y stores
             combos.forEach(crearCreaCombos(cbxs));
-            combos_z.forEach(crearCreaCombosNac(cbxs_z));
-            combos_n.forEach(crearCreaCombosNac(cbxs_n));
+            combos_n.forEach(crearCreaCombos(cbxs_n));
 
-//            cbxs.push(this.co_co_nodo);
+            cbxs.push(this.co_co_nodo);
 
             var ajusta = function(cbx, dep) {
                 self['st_' + dep].on('beforeload', function(st, op) {
@@ -1013,7 +879,7 @@
             ajusta('co_area_estrategica', 'co_ambito_zulia');
             ajusta('co_ambito_zulia', 'co_objetivo_zulia');
             ajusta('co_ambito_zulia', 'co_macroproblema');
-            ajusta('co_ambito_zulia', 'co_nodo');
+            ajusta('co_macroproblema', 'co_nodo');
 
             self.co_co_area_estrategica.on('change', function(){
                 [
@@ -1027,14 +893,13 @@
                 ].forEach(borrar);
                 self.st_co_objetivo_zulia.load();
                 self.st_co_macroproblema.load();
+            });
+            self.co_co_macroproblema.on('change', function(){
+                [
+                    'co_nodo'
+                ].forEach(borrar);
                 self.st_co_nodo.load();
             });
-//            self.co_co_macroproblema.on('change', function(){
-//                [
-//                    'co_nodo'
-//                ].forEach(borrar);
-////                self.st_co_nodo.load();
-//            });
 
             this.forma = Ext.create({
                 xtype: 'form',
@@ -1054,7 +919,7 @@
                                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                                 params: {
                                     op: 17,
-                                    id_accion_centralizada: self.ac.id,
+                                    id_accion_centralizada: self.ac.nu_codigo,
                                     up: self.actualizar
                                 },
                                 waitMsg: 'Enviando datos, por favor espere..',
@@ -1096,11 +961,8 @@
                     title: 'OBJETIVOS DEL PLAN DE LA PATRIA',
                     items: cbxs_n
                 }, {
-                    title: 'OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA (LÍNEA MATRIZ 2022-2025)',
-                    items: [
-                        cbxs_z,
-                        cbxs
-                    ] 
+                    title: 'OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA',
+                    items: cbxs
                 }]
             });
 
@@ -1136,7 +998,7 @@
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 params: {
                     op: 7,
-                    id: self.ac.id,
+                    id: self.ac.nu_codigo,
                 },
                 success: function(result) {
                     var obj = Ext.util.JSON.decode(result.responseText);
@@ -1288,7 +1150,7 @@
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 baseParams: {
                     op: 20,
-                    id: config.ac.id
+                    id: config.ac.nu_codigo
                 },
                 autoLoad: true,
                 root: 'data',
@@ -1348,7 +1210,7 @@
                                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                                 params: {
                                     op: 21,
-                                    id_accion_centralizada: self.ac.id,
+                                    id_accion_centralizada: self.ac.nu_codigo,
                                     localidades: Ext.util.JSON.encode(localidades)
                                 },
                                 failure: function() {

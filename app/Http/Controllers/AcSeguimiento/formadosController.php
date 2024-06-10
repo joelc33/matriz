@@ -337,24 +337,28 @@ class formadosController extends Controller
             'id_tab_ac_ae',
             'codigo',
             'nb_meta',
-            'id_tab_unidad_medida',
+            'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida',
             'tx_prog_anual',
             'nb_responsable',
             'ac_seguimiento.tab_meta_fisica.in_activo',
             'de_unidad_medida',
-            DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
-            DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
+            DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+            DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
             'nu_meta_modificada',
             'nu_meta_actualizada',
             'nu_obtenido',
             'nu_corte',
             'resultado',
+            'nu_po_beneficiar',
+            'nu_em_previsto',
             'observacion',                
-            'id_tab_municipio_detalle',
-            'id_tab_parroquia_detalle',
+            'ac_seguimiento.tab_meta_fisica.id_tab_municipio_detalle',
+            'ac_seguimiento.tab_meta_fisica.id_tab_parroquia_detalle',
             'in_bloquear_002'    
         )
         ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
+        ->join('ac_seguimiento.tab_ac_ae as t02', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't02.id')
+        ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
         ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
         ->first();
 

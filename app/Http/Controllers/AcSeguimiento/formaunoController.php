@@ -216,13 +216,13 @@ class formaunoController extends Controller
                     ));
                 }
                 $tabla = tab_ac::find($id);
-                /*$tabla->inst_mision = Input::get("mision");
+                $tabla->inst_mision = Input::get("mision");
                 $tabla->inst_vision = Input::get("vision");
-                $tabla->inst_objetivos = Input::get("objetivos");*/
-                $tabla->in_001 = true;
-                $tabla->in_bloquear_001 = true;
-                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
-                $tabla->nu_em_generado = Input::get("nu_em_generado");
+                $tabla->inst_objetivos = Input::get("objetivos");
+//                $tabla->in_001 = true;
+//                $tabla->in_bloquear_001 = true;
+//                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
+//                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
 
                 DB::commit();

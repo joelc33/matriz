@@ -211,6 +211,46 @@ this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
 	allowBlank:false
 });
 
+this.nu_po_beneficiar = new Ext.form.TextField({
+	fieldLabel:'POBLACION A BENEFICIAR',
+	name:'nu_po_beneficiar',
+	value:this.OBJ.nu_po_beneficiar,
+	allowBlank:false,
+	width:400,
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.nu_em_previsto = new Ext.form.TextField({
+	fieldLabel:'EMPLEOS A GENERAR',
+	name:'nu_em_previsto',
+	value:this.OBJ.nu_em_previsto,
+	allowBlank:false,
+	width:400,
+	readOnly:true,
+	style:'background:#f2d7d5;'
+});
+
+this.nu_po_beneficiada = new Ext.form.TextField({
+	fieldLabel:'POBLACION BENEFICIADA',
+	name:'nu_po_beneficiada',
+	value:this.OBJ.nu_po_beneficiada,
+	allowBlank:false,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_002,
+	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':''
+});
+
+this.nu_em_generado = new Ext.form.TextField({
+	fieldLabel:'EMPLEOS GENERADOS',
+	name:'nu_em_generado',
+	value:this.OBJ.nu_em_generado,
+	allowBlank:false,
+	width:400,
+	readOnly:this.OBJ.in_bloquear_002,
+	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':''
+});
+
 this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos del Seguimiento',
 	items:[
@@ -220,7 +260,11 @@ this.fieldset2 = new Ext.form.FieldSet({
 		this.nu_meta_moificada,
 		this.nu_obtenido,
                 this.resultado,
-		this.de_observacion
+//		this.nu_po_beneficiar,
+//                this.nu_po_beneficiada,
+//                this.nu_em_previsto,
+//                this.nu_em_generado                
+//		this.de_observacion
 	]
 });
 

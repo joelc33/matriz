@@ -136,7 +136,7 @@ EOT;
 		break;
 	case 2:
 
-	$res = $comunes->ObtenerFilasBySqlSelect('select id, de_nombre from mantenimiento.tab_ac_predefinida WHERE in_activo is true;');
+	$res = $comunes->ObtenerFilasBySqlSelect('select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;');
 
 	if ($res) {
 		$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
@@ -147,14 +147,24 @@ EOT;
 		break;
 	case 3:
 
-	$sql = "SELECT * FROM mantenimiento.tab_ejecutores WHERE in_activo is true;";       
+	$sql = "SELECT id_ejecutor,tx_ejecutor, (select inst_mision 
+from public.t46_acciones_centralizadas 
+where id_ejecutor = t1.id_ejecutor and id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by id desc limit 1 ), (select inst_vision 
+from public.t46_acciones_centralizadas 
+where id_ejecutor = t1.id_ejecutor and id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by id desc limit 1 ) , (select inst_objetivos 
+from public.t46_acciones_centralizadas 
+where id_ejecutor = t1.id_ejecutor and id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by id desc limit 1 )  
+FROM mantenimiento.tab_ejecutores t1
+WHERE id_ejecutor = '".$_SESSION['id_ejecutor']."' and in_activo is true order by id_ejecutor asc;";       
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){
 		array_push($data,array(
-			"co_ejecutores"		=> $row["id"],
 			"id_ejecutor"	=> $row["id_ejecutor"], 
-			"tx_ejecutor"	=> $row["tx_ejecutor"], 
+			"tx_ejecutor"	=> $row["tx_ejecutor"],
+                        "inst_mision"	=> $row["inst_mision"],
+                        "inst_vision"	=> $row["inst_vision"],
+                        "inst_objetivos" => $row["inst_objetivos"],
 		));
 	}
 	echo json_encode(
@@ -428,8 +438,9 @@ EOT;
 				'id_accion_centralizada' => 'id'
 			) );
 
-			$clave = v::key( 'id', v::string() );
-			$reglas = v::key( 'co_nodos', v::arr()->notEmpty()->each( v::int()->positive() ) );
+			$clave = v::key( 'id', v::intero()->notEmpty() );
+
+//			$reglas = v::key( 'co_nodos', v::arr()->notEmpty()->each( v::int()->positive() ) );
 			foreach( array(
 				'co_objetivo_historico',
 				'co_objetivo_nacional',
@@ -440,15 +451,17 @@ EOT;
 				'co_objetivo_estado',
 				'co_macroproblema'
 			) as $campo ) {
-				$reglas = $reglas->key( $campo, v::int()->positive()->notEmpty() );
+//				$reglas = $reglas->key( $campo, v::intero()->notEmpty() );
 			}
 
 			$clave->assert( $pk );
-			$reglas->assert( $params );
-			$params['co_nodos'] = implode (',', $params['co_nodos'] );
+//			$reglas->assert( $params );
+//			$params['co_nodos'] = implode (',', $params['co_nodos'] );
 			$params['updated_at'] = date( \DateTime::ISO8601 );
 			$tabla = 'ac_seguimiento.tab_ac_vinculo';
 			if ( $actualizar ) {
+                            
+
 				$resultado = $comunes->InsertUpdate(
 					$tabla,
 					$params,
@@ -537,8 +550,7 @@ EOT;
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_accion_centralizada' => 'id'
 			) );
-
-			$clave = v::key( 'id', v::string()->notEmpty() );
+                        $clave = v::key( 'id', v::intero()->notEmpty() );
 			$clave->assert( $pk );
 
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
@@ -548,11 +560,11 @@ EOT;
 			$json->assert( $params );
 			$localidades = json_decode( $params['localidades'] );
 
-			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_municipio', v::int()->positive()->notEmpty() )
-					->attribute( 'co_parroquia', v::int()->positive(), false )
-			);
-			$reglas->assert( $localidades );
+//			$reglas = v::arr()->each(
+//				v::object()->attribute( 'co_municipio', v::int()->positive()->notEmpty() )
+//					->attribute( 'co_parroquia', v::int()->positive(), false )
+//			);
+//			$reglas->assert( $localidades );
 
 			$paraTransaccion->StartTrans();
 
@@ -605,12 +617,12 @@ EOT;
 
 			$tipos = array( 'realizador', 'registrador', 'autorizador' );
 			$datos = array(
-				'nombres' => v::string()->length( 4, 80)->notEmpty(),
+				'nombres' => v::stringcadena()->length( 4, 80)->notEmpty(),
 				'cedula' => v::regex( '/^[VvEe](\-)?(\d{4,8})$/' ),
-				'cargo' => v::string()->length( 4, 50)->notEmpty(),
+				'cargo' => v::stringcadena()->length( 4, 50)->notEmpty(),
 				'correo' => v::regex( '/^(\w+)([\-+.\'][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/' )->notEmpty(),
 				'telefono' => v::regex( '/^((((\+)(\d{2})|(\d{2}))(\-)?)(\d{4}(\-)?)|(\d{4}(\-)?))?(\d{7})$/' )->notEmpty(),
-				'unidad' => v::string()->length( 3, 50)->notEmpty()
+				'unidad' => v::stringcadena()->length( 3, 50)->notEmpty()
 			);
 
 			$campos = array();
@@ -619,6 +631,8 @@ EOT;
 					$campos[] = "{$t}_{$d}";
 				}
 			}
+                        
+                
 			$params = re\Helpers::obtener_pertinentes( $_POST, $campos );
 
 			$cadena = null;
@@ -632,10 +646,13 @@ EOT;
 				}
 			}
 
+
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array( 'id_accion_centralizada' ) );
 			$params = array_merge( $params, $pk );
 			$params['updated_at'] = date( \DateTime::ISO8601 );
-			$cadena->key( 'id_accion_centralizada', v::string()->notEmpty() );
+			$cadena->key( 'id_accion_centralizada', v::intero()->notEmpty() );
+                        
+
 
 			$cadena->assert( $params );
 			$tabla = 'ac_seguimiento.tab_ac_responsable';
@@ -674,18 +691,18 @@ WHERE id_tab_ac = ? and t47.in_activo is true
 EOT;
 				$sql = <<<EOT
 SELECT t47.id, id_tab_ac_ae_predefinida as id_accion, t53.nu_numero as numero, t53.de_nombre as nombre, bien_servicio, t47.mo_ae as monto,
-	t47.mo_ae_calculado as monto_calc, to_char(fecha_inicio, 'DD/MM/YYYY') as fecha_inicio, to_char(fecha_fin, 'DD/MM/YYYY') as fecha_fin, t47.id_tab_ejecutores as id_ejecutor, t24.tx_ejecutor,
+	t47.mo_ae_calculado as monto_calc, to_char(fecha_inicio, 'DD/MM/YYYY') as fecha_inicio, to_char(fecha_fin, 'DD/MM/YYYY') as fecha_fin, t47.id_ejecutor as id_ejecutor, t24.tx_ejecutor,
 	id_tab_unidad_medida as id_unidad_medida, de_unidad_medida, meta, objetivo_institucional,
-	count(t54.id_tab_ac_ae_predefinida) as npartidas
+	count(t54.id_tab_ac_ae) as npartidas,t47.id_tab_origen
 FROM ac_seguimiento.tab_ac_ae as t47
-	JOIN mantenimiento.tab_ejecutores as t24 on t47.id_tab_ejecutores = t24.id_ejecutor
+	JOIN mantenimiento.tab_ejecutores as t24 on t47.id_ejecutor = t24.id_ejecutor
 	JOIN mantenimiento.tab_ac_ae_predefinida as t53 on t53.id = t47.id_tab_ac_ae_predefinida
 	JOIN mantenimiento.tab_unidad_medida as t21 on t21.id = t47.id_tab_unidad_medida
-	LEFT JOIN ac_seguimiento.tab_ac_ae_partida as t54 using (id_tab_ac, id_tab_ac_ae_predefinida)
+	LEFT JOIN ac_seguimiento.tab_ac_ae_partida as t54 on t54.id_tab_ac_ae = t47.id
 WHERE t47.id_tab_ac = ? and t47.in_activo is true
 GROUP BY t47.id, id_tab_ac_ae_predefinida, t53.nu_numero, t53.de_nombre, bien_servicio, t47.mo_ae,
 	t47.mo_ae_calculado, fecha_inicio, fecha_fin, t47.id_tab_ejecutores, t24.tx_ejecutor,
-	id_tab_unidad_medida, de_unidad_medida, meta, objetivo_institucional
+	id_tab_unidad_medida, de_unidad_medida, meta, objetivo_institucional,t47.id_tab_origen
 ORDER BY id_tab_ac_ae_predefinida LIMIT ? OFFSET ?;
 EOT;
 				$total = $comunes->ObtenerFilasBySqlSelect(
@@ -783,8 +800,9 @@ EOT;
 			$fondos = re\Helpers::obtener_pertinentes( $_POST, array(
 				'fondos'
 			));
+                        
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
-				'id_ejecutor' => 'id_tab_ejecutores',
+				'id_ejecutor',
 				'bien_servicio',
 				'objetivo_institucional',
 				'monto' => 'mo_ae',
@@ -795,17 +813,18 @@ EOT;
 				'fecha_fin'
 			));
 
-			$primaria = v::key( 'id_tab_ac', v::string()->notEmpty() )
+                        
+			$primaria = v::key( 'id_tab_ac', v::intero()->notEmpty() )
 				->key( 'id_tab_ac_ae_predefinida', v::intero()->notEmpty() );
 
 			$actualiza = v::key( 'id_viejo', v::intero()->notEmpty() );
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
-			$validador = v::key( 'id_tab_ejecutores', v::string()->length( 4, 4, true ) )
-				->key( 'id_tab_unidad_medida', v::int()->positive()->notEmpty() )
+			$validador = v::key( 'id_ejecutor',v::stringcadena()->length( 4, 4, true ) )
+				->key( 'id_tab_unidad_medida', v::intero()->positive()->notEmpty() )
 				->key( 'mo_ae', v::numeric()->positive()->notEmpty() )
-				->key( 'meta', v::int()->positive()->notEmpty() )
-				->key( 'bien_servicio', v::string()->length( 3, 128 ) )
+				->key( 'meta', v::intero()->positive()->notEmpty() )
+				->key( 'bien_servicio', v::stringcadena()->length( 3, 128 ) )
 				->key( 'fecha_inicio',  $fechas )
 				->key( 'fecha_fin', $fechas );
 
@@ -816,12 +835,23 @@ EOT;
 			$json->assert( $fondos );
 			$fondos = json_decode( $fondos['fondos'] );
 
-			$reglas = v::arr()->each(
-				v::object()->attribute( 'co_tipo_fondo', v::int()->positive()->notEmpty() )
-					->attribute( 'monto', v::int()->positive() )
-			);
-			$reglas->assert( $fondos );
-
+//			$reglas = v::arr()->each(
+//				v::object()->attribute( 'co_tipo_fondo', v::intero()->positive()->notEmpty() )
+//					->attribute( 'monto', v::intero()->positive() )
+//			);
+                        
+//			$reglas->assert( $fondos );
+                        
+				$sql_ejecutor = <<<EOT
+SELECT id
+FROM mantenimiento.tab_ejecutores
+WHERE id_ejecutor = ?;
+EOT;
+				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $params['id_ejecutor']); 
+                                $res_ejecutor = $res_ejecutor[0];                        
+                        $params['id_tab_ejecutores'] = $res_ejecutor['id'];
+                        $params['mo_ae_calculado'] = $params['mo_ae'];
+                        $params['id_tab_origen'] = 2;
 			$paraTransaccion->StartTrans();
 
 			$llave = null;
@@ -990,7 +1020,7 @@ EOT;
 	case 31: //elimina AE
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array( 'id_accion_centralizada',
 				'id_accion_especifica' => 'numero' ) );
-			$existe = v::key( 'id_accion_centralizada', v::string()->notEmpty() )
+			$existe = v::key( 'id_accion_centralizada', v::intero()->notEmpty() )
 				->key( 'numero', v::intero()->notEmpty() );
 
 				$existe->assert( $pk );
@@ -1223,7 +1253,6 @@ EOT;
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array( 'id' ) );
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_ejercicio' => 'id_tab_ejercicio_fiscal',
-				'id_ejecutor' => 'id_tab_ejecutores',
 				'id_accion' => 'id_tab_ac_predefinida',
 				'descripcion' => 'de_ac',
 				'id_subsector' => 'id_tab_sectores',
@@ -1234,59 +1263,102 @@ EOT;
 				'inst_objetivos',
 				'nu_po_beneficiar',
 				'nu_em_previsto',
+                                'tx_pr_objetivo' => 'pp_anual',
 				'tx_re_esperado',
+                                'id_ejecutores' => 'id_ejecutor',                            
 				'co_situacion_presupuestaria' => 'id_tab_situacion_presupuestaria',
 				'monto' => 'mo_ac'
 			));
-/*$respuesta = re\Helpers::responder( false, $mensaje, array( 'data' => $params));
-echo $respuesta;
-exit();*/
+//$respuesta = re\Helpers::responder( false, $mensaje, array( 'data' => $params));
+//echo $respuesta;
+//exit();
 
 			$params['id_tab_estatus'] = 1; //FIXME asi no
 			$existe = v::key( 'id', v::intero()->notEmpty() );
 
 			$ejercicio = intval($params['id_tab_ejercicio_fiscal']);
 			$fechas = v::date( 'd-m-Y' )->between( '01-01-' . $ejercicio, '31-12-' . $ejercicio, true )->notEmpty();
+                        
 
 			$validador = v::key( 'id_tab_ejercicio_fiscal', v::intero()->notEmpty() )
 				->key( 'id_tab_estatus', v::intero()->notEmpty() )
 				->key( 'id_tab_ac_predefinida', v::intero()->notEmpty() )
 				->key( 'id_tab_sectores', v::intero()->notEmpty() )
-				->key( 'de_ac', v::string() )
-				->key( 'inst_mision', v::string() )
-				->key( 'inst_vision', v::string() )
-				->key( 'inst_objetivos', v::string() )
+				->key( 'de_ac', v::stringcadena()  )
+				->key( 'inst_mision', v::stringcadena()  )
+				->key( 'inst_vision', v::stringcadena()  )
+				->key( 'inst_objetivos', v::stringcadena()  )
 				->key( 'fe_inicio',  $fechas )
 				->key( 'fe_fin', $fechas )
 				->key( 'id_tab_situacion_presupuestaria', v::intero()->notEmpty() )
-				->key( 'nu_po_beneficiar', v::numeric()->notEmpty() )
-				->key( 'nu_em_previsto', v::numeric()->notEmpty() )
-				->key( 'tx_re_esperado', v::string() )
-				->key( 'mo_ac', v::numeric()->notEmpty() );
+				->key( 'nu_po_beneficiar', v::numeric() )
+				->key( 'nu_em_previsto', v::numeric() )
+				->key( 'tx_re_esperado', v::stringcadena()  )
+                                ->key( 'pp_anual', v::stringcadena() )
+                                ->key( 'mo_ac', v::numeric()->notEmpty() );
+                        
+                      
 
 			if ( $usuario->co_rol > 2 ) { //es local
-				$params['id_tab_ejecutores'] = $usuario->id_ejecutor;
+				$params['id_ejecutor'] = $usuario->id_ejecutor;
 			} else {
 				$validador = $validador->key(
-					'id_tab_ejecutores', v::string()->length( 4, 4, true )
+					'id_ejecutor',v::stringcadena()->length( 4, 4, true )
 				);
 			}
-
+   			
 			$validador->assert($params);
+                        
 			$tabla = 'ac_seguimiento.tab_ac';
 			$mensaje = null;
 
 			$paraTransaccion->BeginTrans();
 
 			if ( $existe->validate( $pk ) ) {
+                                                        
 				$params['updated_at'] = date( \DateTime::ISO8601 );
 				$resultado = $comunes->InsertUpdate( $tabla, $params, 'UPDATE', 'id = '.$pk['id']);
 				$resultado = $resultado === 'Ok';
 			} else {
+                            
+                            
+				$sql_ejecutor = <<<EOT
+SELECT id
+FROM mantenimiento.tab_ejecutores
+WHERE id_ejecutor = ?;
+EOT;
+				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $params['id_ejecutor']); 
+                                $res_ejecutor = $res_ejecutor[0];
+                                
+				$sql_desc = <<<EOT
+SELECT de_nombre
+FROM mantenimiento.tab_ac_predefinida
+WHERE id = ?;
+EOT;
+				$res_desc = $comunes->ObtenerFilasBySqlSelect($sql_desc, $params['id_tab_ac_predefinida']); 
+                                $res_desc = $res_desc[0];   
+                                
+				$sql_lapso = <<<EOT
+SELECT id
+FROM mantenimiento.tab_lapso
+WHERE id_tab_ejercicio_fiscal = ? and in_activo = true;
+EOT;
+				$res_lapso = $comunes->ObtenerFilasBySqlSelect($sql_lapso, $params['id_tab_ejercicio_fiscal']); 
+                                $res_lapso = $res_lapso[0];                                
+
 				$params['id_tab_tipo_registro'] = 2;
 				$params['in_activo'] = 'TRUE';
+                                $params['id_tab_ejecutores'] = $res_ejecutor['id'];
+                                $params['de_ac'] = $res_desc['de_nombre'];
+                                $params['id_tab_lapso'] = $res_lapso['id'];
+                                $params['mo_calculado'] = $params['mo_ac'];
+                                $params['id_tab_origen'] = 1;
+                                $params['nu_codigo'] = 'AC'.$params['id_ejecutor'].$params['id_tab_ejercicio_fiscal'].str_pad($params['id_tab_ac_predefinida'], 5,'0', STR_PAD_LEFT );
 				$params['created_at'] = date( \DateTime::ISO8601 );
+                                $params['updated_at'] = date( \DateTime::ISO8601 );
+                      
 				$res = $comunes->InsertConID( $tabla, $params, 'id');
+ 
 
 				$sql = <<<EOT
 SELECT nu_codigo
@@ -1294,6 +1366,8 @@ FROM ac_seguimiento.tab_ac
 WHERE id = ? and in_activo is true LIMIT 1;
 EOT;
 				$resultado = $comunes->ObtenerFilasBySqlSelect($sql, array($res));
+                                
+                                
 
 				if ( ! empty( $resultado ) ) {
 					$resultado = $resultado[0];
@@ -1325,7 +1399,7 @@ EOT;
 } catch ( \ADODB_Exception $e ) {
 	error_log( json_encode( re\Helpers::jTraceEx( $e ) ) );
 	//FIXME feo
-	$mensaje = 'ocurrió una falla trabajando con la base de datos';
+	$mensaje = 'ocurrió una falla trabajando con la base de datos'.$e->getMessage();
 	if ( $paraTransaccion->HasFailedTrans() ) {
 		$paraTransaccion->CompleteTrans();
 	}

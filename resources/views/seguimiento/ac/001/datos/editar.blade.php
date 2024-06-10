@@ -213,10 +213,10 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.inst_mision,
 		this.inst_vision,
 		this.inst_objetivos,
-		this.nu_po_beneficiar,
-                this.nu_em_previsto,
-                this.nu_po_beneficiada,
-                this.nu_em_generado
+//		this.nu_po_beneficiar,
+//                this.nu_em_previsto,
+//                this.nu_po_beneficiada,
+//                this.nu_em_generado
 	]
 });
 

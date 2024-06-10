@@ -26,7 +26,7 @@
                     }
                 }),
                 baseParams: {
-                    id_accion_centralizada: config.ac.nu_codigo,
+                    id_accion_centralizada: config.ac.id,
 		    op: config.op
                 },
                 writer: new Ext.data.JsonWriter({
@@ -191,7 +191,7 @@
             this.callParent(arguments);
 
             if ( self.ac.bloqueado ) {
-                Reingsys.util.deshabilitarForma(self);
+//                Reingsys.util.deshabilitarForma(self);
             }
         }
     });
@@ -225,7 +225,7 @@
                 }),
                 baseParams: {
                     op: 25,
-		    id_accion_centralizada: config.ac.nu_codigo,
+		    id_accion_centralizada: config.ac.id,
                     id_accion: config.ac.id_accion
                 },
                 root: 'data',
@@ -312,7 +312,7 @@
                 items: [{
                     xtype: 'hidden',
                     name: 'id_accion_centralizada',
-                    value: config.ac.nu_codigo
+                    value: config.ac.id
                 }, {
                     xtype: 'hidden',
                     name: 'id',
@@ -663,7 +663,7 @@
                     items: [{
                             xtype: 'hidden',
                             name: 'accion_centralizada',
-                            value: config.ac.nu_codigo
+                            value: config.ac.id
                         }, {
                             xtype: 'displayfield',
                             fieldLabel: 'Código',
@@ -751,7 +751,7 @@
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 baseParams: {
                     op: 34,
-                    id_accion_centralizada: config.ac.nu_codigo,
+                    id_accion_centralizada: config.ac.id,
                     id_accion_especifica: config.ae.id_accion,
                     start: 0,
                     limit: tpagina
@@ -833,7 +833,7 @@
         url: 'formulacion/modulos/seguimiento_ac/funcion.php',
         baseParams: {
             op: 24,
-        id: config.ac.nu_codigo,
+        id: config.ac.id,
         start: 0,
         limit: tpagina
         },
@@ -845,7 +845,7 @@
         'bien_servicio', 'monto', 'monto_calc', 'fecha_inicio',
         'fecha_fin', 'id_ejecutor', 'tx_ejecutor',
         'id_unidad_medida', 'de_unidad_medida',
-        'meta', 'npartidas', 'objetivo_institucional'
+        'meta', 'npartidas', 'objetivo_institucional','id_tab_origen'
         ]
     });
 
@@ -962,7 +962,7 @@
                                     url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                                     params: {
                                         op: 31,
-                                        id_accion_centralizada: self.ac.nu_codigo,
+                                        id_accion_centralizada: self.ac.id,
                                         id_accion_especifica: r.get('id')
                                     },
                                     success: function(result) {
@@ -993,7 +993,7 @@
                         url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                         params: {
                             op: 32,
-                            id_accion_centralizada: self.ac.nu_codigo
+                            id_accion_centralizada: self.ac.id
                         },
                         failure: function() {
                             mb.hide();
@@ -1059,13 +1059,13 @@
                 tbar: [
                     this.cargarAccion,
                     this.editarAccion,
-                    this.cargarPartida,
-                    this.verPartidas,
-                    this.verDistribucion,
-                    this.verDistribucionFisica,
+//                    this.cargarPartida,
+//                    this.verPartidas,
+//                    this.verDistribucion,
+//                    this.verDistribucionFisica,
                     this.eliminar,
-                    '->',
-                    this.cerrar
+//                    '->',
+//                    this.cerrar
                 ],
                 columns: [{
                     header: 'NÚMERO',
@@ -1147,10 +1147,38 @@
             this.callParent(arguments);
 
             if ( self.ac.bloqueado ) {
-                Reingsys.util.deshabilitarForma(self);
-                self.verDistribucion.enable();
-                self.verDistribucionFisica.enable();
-                self.verPartidas.enable();
+//                Reingsys.util.deshabilitarForma(self);
+                var verificarAccionesAE = function(sm) {
+                    if (sm.hasSelection()) {
+                        var rec = sm.getSelected();
+                        if (rec.get('id_tab_origen') > 1) {
+                        self.editarAccion.enable();
+                        self.eliminar.enable();
+                        } else {
+                        self.editarAccion.disable();
+                        self.eliminar.disable();
+                        }
+                    } else {
+                        self.editarAccion.disable();
+                        self.eliminar.disable();
+
+                    }
+                };
+                self.store.on('datachanged', function(st) {
+                    if (st.getCount() > 0) {
+                        self.cargarPartida.enable();
+                        self.verDistribucion.enable();
+                        self.verDistribucionFisica.enable();
+                        self.cerrar.enable();
+                        verificarAccionesAE(self.grid.getSelectionModel());
+                    } else {
+                        self.cargarPartida.disable();
+                        self.verDistribucion.disable();
+                        self.verDistribucionFisica.disable();
+                        self.cerrar.disable();
+                    }
+                });
+                self.rowSelModel.on('selectionchange', verificarAccionesAE);
             } else {
                 var verificarAccionesAE = function(sm) {
                     if (sm.hasSelection()) {

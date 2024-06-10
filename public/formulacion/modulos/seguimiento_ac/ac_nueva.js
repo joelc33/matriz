@@ -39,21 +39,54 @@
 
             this.store_accion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
-                    url: 'formulacion/modulos/seguimiento_ac/funcion.php'
+                    /*url: 'formulacion/modulos/accionCentralizada/orm.php/tipo/accion',*/
+                    url: 'auxiliar/accion/tipo',
+                    /*method: 'POST'*/
                 }),
-                baseParams: {
-                    op: 2
-                },
+                /*baseParams: {
+                    op: 1
+                },*/
                 root: 'data',
                 fields: [
                     'id', {
-                        name: 'de_nombre',
+                        name: 'nombre',
                         convert: function(v, r) {
                             return r.id + ' - ' + r.de_nombre;
                         }
-                    }
+                    },
+		                'de_accion'
                 ]
             });
+            
+	    this.accion_id = new Ext.form.ComboBox({
+		fieldLabel:'1.2. TIPO DE ACCIÓN',
+		store: this.store_accion,
+		typeAhead: true,
+		valueField: 'id',
+		displayField:'nombre',
+		hiddenName:'id_accion',
+		forceSelection:true,
+		resizable:true,
+		triggerAction: 'all',
+		emptyText: 'Seleccione el tipo de Acción Centralizada',
+		selectOnFocus: true,
+		mode: 'local',
+		width:400,
+		allowBlank:false,
+		onSelect: function(record){
+			self.accion_id.setValue(record.data.id);
+			self.de_accion.setValue(record.data.de_accion);
+			this.collapse();
+		}
+	    });
+
+	    this.de_accion = new Ext.form.TextArea({
+		fieldLabel: '1.3. DESCRIPCIÓN',
+		name: 'descripcion',
+		allowBlank: false,
+		height: 100,
+		maxLength: 1200
+	    });            
 
             this.store_ejecutor = new Ext.data.JsonStore({
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
@@ -61,8 +94,62 @@
 		baseParams: {
                     op: 3
                 },
-                fields: ['id_ejecutor', 'tx_ejecutor']
+                fields: ['id_ejecutor', 'tx_ejecutor', 'inst_mision', 'inst_vision', 'inst_objetivos']
             });
+            this.store_ejecutor.load({
+                        callback: function(r, op, scs) {
+                        self.id_ejecutor.setValue(r[0].data.id_ejecutor);
+			self.inst_mision.setValue(r[0].data.inst_mision);
+                        self.inst_vision.setValue(r[0].data.inst_vision);
+                        self.inst_objetivos.setValue(r[0].data.inst_objetivos);
+                        }
+                    });                      
+
+	    this.id_ejecutor = new Ext.form.ComboBox({
+                    fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
+                    store: this.store_ejecutor,
+                    valueField: 'id_ejecutor',
+                    displayField: 'tx_ejecutor',
+                    hiddenName: 'id_ejecutores',
+                    emptyText: 'Seleccione Unidad Ejecutora',
+                    allowBlank: false,
+                    forceSelection: true,
+                    resizable: true,
+                    triggerAction: 'all',
+                    mode: 'local',
+                       onSelect: function(record){
+			self.id_ejecutor.setValue(record.data.id_ejecutor);
+			self.inst_mision.setValue(record.data.inst_mision);
+                        self.inst_vision.setValue(record.data.inst_vision);
+                        self.inst_objetivos.setValue(record.data.inst_objetivos);
+			this.collapse();
+		}
+	    });
+                       
+            
+	    this.inst_mision = new Ext.form.TextArea({
+                    fieldLabel: '1.4.1. MISION',
+                    name: 'inst_mision',
+                    allowBlank: false,
+                    height: 60,
+                    maxLength: 600
+	    });
+            
+	    this.inst_vision = new Ext.form.TextArea({
+                    fieldLabel: '1.4.2. VISION',
+                    name: 'inst_vision',
+                    allowBlank: false,
+                    height: 60,
+                    maxLength: 600
+	    });
+            
+	    this.inst_objetivos = new Ext.form.TextArea({
+                    fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
+                    name: 'inst_objetivos',
+                    allowBlank: false,
+                    height: 100,
+                    maxLength: 3000
+	    });            
 
             this.store_situacion = new Ext.data.JsonStore({
                 proxy: new Ext.data.HttpProxy({
@@ -120,7 +207,8 @@
                     name: 'co_sistema',
                     readOnly: true,
                     style: 'background:#c9c9c9;'
-                }, {
+                },this.accion_id
+                /*{
                     xtype: 'combo',
                     store: this.store_accion,
                     fieldLabel: '1.2. TIPO DE ACCIÓN',
@@ -132,7 +220,7 @@
                     allowBlank: false,
                     emptyText: 'Seleccione el tipo de Acción Centralizada',
                     triggerAction: 'all',
-                    mode: 'local'
+                    mode: 'local'                   
                 }, {
                     xtype: 'textarea',
                     fieldLabel: '1.3. DESCRIPCIÓN',
@@ -140,7 +228,12 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 200
-                }, {
+                }*/,this.de_accion,
+                    this.id_ejecutor,
+                    this.inst_mision,
+                    this.inst_vision,
+                    this.inst_objetivos
+                   /* {
                     xtype: 'combo',
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
                     store: this.store_ejecutor,
@@ -179,7 +272,7 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 3000
-                }]
+                }*/]
             });
 
             this.co_sector = new Ext.form.ComboBox({
@@ -327,7 +420,14 @@
                         emptyText: '0',
 		    }, {
 			xtype: 'textarea',
-			fieldLabel: '1.9.3. RESULTADOS ESPERADOS',
+			fieldLabel: '1.9.3. PRODUCTO PROGRAMADO DEL OBJETIVO',
+			name: 'tx_pr_objetivo',
+			allowBlank: false,
+			height: 60,
+			maxLength: 600
+                    },{
+			xtype: 'textarea',
+			fieldLabel: '1.9.4. RESULTADOS ESPERADOS',
 			name: 'tx_re_esperado',
 			allowBlank: false,
 			height: 60,
@@ -429,7 +529,7 @@
             this.on('beforerender', function() {
                 async.parallel([
                         intermedio( 'accion'),
-                        intermedio( 'ejecutor'),
+//                        intermedio( 'ejecutor'),
                         intermedio( 'situacion'),
                         function(cb) {
                             async.series([

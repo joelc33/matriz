@@ -225,7 +225,7 @@ this.fieldset2 = new Ext.form.FieldSet({
 		this.nu_meta_moificada,
 		this.nu_obtenido,
                 this.resultado,
-		this.de_observacion
+//		this.de_observacion
 	]
 });
 
