@@ -344,7 +344,7 @@ getStoreCO_PARTIDA:function(){
         url:'{{ URL::to('ac/seguimiento/002/actividad/financiera/partida') }}',
         root:'data',
 				baseParams:{
-					ac_ae:{{ $data->id_tab_ac_ae }},
+					id_tab_ac_ae_predefinida:{{ $data->id_tab_ac_ae_predefinida }},
 					_token: '{{ csrf_token() }}',
 				},
         fields:[

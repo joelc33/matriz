@@ -8,7 +8,7 @@ use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_002;
-use matriz\Models\AcSegto\tab_ac_ae_partida;
+use matriz\Models\Mantenimiento\tab_ac_ae_partida;
 use View;
 use Validator;
 use Input;
@@ -778,7 +778,7 @@ class formadosController extends Controller
     public function nuevoFinanciera($id)
     {
 
-        $data = tab_meta_fisica::select('id as id_tab_meta_fisica', 'id_tab_ac_ae')
+        $data = tab_ac_ae::select('id as id_tab_meta_fisica','id_tab_ac_ae_predefinida')
         ->where('id', '=', $id)
         ->first();
 
@@ -789,8 +789,8 @@ class formadosController extends Controller
     public function partida()
     {
         $response['success']  = 'true';
-        $response['data']  = tab_ac_ae_partida::select(DB::raw('left(co_partida, 3) as co_partida'))
-        ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+        $response['data']  = tab_ac_ae_partida::select(DB::raw('substring(nu_partida::text from 1 for 3) as co_partida'))
+        ->where('id_tab_ac_ae_predefinida', '=', Input::get('id_tab_ac_ae_predefinida'))
         ->where('in_activo', '=', true)
         ->groupBy(DB::raw('1'))
         ->orderby('co_partida', 'ASC')->get()->toArray();
