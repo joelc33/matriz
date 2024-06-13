@@ -327,12 +327,13 @@
                     autoSelect: true,
                     forceSelection: true,
                     allowBlank: false,
+                    readOnly:config.ae?true:false,
                     emptyText: 'Seleccione el tipo de Acción Específica',
                     triggerAction: 'all',
 		    itemSelector: 'div.search-item',
 		    tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{nombre}</div></div></tpl>'),
                     mode: 'local'
-                }, {
+                },/* {
                     xtype: 'combo',
                     fieldLabel: 'UNIDAD EJECUTORA RESPONSABLE',
                     name: 'id_ejecutor_fld',
@@ -348,7 +349,7 @@
 		    itemSelector: 'div.search-item',
 		    tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{tx_ejecutor}</div></div></tpl>'),
                     store: self.store_unidad
-                }, {
+                },*/ {
                     xtype: 'compositefield',
                     fieldLabel: 'FECHA DE INICIO',
                     items: [

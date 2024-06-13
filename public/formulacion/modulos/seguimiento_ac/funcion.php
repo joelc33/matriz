@@ -735,7 +735,7 @@ EOT;
 
 			$id_accion = intval( $_REQUEST['id_accion'] );
 			if ( $id_accion > 0 ) {
-				$sql = 'select id, nu_numero as numero, de_nombre as nombre from mantenimiento.tab_ac_ae_predefinida where id_padre = ?;';
+				$sql = 'select id, nu_numero as numero, de_nombre as nombre from mantenimiento.tab_ac_ae_predefinida where id not in (select id_tab_ac_ae_predefinida from ac_seguimiento.tab_ac_ae where id_tab_ac = '.$_REQUEST['id_accion_centralizada'].' ) and id_padre = ?;';
 				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_accion ) );
 				if ( $res ) {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
@@ -809,7 +809,6 @@ EOT;
 			));
                         
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
-				'id_ejecutor',
 				'bien_servicio',
 				'objetivo_institucional',
 				'monto' => 'mo_ae',
@@ -827,8 +826,7 @@ EOT;
 			$actualiza = v::key( 'id_viejo', v::intero()->notEmpty() );
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
-			$validador = v::key( 'id_ejecutor',v::stringcadena()->length( 4, 4, true ) )
-				->key( 'id_tab_unidad_medida', v::intero()->positive()->notEmpty() )
+			$validador = v::key( 'id_tab_unidad_medida', v::intero()->positive()->notEmpty() )
 				->key( 'mo_ae', v::numeric()->positive()->notEmpty() )
 				->key( 'meta', v::intero()->positive()->notEmpty() )
 				->key( 'bien_servicio', v::stringcadena()->length( 3, 128 ) )
@@ -849,14 +847,16 @@ EOT;
                         
 //			$reglas->assert( $fondos );
                         
+                        
 				$sql_ejecutor = <<<EOT
-SELECT id
-FROM mantenimiento.tab_ejecutores
-WHERE id_ejecutor = ?;
+SELECT id_ejecutor,id_tab_ejecutores
+FROM ac_seguimiento.tab_ac
+WHERE id = ?;
 EOT;
-				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $params['id_ejecutor']); 
+				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $pk['id_tab_ac']); 
                                 $res_ejecutor = $res_ejecutor[0];                        
-                        $params['id_tab_ejecutores'] = $res_ejecutor['id'];
+                        $params['id_tab_ejecutores'] = $res_ejecutor['id_tab_ejecutores'];
+                        $params['id_ejecutor'] = $res_ejecutor['id_ejecutor'];
                         $params['mo_ae_calculado'] = $params['mo_ae'];
                         $params['id_tab_origen'] = 2;
 			$paraTransaccion->StartTrans();
