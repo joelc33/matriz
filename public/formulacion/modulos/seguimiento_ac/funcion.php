@@ -135,9 +135,16 @@ EOT;
 
 		break;
 	case 2:
+            
+        if($_POST['codigo']){    
 
-	$res = $comunes->ObtenerFilasBySqlSelect('select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;');
-
+	$res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;");
+        }else{
+            
+            
+        $res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true and id not in (select id_tab_ac_predefinida from ac_seguimiento.tab_ac where id_tab_ejercicio_fiscal = ".$_SESSION['ejercicio_fiscal']." and id_ejecutor = '".$_POST['id_ejecutor']."') order by id;");
+             
+        }
 	if ($res) {
 		$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
 	} else {
@@ -155,7 +162,7 @@ where id_ejecutor = t1.id_ejecutor and id_ejercicio = ".$_SESSION['ejercicio_fis
 from public.t46_acciones_centralizadas 
 where id_ejecutor = t1.id_ejecutor and id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by id desc limit 1 )  
 FROM mantenimiento.tab_ejecutores t1
-WHERE id_ejecutor = '".$_SESSION['id_ejecutor']."' and in_activo is true order by id_ejecutor asc;";       
+WHERE in_activo is true order by id_ejecutor asc;";       
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){

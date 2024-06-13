@@ -43,7 +43,9 @@
                     url: 'formulacion/modulos/seguimiento_ac/funcion.php'
                 }),
                 baseParams: {
-                    op: 2
+                    op: 2,
+                    id_ejecutor: ac.id_ejecutor,
+                    codigo: ac.id
                 },
                 root: 'data',
                 fields: [
@@ -102,12 +104,7 @@
 			self.inst_mision.setValue(r[0].data.inst_mision);
                         self.inst_vision.setValue(r[0].data.inst_vision);
                         self.inst_objetivos.setValue(r[0].data.inst_objetivos);
-                        self.store_accion.load({
-                            params: {
-                                id_ejecutor: self.ac.id_ejecutor,
-                                codigo: self.ac.id
-                            }
-                        });   
+                        this.collapse();
                         }
                     });                      
 
@@ -120,7 +117,7 @@
                     emptyText: 'Seleccione Unidad Ejecutora',
                     allowBlank: false,
                     forceSelection: true,
-                    readOnly: ac.id?true:false,
+                    readOnly: ac.es_local,
                     resizable: true,
                     triggerAction: 'all',
                     mode: 'local',
@@ -131,6 +128,7 @@
                         self.inst_objetivos.setValue(record.data.inst_objetivos);
                         self.de_accion.setValue('');
                         self.accion_id.clearValue();
+                        self.store_accion.removeAll();
                         self.store_accion.load({
                             params: {
                                 id_ejecutor: this.getValue()
@@ -551,7 +549,7 @@
                }                
                
                 async.parallel([
-//                        intermedio( 'accion'),
+                        intermedio( 'accion'),
 //                        intermedio( 'ejecutor'),
                         intermedio( 'situacion'),
                         function(cb) {
@@ -1436,3 +1434,4 @@
     });
 
 }(Ext, Reingsys, async, paqueteComunJS, opcionPlanificador));
+
