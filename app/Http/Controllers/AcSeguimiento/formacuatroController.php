@@ -64,6 +64,7 @@ class formacuatroController extends Controller
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',
                 'de_ac',
+                'de_lapso',
                 'in_004',
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )
