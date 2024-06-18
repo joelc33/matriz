@@ -431,7 +431,8 @@ EOT;
 
 			$actualizar = ( array_key_exists( 'up', $_POST ) and $_POST['up'] === 't' );
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
-				'co_objetivo_historico',
+				'id_accion_centralizada' => 'id_tab_ac',
+                                'co_objetivo_historico',
 				'co_objetivo_nacional',
 				'co_objetivo_estrategico',
 				'co_objetivo_general',
@@ -476,12 +477,12 @@ EOT;
 					"id_tab_ac = '{$pk['id']}'"
 				);
 			} else {
-				/*$params['id_accion_centralizada'] = $pk['id'];
+				$params['id_accion_centralizada'] = $pk['id'];
 				$resultado = $comunes->InsertUpdate(
 					$tabla,
 					$params,
 					'INSERT'
-				);*/
+				);
 			}
 
 			if ( $resultado === 'Ok' ) {

@@ -42,7 +42,12 @@ EOT;
 		$id_ejercicio = $res['id_ejercicio'];
 		$contenedor = "ac_{$id_accion}";
 		$accion['es_local'] = $local;
-		$accion['bloqueado'] = $accion['bloqueado'] === 't';
+	if ( $local ) { //planificador local sólo lectura
+            $accion['bloqueado'] = true; 
+	}else{
+          $accion['bloqueado'] = false;  
+        }                
+		
 	}
 }
 
@@ -57,6 +62,17 @@ if ( is_null( $accion ) ) {
 SELECT id FROM mantenimiento.tab_ejercicio_fiscal WHERE id = $_SESSION[ejercicio_fiscal] LIMIT 1;
 EOT
 	)[0];
+        
+	$sql_ejecutor = <<<EOT
+select inst_mision,inst_vision,inst_objetivos 
+from public.t46_acciones_centralizadas 
+where id_ejecutor = ? and id_ejercicio = ? order by id desc limit 1;
+EOT;
+        			$ejecutor = $comunes->ObtenerFilasBySqlSelect( $sql_ejecutor, array(
+				$usuario->id_ejecutor, $_SESSION[ejercicio_fiscal]
+			) );
+                                $ejecutor = $ejecutor[0];    
+        
 	$id_ejercicio = $ejercicio['id'];
 	$contenedor = "ac_nueva";
 
@@ -75,7 +91,10 @@ EOT
 		'co_sector' => null,
 		'id_subsector' => null,
 		'fecha_inicio' => "01-01-{$id_ejercicio}",
-		'fecha_fin' => "31-12-{$id_ejercicio}"
+		'fecha_fin' => "31-12-{$id_ejercicio}",
+                'inst_mision' => $ejecutor['inst_mision'],
+                'inst_vision' => $ejecutor['inst_vision'],
+                'inst_objetivos' => $ejecutor['inst_objetivos']
 	);
 }
 

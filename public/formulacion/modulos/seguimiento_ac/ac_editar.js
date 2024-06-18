@@ -99,9 +99,9 @@
             this.store_ejecutor.load({
                         callback: function(r, op, scs) {
                         self.id_ejecutor.setValue(self.ac.id_ejecutor);
-			self.inst_mision.setValue(r[0].data.inst_mision);
-                        self.inst_vision.setValue(r[0].data.inst_vision);
-                        self.inst_objetivos.setValue(r[0].data.inst_objetivos);
+			self.inst_mision.setValue(self.ac.inst_mision);
+                        self.inst_vision.setValue(self.ac.inst_vision);
+                        self.inst_objetivos.setValue(self.ac.inst_objetivos);
                         self.store_accion.load({
                             params: {
                                 id_ejecutor: self.ac.id_ejecutor,

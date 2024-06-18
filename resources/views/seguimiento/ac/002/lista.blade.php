@@ -41,6 +41,33 @@ this.ficha= new Ext.Button({
 
 this.ficha.disable();
 
+this.editar = new Ext.Button({
+	text:'Editar',
+	iconCls: 'icon-editar',
+	handler:function(){
+	this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma002Lista.main.mascara.show();
+			this.msg = Ext.get('formularioacseguimiento');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/002/editar') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+	}
+});
+this.editar.disable();
+this.cargar = new Ext.Button({
+	text:'Cargar Matriz',
+	iconCls: 'icon-editar',
+	handler:function(){
+            this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+            this.nu_codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('nu_codigo');
+            addTab('foma002'+this.nu_codigo,'F002 - A.C: '+this.nu_codigo,'{{ URL::to('ac/seguimiento/002/datos') }}/'+this.codigo,'load','icon-editar','');
+	}
+});
+
+this.cargar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -104,7 +131,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',
+			  this.ficha,'-',this.editar,'-',this.cargar,'-',
 			@endif
 				this.buscador
     ],
@@ -122,6 +149,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002Lista.main.ficha.enable();
+                        forma002Lista.main.cargar.enable();
+                        forma002Lista.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -135,35 +164,35 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			/*AQUI ES DONDE ESTA EL LISTENER*/
 				listeners: {
 				rowselect: function(sm, row, rec) {
-					var msg = Ext.get('detalle');
-					msg.load({
-									url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
-									scripts: true,
-									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
-									text: 'Cargando...'
-					});
-					if(panel_detalle.collapsed == true)
-					{
-						panel_detalle.toggleCollapse();
-					}
+//					var msg = Ext.get('detalle');
+//					msg.load({
+//									url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
+//									scripts: true,
+//									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+//									text: 'Cargando...'
+//					});
+//					if(panel_detalle.collapsed == true)
+//					{
+//						panel_detalle.toggleCollapse();
+//					}
 				}
 			}
 		})
 });
 
 /*Evento Doble Click*/
-this.gridPanel_.on('rowdblclick', function( grid, row, evt){
-	panel_detalle.toggleCollapse(true);
-	this.record = forma002Lista.main.store_lista.getAt(row);
-	this.codigo = this.record.data["id"];
-	this.msg = Ext.get('detalle');
-	this.msg.load({
-	    url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
-	    scripts: true,
-	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
-	    text: "Cargando..."
-	});
-});
+//this.gridPanel_.on('rowdblclick', function( grid, row, evt){
+//	panel_detalle.toggleCollapse(true);
+//	this.record = forma002Lista.main.store_lista.getAt(row);
+//	this.codigo = this.record.data["id"];
+//	this.msg = Ext.get('detalle');
+//	this.msg.load({
+//	    url: '{{ URL::to('ac/seguimiento/002/detalle') }}',
+//	    scripts: true,
+//	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
+//	    text: "Cargando..."
+//	});
+//});
 
 this.panel = new Ext.Panel({
 	layout: "fit",
@@ -182,6 +211,8 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002Lista.main.ficha.disable();
+forma002Lista.main.cargar.disable();
+forma002Lista.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

@@ -4,6 +4,16 @@ namespace matriz\Http\Controllers\Mantenimiento;
 
 //*******agregar esta linea******//
 use matriz\Models\Mantenimiento\tab_lapso;
+use matriz\Models\Ac\tab_ac as ac;
+use matriz\Models\Ac\tab_ac_ae as ac_ae;
+use matriz\Models\Ac\tab_ac_ae_partida as ac_ae_partida;
+use matriz\Models\Ac\tab_meta_fisica as ac_ae_mf;
+use matriz\Models\Ac\tab_meta_financiera as ac_ae_mff;
+use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_ac_ae_partida;
+use matriz\Models\AcSegto\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_financiera;
 use View;
 use Validator;
 use Input;
@@ -141,7 +151,8 @@ class lapsoController extends Controller
                 $tabla->fe_inicio = Input::get("fecha_inicio");
                 $tabla->fe_fin = Input::get("fecha_cierre");
                 $tabla->de_lapso = Input::get("descripcion");
-                $tabla->save();
+                $tabla->save();     
+                
 
                 DB::commit();
                 return Response::json(array(
@@ -167,15 +178,139 @@ class lapsoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = new tab_lapso();
-                $tabla->id_tab_ejercicio_fiscal = Input::get("ejercicio");
-                $tabla->id_tab_periodo = Input::get("periodo");
-                $tabla->nu_lapso = 1;
-                $tabla->fe_inicio = Input::get("fecha_inicio");
-                $tabla->fe_fin = Input::get("fecha_cierre");
-                $tabla->de_lapso = Input::get("descripcion");
+                $lapso = new tab_lapso();
+                $lapso->id_tab_ejercicio_fiscal = Input::get("ejercicio");
+                $lapso->id_tab_periodo = Input::get("periodo");
+                $lapso->nu_lapso = 1;
+                $lapso->fe_inicio = Input::get("fecha_inicio");
+                $lapso->fe_fin = Input::get("fecha_cierre");
+                $lapso->de_lapso = Input::get("descripcion");
+                $lapso->in_activo = 'TRUE';
+                $lapso->save();
+                
+                
+                
+        $tab_ac = ac::join('mantenimiento.tab_ejecutores as t01', 'public.t46_acciones_centralizadas.id_ejecutor', '=', 't01.id_ejecutor')
+        ->join('mantenimiento.tab_ac_predefinida as t03', 'public.t46_acciones_centralizadas.id_accion', '=', 't03.id')
+            ->select(
+                'public.t46_acciones_centralizadas.id',
+                'public.t46_acciones_centralizadas.id_ejecutor',
+                'id_ejercicio',
+                'id_accion',
+                'id_subsector',
+                'id_estatus',
+                'sit_presupuesto',
+                'codigo_new_etapa',
+                'de_nombre',
+                'monto',
+                'monto_calc',
+                'fecha_inicio',
+                'fecha_fin',
+                'de_nombre',
+                'tx_ejecutor',
+                't01.id as id_tab_ejecutores',
+                'inst_mision',
+                'inst_vision',
+                'inst_objetivos',
+                'nu_po_beneficiar',
+                'nu_em_previsto',
+                'tx_re_esperado',
+                'tx_pr_objetivo',
+                DB::raw("'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo")
+            )
+        ->where('edo_reg', '=', true)
+        ->where('id_estatus', '=', 3)
+        ->where('id_ejercicio', '=', Input::get("ejercicio"))
+        ->orderby('public.t46_acciones_centralizadas.id_ejecutor', 'ASC')
+        ->orderby('public.t46_acciones_centralizadas.id_accion', 'ASC')
+        ->get();  
+        
+        foreach ($tab_ac as $arreglo_ac) {
+            
+                $tabla = new tab_ac();
+                $tabla->nu_codigo = $arreglo_ac->codigo;
+                $tabla->id_ejecutor = $arreglo_ac->id_ejecutor;
+                $tabla->id_tab_ejecutores = $arreglo_ac->id_tab_ejecutores;
+                $tabla->id_tab_ejercicio_fiscal = $arreglo_ac->id_ejercicio;
+                $tabla->id_tab_ac_predefinida = $arreglo_ac->id_accion;
+                $tabla->id_tab_sectores = $arreglo_ac->id_subsector;
+                $tabla->id_tab_estatus = $arreglo_ac->id_estatus;
+                $tabla->id_tab_situacion_presupuestaria = $arreglo_ac->sit_presupuesto;
+                $tabla->id_tab_tipo_registro = 1;
+                $tabla->co_new_etapa = $arreglo_ac->codigo_new_etapa;
+                $tabla->de_ac = $arreglo_ac->de_nombre;
+                $tabla->mo_ac = $arreglo_ac->monto;
+                $tabla->mo_calculado = $arreglo_ac->monto_calc;
+                $tabla->fe_inicio = $arreglo_ac->fecha_inicio;
+                $tabla->fe_fin = $arreglo_ac->fecha_fin;
+                $tabla->inst_mision = $arreglo_ac->inst_mision;
+                $tabla->inst_vision = $arreglo_ac->inst_vision;
+                $tabla->inst_objetivos = $arreglo_ac->inst_objetivos;
+                $tabla->nu_po_beneficiar = $arreglo_ac->nu_po_beneficiar;
+                $tabla->nu_em_previsto = $arreglo_ac->nu_em_previsto;
+                $tabla->tx_re_esperado = $arreglo_ac->tx_re_esperado;
+                $tabla->pp_anual = $arreglo_ac->tx_pr_objetivo;
+                $tabla->id_tab_lapso = $lapso->id;
+                $tabla->id_tab_origen = 1;
                 $tabla->in_activo = 'TRUE';
-                $tabla->save();
+                $tabla->in_001 = false;
+                $tabla->in_005 = false;
+                $tabla->in_bloquear_001 = false;
+                $tabla->in_bloquear_005 = false;
+                $tabla->id_accion_centralizada = $arreglo_ac->id;
+                $tabla->save();  
+                
+            $tab_ac_ae = ac_ae::select(
+                'id_accion_centralizada',
+                'id_accion',
+                'public.t47_ac_accion_especifica.id_ejecutor',
+                'bien_servicio',
+                'id_unidad_medida',
+                'meta',
+                'ponderacion',
+                'id_tipo_fondo',
+                'monto',
+                'monto_calc',
+                'fecha_inicio',
+                'fecha_fin',
+                'edo_reg',
+                'fecha_creacion',
+                'fecha_actualizacion',
+                'objetivo_institucional',
+                'id_tab_ejecutor',
+                'in_definitivo',
+                't01.id as id_tab_ejecutores'
+            )
+            ->join('mantenimiento.tab_ejecutores as t01', 'public.t47_ac_accion_especifica.id_ejecutor', '=', 't01.id_ejecutor')
+            ->where('id_accion_centralizada', '=', $arreglo_ac->id)
+            ->orderby('id_accion', 'ASC')
+            ->get();
+            
+            foreach ($tab_ac_ae as $arreglo_ac_ae) {
+                
+                    $tabla_ac_ae= new tab_ac_ae();
+                    $tabla_ac_ae->id_tab_ac = $tabla->id;
+                    $tabla_ac_ae->id_tab_ac_ae_predefinida = $arreglo_ac_ae->id_accion;
+                    $tabla_ac_ae->id_ejecutor = $arreglo_ac_ae->id_ejecutor;
+                    $tabla_ac_ae->id_tab_ejecutores = $arreglo_ac->id_tab_ejecutores;
+                    $tabla_ac_ae->bien_servicio = $arreglo_ac_ae->bien_servicio;
+                    $tabla_ac_ae->id_tab_unidad_medida = $arreglo_ac_ae->id_unidad_medida;
+                    $tabla_ac_ae->meta = $arreglo_ac_ae->meta;
+                    $tabla_ac_ae->ponderacion = $arreglo_ac_ae->ponderacion;
+                    $tabla_ac_ae->id_tab_tipo_fondo = $arreglo_ac_ae->id_tipo_fondo;
+                    $tabla_ac_ae->mo_ae = $arreglo_ac_ae->monto;
+                    $tabla_ac_ae->mo_ae_calculado = $arreglo_ac_ae->monto_calc;
+                    $tabla_ac_ae->fecha_inicio = $arreglo_ac_ae->fecha_inicio;
+                    $tabla_ac_ae->fecha_fin = $arreglo_ac_ae->fecha_fin;
+                    $tabla_ac_ae->objetivo_institucional = $arreglo_ac_ae->objetivo_institucional;
+                    $tabla_ac_ae->id_tab_origen = 1;
+                    $tabla_ac_ae->in_activo = 'TRUE';
+                    $tabla_ac_ae->id_accion_centralizada = $arreglo_ac_ae->id_accion_centralizada;
+                    $tabla_ac_ae->save();                       
+                                
+            }
+
+        }                   
 
                 DB::commit();
                 return Response::json(array(

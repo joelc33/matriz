@@ -293,8 +293,8 @@ class formaunoController extends Controller
                 }
                 $tabla = tab_ac::find($id);
                 $tabla->in_bloquear_001 = true;
-                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
-                $tabla->nu_em_generado = Input::get("nu_em_generado");
+//                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
+//                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
 
                 $tabla_001 = new tab_forma_001();

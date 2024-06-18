@@ -43,7 +43,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'DESVIO DE LA GESTIÓN', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
-        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+//        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
         $pdf->Ln(5);        
 
         return $pdf;

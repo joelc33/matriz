@@ -1184,17 +1184,17 @@
                 var verificarAccionesAE = function(sm) {
                     if (sm.hasSelection()) {
                         var rec = sm.getSelected();
-                        if (rec.get('npartidas') > 0) {
-                            self.verPartidas.enable();
-                        } else {
-                            self.verPartidas.disable();
-                        }
+                        if (rec.get('id_tab_origen') > 1) {
                         self.editarAccion.enable();
                         self.eliminar.enable();
-                    } else {
-                        self.verPartidas.disable();
+                        } else {
                         self.editarAccion.disable();
                         self.eliminar.disable();
+                        }
+                    } else {
+                        self.editarAccion.disable();
+                        self.eliminar.disable();
+
                     }
                 };
                 self.store.on('datachanged', function(st) {
