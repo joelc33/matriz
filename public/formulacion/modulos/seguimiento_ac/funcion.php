@@ -135,12 +135,15 @@ EOT;
 
 		break;
 	case 2:
+        $codigo = $_POST['codigo'];
             
-        if($_POST['codigo']==''){    
-
+        if ($codigo!=''||$codigo!=null) {              
+            echo "prueba";
+            exit();
 	$res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;");
         }else{
-            
+            echo "prueba";
+            exit();
             
         $res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true and id not in (select id_tab_ac_predefinida from ac_seguimiento.tab_ac where id_tab_ejercicio_fiscal = ".$_SESSION['ejercicio_fiscal']." and id_ejecutor = '".$_POST['id_ejecutor']."') order by id;");
              
