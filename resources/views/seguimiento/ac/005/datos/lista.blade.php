@@ -128,7 +128,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
     {header: 'PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'pp_anual'},
-    {header: 'INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD)', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'tp_indicador'},
+    {header: 'TIPO DE INDICADOR', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'tp_indicador'},
     {header: 'NOMBRE DEL INDICADOR', width:220,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nb_indicador_gestion'},
     {header: 'DESCRIPCIÓN DEL INDICADOR', width:180,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_indicador_descripcion'},
     {header: 'Estatus', width:130,  menuDisabled:true, sortable: true, renderer: actividadEstado, dataIndex: 'id_tab_estatus'},

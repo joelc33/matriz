@@ -230,24 +230,66 @@ class acseguimiento004Controller extends Controller
             ->orderBy('codigo', 'ASC')
             ->get();
           
+//$html1 = '
+//<table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+//<tbody>
+//<tr style="font-size:9px">
+//<td style="width: 45%;"><b>UNIDAD EJECUTORA:</b> '.$data->tx_ejecutor.'</td>
+//<td style="width: 15%;"><b>COD EJECUTOR:</b> '.$data->id_ejecutor.'</td>
+//<td style="width: 10%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+//<td style="width: 30%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+//</tr>
+//<tr style="font-size:9px">
+//<td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
+//</tr>
+//<tr style="font-size:9px">
+//<td style="width: 100%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+//</tr>
+//</tbody>
+//</table>
+//';
+            
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 45%;"><b>UNIDAD EJECUTORA:</b> '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>COD EJECUTOR:</b> '.$data->id_ejecutor.'</td>
-<td style="width: 10%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
-<td style="width: 30%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2" style="width: 30%;" align="justify"><b>OBJETIVO HISTORICO:</b> '.$data->tx_objetivo_historico.'</td>
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$data->tx_objetivo_nacional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$data->tx_objetivo_estrategico.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" align="justify"><b>OBJETIVO GENERAL:</b> '.$data->tx_objetivo_general.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> '.$data->tx_ambito_estado.'</td>
+<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$data->tx_macroproblema.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 100%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+<td style="width: 80%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
 </tr>
 </tbody>
 </table>
-';
+';            
 
 $html23='';
 $html23.= '

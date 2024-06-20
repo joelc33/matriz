@@ -310,9 +310,13 @@ $cantidad = $actividad->count();
 
 $contar=0;
       foreach($actividad as $item) {
+ 
+          if($item->nu_meta_actualizada==0){
+             $nu_meta_actualizada =  1;
+          }else{
+            $nu_meta_actualizada =  $item->nu_meta_actualizada;  
+          }
           
-//                               var_dump($item->nb_responsable);
-//          exit();
 $contar=$contar+1;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
@@ -324,7 +328,7 @@ $contar=$contar+1;
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$item->nu_obtenido.'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$item->nu_meta_actualizada)*100).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';

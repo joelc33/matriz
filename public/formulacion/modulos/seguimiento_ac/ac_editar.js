@@ -102,15 +102,14 @@
 			self.inst_mision.setValue(self.ac.inst_mision);
                         self.inst_vision.setValue(self.ac.inst_vision);
                         self.inst_objetivos.setValue(self.ac.inst_objetivos);
-                        self.store_accion.load({
+                    }
+                    });                      
+                        this.store_accion.load({
                             params: {
-                                id_ejecutor: self.ac.id_ejecutor,
-                                codigo: self.ac.id
+                                id_ejecutor: config.ac.id_ejecutor,
+                                codigo: config.ac.id
                             }
                         });   
-                        }
-                    });                      
-
 	    this.id_ejecutor = new Ext.form.ComboBox({
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
                     store: this.store_ejecutor,
@@ -796,6 +795,7 @@
                 params: {
                     op: 22,
                     id: self.ac.id,
+                    id_ejecutor: self.ac.id_ejecutor,
                 },
                 success: function(result) {
                     var obj = Ext.util.JSON.decode(result.responseText);
@@ -1148,6 +1148,7 @@
                 params: {
                     op: 7,
                     id: self.ac.id,
+                    id_ejecutor: self.ac.id_ejecutor,
                 },
                 success: function(result) {
                     var obj = Ext.util.JSON.decode(result.responseText);
@@ -1299,7 +1300,8 @@
                 url: 'formulacion/modulos/seguimiento_ac/funcion.php',
                 baseParams: {
                     op: 20,
-                    id: config.ac.id
+                    id: config.ac.id,
+                    id_ejecutor: config.ac.id_ejecutor,
                 },
                 autoLoad: true,
                 root: 'data',

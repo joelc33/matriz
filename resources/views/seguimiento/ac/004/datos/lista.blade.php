@@ -171,7 +171,7 @@ getLista: function(){
 			{
 					name: 'ejecutor',
 					convert: function(v, r) {
-							return r.id_tab_ejecutores + ' - ' + r.tx_ejecutor;
+							return r.id_ejecutor + ' - ' + r.tx_ejecutor;
 					}
 			},
 			{

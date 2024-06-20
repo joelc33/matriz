@@ -29,7 +29,7 @@ class tab_ac extends Model
         "nombre_indicador" => "required",
         "valor_objetivo" => "required",
         "valor_obtenido" => "required",
-        "cumplimiento" => "required",
+//        "cumplimiento" => "required",
         "indicador" => "required",
         "formula" => "required"
     );

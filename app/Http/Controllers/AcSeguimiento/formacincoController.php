@@ -83,18 +83,18 @@ class formacincoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('de_aplicacion', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
@@ -232,8 +232,8 @@ class formacincoController extends Controller
                 $tabla->pp_anual = Input::get("programado_anual");
                 $tabla->tp_indicador = Input::get("tipo_indicador");
                 $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
-                $tabla->de_valor_obtenido = Input::get("valor_objetivo");
-                $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+                $tabla->de_valor_obtenido = Input::get("valor_obtenido");
+                $tabla->de_valor_objetivo = Input::get("valor_objetivo");
                 $tabla->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla->de_indicador_descripcion = Input::get("indicador");
                 $tabla->de_formula = Input::get("formula");
@@ -268,8 +268,8 @@ class formacincoController extends Controller
                 $tabla->pp_anual = Input::get("programado_anual");
                 $tabla->tp_indicador = Input::get("tipo_indicador");
                 $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
-                $tabla->de_valor_obtenido = Input::get("valor_objetivo");
-                $tabla->de_valor_objetivo = Input::get("valor_obtenido");
+                $tabla->de_valor_obtenido = Input::get("valor_obtenido");
+                $tabla->de_valor_objetivo = Input::get("valor_objetivo");
                 $tabla->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla->de_indicador_descripcion = Input::get("indicador");
                 $tabla->de_formula = Input::get("formula");
@@ -320,8 +320,8 @@ class formacincoController extends Controller
                 $tabla_005->pp_anual = Input::get("programado_anual");
                 $tabla_005->tp_indicador = Input::get("tipo_indicador");
                 $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
-                $tabla_005->de_valor_obtenido = Input::get("valor_objetivo");
-                $tabla_005->de_valor_objetivo = Input::get("valor_obtenido");
+                $tabla_005->de_valor_obtenido = Input::get("valor_obtenido");
+                $tabla_005->de_valor_objetivo = Input::get("valor_objetivo");
                 $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla_005->de_indicador_descripcion = Input::get("indicador");
                 $tabla_005->de_formula = Input::get("formula");
@@ -364,8 +364,8 @@ class formacincoController extends Controller
                 $tabla_005->pp_anual = Input::get("programado_anual");
                 $tabla_005->tp_indicador = Input::get("tipo_indicador");
                 $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
-                $tabla_005->de_valor_obtenido = Input::get("valor_objetivo");
-                $tabla_005->de_valor_objetivo = Input::get("valor_obtenido");
+                $tabla_005->de_valor_obtenido = Input::get("valor_obtenido");
+                $tabla_005->de_valor_objetivo = Input::get("valor_objetivo");
                 $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla_005->de_indicador_descripcion = Input::get("indicador");
                 $tabla_005->de_formula = Input::get("formula");

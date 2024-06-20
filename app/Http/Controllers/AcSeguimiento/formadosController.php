@@ -82,18 +82,18 @@ class formadosController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('de_aplicacion', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
@@ -194,6 +194,7 @@ class formadosController extends Controller
                 'de_nombre',
                 'de_unidad_medida',
                 'tx_ejecutor',
+                't03.id_ejecutor',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
             )

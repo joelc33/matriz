@@ -34,7 +34,7 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 });
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Datos',
+    text:'Cargar Matriz',
     iconCls: 'icon-editar',
     handler:function(){
 	this.codigo  = forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');

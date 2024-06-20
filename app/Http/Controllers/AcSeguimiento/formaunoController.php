@@ -79,18 +79,18 @@ class formaunoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('nu_codigo', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_ac->count();
                 $tab_ac->skip($start)->take($limit);
-                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_ac->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);

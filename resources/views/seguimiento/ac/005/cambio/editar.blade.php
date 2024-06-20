@@ -263,10 +263,10 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.nb_indicador,
 		this.valor_objetivo,
 		this.valor_obtenido,
-		this.nu_cumplimiento,
+//		this.nu_cumplimiento,
 		this.de_indicador,
 		this.de_formula,
-		this.de_observacion
+//		this.de_observacion
 	]
 });
 

@@ -35,7 +35,7 @@ this.nuevo = new Ext.Button({
 
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Editar',
+    text:'Cargar Matriz',
     iconCls: 'icon-editar',
     handler:function(){
 	this.codigo  = forma004ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');

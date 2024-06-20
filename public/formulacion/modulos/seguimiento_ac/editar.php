@@ -16,7 +16,7 @@ if ($id_accion!=''||$id_accion!=null) {
 	$sql = <<<EOT
 SELECT t46.id, id_tab_ejercicio_fiscal as id_ejercicio, t46.id_ejecutor as id_ejecutor, t24.tx_ejecutor as ejecutor,
 nu_codigo,
-co_new_etapa as co_sistema, t46.id_tab_ac_predefinida as id_accion, de_ac as descripcion,
+co_new_etapa as co_sistema, t46.id_tab_ac_predefinida as id_accion, t52.de_accion as descripcion,
 id_tab_estatus, id_tab_sectores as id_subsector, id_tab_situacion_presupuestaria as co_situacion_presupuestaria,
 mo_ac as monto, t18.co_sector, fe_inicio as fecha_inicio, fe_fin as fecha_fin, t52.de_nombre, 
 inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, 

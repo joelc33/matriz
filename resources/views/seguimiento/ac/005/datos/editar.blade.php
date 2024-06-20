@@ -29,16 +29,39 @@ this.de_programado_anual = new Ext.form.TextArea({
 	style:(true==true)?'background:#f2d7d5;':''
 });
 
-this.tp_indicador = new Ext.form.TextField({
-	fieldLabel:'INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD)',
-	name:'tipo_indicador',
-	value:this.OBJ.tp_indicador,
+this.tp_indicador = new Ext.form.ComboBox({
+	fieldLabel:'TIPO INDICADOR',
+	store: ['EFICACIA','EFICIENCIA','EFECTIVIDAD'],
+	typeAhead: true,
+	valueField: 'de_tipo_indicador',
+	displayField:'de_tipo_indicador',
+	hiddenName:'tipo_indicador',
+        readOnly:true,
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione el tipo indicador',
+	selectOnFocus: true,
+	mode: 'local',
 	width:400,
-	maxLength: 600,
-	allowBlank:false,
+	resizable:true,
+        value:  this.OBJ.tp_indicador,
 	readOnly:this.OBJ.in_bloquear_005,
-	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':'',        
+	allowBlank:false
 });
+
+
+//this.tp_indicador = new Ext.form.TextField({
+//	fieldLabel:'INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD)',
+//	name:'tipo_indicador',
+//	value:this.OBJ.tp_indicador,
+//	width:400,
+//	maxLength: 600,
+//	allowBlank:false,
+//	readOnly:this.OBJ.in_bloquear_005,
+//	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+//});
 
 this.nb_indicador = new Ext.form.TextField({
 	fieldLabel:'NOMBRE DEL INDICADOR',
@@ -51,7 +74,7 @@ this.nb_indicador = new Ext.form.TextField({
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
 });
 
-this.valor_objetivo = new Ext.form.TextField({
+this.valor_objetivo = new Ext.form.NumberField({
 	fieldLabel:'VALOR OBJETIVO',
 	name:'valor_objetivo',
 	value:this.OBJ.de_valor_objetivo,
@@ -62,7 +85,7 @@ this.valor_objetivo = new Ext.form.TextField({
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
 });
 
-this.valor_obtenido = new Ext.form.TextField({
+this.valor_obtenido = new Ext.form.NumberField({
 	fieldLabel:'VALOR OBTENIDO',
 	name:'valor_obtenido',
 	value:this.OBJ.de_valor_obtenido,
@@ -127,6 +150,11 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+        if(forma005Editar.main.valor_obtenido.getValue()>forma005Editar.main.valor_objetivo.getValue()){
+            Ext.Msg.alert("Alerta","El valor obtenido no puede ser mayor que el valor objetivo, por favor verifique!");
+            return false;
+        }        
 
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los datos?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
 				if(boton=="yes"){
@@ -195,10 +223,9 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.nb_indicador,
 		this.valor_objetivo,
 		this.valor_obtenido,
-		this.nu_cumplimiento,
 		this.de_indicador,
 		this.de_formula,
-		this.de_observacion
+//		this.de_observacion
 	]
 });
 

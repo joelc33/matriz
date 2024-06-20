@@ -239,6 +239,7 @@ WHERE in_activo is true order by id_ejecutor asc;";
 	case 7: //consultar vinculos
 
 			$id_accion = $_REQUEST['id'];
+                        $id_ejecutor = $_REQUEST['id_ejecutor'];
 			if ($id_accion!=''||$id_accion!=null) {
 				$sql = <<<EOT
 
@@ -258,7 +259,34 @@ EOT;
 				if ( $res ) {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res[0] ) );
 				} else {
-					$respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );
+                                    
+       if ($id_ejecutor!=''||$id_ejecutor!=null) {
+     
+           				$sql = <<<EOT
+SELECT id_accion_centralizada,
+trim(co_objetivo_historico) as co_objetivo_historico,
+trim(co_objetivo_nacional) as co_objetivo_nacional,
+trim(co_objetivo_estrategico) as co_objetivo_estrategico,
+trim(co_objetivo_general) as co_objetivo_general,
+co_area_estrategica,
+co_macroproblema, co_nodos as co_nodo, co_ambito_estado as co_ambito_zulia,
+co_objetivo_estado as co_objetivo_zulia
+FROM t49_ac_planes t49
+join t46_acciones_centralizadas t46 on (t46.id = t49.id_accion_centralizada)
+WHERE id_ejecutor = ? and id_ejercicio = ?
+order by 1 asc LIMIT 1;
+EOT;
+				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_ejecutor,$_SESSION['ejercicio_fiscal'] ) );
+           				if ( $res ) {
+					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res[0] ) );
+				} else {
+                                $respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );    
+                                }
+       }else{
+       $respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );    
+       }                             
+                                    
+					
 				}
 			} else {
 				$respuesta = re\Helpers::responder( false, 'id?' );
@@ -533,6 +561,7 @@ EOT;
 	case 20://consultar localidades
 
 			$id_accion = $_REQUEST['id'];
+                        $id_ejecutor = $_REQUEST['id_ejecutor'];
 			if ($id_accion!=''||$id_accion!=null) {
 				$sql = <<<EOT
 SELECT de_municipio as tx_municipio, t50.id_tab_municipio as co_municipio, de_parroquia as tx_parroquia, t50.id_tab_parroquia as co_parroquia
@@ -546,7 +575,25 @@ EOT;
 				if ( $res ) {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
 				} else {
+			if ($id_ejecutor!=''||$id_ejecutor!=null) {
+				$sql = <<<EOT
+SELECT distinct tx_municipio, t50.co_municipio, tx_parroquia, t50.co_parroquia
+FROM t50_ac_localizacion as t50
+join t46_acciones_centralizadas t46 on (t46.id = t50.id_accion_centralizada)
+JOIN t13_municipio as t13 on t13.co_municipio = t50.co_municipio
+LEFT JOIN t14_parroquia as t14 on t14.co_parroquia = t50.co_parroquia
+WHERE id_ejecutor = ? and id_ejercicio = ?
+ORDER BY t50.co_municipio, t50.co_parroquia NULLS FIRST
+EOT;
+				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_ejecutor,$_SESSION['ejercicio_fiscal'] ) );
+				if ( $res ) {
+					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
+				} else {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );
+				}
+			}else{
+                            $respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );
+                        }
 				}
 			} else {
 				$respuesta = re\Helpers::responder( false, 'id?' );
@@ -600,6 +647,7 @@ EOT
 
 			$respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );
 			$id_accion = $_REQUEST['id'];
+                        $id_ejecutor = $_REQUEST['id_ejecutor'];
 			if ($id_accion!=''||$id_accion!=null) {
 				$sql = <<<EOT
 SELECT id_tab_ac, realizador_nombres, realizador_cedula,
@@ -615,7 +663,26 @@ EOT;
 				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_accion ) );
 				if ( ! empty($res) ) {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res[0] ) );
+				}else{
+ 			if ($id_ejecutor!=''||$id_ejecutor!=null) {
+				$sql = <<<EOT
+SELECT id_accion_centralizada, realizador_nombres, realizador_cedula,
+realizador_cargo, realizador_correo, realizador_telefono, realizador_unidad,
+registrador_nombres, registrador_cedula, registrador_cargo, registrador_correo,
+registrador_telefono, registrador_unidad, autorizador_nombres,
+autorizador_cedula, autorizador_cargo, autorizador_correo,
+autorizador_telefono, autorizador_unidad
+FROM t48_ac_responsables t48
+join t46_acciones_centralizadas t46 on (t46.id = t48.id_accion_centralizada)
+WHERE id_ejecutor = ? and id_ejercicio = ?
+order by 1 asc LIMIT 1;
+EOT;
+				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_ejecutor,$_SESSION['ejercicio_fiscal'] ) );
+				if ( ! empty($res) ) {
+					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res[0] ) );
 				}
+			}                                    
+                                }
 			}
 
 		break;
