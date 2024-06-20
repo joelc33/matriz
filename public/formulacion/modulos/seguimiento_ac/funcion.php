@@ -138,8 +138,7 @@ EOT;
         $codigo = $_POST['codigo'];
             
         if ($codigo!=''||$codigo!=null) {              
-            echo "prueba";
-            exit();
+
 	$res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;");
         }else{
             
