@@ -136,7 +136,7 @@ EOT;
 		break;
 	case 2:
             
-        if($_POST['codigo']){    
+        if($_POST['codigo']!=''){    
 
 	$res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;");
         }else{
