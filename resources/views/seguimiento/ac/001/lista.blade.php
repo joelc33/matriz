@@ -47,7 +47,9 @@ this.editar = new Ext.Button({
         handler:function(){
             this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
             this.nu_codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('nu_codigo');
-            addTab('','EDITAR A.C: '+this.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+this.codigo);
+            this.panelCambio = Ext.getCmp('tabpanel');
+            this.panelCambio.remove(this.codigo);
+            addTab(this.codigo,'EDITAR A.C: '+this.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+this.codigo);
 	}
 });
 
