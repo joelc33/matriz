@@ -802,9 +802,15 @@ EOT;
 	case 25: //consulta ae predefinidas
 
 			$id_accion = intval( $_REQUEST['id_accion'] );
+                        $ae = intval( $_REQUEST['ae'] );
 			if ( $id_accion > 0 ) {
-				$sql = 'select id, nu_numero as numero, de_nombre as nombre from mantenimiento.tab_ac_ae_predefinida where id not in (select id_tab_ac_ae_predefinida from ac_seguimiento.tab_ac_ae where id_tab_ac = '.$_REQUEST['id_accion_centralizada'].' ) and id_padre = ?;';
-				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_accion ) );
+                            
+                            if($ae > 0){
+				$sql = 'select id, nu_numero as numero, de_nombre as nombre from mantenimiento.tab_ac_ae_predefinida where id_padre = ?;';
+                            }else{
+                             $sql = 'select id, nu_numero as numero, de_nombre as nombre from mantenimiento.tab_ac_ae_predefinida where id not in (select id_tab_ac_ae_predefinida from ac_seguimiento.tab_ac_ae where id_tab_ac = '.$_REQUEST['id_accion_centralizada'].' ) and id_padre = ?;';   
+                            }
+                                $res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_accion ) );
 				if ( $res ) {
 					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
 				} else {

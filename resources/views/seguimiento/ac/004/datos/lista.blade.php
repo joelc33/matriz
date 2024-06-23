@@ -1,5 +1,5 @@
 <script type="text/javascript">
-Ext.ns("forma004DetalleLista");
+Ext.ns("forma004DetalleLista{!! $data['id'] !!}");
 function change(val){
 	if(val==true){
 	    return '<span style="color:green;">Activo</span>';
@@ -16,7 +16,7 @@ function movimiento(val){
 	}
 return val;
 };
-forma004DetalleLista.main = {
+forma004DetalleLista{!! $data['id'] !!}.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
@@ -32,8 +32,8 @@ this.editar= new Ext.Button({
     text:'Ver Actividades',
     iconCls: 'icon-accion_fisica',
     handler:function(){
-	this.codigo  = forma004DetalleLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma004DetalleLista.main.mascara.show();
+	this.codigo  = forma004DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma004DetalleLista{!! $data['id'] !!}.main.mascara.show();
         this.msg = Ext.get('forma004Detalle');
         this.msg.load({
          url:"{{ URL::to('ac/seguimiento/004/actividad/lista') }}/"+this.codigo,
@@ -73,11 +73,11 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
-		forma004DetalleLista.main.store_lista.baseParams={};
-		forma004DetalleLista.main.store_lista.baseParams.paginar = 'si';
-		forma004DetalleLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-		forma004DetalleLista.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
-		forma004DetalleLista.main.store_lista.load();
+		forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams={};
+		forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams.paginar = 'si';
+		forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+		forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
+		forma004DetalleLista{!! $data['id'] !!}.main.store_lista.load();
 	},
 	onTrigger2Click : function(){
 		var v = this.getRawValue();
@@ -89,13 +89,13 @@ this.buscador = new Ext.form.TwinTriggerField({
 				       icon: Ext.MessageBox.WARNING
 			    });
 		}else{
-			forma004DetalleLista.main.store_lista.baseParams={}
-			forma004DetalleLista.main.store_lista.baseParams.BuscarBy = true;
-			forma004DetalleLista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
-			forma004DetalleLista.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
-			forma004DetalleLista.main.store_lista.baseParams[this.paramName] = v;
-			forma004DetalleLista.main.store_lista.baseParams.paginar = 'si';
-			forma004DetalleLista.main.store_lista.load();
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams={}
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams.BuscarBy = true;
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams.ac = '{{ $data['id'] }}';
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams[this.paramName] = v;
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.baseParams.paginar = 'si';
+			forma004DetalleLista{!! $data['id'] !!}.main.store_lista.load();
 		}
 	}
 });
@@ -128,7 +128,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-			forma004DetalleLista.main.editar.enable();
+			forma004DetalleLista{!! $data['id'] !!}.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -139,7 +139,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })
 });
 
-this.gridPanel_.render("contenedorforma004DetalleLista");
+this.gridPanel_.render("contenedorforma004DetalleLista{!! $data['id'] !!}");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
@@ -147,7 +147,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.baseParams.ac = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
-forma004DetalleLista.main.editar.disable();
+forma004DetalleLista{!! $data['id'] !!}.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -185,8 +185,8 @@ getLista: function(){
     return this.store;
 }
 };
-Ext.onReady(forma004DetalleLista.main.init, forma004DetalleLista.main);
+Ext.onReady(forma004DetalleLista{!! $data['id'] !!}.main.init, forma004DetalleLista{!! $data['id'] !!}.main);
 </script>
-<div id="contenedorforma004DetalleLista"></div>
+<div id="contenedorforma004DetalleLista{!! $data['id'] !!}"></div>
 <div id="forma004Detalle"></div>
 <div id="forma004Actividad"></div>

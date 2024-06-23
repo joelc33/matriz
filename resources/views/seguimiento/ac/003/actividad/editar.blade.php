@@ -36,7 +36,6 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO MODIFICADO ANUAL',
 	name:'modificado_anual',
 	value:this.OBJ.mo_modificado_anual,
-	allowBlank:false,
 	width:200,
 	maxLength: 20,
 	emptyText: '0',
@@ -50,7 +49,7 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 this.mo_actualizado_anual = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO ACTUALIZADO ANUAL (Bs.)',
 	name:'actualizado_anual',
-	value:this.OBJ.mo_actualizado_anual,
+	value:this.OBJ.mo_presupuesto,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -134,6 +133,26 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+         if(forma003ActividadEditar.main.mo_modificado_anual.getValue()>forma003ActividadEditar.main.mo_actualizado_anual.getValue()){
+            Ext.Msg.alert("Alerta","El monto modificado no puede ser mayor al inicial o aprobado");
+            return false;
+        }    
+        
+         if(forma003ActividadEditar.main.mo_comprometido.getValue()>(forma003ActividadEditar.main.mo_actualizado_anual.getValue()+forma003ActividadEditar.main.mo_modificado_anual.getValue())){
+            Ext.Msg.alert("Alerta","El monto comprometido no puede ser mayor al inicial o aprobado");
+            return false;
+        } 
+        
+         if(forma003ActividadEditar.main.mo_causado.getValue()>forma003ActividadEditar.main.mo_comprometido.getValue()){
+            Ext.Msg.alert("Alerta","El monto causado no puede ser mayor al comprometido");
+            return false;
+        }   
+        
+         if(forma003ActividadEditar.main.mo_pagado.getValue()>forma003ActividadEditar.main.mo_causado.getValue()){
+            Ext.Msg.alert("Alerta","El monto pagado no puede ser mayor al causado");
+            return false;
+        }           
         forma003ActividadEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))

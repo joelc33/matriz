@@ -47,7 +47,9 @@ this.cargar = new Ext.Button({
 	handler:function(){
             this.codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
             this.nu_codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('nu_codigo');
-            addTab('foma003'+this.nu_codigo,'F003 - A.C: '+this.nu_codigo,'{{ URL::to('ac/seguimiento/003/datos') }}/'+this.codigo,'load','icon-editar','');
+            this.panelCambio = Ext.getCmp('tabpanel');
+            this.panelCambio.remove(this.codigo);
+            addTab(this.codigo,'F003 - A.C: '+this.nu_codigo,'{{ URL::to('ac/seguimiento/003/datos') }}/'+this.codigo,'load','icon-editar','');
 	}
 });
 this.cargar.disable();

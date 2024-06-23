@@ -154,7 +154,7 @@ this.id_tab_fuente_financiamiento = new Ext.form.ComboBox({
 	store: this.storeCO_FUENTE_FINANCIAMIENTO,
 	typeAhead: true,
 	valueField: 'id',
-	displayField:'de_fuente_financiamiento',
+	displayField:'de_tipo_fondo',
 	hiddenName:'fuente_financiamiento',
 	//readOnly:(this.OBJ.id_tab_fuente_financiamiento!='')?true:false,
 	//style:(this.OBJ.id_tab_fuente_financiamiento!='')?'background:#c9c9c9;':'',
@@ -166,7 +166,7 @@ this.id_tab_fuente_financiamiento = new Ext.form.ComboBox({
 	mode: 'local',
 	width:300,
 	itemSelector: 'div.search-item',
-	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_fuente_financiamiento}</div></div></tpl>'),
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_tipo_fondo}</div></div></tpl>'),
 	resizable:true,
 	allowBlank:false
 });
@@ -355,10 +355,14 @@ getStoreCO_PARTIDA:function(){
 },
 getStoreCO_FUENTE_FINANCIAMIENTO:function(){
     this.store = new Ext.data.JsonStore({
-        url:'{{ URL::to('auxiliar/fuentefinanciamiento') }}',
+        url:'{{ URL::to('ac/seguimiento/002/actividad/financiera/fuentefinanciamiento') }}',
         root:'data',
+        baseParams:{
+                id_tab_ac_ae:{{ $data->id_tab_meta_fisica }},
+                _token: '{{ csrf_token() }}',
+        },        
         fields:[
-            {name: 'id'},{name: 'de_fuente_financiamiento'}
+            {name: 'id'},{name: 'de_tipo_fondo'}
             ]
     });
     return this.store;

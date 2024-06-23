@@ -196,7 +196,7 @@ class acseguimiento005Controller extends Controller
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
             't47.id_ejecutor as id_ejecutor_ae',
-            'tx_pr_objetivo',
+            'ac_seguimiento.tab_ac.tx_pr_objetivo',
             't47.id_accion as co_ae',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),

@@ -226,7 +226,8 @@
                 baseParams: {
                     op: 25,
 		    id_accion_centralizada: config.ac.id,
-                    id_accion: config.ac.id_accion
+                    id_accion: config.ac.id_accion,
+                    ae: config.ae?'1':'0'
                 },
                 root: 'data',
                 fields: [

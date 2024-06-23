@@ -196,7 +196,7 @@ class acseguimiento003Controller extends Controller
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
             't47.id_ejecutor as id_ejecutor_ae',
-            'tx_pr_objetivo',
+            'ac_seguimiento.tab_ac.tx_pr_objetivo',
             't47.id_accion as co_ae',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
@@ -315,7 +315,7 @@ $html23.= '
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 28%;" colspan="4">ASIG. PRESUP. PARTIDA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 28%;" colspan="4">ASIGNACIÓN PRESUPUESTARIA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">FUENTE FINANCIAMIENTO (AÑO)</th>
 </tr>
 <tr style="font-size:6px">
@@ -351,7 +351,7 @@ $mo_pagado = 0;
 		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
                 <td style="width: 7%;" align="center">'.$item->co_sector.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
-                <td style="width: 7%;" align="center">'.$item->nu_numero.'</td>
+                <td style="width: 7%;" align="center">0'.$item->nu_numero.'</td>
                 <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
 		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';

@@ -76,13 +76,14 @@ this.tx_prog_anual = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 8,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 99999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
 	allowDecimals: false,
+        readOnly:true,
 	allowNegative: false
 });
 
@@ -185,6 +186,7 @@ this.de_desvio = new Ext.form.TextArea({
             }
         }
 });
+ 
 
 this.guardar = new Ext.Button({
     text:'Guardar',

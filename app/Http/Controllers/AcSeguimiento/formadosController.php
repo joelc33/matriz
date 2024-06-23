@@ -5,10 +5,12 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_ac_ae_fuente;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_002;
 use matriz\Models\Mantenimiento\tab_ac_ae_partida;
+use matriz\Models\Mantenimiento\tab_tipo_fondo;
 use View;
 use Validator;
 use Input;
@@ -868,5 +870,21 @@ class formadosController extends Controller
         ->orderby('co_partida', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }    
+    
+
+    public function fondoTipo()
+    {
+        
+         $incluir = tab_ac_ae_fuente::select('id_tab_tipo_fondo')
+        ->where('id_tab_ac_ae', '=', Input::get('id_tab_ac_ae'))
+        ->get()->toArray();
+                
+        $response['success']  = 'true';
+        $response['data']  = tab_tipo_fondo::select('id', 'de_tipo_fondo')
+                ->whereIn('id',$incluir)
+                ->orderby('id', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }
+       
     
 }

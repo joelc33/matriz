@@ -48,7 +48,7 @@ this.inst_objetivos = new Ext.form.TextArea({
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
-this.nu_po_beneficiar = new Ext.form.TextField({
+this.nu_po_beneficiar = new Ext.form.NumberField({
 	fieldLabel:'POBLACION A BENEFICIAR',
 	name:'nu_po_beneficiar',
 	value:this.OBJ.nu_po_beneficiar,
@@ -58,7 +58,7 @@ this.nu_po_beneficiar = new Ext.form.TextField({
 	style:'background:#f2d7d5;'
 });
 
-this.nu_em_previsto = new Ext.form.TextField({
+this.nu_em_previsto = new Ext.form.NumberField({
 	fieldLabel:'EMPLEOS A GENERAR',
 	name:'nu_em_previsto',
 	value:this.OBJ.nu_em_previsto,
@@ -93,6 +93,14 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        if(forma002Editar.main.nu_po_beneficiada.getValue()>forma002Editar.main.nu_po_beneficiar.getValue()){
+            Ext.Msg.alert("Alerta","La poblacion beneficiada no puede ser mayor a la del poa");
+            return false;
+        }
+        if(forma002Editar.main.nu_em_generado.getValue()>forma002Editar.main.nu_em_previsto.getValue()){
+            Ext.Msg.alert("Alerta","la cantidad de empleos generados no puede ser mayor a la del poa");
+            return false;
+        }        
 
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar los cambios?.', function(boton){
 				if(boton=="yes"){

@@ -160,7 +160,7 @@ this.winformPanel_ = new Ext.Window({
     ]
 });
 this.winformPanel_.show();
-forma003DetalleLista.main.mascara.hide();
+forma003DetalleLista{!! $data['id_tab_ac'] !!}.main.mascara.hide();
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
