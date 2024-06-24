@@ -29,10 +29,10 @@ EOT;
 	$where = ' WHERE t46.id = ?';
 	$params[] = $id_accion;
 
-	if ( $local ) { //planificador local sólo ve los de su ejecutor
-		$params[] = $usuario->id_ejecutor;
-		$where .= ' AND t46.id_tab_ejecutores = ?';
-	}
+//	if ( $local ) { //planificador local sólo ve los de su ejecutor
+//		$params[] = $usuario->id_ejecutor;
+//		$where .= ' AND t46.id_tab_ejecutores = ?';
+//	}
 //        echo $sql.$where;
 //exit();
 
