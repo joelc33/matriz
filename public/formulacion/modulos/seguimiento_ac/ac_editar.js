@@ -119,7 +119,7 @@
                     emptyText: 'Seleccione Unidad Ejecutora',
                     allowBlank: false,
                     forceSelection: true,
-                    readOnly: ac.id?true:ac.bloqueado,
+                    readOnly: ac.id?true:ac.es_local,
                     resizable: true,
                     triggerAction: 'all',
                     mode: 'local',
@@ -139,7 +139,7 @@
 		}
 	    });
                        
-            console.log(ac.bloqueado);
+            console.log(ac.es_local);
 	    this.inst_mision = new Ext.form.TextArea({
                     fieldLabel: '1.4.1. MISION',
                     name: 'inst_mision',

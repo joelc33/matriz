@@ -75,12 +75,6 @@ EOT;
         
 	$id_ejercicio = $ejercicio['id'];
 	$contenedor = "ac_nueva";
-        
-	if ( $local ) { //planificador local sólo lectura
-            $bloqueado = true; 
-	}else{
-          $bloqueado = false;  
-        }         
 
 	$accion = array(
 		'id' => null,
@@ -88,7 +82,7 @@ EOT;
 		'id_ejercicio' => $id_ejercicio,
 		'id_ejecutor' => $usuario->id_ejecutor,
 		'es_local' => $local,
-		'bloqueado' => $bloqueado,
+		'bloqueado' => false,
 		'id_accion' => null,
 		'co_sistema' => null,
 		'descripcion' => null,
