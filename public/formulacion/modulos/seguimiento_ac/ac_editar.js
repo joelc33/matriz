@@ -119,7 +119,7 @@
                     emptyText: 'Seleccione Unidad Ejecutora',
                     allowBlank: false,
                     forceSelection: true,
-                    readOnly: ac.id?true:false,
+                    readOnly: ac.id?true:ac.bloqueado,
                     resizable: true,
                     triggerAction: 'all',
                     mode: 'local',
