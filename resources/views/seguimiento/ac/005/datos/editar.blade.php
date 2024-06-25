@@ -241,7 +241,7 @@ this.winformPanel_ = new Ext.Window({
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.005.enviar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_005==false)
 					this.guardar,'-',
 				@endif

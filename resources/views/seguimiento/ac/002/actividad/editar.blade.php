@@ -401,7 +401,7 @@ width:814,
         this.formPanel_
     ],
     buttons:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.guardar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				@if($data->in_bloquear_002==false)
 					this.enviar,'-',
 				@endif
