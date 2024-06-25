@@ -114,10 +114,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     height:510,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
+			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				this.nuevo,'-',
 			@endif
-                        @if( in_array( array( 'de_privilegio' => 'aplicacion.editar', 'in_habilitado' => true), Session::get('credencial') ))
+                        @if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
 			@endif
 				this.buscador
