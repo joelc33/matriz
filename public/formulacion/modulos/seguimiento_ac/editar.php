@@ -82,7 +82,7 @@ EOT;
 		'id_ejercicio' => $id_ejercicio,
 		'id_ejecutor' => $usuario->id_ejecutor,
 		'es_local' => $local,
-		'bloqueado' => false,
+		'bloqueado' => $accion['bloqueado'],
 		'id_accion' => null,
 		'co_sistema' => null,
 		'descripcion' => null,
