@@ -43,7 +43,7 @@ EOT;
 		$contenedor = "ac_{$id_accion}";
 		$accion['es_local'] = $local;
 	if ( $local ) { //planificador local sólo lectura
-            if($res['id_tab_tipo_registro']==1){
+            if($accion['id_tab_tipo_registro']==1){
             $accion['bloqueado'] = true; 
             }else{
             $accion['bloqueado'] = false;      
