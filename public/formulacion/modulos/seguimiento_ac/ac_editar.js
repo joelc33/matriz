@@ -139,7 +139,7 @@
 		}
 	    });
                        
-            console.log(ac.es_local);
+            console.log(self.ac.bloqueado);
 	    this.inst_mision = new Ext.form.TextArea({
                     fieldLabel: '1.4.1. MISION',
                     name: 'inst_mision',
