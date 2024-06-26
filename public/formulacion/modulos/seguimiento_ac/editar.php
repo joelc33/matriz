@@ -20,7 +20,7 @@ co_new_etapa as co_sistema, t46.id_tab_ac_predefinida as id_accion, t52.de_accio
 id_tab_estatus, id_tab_sectores as id_subsector, id_tab_situacion_presupuestaria as co_situacion_presupuestaria,
 mo_ac as monto, t18.co_sector, fe_inicio as fecha_inicio, fe_fin as fecha_fin, t52.de_nombre, 
 inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, 
-(t46.id_tab_estatus = 3) as bloqueado, pp_anual as tx_pr_objetivo
+(t46.id_tab_estatus = 3) as bloqueado, pp_anual as tx_pr_objetivo,id_tab_tipo_registro
 FROM ac_seguimiento.tab_ac as t46
 JOIN mantenimiento.tab_sectores as t18 on t46.id_tab_sectores = t18.id
 JOIN mantenimiento.tab_ejecutores as t24 on t46.id_ejecutor = t24.id_ejecutor
@@ -43,7 +43,11 @@ EOT;
 		$contenedor = "ac_{$id_accion}";
 		$accion['es_local'] = $local;
 	if ( $local ) { //planificador local sólo lectura
+            if($res['id_tab_tipo_registro']==1){
             $accion['bloqueado'] = true; 
+            }else{
+            $accion['bloqueado'] = false;      
+            }
 	}else{
           $accion['bloqueado'] = false;  
         }                

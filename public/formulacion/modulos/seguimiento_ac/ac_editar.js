@@ -688,15 +688,15 @@
 
             var tipos = {
                 realizador: {
-                    nombre: 'Realizado por',
+                    nombre: 'Planificador',
                     campos: comunes
                 },
                 registrador: {
-                    nombre: 'Registrado por',
+                    nombre: 'Administrador',
                     campos: comunes
                 },
                 autorizador: {
-                    nombre: 'Autorizado por',
+                    nombre: 'Titular',
                     campos: comunes
                 }
             };
