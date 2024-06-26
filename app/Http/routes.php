@@ -472,7 +472,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });
     //*Modulo de Accion Centralizada Forma 001*/
     Route::group(['prefix' => 'ac/seguimiento/001'], function () {
-        Route::get('lista', 'formaunoController@lista');
+        Route::get('lista/{id}', 'formaunoController@lista');
         Route::post('storeLista', 'formaunoController@storeLista');
         Route::post('detalle', 'formaunoController@detalle');
         Route::get('editar/{id}', 'formaunoController@datos');
@@ -491,7 +491,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });
     //*Modulo de Accion Centralizada Forma 002*/
     Route::group(['prefix' => 'ac/seguimiento/002'], function () {
-        Route::get('lista', 'formadosController@lista');
+        Route::get('lista/{id}', 'formadosController@lista');
         Route::post('storeLista', 'formadosController@storeLista');
         Route::post('detalle', 'formadosController@detalle');
         Route::get('datos/{id}', 'formadosController@datos');
@@ -519,7 +519,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });    
     //*Modulo de Accion Centralizada Forma 003*/
     Route::group(['prefix' => 'ac/seguimiento/003'], function () {
-        Route::get('lista', 'formatresController@lista');
+        Route::get('lista/{id}', 'formatresController@lista');
         Route::post('storeLista', 'formatresController@storeLista');
         Route::post('detalle', 'formatresController@detalle');
         Route::get('datos/{id}', 'formatresController@datos');
@@ -532,7 +532,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });
     //*Modulo de Accion Centralizada Forma 004*/
     Route::group(['prefix' => 'ac/seguimiento/004'], function () {
-        Route::get('lista', 'formacuatroController@lista');
+        Route::get('lista/{id}', 'formacuatroController@lista');
         Route::post('storeLista', 'formacuatroController@storeLista');
         Route::post('detalle', 'formacuatroController@detalle');
         Route::get('datos/{id}', 'formacuatroController@datos');
@@ -554,7 +554,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });
     //*Modulo de Accion Centralizada Forma 005*/
     Route::group(['prefix' => 'ac/seguimiento/005'], function () {
-        Route::get('lista', 'formacincoController@lista');
+        Route::get('lista/{id}', 'formacincoController@lista');
         Route::post('storeLista', 'formacincoController@storeLista');
         Route::post('datos/storeListaDatos', 'formacincoController@storeListaDatos');
         Route::post('detalle', 'formacincoController@detalle');

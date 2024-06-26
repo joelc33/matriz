@@ -10,6 +10,7 @@ use matriz\Models\Autenticacion\tab_usuarios;
 use matriz\Models\Autenticacion\tab_usuario_rol;
 use matriz\Models\Auditoria\tab_login_acceso;
 use matriz\Models\Mantenimiento\tab_funcionario;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
 use Input;
@@ -80,6 +81,8 @@ class panelController extends Controller
                       myobject = n;
                       if (n.attributes.url){url = n.attributes.url;} else {url =n.id;}
                       /*Abrimos el nuevo tab*/
+                    this.panelCambio = Ext.getCmp('tabpanel');
+                    this.panelCambio.remove(n.id);
                       addTab(n.id,n.text,url,n.attributes.tabType,n.attributes.iconCls, '', n.attributes.nu_margen);
                   }
                     }
@@ -139,6 +142,31 @@ class panelController extends Controller
 
         $submenu = '';
         foreach($menu as $items) {
+            
+            if($items->id_tab_menu==68||$items->id_tab_menu==43||$items->id_tab_menu==69||$items->id_tab_menu==70||$items->id_tab_menu==71){
+            
+                
+        $menu_lapso = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'de_lapso')
+        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->orderBy('id', 'ASC')->get();                
+              foreach($menu_lapso as $items_lapso) {
+            $submenu.= "{
+            id: '".$items->id_tab_menu.$items_lapso->de_lapso."',
+            url: '".$items->da_url."/".$items_lapso->id."',
+            tabType:'load',
+            text:'".$items->de_menu." - ".$items_lapso->de_lapso."',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";                  
+              }                
+//                $submenu.= "{
+//                              text:'".$items->de_menu."',
+//                              children:[".self::ArmaSubmenuLapso($items)."]
+//                              },";                                
+                
+            }else{
             $cantidad = tab_menu::sp_catidad_menu_privilegio($items->id_tab_menu, $co_rol);
             if($cantidad[0]->sp_catidad_menu_privilegio > 0) {
                 $submenu.= "{
@@ -158,8 +186,34 @@ class panelController extends Controller
           },";
             }
         }
+        
+        }
         return  $submenu;
     }
+    
+    public static function ArmaSubmenuLapso($items)
+    {
+
+          $submenu = '';                   
+                
+        $menu_lapso = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'de_lapso')
+        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->orderBy('id', 'ASC')->get();                
+              foreach($menu_lapso as $items_lapso) {
+            $submenu.= "{
+            id: '".$items->id_tab_menu.$items_lapso->de_lapso."',
+            url: '".$items->da_url."/".$items_lapso->id."',
+            tabType:'load',
+            text:'".$items->de_menu." - ".$items_lapso->de_lapso."',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";                  
+              }  
+                
+        return  $submenu;
+    }    
 
     /**
      * Display a listing of the resource.

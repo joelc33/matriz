@@ -21,6 +21,8 @@ condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
 init:function(){
+    
+this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});   
 //Mascara general del modulo
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
@@ -137,8 +139,13 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
+                        if(forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma005Lista.main.ficha.enable();
                         forma005Lista.main.cargar.enable();
+                    }else{
+                        forma005Lista.main.ficha.enable();
+                        forma005Lista.main.cargar.disable();
+                    }
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -195,6 +202,7 @@ this.panel.render("contenedorforma005Lista");
 
 //Cargar el grid
 this.store_lista.baseParams.paginar = 'si';
+this.store_lista.baseParams.id_lapso = this.OBJ.id;
 this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
@@ -215,6 +223,7 @@ getLista: function(){
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
+                                {name: 'activo'},
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
 				{name: 'in_005'},

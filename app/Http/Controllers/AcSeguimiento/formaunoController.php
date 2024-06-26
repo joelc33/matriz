@@ -5,6 +5,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_forma_001;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
 use Input;
@@ -35,9 +36,16 @@ class formaunoController extends Controller
     *
     * @return Response
     */
-    public function lista()
+    public function lista($id)
     {
-        return View::make('seguimiento.ac.001.lista');
+        $data = tab_lapso::select(
+                'id',
+                DB::raw("NOW() between fe_inicio and fe_fin as activo")
+                )
+        ->where('id', '=', $id)
+        ->first();
+        
+        return View::make('seguimiento.ac.001.lista')->with('data', $data);
     }
 
     /**
@@ -51,6 +59,7 @@ class formaunoController extends Controller
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
             $variable = Input::get('variable');
+            $id_lapso = Input::get('id_lapso');
 
             $tab_ac = $this->tab_ac
             ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
@@ -62,6 +71,7 @@ class formaunoController extends Controller
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+                DB::raw("NOW() between t02.fe_inicio and t02.fe_fin as activo"),
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
@@ -69,6 +79,7 @@ class formaunoController extends Controller
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t02.id', '=', $id_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
 
             $rol_planificador = array(3, 8);

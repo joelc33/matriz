@@ -11,6 +11,7 @@ use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_002;
 use matriz\Models\Mantenimiento\tab_ac_ae_partida;
 use matriz\Models\Mantenimiento\tab_tipo_fondo;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
 use Input;
@@ -40,9 +41,12 @@ class formadosController extends Controller
     *
     * @return Response
     */
-    public function lista()
+    public function lista($id)
     {
-        return View::make('seguimiento.ac.002.lista');
+        $data = tab_lapso::where('id', '=', $id)
+        ->first();
+        
+        return View::make('seguimiento.ac.002.lista')->with('data', $data);
     }
 
     /**
@@ -56,6 +60,7 @@ class formadosController extends Controller
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
             $variable = Input::get('variable');
+            $id_lapso = Input::get('id_lapso');
 
             $tab_ac = $this->tab_ac
             ->join('mantenimiento.tab_ejecutores as t01', 'ac_seguimiento.tab_ac.id_tab_ejecutores', '=', 't01.id')
@@ -67,6 +72,7 @@ class formadosController extends Controller
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+                DB::raw("NOW() between t02.fe_inicio and t02.fe_fin as activo"),
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
@@ -74,6 +80,7 @@ class formadosController extends Controller
                 'in_002'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t02.id', '=', $id_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true);
 
             $rol_planificador = array(3, 8);
