@@ -83,6 +83,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.fireEvent('clear', this);
 		forma004Lista.main.store_lista.baseParams={};
 		forma004Lista.main.store_lista.baseParams.paginar = 'si';
+                forma004Lista.main.store_lista.baseParams.id_lapso = forma004Lista.main.OBJ.id;
 		forma004Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
 		forma004Lista.main.store_lista.load();
 	},

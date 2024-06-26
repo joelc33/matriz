@@ -100,6 +100,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.fireEvent('clear', this);
 		forma002Lista.main.store_lista.baseParams={};
 		forma002Lista.main.store_lista.baseParams.paginar = 'si';
+                forma002Lista.main.store_lista.baseParams.id_lapso = forma002Lista.main.OBJ.id;
 		forma002Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
 		forma002Lista.main.store_lista.load();
 	},
@@ -115,6 +116,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 		}else{
 			forma002Lista.main.store_lista.baseParams={}
 			forma002Lista.main.store_lista.baseParams.BuscarBy = true;
+                        forma002Lista.main.store_lista.baseParams.id_lapso = forma002Lista.main.OBJ.id;
 			forma002Lista.main.store_lista.baseParams._token = '{{ csrf_token() }}';
 			forma002Lista.main.store_lista.baseParams[this.paramName] = v;
 			forma002Lista.main.store_lista.baseParams.paginar = 'si';
