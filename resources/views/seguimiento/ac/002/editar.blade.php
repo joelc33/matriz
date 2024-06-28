@@ -24,16 +24,14 @@ this.inst_mision = new Ext.form.TextArea({
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
-this.inst_vision = new Ext.form.TextArea({
-	fieldLabel: '1.4.2. VISION',
-	name: 'vision',
-	value:this.OBJ.inst_vision,
+this.producto_programado = new Ext.form.TextArea({
+	fieldLabel: 'PRODUCTO PROGRAMADO OBTENIDO',
+	name: 'producto_programado',
+	value:this.OBJ.producto_programado,
 	allowBlank: false,
 	width:400,
 	height: 100,
-	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+	maxLength: 6000
 });
 
 this.inst_objetivos = new Ext.form.TextArea({
@@ -163,7 +161,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.nu_po_beneficiar,
                 this.nu_po_beneficiada,                
                 this.nu_em_previsto,
-                this.nu_em_generado
+                this.nu_em_generado,
+                this.producto_programado
 	]
 });
 

@@ -142,38 +142,36 @@ class panelController extends Controller
 
         $submenu = '';
         foreach($menu as $items) {
-            
-            if($items->id_tab_menu==68||$items->id_tab_menu==43||$items->id_tab_menu==69||$items->id_tab_menu==70||$items->id_tab_menu==71){
-            
-                
-        $menu_lapso = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'de_lapso')
-        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->orderBy('id', 'ASC')->get();                
-              foreach($menu_lapso as $items_lapso) {
-            $submenu.= "{
-            id: '".$items->id_tab_menu.$items_lapso->de_lapso."',
-            url: '".$items->da_url."/".$items_lapso->id."',
-            tabType:'load',
-            text:'".$items->de_menu." - ".$items_lapso->de_lapso."',
-            iconCls:'".$items->de_icono."',
-            nu_margen:'".$items->nu_margen."',
-            qtip : '".$items_lapso->de_lapso."',
-            leaf:true
-          },";                  
-              }                
-//                $submenu.= "{
-//                              text:'".$items->de_menu."',
-//                              children:[".self::ArmaSubmenuLapso($items)."]
-//                              },";                                
-                
-            }else{
+
             $cantidad = tab_menu::sp_catidad_menu_privilegio($items->id_tab_menu, $co_rol);
             if($cantidad[0]->sp_catidad_menu_privilegio > 0) {
+
+                
                 $submenu.= "{
                               text:'".$items->de_menu."',
                               children:[".self::ArmaSubmenu($items->id_tab_menu, $co_rol)."]
                               },";
+            
             } else {
+                
+                
+                         if($items->id_tab_menu==43){  
+
+        $menu_lapso = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'de_lapso')
+        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->orderBy('id', 'ASC')->get();  
+        
+              foreach($menu_lapso as $items_lapso) {
+
+                $submenu.= "{
+                              text:'".$items_lapso->de_lapso."',
+                              children:[".self::ArmaSubmenuLapso($items, $items_lapso)."]
+                              },";                  
+                  
+                
+              }                                            
+                
+            }else{                
                 $submenu.= "{
             id: '".$items->id_tab_menu."',
             url: '".$items->da_url."',
@@ -185,32 +183,94 @@ class panelController extends Controller
             leaf:true
           },";
             }
+            }
         }
         
-        }
+        
         return  $submenu;
     }
     
-    public static function ArmaSubmenuLapso($items)
+    public static function ArmaSubmenuLapso($items,$items_lapso)
     {
 
           $submenu = '';                   
                 
-        $menu_lapso = tab_lapso::select('id', 'id_tab_ejercicio_fiscal', 'de_lapso')
-        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-        ->orderBy('id', 'ASC')->get();                
-              foreach($menu_lapso as $items_lapso) {
             $submenu.= "{
-            id: '".$items->id_tab_menu.$items_lapso->de_lapso."',
-            url: '".$items->da_url."/".$items_lapso->id."',
+            id: 'Forma1".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/001/lista/".$items_lapso->id."',
             tabType:'load',
-            text:'".$items->de_menu." - ".$items_lapso->de_lapso."',
+            text:'Forma 1 – Marco Institucional',
             iconCls:'".$items->de_icono."',
             nu_margen:'".$items->nu_margen."',
             qtip : '".$items_lapso->de_lapso."',
             leaf:true
-          },";                  
-              }  
+          },";   
+            
+            $submenu.= "{
+            id: 'Forma2".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/002/lista/".$items_lapso->id."',
+            tabType:'load',
+            text:'Forma 2 – Metas Físicas',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";
+
+            $submenu.= "{
+            id: 'Forma3".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/003/lista/".$items_lapso->id."',
+            tabType:'load',
+            text:'Forma 3 – Metas Financieras',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";
+
+            $submenu.= "{
+            id: 'Forma4".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/004/lista/".$items_lapso->id."',
+            tabType:'load',
+            text:'Forma 4 – Desvío de la Gestión',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";
+
+            $submenu.= "{
+            id: 'Forma5".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/005/lista/".$items_lapso->id."',
+            tabType:'load',
+            text:'Forma 5 – Indicadores de Gestión',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";      
+            
+             $submenu.= "{
+            id: 'Ejecu".$items_lapso->de_lapso."',
+            url: 'ac/seguimiento/ejecucion/lista/".$items_lapso->id."',
+            tabType:'load',
+            text:'Ejecu. Pres. A.C.',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";           
+             
+             $submenu.= "{
+            id: 'Rep".$items_lapso->de_lapso."',
+            url: 'reporte/ac/seguimiento/".$items_lapso->id."',
+            tabType:'load',
+            text:'Reporte Consolidado',
+            iconCls:'".$items->de_icono."',
+            nu_margen:'".$items->nu_margen."',
+            qtip : '".$items_lapso->de_lapso."',
+            leaf:true
+          },";             
                 
         return  $submenu;
     }    

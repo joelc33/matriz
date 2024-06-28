@@ -288,7 +288,8 @@ class formadosController extends Controller
             'nu_po_beneficiar',
             'nu_em_previsto',
             'nu_po_beneficiada',
-            'nu_em_generado',                  
+            'nu_em_generado as producto_programado', 
+            'tx_pr_programado',
             'tx_re_esperado',
             'in_activo',
             'id_tab_lapso',
@@ -299,6 +300,19 @@ class formadosController extends Controller
         ->first();
 
         return View::make('seguimiento.ac.002.editar')->with('data', $data);
+    } 
+    
+    public function editarAe($id)
+    {
+        $data = tab_ac_ae::select(
+            'id',
+            'id_tab_ac',
+            'observaciones'
+        )
+        ->where('id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.002.datos.editar')->with('data', $data);
     }    
 
     /**
@@ -484,16 +498,11 @@ class formadosController extends Controller
         if($id!=''||$id!=null) {
 
             try {
-                $validator= Validator::make(Input::all(), tab_ac::$validarEditar);
-//                if ($validator->fails()) {
-//                    return Response::json(array(
-//                      'success' => false,
-//                      'msg' => $validator->getMessageBag()->toArray()
-//                    ));
-//                }
+                
                 $tabla = tab_ac::find($id);
                 $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
                 $tabla->nu_em_generado = Input::get("nu_em_generado");
+                $tabla->tx_pr_programado = Input::get("producto_programado");
                 $tabla->save();
 
                 DB::commit();
@@ -511,8 +520,35 @@ class formadosController extends Controller
             }
 
         }
-    }    
+    }  
+    
+    public function guardarEditarAe($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
 
+            try {
+
+                $tabla = tab_ac_ae::find($id);
+                $tabla->observaciones = Input::get("observaciones");
+                $tabla->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Editado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        }
+    }
     /**
      * Update the specified resource in storage.
      *

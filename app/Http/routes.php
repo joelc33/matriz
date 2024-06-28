@@ -496,7 +496,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('detalle', 'formadosController@detalle');
         Route::get('datos/{id}', 'formadosController@datos');
         Route::get('editar/{id}', 'formadosController@editarAc');
+        Route::get('editarAe/{id}', 'formadosController@editarAe');
         Route::post('guardarEditarAc/{id}', 'formadosController@guardarEditarAc');
+        Route::post('guardarEditarAe/{id}', 'formadosController@guardarEditarAe');
         Route::post('datos/storeLista', 'formadosController@datosstoreLista');
         Route::get('actividad/lista/{id}', 'formadosController@editar');
         Route::post('actividad/storeLista', 'formadosController@actividadstoreLista');

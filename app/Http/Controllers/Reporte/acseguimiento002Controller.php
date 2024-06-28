@@ -114,6 +114,19 @@ class acseguimiento002Controller extends Controller
       
       public function ficha002($id)
       {
+          
+          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
+          $pdf->SetCreator('Sistema POA, Yoser Perez');
+          $pdf->SetAuthor('Yoser Perez');
+          $pdf->SetTitle('Seguimiento AC');
+          $pdf->SetSubject('Seguimiento AC');
+          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+          $pdf->SetMargins(10,10,10);
+          $pdf->SetTopMargin(50);
+          $pdf->SetPrintHeader(true);
+          $pdf->SetPrintFooter(true);
+          // set auto page breaks
+          $pdf->SetAutoPageBreak(true, 10);
 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
             ->join('t46_acciones_centralizadas as t46', function ($join) {
@@ -122,11 +135,10 @@ class acseguimiento002Controller extends Controller
             ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
             })
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
-            ->join('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
-            ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
             ->leftjoin('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
-            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't47.id_accion')
+            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
             ->leftjoin('t45_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
@@ -189,14 +201,13 @@ class acseguimiento002Controller extends Controller
             't45a.tx_descripcion as tx_ambito_estado', 
             't45b.tx_descripcion as tx_macroproblema',
             't45c.tx_descripcion as tx_nodos',
-            't47.objetivo_institucional as tx_objetivo_institucional',
+            't21.objetivo_institucional as tx_objetivo_institucional',
             DB::raw("'AC' || t04.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac"),
             't52.nombre',
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
-            't47.id_ejecutor as id_ejecutor_ae',
+            't21.id_ejecutor as id_ejecutor_ae',
             'ac_seguimiento.tab_ac.tx_pr_objetivo',
-            't47.id_accion as co_ae',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
             't21.id as id_tab_ac_ae',
@@ -204,14 +215,20 @@ class acseguimiento002Controller extends Controller
             'ac_seguimiento.tab_ac.nu_po_beneficiar',
             'ac_seguimiento.tab_ac.nu_em_previsto',
             'ac_seguimiento.tab_ac.nu_po_beneficiada',
-            'ac_seguimiento.tab_ac.nu_em_generado'                    
+            'ac_seguimiento.tab_ac.nu_em_generado',
+            'ac_seguimiento.tab_ac.tx_pr_programado',
+            't21.observaciones'                    
         )
-        ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();    
-            
+        ->where('t21.id_tab_ac', '=', $id)
+        ->get();  
+//var_dump($data);
+//exit();
+          
+          foreach($data as $data) {
+              
         $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
             
-          Session::put('periodo',$periodo);            
+          Session::put('periodo',$periodo);               
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
             't002.nb_responsable','de_unidad_medida as tx_unidades_medida','t002.nu_meta_modificada','de_municipio','de_parroquia','t002.resultado','t002.observacion',
@@ -350,37 +367,26 @@ $html23.='
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$resultado.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$observacion.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->observaciones.'</td>
 </tr>';   
 
 $html23.='
 </tbody>
 </table>';
 
-          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
-          $pdf->SetCreator('Sistema POA, Yoser Perez');
-          $pdf->SetAuthor('Yoser Perez');
-          $pdf->SetTitle('Seguimiento AC');
-          $pdf->SetSubject('Seguimiento AC');
-          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-          $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
-          $pdf->SetPrintHeader(true);
-          $pdf->SetPrintFooter(true);
-          // set auto page breaks
-          $pdf->SetAutoPageBreak(true, 10);
+
           $pdf->AddPage();
 
           $pdf->SetFont('','',11);
-//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
           $pdf->Ln(-3);
           $pdf->writeHTML($html23, true, false, false, false, '');
+
+      }      
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
-      }      
-
+      }
 }

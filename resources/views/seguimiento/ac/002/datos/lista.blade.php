@@ -45,6 +45,22 @@ this.editar= new Ext.Button({
 
 this.editar.disable();
 
+this.observaciones = new Ext.Button({
+	text:'Observaciones',
+	iconCls: 'icon-editar',
+	handler:function(){
+	this.codigo  = forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma002DetalleLista{!! $data['id'] !!}.main.mascara.show();
+            this.msg = Ext.get('forma002Detalle');
+            this.msg.load({
+             url:"{{ URL::to('ac/seguimiento/002/editarAe') }}/"+this.codigo,
+             scripts: true,
+             text: "Cargando.."
+            });
+	}
+});
+this.observaciones.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -110,7 +126,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.editar,'-',
+				this.editar,'-',this.observaciones,'-',
 			@endif
 				this.buscador
     ],
@@ -129,6 +145,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002DetalleLista{!! $data['id'] !!}.main.editar.enable();
+                        forma002DetalleLista{!! $data['id'] !!}.main.observaciones.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -148,6 +165,7 @@ this.store_lista.baseParams.ac = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002DetalleLista{!! $data['id'] !!}.main.editar.disable();
+forma002DetalleLista{!! $data['id'] !!}.main.observaciones.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
