@@ -38,22 +38,31 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	value:this.OBJ.mo_modificado_anual,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: true
+	allowDecimals: true,
+        validationEvent: 'blur',
+	validator: function(value){
+		tedm=value;
+        	if(isNaN(tedm)){tedm = parseFloat(0);}
+		tedf=forma003ActividadEditar.main.OBJ.mo_presupuesto;
+        	if(isNaN(tedf)){tedf = parseFloat(0);}
+		forma003ActividadEditar.main.mo_actualizado_anual.setValue(parseFloat(tedf)+parseFloat(tedm));
+	}        
 });
 
 this.mo_actualizado_anual = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO ACTUALIZADO ANUAL (Bs.)',
 	name:'actualizado_anual',
-	value:this.OBJ.mo_presupuesto,
+	value:this.OBJ.mo_presupuesto + this.OBJ.mo_modificado_anual,
 	allowBlank:false,
+        readOnly:true,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -70,7 +79,7 @@ this.mo_comprometido = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -87,7 +96,7 @@ this.mo_causado = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -104,7 +113,7 @@ this.mo_pagado = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -118,6 +127,7 @@ this.fieldset2 = new Ext.form.FieldSet({
 	title: 'Datos del Seguimiento',
 	items:[
 		this.mo_modificado_anual,
+                this.mo_actualizado_anual,
 		this.mo_comprometido,
 		this.mo_causado,
 		this.mo_pagado
@@ -128,6 +138,11 @@ this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
+        
+         if(forma003ActividadEditar.main.mo_actualizado_anual.getValue()<0){
+            Ext.Msg.alert("Alerta","El monto actualizado no puede ser menor a cero");
+            return false;
+        }         
 
         if(!forma003ActividadEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
@@ -139,7 +154,9 @@ this.guardar = new Ext.Button({
             return false;
         }    
         
-         if(forma003ActividadEditar.main.mo_comprometido.getValue()>(forma003ActividadEditar.main.mo_actualizado_anual.getValue()+forma003ActividadEditar.main.mo_modificado_anual.getValue())){
+        
+        
+         if(forma003ActividadEditar.main.mo_comprometido.getValue()>forma003ActividadEditar.main.mo_actualizado_anual.getValue()){
             Ext.Msg.alert("Alerta","El monto comprometido no puede ser mayor al inicial o aprobado");
             return false;
         } 

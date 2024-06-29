@@ -143,14 +143,12 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	//allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 2,
- 	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
-	allowNegative: false,
 	readOnly:true,
 });
 

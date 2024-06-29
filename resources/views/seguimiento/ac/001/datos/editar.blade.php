@@ -20,8 +20,8 @@ this.inst_mision = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+//	readOnly:this.OBJ.in_bloquear_001,
+//	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.inst_vision = new Ext.form.TextArea({
@@ -32,8 +32,8 @@ this.inst_vision = new Ext.form.TextArea({
 	width:400,
 	height: 100,
 	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+//	readOnly:this.OBJ.in_bloquear_001,
+//	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.inst_objetivos = new Ext.form.TextArea({
@@ -44,8 +44,8 @@ this.inst_objetivos = new Ext.form.TextArea({
 	width:400,
 	height: 200,
 	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+//	readOnly:this.OBJ.in_bloquear_001,
+//	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
 this.nu_po_beneficiar = new Ext.form.TextField({
@@ -237,11 +237,7 @@ width:614,
 					this.enviar,'-',
 				@endif
 			@endif
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_bloquear_001==false)
-					this.guardar,'-',
-				@endif
-			@endif
+	this.guardar,'-',
         this.salir
     ],
     buttonAlign:'center'

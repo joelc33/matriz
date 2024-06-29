@@ -362,7 +362,44 @@ class formatresController extends Controller
 
         return View::make('seguimiento.ac.003.actividad.editar')->with('data', $data);
     }
+    public function editarAc($id)
+    {
+        $data = tab_ac::select(
+            'id',
+            'nu_codigo',
+            'id_tab_ejecutores',
+            'id_tab_ejercicio_fiscal',
+            'id_tab_ac_predefinida',
+            'id_tab_sectores',
+            'id_tab_estatus',
+            'id_tab_situacion_presupuestaria',
+            'id_tab_tipo_registro',
+            'co_new_etapa',
+            'de_ac',
+            'mo_ac',
+            'mo_calculado',
+            'fe_inicio',
+            'fe_fin',
+            'inst_mision',
+            'inst_vision',
+            'inst_objetivos',
+            'nu_po_beneficiar',
+            'nu_em_previsto',
+            'nu_po_beneficiada',
+            'nu_em_generado', 
+            'tx_pr_programado as producto_programado',
+            'tx_re_esperado',
+            'in_activo',
+            'id_tab_lapso',
+            'in_bloquear_001',
+            'de_observacion_001',
+            'de_observacion_003'
+        )
+        ->where('id', '=', $id)
+        ->first();
 
+        return View::make('seguimiento.ac.003.editar')->with('data', $data);
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -462,6 +499,34 @@ class formatresController extends Controller
                   'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
                 ));
             }
+        }
+    }
+
+    public function guardarEditarAc($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
+
+            try {
+                
+                $tabla = tab_ac::find($id);
+                $tabla->de_observacion_003 = Input::get("observaciones");
+                $tabla->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Editado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
         }
     }
     

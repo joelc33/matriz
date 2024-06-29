@@ -319,7 +319,7 @@ class formacincoController extends Controller
                 }
 
                 $tabla = tab_ac::find(Input::get("id_tab_ac"));
-                $tabla->in_005 = false;
+                $tabla->in_005 = true;
                 $tabla->in_bloquear_005 = true;
                 $tabla->save();                
                 
@@ -334,7 +334,9 @@ class formacincoController extends Controller
                 $tabla_005->de_formula = Input::get("formula");
                 $tabla_005->de_observacion = Input::get("observacion");
                 $tabla_005->id_usuario_solicita = Auth::user()->id;
-                $tabla_005->id_tab_estatus = 5;
+                $tabla_005->id_tab_estatus = 6;
+                $tabla_005->id_usuario_procesa = Auth::user()->id;                
+//                $tabla_005->id_tab_estatus = 5;
                 $tabla_005->save();
 
                 DB::commit();
@@ -363,7 +365,7 @@ class formacincoController extends Controller
                 }
                 $tabla = tab_ac::find(Input::get("id_tab_ac"));
                 $tabla->in_bloquear_005 = true;
-                $tabla->in_005 = false;
+                $tabla->in_005 = true;
                 $tabla->save();
 
                 $tabla_005 = new tab_forma_005();
@@ -379,8 +381,10 @@ class formacincoController extends Controller
                 $tabla_005->de_observacion = Input::get("observacion");
                 $tabla_005->in_005 = false;
                 $tabla_005->id_usuario_solicita = Auth::user()->id;
+                $tabla_005->id_tab_estatus = 6;
+                $tabla_005->id_usuario_procesa = Auth::user()->id;                
                 $tabla_005->in_activo = true;
-                $tabla_005->id_tab_estatus = 5;
+//                $tabla_005->id_tab_estatus = 5;
                 $tabla_005->save();
 
                 DB::commit();

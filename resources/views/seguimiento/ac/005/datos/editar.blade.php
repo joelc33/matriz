@@ -82,7 +82,16 @@ this.valor_objetivo = new Ext.form.NumberField({
 	maxLength: 600,
 	allowBlank:false,
 	readOnly:this.OBJ.in_bloquear_005,
-	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':'',
+        validationEvent: 'blur',
+        allowNegative: false,
+	validator: function(value){
+		tedm=value;
+        	if(isNaN(tedm)){tedm = parseFloat(0);}
+		tedf=forma005Editar.main.valor_obtenido.getValue();
+        	if(isNaN(tedf)){tedf = parseFloat(0);}
+		forma005Editar.main.nu_cumplimiento.setValue((parseFloat(tedf)*100)/parseFloat(tedm));
+	}        
 });
 
 this.valor_obtenido = new Ext.form.NumberField({
@@ -93,7 +102,16 @@ this.valor_obtenido = new Ext.form.NumberField({
 	maxLength: 600,
 	allowBlank:false,
 	readOnly:this.OBJ.in_bloquear_005,
-	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':'',
+        validationEvent: 'blur',
+        allowNegative: false,
+	validator: function(value){
+		tedm=value;
+        	if(isNaN(tedm)){tedm = parseFloat(0);}
+		tedf=forma005Editar.main.valor_objetivo.getValue();
+        	if(isNaN(tedf)){tedf = parseFloat(0);}
+		forma005Editar.main.nu_cumplimiento.setValue((parseFloat(tedm)*100)/parseFloat(tedf));
+	}
 });
 
 this.nu_cumplimiento = new Ext.form.NumberField({
@@ -105,11 +123,11 @@ this.nu_cumplimiento = new Ext.form.NumberField({
 	minLength : 0,
 	maxLength: 18,
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 18},
-	readOnly:this.OBJ.in_bloquear_005,
-	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
+	readOnly:true,
+	style:'background:#f2d7d5;'
 });
 
-this.de_indicador = new Ext.form.TextField({
+this.de_indicador = new Ext.form.TextArea({
 	fieldLabel:'DESCRIPCIÓN DEL INDICADOR',
 	name:'indicador',
 	value:this.OBJ.de_indicador_descripcion,
@@ -120,7 +138,7 @@ this.de_indicador = new Ext.form.TextField({
 	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':''
 });
 
-this.de_formula = new Ext.form.TextField({
+this.de_formula = new Ext.form.TextArea({
 	fieldLabel:'FÓRMULA',
 	name:'formula',
 	value:this.OBJ.de_formula,
@@ -142,8 +160,8 @@ this.de_observacion = new Ext.form.TextField({
 });
 
 this.guardar = new Ext.Button({
-    text:'Enviar Datos',
-    iconCls: 'icon-report',
+    text:'Guardar',
+    iconCls: 'icon-guardar',
     handler:function(){
 
         if(!forma005Editar.main.formPanel_.getForm().isValid()){
@@ -156,7 +174,7 @@ this.guardar = new Ext.Button({
             return false;
         }        
 
-				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los datos?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los datos?', function(boton){
 				if(boton=="yes"){
 
         forma005Editar.main.formPanel_.getForm().submit({
@@ -223,6 +241,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.nb_indicador,
 		this.valor_objetivo,
 		this.valor_obtenido,
+                this.nu_cumplimiento,
 		this.de_indicador,
 		this.de_formula,
 //		this.de_observacion

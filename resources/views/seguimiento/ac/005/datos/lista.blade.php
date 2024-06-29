@@ -36,7 +36,7 @@ this.nuevo = new Ext.Button({
 });
 //Editar un registro
 this.editar= new Ext.Button({
-    text:'Datos',
+    text:'Editar Indicadores',
     iconCls: 'icon-editar',
 	handler:function(){
 	this.codigo  = forma005ListaDatos.main.gridPanel_.getSelectionModel().getSelected().get('id');

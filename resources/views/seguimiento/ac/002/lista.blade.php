@@ -44,7 +44,7 @@ this.ficha= new Ext.Button({
 this.ficha.disable();
 
 this.editar = new Ext.Button({
-	text:'Editar',
+	text:'Editar Pob./Emp. ',
 	iconCls: 'icon-editar',
 	handler:function(){
 	this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
@@ -59,7 +59,7 @@ this.editar = new Ext.Button({
 });
 this.editar.disable();
 this.cargar = new Ext.Button({
-	text:'Cargar Matriz',
+	text:'Editar AE',
 	iconCls: 'icon-editar',
 	handler:function(){
             this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');

@@ -44,7 +44,7 @@ this.ficha= new Ext.Button({
 this.ficha.disable();
 
 this.cargar = new Ext.Button({
-	text:'Cargar Matriz',
+	text:'Editar AE',
 	iconCls: 'icon-editar',
 	handler:function(){
             this.codigo  = forma004Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');

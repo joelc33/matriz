@@ -43,8 +43,24 @@ this.ficha= new Ext.Button({
 
 this.ficha.disable();
 
+this.observaciones = new Ext.Button({
+	text:'Observaciones',
+	iconCls: 'icon-editar',
+	handler:function(){
+	this.codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma003Lista.main.mascara.show();
+            this.msg = Ext.get('formularioacseguimiento');
+            this.msg.load({
+             url:"{{ URL::to('ac/seguimiento/003/editar') }}/"+this.codigo,
+             scripts: true,
+             text: "Cargando.."
+            });
+	}
+});
+this.observaciones.disable();
+
 this.cargar = new Ext.Button({
-	text:'Cargar Matriz',
+	text:'Editar AE',
 	iconCls: 'icon-editar',
 	handler:function(){
             this.codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
@@ -120,7 +136,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.cargar,'-',
+			  this.ficha,'-',this.observaciones,'-',this.cargar,'-',
 			@endif
 				this.buscador
     ],
@@ -139,9 +155,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
                         if(forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma003Lista.main.ficha.enable();
+                        forma003Lista.main.observaciones.enable();
                         forma003Lista.main.cargar.enable();
                     }else{
                         forma003Lista.main.ficha.enable();
+                        forma003Lista.main.observaciones.disable();
                         forma003Lista.main.cargar.disable();
                     }
 		}},
@@ -205,6 +223,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma003Lista.main.ficha.disable();
+forma003Lista.main.observaciones.disable();
 forma003Lista.main.cargar.disable();
 });
 this.store_lista.on('beforeload',function(){

@@ -522,6 +522,8 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     //*Modulo de Accion Centralizada Forma 003*/
     Route::group(['prefix' => 'ac/seguimiento/003'], function () {
         Route::get('lista/{id}', 'formatresController@lista');
+        Route::get('editar/{id}', 'formatresController@editarAc');
+        Route::post('guardar/{id}', 'formatresController@guardarEditarAc');
         Route::post('storeLista', 'formatresController@storeLista');
         Route::post('detalle', 'formatresController@detalle');
         Route::get('datos/{id}', 'formatresController@datos');
