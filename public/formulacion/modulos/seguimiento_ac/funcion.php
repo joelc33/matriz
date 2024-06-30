@@ -1396,7 +1396,15 @@ EOT;
 			$paraTransaccion->BeginTrans();
 
 			if ( $existe->validate( $pk ) ) {
-                                                        
+                            
+				$sql_desc = <<<EOT
+SELECT de_nombre
+FROM mantenimiento.tab_ac_predefinida
+WHERE id = ?;
+EOT;
+				$res_desc = $comunes->ObtenerFilasBySqlSelect($sql_desc, $params['id_tab_ac_predefinida']); 
+                                $res_desc = $res_desc[0];                             
+                                $params['de_ac'] = $res_desc['de_nombre'];                        
 				$params['updated_at'] = date( \DateTime::ISO8601 );
 				$resultado = $comunes->InsertUpdate( $tabla, $params, 'UPDATE', 'id = '.$pk['id']);
 				$resultado = $resultado === 'Ok';
