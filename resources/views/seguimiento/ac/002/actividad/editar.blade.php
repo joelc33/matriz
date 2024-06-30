@@ -45,7 +45,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 0,
 // 	minValue : 0,
 // 	maxValue : 999999999999999999999,
@@ -53,7 +53,15 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 	readOnly:this.OBJ.in_bloquear_002,
 	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: false
+	allowDecimals: false,
+        validationEvent: 'blur',
+	validator: function(value){
+		tedm=value;
+        	if(isNaN(tedm)){tedm = parseFloat(0);}
+		tedf=forma002ActividadEditar.main.OBJ.tx_prog_anual;
+        	if(isNaN(tedf)){tedf = parseFloat(0);}
+		forma002ActividadEditar.main.nu_meta_actualizada.setValue(parseFloat(tedf)+parseFloat(tedm));
+	}        
 });
 
 this.nu_meta_actualizada = new Ext.form.NumberField({
@@ -63,13 +71,15 @@ this.nu_meta_actualizada = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 999999999999999999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: false,
+        style:'background:#f2d7d5;',
+        readOnly:true,
 	allowNegative: false
 });
 
@@ -80,7 +90,7 @@ this.nu_obtenido = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
+	emptyText: '00',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -89,23 +99,32 @@ this.nu_obtenido = new Ext.form.NumberField({
 	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',        
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: false,
-	allowNegative: false
+	allowNegative: false,
+        validationEvent: 'blur',
+	validator: function(value){
+		tedm=value;
+        	if(isNaN(tedm)){tedm = parseFloat(0);}
+		tedf=forma002ActividadEditar.main.nu_meta_actualizada.getValue();
+        	if(isNaN(tedf)){tedf = parseFloat(0);}
+		forma002ActividadEditar.main.nu_corte.setValue((parseFloat(tedm)*100)/parseFloat(tedf));
+	}       
 });
 
 this.nu_corte = new Ext.form.NumberField({
-	fieldLabel:'% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL',
+	fieldLabel:'% EJEC. OBTENIDA AL CORTE',
 	name:'corte',
 	value:this.OBJ.nu_corte,
 	allowBlank:false,
 	width:200,
-	maxLength: 3,
 	emptyText: '0',
-	decimalPrecision: 0,
+	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 100,
 	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 3},
-	allowDecimals: false
+	readOnly:true,
+	style:'background:#f2d7d5;',             
+	allowDecimals: true,
+	allowNegative: false,
 });
 
 this.nb_responsable = new Ext.form.TextField({
@@ -258,8 +277,10 @@ this.fieldset2 = new Ext.form.FieldSet({
 		this.id_tab_municipio_detalle,
 		this.id_tab_parroquia_detalle,
 		this.nu_meta_moificada,
+                this.nu_meta_actualizada,
 		this.nu_obtenido,
-                this.resultado,
+                this.nu_corte
+//                this.resultado,
 //		this.nu_po_beneficiar,
 //                this.nu_po_beneficiada,
 //                this.nu_em_previsto,
@@ -272,6 +293,16 @@ this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
+
+       if(forma002ActividadEditar.main.nu_meta_actualizada.getValue()<0){
+            Ext.Msg.alert("Alerta","la meta actualizada no puede ser menor a cero");
+            return false;
+        }
+        
+         if(forma002ActividadEditar.main.nu_obtenido.getValue()>forma002ActividadEditar.main.nu_meta_actualizada.getValue()){
+            Ext.Msg.alert("Alerta","La meta obtenida no puede ser mayor a la meta actualizada");
+            return false;
+        }          
 
         if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
@@ -318,6 +349,16 @@ this.enviar = new Ext.Button({
     text:'Enviar Cambios',
     iconCls: 'icon-report',
     handler:function(){
+
+       if(forma002ActividadEditar.main.nu_meta_actualizada.getValue()<0){
+            Ext.Msg.alert("Alerta","la meta actualizada no puede ser menor a cero");
+            return false;
+        }
+
+         if(forma002ActividadEditar.main.nu_obtenido.getValue()>forma002ActividadEditar.main.nu_meta_actualizada.getValue()){
+            Ext.Msg.alert("Alerta","La meta obtenida no puede ser mayor a la meta actualizada");
+            return false;
+        }  
 
         if(!forma002ActividadEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");

@@ -291,6 +291,8 @@ class formadosController extends Controller
             'nu_em_generado', 
             'tx_pr_programado as producto_programado',
             'tx_re_esperado',
+            'tx_pr_obtenido',
+            'de_observacion_002',
             'in_activo',
             'id_tab_lapso',
             'in_bloquear_001',
@@ -503,6 +505,8 @@ class formadosController extends Controller
                 $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
                 $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->tx_pr_programado = Input::get("producto_programado");
+                $tabla->tx_pr_obtenido = Input::get("tx_pr_obtenido");
+                $tabla->de_observacion_002 = Input::get("de_observacion_002");
                 $tabla->save();
 
                 DB::commit();

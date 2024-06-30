@@ -24,26 +24,33 @@ this.inst_mision = new Ext.form.TextArea({
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
 });
 
+this.producto_obtenido = new Ext.form.TextArea({
+	fieldLabel: 'PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL',
+	name: 'tx_pr_obtenido',
+	value:this.OBJ.tx_pr_obtenido,
+	allowBlank: false,
+	width:400,
+	height: 75,
+	maxLength: 6000
+});
+
 this.producto_programado = new Ext.form.TextArea({
-	fieldLabel: 'PRODUCTO PROGRAMADO OBTENIDO',
+	fieldLabel: 'RESULTADOS OBTENIDOS',
 	name: 'producto_programado',
 	value:this.OBJ.producto_programado,
 	allowBlank: false,
 	width:400,
-	height: 100,
+	height: 75,
 	maxLength: 6000
 });
 
-this.inst_objetivos = new Ext.form.TextArea({
-	fieldLabel: '1.4.3. OBJETIVOS DE LA INSTITUCION',
-	name: 'objetivos',
-	value:this.OBJ.inst_objetivos,
-	allowBlank: false,
+this.observaciones = new Ext.form.TextArea({
+	fieldLabel: 'OBSERVACIONES',
+	name: 'de_observacion_002',
+	value:this.OBJ.de_observacion_002,
 	width:400,
-	height: 200,
-	maxLength: 6000,
-	readOnly:this.OBJ.in_bloquear_001,
-	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''
+	height: 75,
+	maxLength: 6000
 });
 
 this.nu_po_beneficiar = new Ext.form.NumberField({
@@ -71,6 +78,7 @@ this.nu_po_beneficiada = new Ext.form.NumberField({
 	name:'nu_po_beneficiada',
 	value:this.OBJ.nu_po_beneficiada,
 	allowBlank:false,
+        allowNegative: false,
 	width:400
 });
 
@@ -79,6 +87,7 @@ this.nu_em_generado = new Ext.form.NumberField({
 	name:'nu_em_generado',
 	value:this.OBJ.nu_em_generado,
 	allowBlank:false,
+        allowNegative: false,
 	width:400
 });
 
@@ -91,14 +100,20 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+        if(forma002Editar.main.nu_po_beneficiar.getValue()>0){
         if(forma002Editar.main.nu_po_beneficiada.getValue()>forma002Editar.main.nu_po_beneficiar.getValue()){
             Ext.Msg.alert("Alerta","La poblacion beneficiada no puede ser mayor a la del poa");
             return false;
         }
+        }
+        
+        if(forma002Editar.main.nu_em_previsto.getValue()>0){
         if(forma002Editar.main.nu_em_generado.getValue()>forma002Editar.main.nu_em_previsto.getValue()){
             Ext.Msg.alert("Alerta","la cantidad de empleos generados no puede ser mayor a la del poa");
             return false;
-        }        
+        }
+        }
 
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar los cambios?.', function(boton){
 				if(boton=="yes"){
@@ -162,7 +177,9 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.nu_po_beneficiada,                
                 this.nu_em_previsto,
                 this.nu_em_generado,
-                this.producto_programado
+                this.producto_obtenido,
+                this.producto_programado,
+                this.observaciones
 	]
 });
 

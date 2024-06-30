@@ -207,7 +207,7 @@ class acseguimiento002Controller extends Controller
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
             't21.id_ejecutor as id_ejecutor_ae',
-            'ac_seguimiento.tab_ac.tx_pr_objetivo',
+            'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
             't21.id as id_tab_ac_ae',
@@ -217,7 +217,8 @@ class acseguimiento002Controller extends Controller
             'ac_seguimiento.tab_ac.nu_po_beneficiada',
             'ac_seguimiento.tab_ac.nu_em_generado',
             'ac_seguimiento.tab_ac.tx_pr_programado',
-            't21.observaciones'                    
+            'ac_seguimiento.tab_ac.tx_pr_obtenido',
+            'ac_seguimiento.tab_ac.de_observacion_002'                    
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();  
@@ -292,7 +293,7 @@ $html1 = '
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
-<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$obtenido.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
 </tr>
 </tbody>
 </table>
@@ -360,7 +361,7 @@ $contar=$contar+1;
       }
 $html23.='      
 <tr style="font-size:9px">
-<td colspan="3" style="width: 40%;" align="justify"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 40%;" align="justify"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_re_esperado.'</td>
 <td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN A BENEFICIAR:</b> '.$data->nu_po_beneficiar.'</td>
 <td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN BENEFICIADA:</b> '.$data->nu_po_beneficiada.'</td>
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS A GENERAR:</b> '.$data->nu_em_previsto.'</td>
@@ -370,7 +371,7 @@ $html23.='
 <td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->observaciones.'</td>
+<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_002.'</td>
 </tr>';   
 
 $html23.='
