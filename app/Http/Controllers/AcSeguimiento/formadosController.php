@@ -929,8 +929,8 @@ class formadosController extends Controller
         $response['success']  = 'true';
         $response['data']  = tab_tipo_fondo::select('t01.id', 'de_tipo_fondo')
                 ->join('mantenimiento.tab_fuente_financiamiento as t01', 'tab_tipo_fondo.id', '=', 't01.id_tab_tipo_fondo')
-                ->whereIn('id',$incluir)
-                ->orderby('id', 'ASC')->get()->toArray();
+                ->whereIn('tab_tipo_fondo.id',$incluir)
+                ->orderby('tab_tipo_fondo.id', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }
        
