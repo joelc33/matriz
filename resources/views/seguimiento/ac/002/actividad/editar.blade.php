@@ -41,7 +41,7 @@ this.fieldset1 = new Ext.form.FieldSet({
 this.nu_meta_moificada = new Ext.form.NumberField({
 	fieldLabel:'META MODIFICADA',
 	name:'meta_modificada',
-	value:this.OBJ.nu_meta_modificada,
+	value:this.OBJ.nu_meta_modificada?this.OBJ.nu_meta_modificada:0,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -70,13 +70,7 @@ this.nu_meta_actualizada = new Ext.form.NumberField({
 	value:this.OBJ.tx_prog_anual,
 	allowBlank:false,
 	width:200,
-	maxLength: 20,
-//	emptyText: '00',
 	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 999999999999999999999,
-	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: false,
         style:'background:#f2d7d5;',
         readOnly:true,
@@ -86,15 +80,15 @@ this.nu_meta_actualizada = new Ext.form.NumberField({
 this.nu_obtenido = new Ext.form.NumberField({
 	fieldLabel:'OBTENIDO AL CORTE',
 	name:'obtenido',
-	value:this.OBJ.nu_obtenido,
+	value:this.OBJ.nu_obtenido?this.OBJ.nu_obtenido:0,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
 //	emptyText: '00',
 	decimalPrecision: 0,
- 	minValue : 0,
- 	maxValue : 999999999999999999999,
-	msgTarget : 'Rango Entre 0 y 9',
+// 	minValue : 0,
+// 	maxValue : 999999999999999999999,
+//	msgTarget : 'Rango Entre 0 y 9',
 	readOnly:this.OBJ.in_bloquear_002,
 	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',        
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
@@ -106,21 +100,21 @@ this.nu_obtenido = new Ext.form.NumberField({
         	if(isNaN(tedm)){tedm = parseFloat(0);}
 		tedf=forma002ActividadEditar.main.nu_meta_actualizada.getValue();
         	if(isNaN(tedf)){tedf = parseFloat(0);}
+                if(tedf==0){
+                forma002ActividadEditar.main.nu_corte.setValue(0);    
+                }else{
 		forma002ActividadEditar.main.nu_corte.setValue((parseFloat(tedm)*100)/parseFloat(tedf));
+                }
 	}       
 });
 
 this.nu_corte = new Ext.form.NumberField({
 	fieldLabel:'% EJEC. OBTENIDA AL CORTE',
 	name:'corte',
-	value:(this.OBJ.nu_meta_actualizada*100)/this.OBJ.nu_corte,
+	value:this.OBJ.nu_corte?this.OBJ.nu_corte:0,
 	allowBlank:false,
 	width:200,
-//	emptyText: '0',
 	decimalPrecision: 2,
- 	minValue : 0,
- 	maxValue : 100,
-	msgTarget : 'Rango Entre 0 y 9',
 	readOnly:true,
 	style:'background:#f2d7d5;',             
 	allowDecimals: true,
