@@ -67,7 +67,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 this.nu_meta_actualizada = new Ext.form.NumberField({
 	fieldLabel:'META ACTUALIZADA',
 	name:'meta_actualizada',
-	value:this.OBJ.nu_meta_actualizada,
+	value:this.OBJ.tx_prog_anual,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -113,7 +113,7 @@ this.nu_obtenido = new Ext.form.NumberField({
 this.nu_corte = new Ext.form.NumberField({
 	fieldLabel:'% EJEC. OBTENIDA AL CORTE',
 	name:'corte',
-	value:this.OBJ.nu_corte,
+	value:(this.OBJ.nu_meta_actualizada*100)/this.OBJ.nu_corte,
 	allowBlank:false,
 	width:200,
 //	emptyText: '0',
