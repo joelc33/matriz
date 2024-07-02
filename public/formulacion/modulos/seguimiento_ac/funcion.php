@@ -1430,7 +1430,7 @@ EOT;
 				$sql_lapso = <<<EOT
 SELECT id
 FROM mantenimiento.tab_lapso
-WHERE id_tab_ejercicio_fiscal = ? and in_activo = true;
+WHERE id_tab_ejercicio_fiscal = ? and NOW() between fe_inicio and fe_fin;
 EOT;
 				$res_lapso = $comunes->ObtenerFilasBySqlSelect($sql_lapso, $params['id_tab_ejercicio_fiscal']); 
                                 $res_lapso = $res_lapso[0];                                

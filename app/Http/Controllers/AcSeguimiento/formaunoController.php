@@ -174,35 +174,34 @@ class formaunoController extends Controller
         ->where('id', '=', $id)
         ->first();
 
-        if (tab_forma_001::where('id_tab_ac', '=', $id)
-        ->where('id_tab_estatus', '=', 5)
-        ->where('in_001', '=', false)->exists()) {
-
-            $data = tab_forma_001::select(
-                'id',
-                'id_tab_ac',
-                'inst_mision',
-                'inst_vision',
-                'inst_objetivos',
-                'in_001',
-                'created_at',
-                'updated_at',
-                'de_observacion',
-                'id_usuario_solicita',
-                'id_usuario_procesa',
-                'nu_po_beneficiar',
-                'nu_em_previsto',
-                'nu_po_beneficiada',
-                'nu_em_generado',                    
-                'id_tab_estatus',
-                'in_activo as in_bloquear_001'
-            )
-            ->where('id_tab_ac', '=', $id)
-            ->where('id_tab_estatus', '=', 5)
-            ->where('in_001', '=', false)
-            ->first();
-
-        }
+//        if (tab_forma_001::where('id_tab_ac', '=', $id)
+//        ->where('id_tab_estatus', '=', 5)
+//        ->where('in_001', '=', false)->exists()) {
+//
+//            $data = tab_forma_001::select(
+//                'id_tab_ac as id',
+//                'inst_mision',
+//                'inst_vision',
+//                'inst_objetivos',
+//                'in_001',
+//                'created_at',
+//                'updated_at',
+//                'de_observacion',
+//                'id_usuario_solicita',
+//                'id_usuario_procesa',
+//                'nu_po_beneficiar',
+//                'nu_em_previsto',
+//                'nu_po_beneficiada',
+//                'nu_em_generado',                    
+//                'id_tab_estatus',
+//                'in_activo as in_bloquear_001'
+//            )
+//            ->where('id_tab_ac', '=', $id)
+//            ->where('id_tab_estatus', '=', 5)
+//            ->where('in_001', '=', false)
+//            ->first();
+//
+//        }
 
         //return View::make('seguimiento.ac.001.datos.lista')->with('data',$data);
         return View::make('seguimiento.ac.001.datos.editar')->with('data', $data);
@@ -231,11 +230,37 @@ class formaunoController extends Controller
                 $tabla->inst_mision = Input::get("mision");
                 $tabla->inst_vision = Input::get("vision");
                 $tabla->inst_objetivos = Input::get("objetivos");
-//                $tabla->in_001 = true;
-//                $tabla->in_bloquear_001 = true;
-//                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
-//                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
+                
+                $data = tab_ac::select(
+                    'id'
+                )
+                ->where('id_ejecutor', '=', $tabla->id_ejecutor)
+                ->where('id_tab_ejercicio_fiscal', '=', $tabla->id_tab_ejercicio_fiscal)
+                ->where('id_tab_lapso', '=', $tabla->id_tab_lapso)
+                ->get();                
+                
+                foreach ($data as $lista){
+                
+                $tabla_ac = tab_ac::find($lista->id);
+                $tabla_ac->inst_mision = Input::get("mision");
+                $tabla_ac->inst_vision = Input::get("vision");
+                $tabla_ac->inst_objetivos = Input::get("objetivos");
+                $tabla_ac->save(); 
+                
+                $data2 = tab_forma_001::select(
+                    'id'
+                )
+                ->where('id_tab_ac', '=', $lista->id)
+                ->first();                 
+                
+                $tabla_001 = tab_forma_001::find($data2->id);
+                $tabla_001->inst_mision = Input::get("mision");
+                $tabla_001->inst_vision = Input::get("vision");
+                $tabla_001->inst_objetivos = Input::get("objetivos");
+                $tabla_001->save();                     
+                    
+                }                                
 
                 DB::commit();
                 return Response::json(array(
@@ -303,14 +328,33 @@ class formaunoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
+                
+                
                 $tabla = tab_ac::find($id);
                 $tabla->in_bloquear_001 = true;
-//                $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
-//                $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->save();
 
+                $data = tab_ac::select(
+                    'id'
+                )
+                ->where('id_ejecutor', '=', $tabla->id_ejecutor)
+                ->where('id_tab_ejercicio_fiscal', '=', $tabla->id_tab_ejercicio_fiscal)
+                ->where('id_tab_lapso', '=', $tabla->id_tab_lapso)
+                ->get();                        
+                
+                
+                foreach ($data as $lista){
+                    
+
+                $tabla_ac = tab_ac::find($lista->id);
+                $tabla_ac->in_bloquear_001 = true;
+                $tabla_ac->inst_mision = Input::get("mision");
+                $tabla_ac->inst_vision = Input::get("vision");
+                $tabla_ac->inst_objetivos = Input::get("objetivos");                
+                $tabla_ac->save();  
+                
                 $tabla_001 = new tab_forma_001();
-                $tabla_001->id_tab_ac = $id;
+                $tabla_001->id_tab_ac = $lista->id;
                 $tabla_001->inst_mision = Input::get("mision");
                 $tabla_001->inst_vision = Input::get("vision");
                 $tabla_001->inst_objetivos = Input::get("objetivos");
@@ -318,11 +362,11 @@ class formaunoController extends Controller
                 $tabla_001->id_usuario_solicita = Auth::user()->id;
                 $tabla_001->in_activo = true;
                 $tabla_001->id_tab_estatus = 5;
-                $tabla_001->nu_po_beneficiar = Input::get("nu_po_beneficiar");
-                $tabla_001->nu_em_previsto = Input::get("nu_em_previsto");                
-                $tabla_001->nu_po_beneficiada = Input::get("nu_po_beneficiada");
-                $tabla_001->nu_em_generado = Input::get("nu_em_generado");
-                $tabla_001->save();
+                $tabla_001->save();                
+                    
+                }                 
+                
+
 
                 DB::commit();
                 return Response::json(array(
@@ -530,17 +574,40 @@ class formaunoController extends Controller
                     ));
                 }
                 $tabla = tab_ac::find(Input::get("ac"));
-                $tabla->inst_mision = Input::get("mision");
-                $tabla->inst_vision = Input::get("vision");
-                $tabla->inst_objetivos = Input::get("objetivos");
                 $tabla->in_001 = true;
                 $tabla->save();
 
-                $tabla_001 = tab_forma_001::find($id);
+                $data = tab_ac::select(
+                    'id'
+                )
+                ->where('id_ejecutor', '=', $tabla->id_ejecutor)
+                ->where('id_tab_ejercicio_fiscal', '=', $tabla->id_tab_ejercicio_fiscal)
+                ->where('id_tab_lapso', '=', $tabla->id_tab_lapso)
+                ->get();                        
+                
+
+                foreach ($data as $lista){
+                    
+
+                $tabla_ac = tab_ac::find($lista->id);
+                $tabla_ac->in_001 = true;
+                $tabla_ac->save();  
+ 
+                $data2 = tab_forma_001::select(
+                    'id'
+                )
+                ->where('id_tab_ac', '=', $lista->id)
+                ->first();                 
+              
+                $tabla_001 = tab_forma_001::find($data2->id);
                 $tabla_001->in_001 = true;
                 $tabla_001->id_tab_estatus = 6;
                 $tabla_001->id_usuario_procesa = Auth::user()->id;
-                $tabla_001->save();
+                $tabla_001->save();              
+                    
+                }                
+                
+
 
                 DB::commit();
                 return Response::json(array(
@@ -613,12 +680,39 @@ class formaunoController extends Controller
                 $tabla->in_001 = false;
                 $tabla->in_bloquear_001 = false;
                 $tabla->save();
+                
+                $data = tab_ac::select(
+                    'id'
+                )
+                ->where('id_ejecutor', '=', $tabla->id_ejecutor)
+                ->where('id_tab_ejercicio_fiscal', '=', $tabla->id_tab_ejercicio_fiscal)
+                ->where('id_tab_lapso', '=', $tabla->id_tab_lapso)
+                ->get();                        
+                
+                
+                foreach ($data as $lista){
+                    
 
-                $tabla_001 = tab_forma_001::find($id);
+                $tabla_ac = tab_ac::find($lista->id);
+                $tabla_ac->in_001 = false;
+                $tabla_ac->in_bloquear_001 = false;
+                $tabla_ac->save();  
+
+                $data2 = tab_forma_001::select(
+                    'id'
+                )
+                ->where('id_tab_ac', '=', $lista->id)
+                ->first();                                 
+                
+                $tabla_001 = tab_forma_001::find($data2->id);
                 $tabla_001->in_001 = true;
                 $tabla_001->id_tab_estatus = 7;
                 $tabla_001->id_usuario_procesa = Auth::user()->id;
-                $tabla_001->save();
+                $tabla_001->save();             
+                    
+                }                
+
+
 
                 DB::commit();
                 return Response::json(array(

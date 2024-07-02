@@ -291,8 +291,10 @@ class formacuatroController extends Controller
              ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
              ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
              ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
-             ->where('nu_meta_modificada', '!=', 0)
-             ->where('mo_modificado_anual', '!=', 0)
+             ->where(function ($query) {
+             $query->where('nu_meta_modificada', '!=', 0)
+             ->whereOr('mo_modificado_anual', '!=', 0);
+             })
              ->where('ac_seguimiento.tab_meta_fisica.in_activo', '=', true);
 
             if (Input::get("BuscarBy")=="true") {

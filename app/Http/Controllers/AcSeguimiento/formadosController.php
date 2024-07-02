@@ -447,6 +447,37 @@ class formadosController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
+                
+                $detalle = json_decode(Input::get("json_detalle"),true);
+                
+                $data1 = tab_ac_ae::select(
+                    'mo_ae'
+                )
+                ->where('id', '=', Input::get("ac_ae"))
+                ->first();   
+                
+                $data2 = tab_meta_fisica::select(
+                 DB::raw("coalesce(sum(mo_presupuesto),0) as mo_presupuesto")
+                )
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
+                ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
+                ->first();     
+                $mo_actividad = 0;
+                $mo_ae = $data1->mo_ae;
+                $mo_presupuesto = $data2->mo_presupuesto;
+                foreach ($detalle as $lista){
+                $mo_actividad = $mo_actividad + $lista['mo_presupuesto'];
+                } 
+                
+                if(($mo_presupuesto+$mo_actividad)>$mo_ae){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma de las actividades excede el monto de la accion especifica, verifique!'
+                ));
+                
+                }
+               
                 $tabla = new tab_meta_fisica();
                 $tabla->id_tab_ac_ae = Input::get("ac_ae");
                 $tabla->nb_meta = Input::get("actividad");
@@ -460,7 +491,7 @@ class formadosController extends Controller
                 $tabla->in_activo = true;
                 $tabla->save();
                 
-                $detalle = json_decode(Input::get("json_detalle"),true); 
+               
                 
                 foreach ($detalle as $lista){
                     
