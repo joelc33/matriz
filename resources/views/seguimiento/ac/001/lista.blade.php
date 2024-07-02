@@ -35,6 +35,19 @@ this.ficha= new Ext.Button({
 
 this.ficha.disable();
 
+this.ficha_acumulada= new Ext.Button({
+    text:'Ver Ficha Acumulada',
+    iconCls: 'icon-pdf',
+    handler:function(){
+			this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			bajar.load({
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/001') }}/'+this.codigo
+			});
+    }
+});
+
+this.ficha_acumulada.disable();
+
 this.nueva = new Ext.Button({
 	text:'Agregar AC',
 	iconCls: 'icon-nuevo',
@@ -138,7 +151,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
+			  this.ficha,'-',this.ficha_acumulada,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
 			@endif
 				this.buscador
     ],
@@ -157,10 +170,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma001Lista.main.ficha.enable();
+                        forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.editar.enable();
                         forma001Lista.main.cargar.enable();
                     }else{
                         forma001Lista.main.ficha.enable();
+                        forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.nueva.disable();
                         forma001Lista.main.editar.disable();
                         forma001Lista.main.cargar.disable();
@@ -226,6 +241,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma001Lista.main.ficha.disable();
+forma001Lista.main.ficha_acumulada.disable();
 forma001Lista.main.editar.disable();
 forma001Lista.main.cargar.disable();
 });

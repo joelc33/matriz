@@ -581,7 +581,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     });
     //*Modulo de Accion Centralizada Ejecucion*/
     Route::group(['prefix' => 'ac/seguimiento/ejecucion'], function () {
-        Route::get('lista', 'ejecucionController@lista');
+        Route::get('lista/{id}', 'ejecucionController@lista');
         Route::post('storeLista', 'ejecucionController@storeLista');
         Route::post('detalle', 'ejecucionController@detalle');
     });

@@ -32,8 +32,8 @@ this.editar= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
-	forma001Lista.main.mascara.show();
+	this.codigo  = acejecucionLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	acejecucionLista.main.mascara.show();
         this.msg = Ext.get('formularioacseguimiento');
         this.msg.load({
          url:"{{ URL::to('ac/seguimiento/editar') }}/"+this.codigo,
@@ -106,7 +106,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.editar,'-',
+//			  this.editar,'-',
 			@endif
 				this.buscador
     ],
@@ -187,8 +187,8 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 acejecucionLista.main.editar.disable();
-acejecucionLista.main.habilitar.disable();
-acejecucionLista.main.eliminar.disable();
+//acejecucionLista.main.habilitar.disable();
+//acejecucionLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

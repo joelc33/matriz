@@ -43,6 +43,19 @@ this.ficha= new Ext.Button({
 
 this.ficha.disable();
 
+this.ficha_acumulada= new Ext.Button({
+    text:'Ver Ficha Acumulada',
+    iconCls: 'icon-pdf',
+    handler:function(){
+			this.codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+			bajar.load({
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/003') }}/'+this.codigo
+			});
+    }
+});
+
+this.ficha_acumulada.disable();
+
 this.observaciones = new Ext.Button({
 	text:'Observaciones',
 	iconCls: 'icon-editar',
@@ -136,7 +149,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.observaciones,'-',this.cargar,'-',
+			  this.ficha,'-',this.ficha_acumulada,'-',this.observaciones,'-',this.cargar,'-',
 			@endif
 				this.buscador
     ],
@@ -155,10 +168,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
                         if(forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma003Lista.main.ficha.enable();
+                        forma003Lista.main.ficha_acumulada.enable();
                         forma003Lista.main.observaciones.enable();
                         forma003Lista.main.cargar.enable();
                     }else{
                         forma003Lista.main.ficha.enable();
+                        forma003Lista.main.ficha_acumulada.enable();
                         forma003Lista.main.observaciones.disable();
                         forma003Lista.main.cargar.disable();
                     }
@@ -223,6 +238,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma003Lista.main.ficha.disable();
+forma003Lista.main.ficha_acumulada.disable();
 forma003Lista.main.observaciones.disable();
 forma003Lista.main.cargar.disable();
 });
