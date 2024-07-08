@@ -1,10 +1,10 @@
 <script type="text/javascript">
 Ext.ns("forma002ListaCambio");
-function changeEstatus( in_002, de_estatus){
-	if(in_002==true){
-	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> '+de_estatus+'</span>'+'</div></tpl>';
+function change(val){
+	if(val==true){
+	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
 	}else{
-	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> '+de_estatus+'</span>'+'</div></tpl>';
+	    return '<tpl><div class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
 	}
 return val;
 };
@@ -24,7 +24,7 @@ this.ficha= new Ext.Button({
     text:'Ver Ficha',
     iconCls: 'icon-pdf',
     handler:function(){
-			this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_ac_ae');
+			this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id_ac');
 			bajar.load({
 				url: '{{ URL::to('reporte/ac/seguimiento/ficha/002') }}/'+this.codigo
 			});
@@ -32,6 +32,23 @@ this.ficha= new Ext.Button({
 });
 
 this.ficha.disable();
+
+this.editar= new Ext.Button({
+    text:'Ver Actividades',
+    iconCls: 'icon-accion_fisica',
+    handler:function(){
+	this.codigo  = forma002ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_ac_ae');
+	forma002ListaCambio.main.mascara.show();
+        this.msg = Ext.get('formularioacseguimiento');
+        this.msg.load({
+         url:"{{ URL::to('seguimiento/ac/002/cambio/listaAe') }}/"+this.codigo,
+         scripts: true,
+         text: "Cargando.."
+        });
+    }
+});
+
+this.editar.disable();
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -96,25 +113,26 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.ficha', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',
+			  this.ficha,'-',this.editar,'-',
 			@endif
 				this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-    {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'id_ac',hidden:true, menuDisabled:true,dataIndex: 'id_ac'},
     {header: 'id_tab_ac_ae',hidden:true, menuDisabled:true,dataIndex: 'id_tab_ac_ae'},
-		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
+		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'de_lapso'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true,renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
-    {header: 'Fecha', width:140,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
-    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, dataIndex: 'estatus'},
+    {header: 'Nombre AE', width:200,  menuDisabled:true, sortable: true,renderer: textoLargo, dataIndex: 'de_nombre'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_002'},
     ],
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002ListaCambio.main.ficha.enable();
+                        forma002ListaCambio.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -128,35 +146,35 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			/*AQUI ES DONDE ESTA EL LISTENER*/
 				listeners: {
 				rowselect: function(sm, row, rec) {
-					var msg = Ext.get('detalle');
-					msg.load({
-									url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
-									scripts: true,
-									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
-									text: 'Cargando...'
-					});
-					if(panel_detalle.collapsed == true)
-					{
-						panel_detalle.toggleCollapse();
-					}
+//					var msg = Ext.get('detalle');
+//					msg.load({
+//									url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
+//									scripts: true,
+//									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+//									text: 'Cargando...'
+//					});
+//					if(panel_detalle.collapsed == true)
+//					{
+//						panel_detalle.toggleCollapse();
+//					}
 				}
 			}
 		})
 });
 
 /*Evento Doble Click*/
-this.gridPanel_.on('rowdblclick', function( grid, row, evt){
-	panel_detalle.toggleCollapse(true);
-	this.record = forma002ListaCambio.main.store_lista.getAt(row);
-	this.codigo = this.record.data["id"];
-	this.msg = Ext.get('detalle');
-	this.msg.load({
-	    url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
-	    scripts: true,
-	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
-	    text: "Cargando..."
-	});
-});
+//this.gridPanel_.on('rowdblclick', function( grid, row, evt){
+//	panel_detalle.toggleCollapse(true);
+//	this.record = forma002ListaCambio.main.store_lista.getAt(row);
+//	this.codigo = this.record.data["id"];
+//	this.msg = Ext.get('detalle');
+//	this.msg.load({
+//	    url: '{{ URL::to('seguimiento/ac/002/cambio/detalle') }}',
+//	    scripts: true,
+//	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
+//	    text: "Cargando..."
+//	});
+//});
 
 this.panel = new Ext.Panel({
 	layout: "fit",
@@ -175,6 +193,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002ListaCambio.main.ficha.disable();
+forma002ListaCambio.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -185,31 +204,20 @@ getLista: function(){
 	    url:'{{ URL::to('seguimiento/ac/002/cambio/storeLista') }}',
 	    root:'data',
 	    fields:[
-		    {name: 'id'},
+		    {name: 'id_ac'},
 				{name: 'id_ejecutor'},
 				{name: 'id_tab_ejecutores'},
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
                                 {name: 'id_tab_ac_ae'},
 		    {name: 'de_ac'},
+                    {name: 'de_lapso'},
 				{name: 'in_002'},
-				{name: 'fe_solicitud'},
+				{name: 'de_nombre'},
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {
 								return r.id_ejecutor + ' - ' + r.tx_ejecutor;
-						}
-				},
-				{
-						name: 'periodo',
-						convert: function(v, r) {
-								return r.fe_inicio + ' - ' + r.fe_fin;
-						}
-				},
-				{
-						name: 'estatus',
-						convert: function(v, r) {
-								return changeEstatus( r.in_002, r.de_estatus);
 						}
 				}
 	    ]

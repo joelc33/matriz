@@ -12,6 +12,11 @@ this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
+this.id_tab_meta_fisica = new Ext.form.Hidden({
+	name:'id_tab_meta_fisica',
+	value:this.OBJ.id
+});
+
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -340,8 +345,8 @@ this.guardar = new Ext.Button({
 });
 
 this.enviar = new Ext.Button({
-    text:'Enviar Cambios',
-    iconCls: 'icon-report',
+    text:'Guardar',
+    iconCls: 'icon-guardar',
     handler:function(){
 
        if(forma002ActividadEditar.main.nu_meta_actualizada.getValue()<0){
@@ -359,15 +364,15 @@ this.enviar = new Ext.Button({
             return false;
         }
 
-				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea solicitar los cambios?<br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar los cambios?', function(boton){
 				if(boton=="yes"){
 
         forma002ActividadEditar.main.formPanel_.getForm().submit({
 		method:'POST',
-	@if(empty($data->id))
+	@if(empty($data->codigo))
 		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}',
 	@else
-		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}/{!! $data->id !!}',
+		url:'{{ URL::to('ac/seguimiento/002/actividad/enviar') }}/{!! $data->codigo !!}',
 	@endif
 		waitMsg: 'Enviando datos, por favor espere..',
 		waitTitle:'Enviando',
@@ -419,6 +424,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
+                this.id_tab_meta_fisica,
 		this.fieldset1,
 		this.fieldset2
 	]

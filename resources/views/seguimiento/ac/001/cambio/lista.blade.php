@@ -33,6 +33,23 @@ this.ficha= new Ext.Button({
 
 this.ficha.disable();
 
+
+this.editar = new Ext.Button({
+	text:'Editar AE',
+	iconCls: 'icon-editar',
+	handler:function(){
+	this.codigo  = forma001ListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma001ListaCambio.main.mascara.show();
+			this.msg = Ext.get('formularioacseguimiento');
+			this.msg.load({
+			 url:"{{ URL::to('seguimiento/ac/001/cambio/editar') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+	}
+});
+this.editar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -96,7 +113,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.ficha', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',
+			  this.ficha,'-', this.editar,'-',
 			@endif
 				this.buscador
     ],
@@ -104,7 +121,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
     {header: 'id_tab_ac',hidden:true, menuDisabled:true,dataIndex: 'id_tab_ac'},
-		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'periodo'},
+		{header: 'Periodo', width:150,  menuDisabled:true, sortable: true, dataIndex: 'de_lapso'},
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, dataIndex: 'nu_codigo'},
     {header: 'Fecha', width:140,  menuDisabled:true, sortable: true, dataIndex: 'fe_solicitud'},
@@ -115,6 +132,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma001ListaCambio.main.ficha.enable();
+                        forma001ListaCambio.main.editar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -128,35 +146,35 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			/*AQUI ES DONDE ESTA EL LISTENER*/
 				listeners: {
 				rowselect: function(sm, row, rec) {
-					var msg = Ext.get('detalle');
-					msg.load({
-									url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
-									scripts: true,
-									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
-									text: 'Cargando...'
-					});
-					if(panel_detalle.collapsed == true)
-					{
-						panel_detalle.toggleCollapse();
-					}
+//					var msg = Ext.get('detalle');
+//					msg.load({
+//									url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
+//									scripts: true,
+//									params: {_token:'{{ csrf_token() }}', codigo:rec.json.id},
+//									text: 'Cargando...'
+//					});
+//					if(panel_detalle.collapsed == true)
+//					{
+//						panel_detalle.toggleCollapse();
+//					}
 				}
 			}
 		})
 });
 
 /*Evento Doble Click*/
-this.gridPanel_.on('rowdblclick', function( grid, row, evt){
-	panel_detalle.toggleCollapse(true);
-	this.record = forma001ListaCambio.main.store_lista.getAt(row);
-	this.codigo = this.record.data["id"];
-	this.msg = Ext.get('detalle');
-	this.msg.load({
-	    url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
-	    scripts: true,
-	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
-	    text: "Cargando..."
-	});
-});
+//this.gridPanel_.on('rowdblclick', function( grid, row, evt){
+//	panel_detalle.toggleCollapse(true);
+//	this.record = forma001ListaCambio.main.store_lista.getAt(row);
+//	this.codigo = this.record.data["id"];
+//	this.msg = Ext.get('detalle');
+//	this.msg.load({
+//	    url: '{{ URL::to('seguimiento/ac/001/cambio/detalle') }}',
+//	    scripts: true,
+//	    params: {_token:'{{ csrf_token() }}', codigo:this.codigo},
+//	    text: "Cargando..."
+//	});
+//});
 
 this.panel = new Ext.Panel({
 	layout: "fit",
@@ -175,6 +193,7 @@ this.store_lista.baseParams._token = '{{ csrf_token() }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma001ListaCambio.main.ficha.disable();
+forma001ListaCambio.main.editar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -192,6 +211,7 @@ getLista: function(){
 		    {name: 'tx_ejecutor'},
 				{name: 'nu_codigo'},
 		    {name: 'de_ac'},
+                    {name: 'de_lapso'},
 				{name: 'in_001'},
 				{name: 'fe_solicitud'},
 				{

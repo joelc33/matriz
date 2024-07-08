@@ -49,7 +49,6 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '00',
 	decimalPrecision: 0,
 // 	minValue : 0,
 // 	maxValue : 999999999999999999999,
@@ -75,7 +74,6 @@ this.nu_meta_actualizada = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -94,7 +92,6 @@ this.nu_obtenido = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
-	emptyText: '0',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 999999999999999999999,
@@ -120,7 +117,6 @@ this.nu_corte = new Ext.form.NumberField({
 	value:this.OBJ.nu_corte,
 	allowBlank:false,
 	width:200,
-	emptyText: '0',
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 100,
@@ -289,6 +285,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
+                 forma002ActividadListaCambio.main.store_lista.load();
                  forma002ListaCambio.main.store_lista.load();
                  forma002ActividadEditar.main.winformPanel_.close();
              }
@@ -341,6 +338,7 @@ this.negar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
+                 forma002ActividadListaCambio.main.store_lista.load();
                  forma002ListaCambio.main.store_lista.load();
                  forma002ActividadEditar.main.winformPanel_.close();
              }

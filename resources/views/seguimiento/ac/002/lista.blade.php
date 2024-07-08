@@ -57,7 +57,7 @@ this.ficha_acumulada= new Ext.Button({
 this.ficha_acumulada.disable();
 
 this.editar = new Ext.Button({
-	text:'Editar Pob./Emp. ',
+	text:'Editar Datos',
 	iconCls: 'icon-editar',
 	handler:function(){
 	this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');

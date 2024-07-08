@@ -226,6 +226,8 @@ class formaunoController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
+                
+
                 $tabla = tab_ac::find($id);
                 $tabla->inst_mision = Input::get("mision");
                 $tabla->inst_vision = Input::get("vision");
@@ -239,9 +241,9 @@ class formaunoController extends Controller
                 ->where('id_tab_ejercicio_fiscal', '=', $tabla->id_tab_ejercicio_fiscal)
                 ->where('id_tab_lapso', '=', $tabla->id_tab_lapso)
                 ->get();                
-                
+
                 foreach ($data as $lista){
-                
+  
                 $tabla_ac = tab_ac::find($lista->id);
                 $tabla_ac->inst_mision = Input::get("mision");
                 $tabla_ac->inst_vision = Input::get("vision");
@@ -253,7 +255,7 @@ class formaunoController extends Controller
                 )
                 ->where('id_tab_ac', '=', $lista->id)
                 ->first();                 
-                
+
                 $tabla_001 = tab_forma_001::find($data2->id);
                 $tabla_001->inst_mision = Input::get("mision");
                 $tabla_001->inst_vision = Input::get("vision");
@@ -453,6 +455,7 @@ class formaunoController extends Controller
                 DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',
                 'de_ac',
+                'de_lapso',
                 'ac_seguimiento.tab_forma_001.in_001',
                 't01.id_ejecutor',
                 DB::raw("to_char(ac_seguimiento.tab_forma_001.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud")
@@ -468,18 +471,18 @@ class formaunoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_forma_001->where('nu_codigo', 'ILIKE', "%$variable%");
+                    $tab_forma_001->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_001->count();
                 $tab_forma_001->skip($start)->take($limit);
-                $response['data']  = $tab_forma_001->orderby('ac_seguimiento.tab_forma_001.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_forma_001->orderby('t01.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_forma_001.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_001->count();
                 $tab_forma_001->skip($start)->take($limit);
-                $response['data']  = $tab_forma_001->orderby('ac_seguimiento.tab_forma_001.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_forma_001->orderby('t01.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_forma_001.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);

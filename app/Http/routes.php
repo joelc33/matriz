@@ -505,7 +505,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::get('actividad/editar/{id}', 'formadosController@editarActividad');
         Route::get('actividad/nuevo/{id}', 'formadosController@nuevoActividad');
         Route::post('actividad/guardar', 'formadosController@guardar');
+        Route::post('actividad/enviar', 'formadosController@enviar');
         Route::post('actividad/enviar/{id}', 'formadosController@enviar');
+        Route::post('actividad/enviarAprobar', 'formadosController@cargar');
         Route::get('actividad/financiera/nuevo/{id}', 'formadosController@nuevoFinanciera');
         Route::post('actividad/financiera/partida', 'formadosController@partida');
         Route::post('actividad/financiera/fuentefinanciamiento', 'formadosController@fondoTipo');
@@ -513,7 +515,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     //*Modulo de Accion Centralizada Forma 002*/
     Route::group(['prefix' => 'seguimiento/ac/002/cambio'], function () {
         Route::get('lista', 'formadosController@listaCambio');
+        Route::get('listaAe/{id}', 'formadosController@listaCambioAe');
         Route::post('storeLista', 'formadosController@storeListaCambio');
+        Route::post('storeListaAe', 'formadosController@storeListaCambioAe');
         Route::post('detalle', 'formadosController@detalleCambio');
         Route::get('editar/{id}', 'formadosController@datosCambio');
         Route::post('aprobar/{id}', 'formadosController@aprobar');

@@ -26,8 +26,8 @@ this.inst_mision = new Ext.form.TextArea({
 	maxLength: 6000,
 	/*readOnly:this.OBJ.in_bloquear_001,
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+//  readOnly:true,
+//  style:'background:#f2d7d5;'
 });
 
 this.inst_vision = new Ext.form.TextArea({
@@ -40,8 +40,8 @@ this.inst_vision = new Ext.form.TextArea({
 	maxLength: 6000,
 	/*readOnly:this.OBJ.in_bloquear_001,
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+//  readOnly:true,
+//  style:'background:#f2d7d5;'
 });
 
 this.inst_objetivos = new Ext.form.TextArea({
@@ -54,8 +54,8 @@ this.inst_objetivos = new Ext.form.TextArea({
 	maxLength: 6000,
 	/*readOnly:this.OBJ.in_bloquear_001,
 	style:(this.OBJ.in_bloquear_001==true)?'background:#f2d7d5;':''*/
-  readOnly:true,
-  style:'background:#f2d7d5;'
+//  readOnly:true,
+//  style:'background:#f2d7d5;'
 });
 
 this.nu_po_beneficiar = new Ext.form.TextField({
@@ -141,6 +141,55 @@ this.guardar = new Ext.Button({
                  }
                  forma001ListaCambio.main.store_lista.load();
                  forma001EditarCambio.main.winformPanel_.close();
+             }
+        });
+
+			}
+			});
+
+    }
+});
+
+
+this.editar = new Ext.Button({
+    text:'Editar',
+    iconCls: 'icon-guardar',
+    handler:function(){
+
+        if(!forma001EditarCambio.main.formPanel_.getForm().isValid()){
+            Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+            return false;
+        }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea editar?.', function(boton){
+				if(boton=="yes"){
+
+        forma001EditarCambio.main.formPanel_.getForm().submit({
+        method:'POST',
+        url:'{{ URL::to('ac/seguimiento/001/guardar') }}/{!! $data->id_tab_ac !!}',
+        waitMsg: 'Enviando datos, por favor espere..',
+        waitTitle:'Enviando',
+        failure: function(form, action) {
+                var errores = '';
+                for(datos in action.result.msg){
+                        errores += action.result.msg[datos] + '<br>';
+                }
+              Ext.MessageBox.alert('Error en transacción', errores);
+            },
+            success: function(form, action) {
+                 if(action.result.success){
+                     Ext.MessageBox.show({
+                         title: 'Mensaje',
+                         msg: action.result.msg,
+                         closable: false,
+                         icon: Ext.MessageBox.INFO,
+                         resizable: false,
+                         animEl: document.body,
+                         buttons: Ext.MessageBox.OK
+                     });
+                 }
+                 forma001ListaCambio.main.store_lista.load();
+//                 forma001EditarCambio.main.winformPanel_.close();
              }
         });
 
@@ -253,6 +302,7 @@ width:614,
 					this.negar,'-',
 				@endif
 			@endif
+        this.editar,
         this.salir
     ],
     buttonAlign:'center'

@@ -13,8 +13,8 @@ class tab_meta_fisica extends Model
     protected $table = 'ac_seguimiento.tab_meta_fisica';
 
     public static $validarCrear = array(
-        "codigo" => "required|min:1|max:4|unique:tab_aplicacion,co_aplicacion",
-        "aplicacion" => "required|min:1|max:1200|unique:tab_aplicacion,de_aplicacion"
+//        "codigo" => "required|min:1|max:4|unique:tab_aplicacion,co_aplicacion",
+//        "aplicacion" => "required|min:1|max:1200|unique:tab_aplicacion,de_aplicacion"
     );
 
     public static $validarEditar = array(

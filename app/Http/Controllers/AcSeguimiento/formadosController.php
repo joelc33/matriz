@@ -403,26 +403,28 @@ class formadosController extends Controller
             'nb_meta',
             'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida',
             'tx_prog_anual',
-            'nb_responsable',
+            'ac_seguimiento.tab_meta_fisica.nb_responsable',
             'ac_seguimiento.tab_meta_fisica.in_activo',
             'de_unidad_medida',
             DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
             DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
-            'nu_meta_modificada',
-            'nu_meta_actualizada',
-            'nu_obtenido',
-            'nu_corte',
-            'resultado',
+            't04.nu_meta_modificada',
+            't04.nu_meta_actualizada',
+            't04.nu_obtenido',
+            't04.nu_corte',
+            't04.resultado',
             'nu_po_beneficiar',
             'nu_em_previsto',
-            'observacion',                
+            't04.observacion',                
             'ac_seguimiento.tab_meta_fisica.id_tab_municipio_detalle',
             'ac_seguimiento.tab_meta_fisica.id_tab_parroquia_detalle',
-            'in_bloquear_002'    
+            'in_bloquear_002',
+            't04.id as codigo'
         )
         ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
         ->join('ac_seguimiento.tab_ac_ae as t02', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't02.id')
         ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+        ->leftjoin('ac_seguimiento.tab_forma_002 as t04', 't04.id_tab_meta_fisica', '=', 'ac_seguimiento.tab_meta_fisica.id')
         ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
         ->first();
 
@@ -603,8 +605,8 @@ class formadosController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = tab_meta_fisica::find($id);
-                $tabla->in_bloquear_002 = true;
+                $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
+                $tabla->in_bloquear_002 = false;
                 $tabla->nu_meta_modificada = Input::get("meta_modificada");
                 $tabla->nu_obtenido = Input::get("obtenido");
                 $tabla->nb_responsable = Input::get("responsable");
@@ -612,12 +614,12 @@ class formadosController extends Controller
                 $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
                 $tabla->resultado = Input::get("resultado");
                 $tabla->observacion = Input::get("observacion");               
-                $tabla->in_cargado = true;
-                $tabla->id_tab_estatus = 1;
+                $tabla->in_cargado = false;
+                $tabla->id_tab_estatus = 2;
                 $tabla->save();
 
-                $tabla_002 = new tab_forma_002();
-                $tabla_002->id_tab_meta_fisica = $id;
+                $tabla_002 = tab_forma_002::find($id);
+                $tabla_002->id_tab_meta_fisica = Input::get("id_tab_meta_fisica");
                 $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
                 $tabla_002->resultado = Input::get("resultado");
                 $tabla_002->nu_obtenido = Input::get("obtenido");
@@ -655,16 +657,34 @@ class formadosController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
-                $tabla = new tab_meta_fisica();
+                
+                $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
+                $tabla->in_bloquear_002 = false;
                 $tabla->nu_meta_modificada = Input::get("meta_modificada");
-                $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
                 $tabla->nu_obtenido = Input::get("obtenido");
-                $tabla->nu_corte = Input::get("corte");
                 $tabla->nb_responsable = Input::get("responsable");
                 $tabla->id_tab_municipio_detalle = Input::get("municipio");
                 $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
-                $tabla->in_activo = 'TRUE';
+                $tabla->resultado = Input::get("resultado");
+                $tabla->observacion = Input::get("observacion");               
+                $tabla->in_cargado = false;
+                $tabla->id_tab_estatus = 2;
                 $tabla->save();
+
+                $tabla_002 = new tab_forma_002();
+                $tabla_002->id_tab_meta_fisica = Input::get("id_tab_meta_fisica");
+                $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
+                $tabla_002->resultado = Input::get("resultado");
+                $tabla_002->nu_obtenido = Input::get("obtenido");
+                $tabla_002->observacion = Input::get("observacion");
+                $tabla_002->nb_responsable = Input::get("responsable");
+                $tabla_002->id_tab_municipio_detalle = Input::get("municipio");
+                $tabla_002->id_tab_parroquia_detalle = Input::get("parroquia");
+                $tabla_002->in_002 = false;
+                $tabla_002->id_usuario_solicita = Auth::user()->id;
+                $tabla_002->in_activo = true;
+                $tabla_002->id_tab_estatus = 5;
+                $tabla_002->save();
 
                 DB::commit();
                 return Response::json(array(
@@ -682,11 +702,99 @@ class formadosController extends Controller
         }
     }
     
+    public function cargar()
+    {
+        DB::beginTransaction();
+        try {
+            
+            
+                $cant = tab_meta_fisica::where('id_tab_ac_ae', '=', Input::get("id"))
+                ->where('id_tab_estatus','=', 1)
+                ->count();
+                
+                if($cant>0){
+             $response['success']  = 'true';
+            $response['msg']  = 'Tiene Actividades Pendientes por cargar, verifique!';
+            return Response::json($response, 200);                   
+                }else{
+                    
+                 $cant1 = tab_meta_fisica::where('id_tab_ac_ae', '=', Input::get("id"))
+                ->where('id_tab_estatus','=', 2)
+                ->where('in_cargado','=', false)         
+                ->count();                   
+                 
+             if($cant1>0){    
+              
+            $data = tab_forma_002::select(
+                't01.id as id_tab_meta_fisica',
+                'ac_seguimiento.tab_forma_002.id'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_forma_002.id_tab_meta_fisica', '=', 't01.id')
+            ->where('id_tab_ac_ae', '=', Input::get("id"))
+            ->get();                        
+                
+
+                
+                foreach ($data as $lista){   
+
+            $tabla = tab_meta_fisica::find($lista->id_tab_meta_fisica);
+            $tabla->in_cargado = true;
+            $tabla->in_bloquear_002 = true;
+            $tabla->save();  
+            
+            
+//            $tabla_002 = tab_forma_002::find($lista->id);
+//            $tabla_002->in_002 = true;
+//            $tabla_002->save();             
+                } 
+                
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Actividades enviadas con Exito!';
+            return Response::json($response, 200);                 
+                 
+             }else{
+                    
+              $response['success']  = 'true';
+            $response['msg']  = 'No Tiene Actividades Pendientes por cargar!';
+            return Response::json($response, 200); 
+            
+             }
+                }
+            
+
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
+    
     
         public function listaCambio()
     {
         return View::make('seguimiento.ac.002.cambio.lista');
     }
+    
+        public function listaCambioAe($id)
+    {
+            
+        $data = tab_ac_ae::select(
+            'tab_ac_ae.id',
+            'nu_codigo',
+            'de_nombre'
+        )
+        ->join('ac_seguimiento.tab_ac as t01', 'tab_ac_ae.id_tab_ac', '=', 't01.id')
+        ->join('mantenimiento.tab_ac_ae_predefinida as t02', 'tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't02.id')
+        ->where('tab_ac_ae.id', '=', $id)
+        ->first();
+        
+        return View::make('seguimiento.ac.002.cambio.listaAe')->with('data', $data);            
+    }    
 
     public function storeListaCambio()
     {
@@ -702,33 +810,104 @@ class formadosController extends Controller
             ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
             ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
             ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_002.id_tab_estatus')
+            ->join('mantenimiento.tab_ac_ae_predefinida as t07', 't05.id_tab_ac_ae_predefinida', '=', 't07.id')
             ->select(
-                'ac_seguimiento.tab_forma_002.id',
                 'tx_ejecutor',
-                't01.id_tab_ejecutores',
+                't01.id as id_ac',    
                 't02.in_activo',
-                'de_estatus',
                 'id_tab_ac_ae',
-                DB::raw("to_char(t03.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
-                DB::raw("to_char(t03.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'nu_codigo',
                 'de_ac',
-                'ac_seguimiento.tab_forma_002.in_002',
+                'de_lapso',
                 't01.id_ejecutor',
-                DB::raw("to_char(ac_seguimiento.tab_forma_002.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud")
+                'de_nombre',
+                't05.in_002' 
             )
             ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('t01.in_activo', '=', true);
+            ->where('t01.in_activo', '=', true)
+            ->where('in_cargado', '=', true)
+                    ->groupBy('t01.id')
+            ->groupBy('tx_ejecutor')
+                    ->groupBy('t02.in_activo')
+                   ->groupBy('t05.in_002')
+                    ->groupBy('id_tab_ac_ae')
+                    ->groupBy('nu_codigo')
+                    ->groupBy('de_ac')
+                    ->groupBy('de_lapso')
+                    ->groupBy('t01.id_ejecutor')
+                    ->groupBy('de_nombre')
+                    ;
 
             $rol_planificador = array(3, 8);
             if (in_array(Session::get('rol'), $rol_planificador)) {
-                $tab_forma_001->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+                $tab_forma_002->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
             }
 
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_forma_002->where('nu_codigo', 'ILIKE', "%$variable%");
+                    $tab_forma_002->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_002->count();
+                $tab_forma_002->skip($start)->take($limit);
+                $response['data']  = $tab_forma_002->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_002->count();
+                $tab_forma_002->skip($start)->take($limit);
+
+                $response['data']  = $tab_forma_002->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
+        }
+    }
+    
+    public function storeListaCambioAe()
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
+
+            $tab_forma_002 = $this->tab_forma_002
+            ->join('ac_seguimiento.tab_meta_fisica as t06', 'ac_seguimiento.tab_forma_002.id_tab_meta_fisica', '=', 't06.id')        
+            ->join('ac_seguimiento.tab_ac_ae as t05', 't06.id_tab_ac_ae', '=', 't05.id')        
+            ->join('ac_seguimiento.tab_ac as t01', 't05.id_tab_ac', '=', 't01.id')
+            ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+            ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+            ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_002.id_tab_estatus')  
+            ->join('mantenimiento.tab_unidad_medida as t07', 't06.id_tab_unidad_medida', '=', 't07.id')
+            ->select(
+                'ac_seguimiento.tab_forma_002.id',
+                'codigo',
+                'nb_meta',
+                'tx_prog_anual',
+                't06.in_activo',
+                'de_estatus',
+                'de_unidad_medida',
+                'ac_seguimiento.tab_forma_002.in_002',
+                DB::raw("to_char(t06.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+                DB::raw("to_char(t06.fecha_fin, 'dd-mm-YYYY') as fecha_fin") 
+            )
+            ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+            ->where('t01.in_activo', '=', true)
+            ->where('in_cargado', '=', true);
+
+            $rol_planificador = array(3, 8);
+            if (in_array(Session::get('rol'), $rol_planificador)) {
+                $tab_forma_002->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+            }
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_forma_002->where('nb_meta', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -746,7 +925,7 @@ class formadosController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
         }
-    }
+    }    
 
     public function detalleCambio()
     {
@@ -831,16 +1010,13 @@ class formadosController extends Controller
                     ));
                 }
                 $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
-                $tabla->in_cargado = false;
-                $tabla->nu_meta_modificada = null;
-                $tabla->nu_obtenido = null;
-                $tabla->id_tab_municipio_detalle = null;
-                $tabla->id_tab_parroquia_detalle = null;                
+                $tabla->in_cargado = false;               
                 $tabla->in_bloquear_002 = false;
+                $tabla->id_tab_estatus = 1;
                 $tabla->save();
 
                 $tabla_002 = tab_forma_002::find($id);
-                $tabla_002->in_002 = true;
+                $tabla_002->in_002 = false;
                 $tabla_002->id_tab_estatus = 7;
                 $tabla_002->id_usuario_procesa = Auth::user()->id;
                 $tabla_002->save();
@@ -848,7 +1024,7 @@ class formadosController extends Controller
                 DB::commit();
                 return Response::json(array(
                   'success' => true,
-                  'msg' => 'Solicitud procesada con Exito!'
+                  'msg' => 'Solicitud Negada con Exito!'
                 ));
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -907,6 +1083,10 @@ class formadosController extends Controller
                 $tabla = tab_ac::find($data->id);
                 $tabla->in_002 = true;
                 $tabla->save();
+                
+                $tabla_ae = tab_ac_ae::find($data->id_tab_ac_ae);
+                $tabla_ae->in_002 = true;
+                $tabla_ae->save();                
                 
                 }
         
