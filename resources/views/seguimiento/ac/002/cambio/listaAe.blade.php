@@ -27,7 +27,7 @@ this.store_lista = this.getLista();
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 
 this.editar = new Ext.Button({
-	text:'Editar Ae',
+	text:'Editar Actividad',
 	iconCls: 'icon-editar',
 	handler:function(){
 	this.codigo  = forma002ActividadListaCambio.main.gridPanel_.getSelectionModel().getSelected().get('id');
