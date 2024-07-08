@@ -145,7 +145,7 @@
                     name: 'inst_mision',
                     allowBlank: false,
                     height: 60,
-                    maxLength: 600
+                    maxLength: 1600
 	    });
             
 	    this.inst_vision = new Ext.form.TextArea({
@@ -153,7 +153,7 @@
                     name: 'inst_vision',
                     allowBlank: false,
                     height: 60,
-                    maxLength: 600
+                    maxLength: 1600
 	    });
             
 	    this.inst_objetivos = new Ext.form.TextArea({
@@ -437,14 +437,14 @@
 			name: 'tx_pr_objetivo',
 			allowBlank: false,
 			height: 60,
-			maxLength: 600
+			maxLength: 1600
                     },{
 			xtype: 'textarea',
 			fieldLabel: '1.9.4. RESULTADOS ESPERADOS',
 			name: 'tx_re_esperado',
 			allowBlank: false,
 			height: 60,
-			maxLength: 600
+			maxLength: 1600
                     }
                 ]
             });
