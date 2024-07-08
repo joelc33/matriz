@@ -254,13 +254,15 @@ class formaunoController extends Controller
                     'id'
                 )
                 ->where('id_tab_ac', '=', $lista->id)
-                ->first();                 
+                ->first(); 
 
+                if($data2){
                 $tabla_001 = tab_forma_001::find($data2->id);
                 $tabla_001->inst_mision = Input::get("mision");
                 $tabla_001->inst_vision = Input::get("vision");
                 $tabla_001->inst_objetivos = Input::get("objetivos");
-                $tabla_001->save();                     
+                $tabla_001->save(); 
+                }
                     
                 }                                
 
