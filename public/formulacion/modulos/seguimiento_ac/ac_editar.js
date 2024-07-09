@@ -1153,7 +1153,7 @@
                 success: function(result) {
                     var obj = Ext.util.JSON.decode(result.responseText);
                     if (obj.success && obj.data) {
-                        self.actualizar = 't';
+                        self.actualizar = obj.data.actualizar;
                         self.vinculos = obj.data;
 
                         async.auto({

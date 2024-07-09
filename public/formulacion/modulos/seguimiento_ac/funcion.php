@@ -270,7 +270,7 @@ trim(co_objetivo_estrategico) as co_objetivo_estrategico,
 trim(co_objetivo_general) as co_objetivo_general,
 co_area_estrategica,
 co_macroproblema, co_nodos as co_nodo, co_ambito_estado as co_ambito_zulia,
-co_objetivo_estado as co_objetivo_zulia
+co_objetivo_estado as co_objetivo_zulia,false as actualizar
 FROM t49_ac_planes t49
 join t46_acciones_centralizadas t46 on (t46.id = t49.id_accion_centralizada)
 WHERE id_ejecutor = ? and id_ejercicio = ?
