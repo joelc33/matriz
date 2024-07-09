@@ -739,6 +739,8 @@ EOT;
 					"id_tab_ac = '{$pk['id_accion_centralizada']}'"
 				);
 			} else {
+                            $params['id_tab_ac'] = $pk['id_accion_centralizada'];
+                            
 				$resultado = $comunes->InsertUpdate(
 					$tabla,
 					$params,
