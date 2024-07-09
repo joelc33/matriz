@@ -67,7 +67,7 @@ this.mo_actualizado_anual = new Ext.form.NumberField({
 this.mo_comprometido = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO COMPROM. AL CORTE (Bs.)',
 	name:'comprometido',
-	value:this.OBJ.mo_comprometido,
+	value:this.OBJ.mo_comprometido?this.OBJ.mo_comprometido:0,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -83,7 +83,7 @@ this.mo_comprometido = new Ext.form.NumberField({
 this.mo_causado = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO CAUSADO AL CORTE (Bs.)',
 	name:'causado',
-	value:this.OBJ.mo_causado,
+	value:this.OBJ.mo_causado?this.OBJ.mo_causado:0,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
@@ -99,7 +99,7 @@ this.mo_causado = new Ext.form.NumberField({
 this.mo_pagado = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO PAGADO AL CORTE (Bs.)',
 	name:'pagado',
-	value:this.OBJ.mo_pagado,
+	value:this.OBJ.mo_pagado?this.OBJ.mo_pagado:0,
 	allowBlank:false,
 	width:200,
 	maxLength: 20,
