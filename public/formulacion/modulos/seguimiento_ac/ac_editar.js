@@ -801,7 +801,7 @@
                     var obj = Ext.util.JSON.decode(result.responseText);
                     if (obj.success) {
                         if ( obj.data ) {
-                            self.actualizar = 't';
+                            self.actualizar = obj.data.actualizar;
                             self.forma.getForm().setValues(obj.data);
                         }
                     }

@@ -655,7 +655,7 @@ realizador_cargo, realizador_correo, realizador_telefono, realizador_unidad,
 registrador_nombres, registrador_cedula, registrador_cargo, registrador_correo,
 registrador_telefono, registrador_unidad, autorizador_nombres,
 autorizador_cedula, autorizador_cargo, autorizador_correo,
-autorizador_telefono, autorizador_unidad
+autorizador_telefono, autorizador_unidad,true as actualizar
 FROM ac_seguimiento.tab_ac_responsable
 WHERE id_tab_ac = ?
 LIMIT 1;
@@ -671,7 +671,7 @@ realizador_cargo, realizador_correo, realizador_telefono, realizador_unidad,
 registrador_nombres, registrador_cedula, registrador_cargo, registrador_correo,
 registrador_telefono, registrador_unidad, autorizador_nombres,
 autorizador_cedula, autorizador_cargo, autorizador_correo,
-autorizador_telefono, autorizador_unidad
+autorizador_telefono, autorizador_unidad,false as actualizar
 FROM t48_ac_responsables t48
 join t46_acciones_centralizadas t46 on (t46.id = t48.id_accion_centralizada)
 WHERE id_ejecutor = ? and id_ejercicio = ?
@@ -739,11 +739,11 @@ EOT;
 					"id_tab_ac = '{$pk['id_accion_centralizada']}'"
 				);
 			} else {
-				/*$resultado = $comunes->InsertUpdate(
+				$resultado = $comunes->InsertUpdate(
 					$tabla,
 					$params,
 					'INSERT'
-				);*/
+				);
 			}
 
 			if ( $resultado === 'Ok' ) {
