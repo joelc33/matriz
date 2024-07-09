@@ -229,10 +229,11 @@ class acseguimiento002Controller extends Controller
             't002.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(t002.nu_meta_modificada,0) as nu_meta_modificada'),'de_municipio','de_parroquia','t002.resultado','t002.observacion',
             DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(t002.nu_meta_modificada,0) as nu_meta_actualizada'),DB::raw('coalesce(t002.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
-            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
-            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
-            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
-            })
+            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', 'tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
+//            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
+//            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
+//            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
+//            })
             ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 't002.id_tab_municipio_detalle', '=', 't64.id')
             ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 't002.id_tab_parroquia_detalle', '=', 't65.id')            
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
