@@ -250,7 +250,7 @@ trim(co_objetivo_estrategico) as co_objetivo_estrategico,
 trim(co_objetivo_general) as co_objetivo_general,
 co_area_estrategica,
 co_macroproblema, co_nodos as co_nodo, co_ambito_estado as co_ambito_zulia,
-co_objetivo_estado as co_objetivo_zulia
+co_objetivo_estado as co_objetivo_zulia,true as actualizar
 FROM ac_seguimiento.tab_ac_vinculo
 WHERE id_tab_ac = ?
 LIMIT 1;
