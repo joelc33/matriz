@@ -406,7 +406,7 @@
                         fieldLabel: '1.9. MONTO TOTAL (BS.)',
                         name: 'monto',
                         allowBlank: false,
-                        allowDecimals: false,
+                        allowDecimals: true,
                         minLength: 1,
                         maxLength: 12,
                         allowNegative: false,

@@ -129,15 +129,10 @@ class acseguimiento002Controller extends Controller
           $pdf->SetAutoPageBreak(true, 10);
 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->join('t46_acciones_centralizadas as t46', function ($join) {
-            $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
-            ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
-            })
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-            ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')        
-            ->leftjoin('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
+            ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')        
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
             ->leftjoin('t45_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
@@ -160,7 +155,7 @@ class acseguimiento002Controller extends Controller
             ->on('t45c.edo_reg', '=', DB::raw('true'))        
             ->on('t45c.nu_nivel', '=', DB::raw('4'));
             })            
-            ->join('mantenimiento.tab_sectores as t18a', 't46.id_subsector', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18a', 'ac_seguimiento.tab_ac.id_tab_sectores', '=', 't18a.id')
             ->join('mantenimiento.tab_sectores as t18b', function ($join) {
             $join->on('t18a.co_sector', '=', 't18b.co_sector')
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
@@ -189,8 +184,7 @@ class acseguimiento002Controller extends Controller
             ->on('t20c.nu_nivel', '=', DB::raw('4'));
             })            
             ->select(
-            't46.id as id_accion_centralizada',
-            't46.id_ejecutor',
+            'ac_seguimiento.tab_ac.id_ejecutor',
             'tx_ejecutor',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
@@ -202,7 +196,7 @@ class acseguimiento002Controller extends Controller
             't45b.tx_descripcion as tx_macroproblema',
             't45c.tx_descripcion as tx_nodos',
             't21.objetivo_institucional as tx_objetivo_institucional',
-            DB::raw("'AC' || t04.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac"),
+            DB::raw("'AC' || t04.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
             't52.nombre',
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
@@ -368,10 +362,10 @@ $html23.='
 <td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
+<td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_002.'</td>
+<td colspan="16" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_002.'</td>
 </tr>';   
 
 $html23.='
