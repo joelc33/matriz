@@ -341,6 +341,7 @@ class formadosController extends Controller
                 'nb_responsable',
                 'ac_seguimiento.tab_meta_fisica.in_activo',
                 'de_unidad_medida',
+                'id_tab_origen',
                 'in_cargado',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
@@ -408,17 +409,18 @@ class formadosController extends Controller
             'de_unidad_medida',
             DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
             DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
-            't04.nu_meta_modificada',
-            't04.nu_meta_actualizada',
-            't04.nu_obtenido',
-            't04.nu_corte',
-            't04.resultado',
+            'ac_seguimiento.tab_meta_fisica.nu_meta_modificada',
+            'ac_seguimiento.tab_meta_fisica.nu_meta_actualizada',
+            'ac_seguimiento.tab_meta_fisica.nu_obtenido',
+            'ac_seguimiento.tab_meta_fisica.nu_corte',
+            'ac_seguimiento.tab_meta_fisica.resultado',
             'nu_po_beneficiar',
             'nu_em_previsto',
-            't04.observacion',                
+            'ac_seguimiento.tab_meta_fisica.observacion',                
             'ac_seguimiento.tab_meta_fisica.id_tab_municipio_detalle',
             'ac_seguimiento.tab_meta_fisica.id_tab_parroquia_detalle',
             'in_bloquear_002',
+            'ac_seguimiento.tab_meta_fisica.id_tab_origen',
             't04.id as codigo'
         )
         ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
@@ -485,6 +487,7 @@ class formadosController extends Controller
                 $tabla->nb_meta = Input::get("actividad");
                 $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
                 $tabla->tx_prog_anual = 0;
+                $tabla->nu_meta_modificada = Input::get("programado_anual");
                 $tabla->fecha_inicio = Input::get("fecha_inicio");
                 $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
@@ -501,7 +504,8 @@ class formadosController extends Controller
                 $tab_meta_financiera->id_tab_meta_fisica = $tabla->id;
                 $tab_meta_financiera->id_tab_municipio_detalle = $lista['co_municipio'];
                 $tab_meta_financiera->id_tab_parroquia_detalle = $lista['co_parroquia'];
-                $tab_meta_financiera->mo_presupuesto = $lista['mo_presupuesto'];
+                $tab_meta_financiera->mo_presupuesto = 0;
+                $tab_meta_financiera->mo_modificado_anual = $lista['mo_presupuesto'];
                 $tab_meta_financiera->co_partida = $lista['co_partida'];
                 $tab_meta_financiera->id_tab_fuente_financiamiento = $lista['co_fuente_financiamiento'];
                 $tab_meta_financiera->id_tab_origen = 2;
@@ -1144,6 +1148,52 @@ class formadosController extends Controller
                 ->orderby('tab_tipo_fondo.id', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }
+    
+    public function eliminar()
+    {
+        DB::beginTransaction();
+        try {
+            
+            $tabla = tab_meta_fisica::find(Input::get("id"));
+            $tabla->delete();
+            
+            $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', Input::get("id"))
+            ->delete();        
+            
+            $tab_forma_002 = tab_forma_002::where('id_tab_meta_fisica', '=', Input::get("id"))
+            ->delete();             
+
+            DB::commit();
+            
+            
+            $data = tab_meta_fisica::select(
+                'id',
+                'codigo as original',
+                DB::raw("lpad((row_number() OVER (ORDER BY codigo))::text, 3, '0') as corregido")
+            )
+            ->where('id_tab_ac_ae', '=', $tabla->id_tab_ac_ae)
+            ->get();                        
+
+                foreach ($data as $lista){   
+
+            $tabla_meta = tab_meta_fisica::find($lista->id);
+            $tabla_meta->codigo = $lista->corregido;
+            $tabla_meta->save();  
+                      
+                }             
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Registro borrado con Exito!';
+            return Response::json($response, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
        
     
 }

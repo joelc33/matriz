@@ -94,20 +94,17 @@ this.storeCO_UNIDADES_MEDIDA.load();
 });
 
 this.tx_prog_anual = new Ext.form.NumberField({
-	fieldLabel:'PROGRAMADO ANUAL',
+	fieldLabel:'META MODIFICADA',
 	name:'programado_anual',
-	value:'0',
 	allowBlank:false,
 	width:200,
 	maxLength: 8,
-	emptyText: '0',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 99999999,
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
 	allowDecimals: false,
-        readOnly:true,
 	allowNegative: false
 });
 
@@ -268,7 +265,7 @@ this.fieldset1 = new Ext.form.FieldSet({
         items:[
 		this.nb_meta,
 		this.id_tab_unidad_medida,
-//		this.tx_prog_anual,
+		this.tx_prog_anual,
 		this.comFechaInCul,
 		this.nb_responsable
 		]

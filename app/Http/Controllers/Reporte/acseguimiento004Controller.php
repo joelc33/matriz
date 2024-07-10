@@ -37,7 +37,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(30, 20);
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);        
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 4', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
@@ -56,7 +56,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
         $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -284,7 +284,8 @@ $html1 = '
 <td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
 </tr>
 </tbody>
 </table>
@@ -297,15 +298,15 @@ $html23.= '
 <thead>
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 30%;" rowspan="2">ACTIVIDAD</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 30%;" colspan="3">FISICA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 40%;" colspan="4">FINANCIERA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 30%;" colspan="3">METAS FISICA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 40%;" colspan="4">METAS FINANCIERAS</th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS PROGRAMADAS</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS PROGRAMADAS POA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS ACTUALIZADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PARTIDA PRESUPUESTARIA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO POA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO MODIFICADO</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO ACTUALIZADO</th>
 </tr>

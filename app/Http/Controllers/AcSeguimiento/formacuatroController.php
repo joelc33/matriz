@@ -516,7 +516,7 @@ class formacuatroController extends Controller
                 'id_tab_meta_fisica',
                 'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle',
                 'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
-                'mo_presupuesto',
+                DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_presupuesto'),
                 'co_partida',
                 'id_tab_fuente_financiamiento',
                 'ac_seguimiento.tab_meta_financiera.in_activo',

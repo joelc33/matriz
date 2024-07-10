@@ -1399,6 +1399,21 @@ EOT;
 
 			if ( $existe->validate( $pk ) ) {
                             
+				$sql_sum_ae = <<<EOT
+SELECT sum(mo_ae) as mo_total_ae
+FROM ac_seguimiento.tab_ac_ae
+WHERE id_tab_ac = ?;
+EOT;
+				$res_sum_ae = $comunes->ObtenerFilasBySqlSelect($sql_sum_ae, $pk['id']); 
+                                $res_sum_ae = $res_sum_ae[0];  
+                                
+				if ($params['mo_ac']<$res_sum_ae['mo_total_ae'] ) {
+                                    
+                                $mensaje = '<span>El monto de la accion centralizada no puede ser menor que la suma de las acciones especifcas, verifique!</span>';                                    
+					$respuesta = re\Helpers::responder( false, $mensaje, array( 'data' => $params['mo_ac']));
+					die($respuesta);
+				}                                
+                            
 				$sql_desc = <<<EOT
 SELECT de_nombre
 FROM mantenimiento.tab_ac_predefinida

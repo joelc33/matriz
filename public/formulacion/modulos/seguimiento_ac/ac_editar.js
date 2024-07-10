@@ -408,7 +408,7 @@
                         allowBlank: false,
                         allowDecimals: true,
                         minLength: 1,
-                        maxLength: 12,
+                        maxLength: 14,
                         allowNegative: false,
                         emptyText: '0',
                     }, {

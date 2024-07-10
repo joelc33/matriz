@@ -37,7 +37,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(30, 20);
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
@@ -55,7 +55,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
         $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }

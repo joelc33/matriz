@@ -37,7 +37,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(30, 20);
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);        
         $pdf->MultiCell(277, 5, 'FORMULARIO N° 5', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
@@ -56,7 +56,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
         $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -291,10 +291,15 @@ $html1 = '
 <td colspan="3" style="width: 100%;" align="justify"><b>INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD):</b> '.$item->tp_indicador.'</td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 55%;  height: 30px;"><b>NOMBRE DEL INDICADOR:</b> '.$item->nb_indicador_gestion.'</td>
-<td style="width: 15%;"><b>VALOR OBJETIVO:</b> '.$item->de_valor_objetivo.' </td>
-<td style="width: 15%;"><b>VALOR OBTENIDO:</b> '.$item->de_valor_obtenido.' </td>
-<td style="width: 15%;"><b>CUMPLIMIENTO:</b> '.$item->nu_cumplimiento.' % </td>
+<td style="width: 70%;  height: 30px;" align="justify" rowspan="2"><b>NOMBRE DEL INDICADOR:</b> '.$item->nb_indicador_gestion.'</td>
+<td style="width: 10%;" align="center"><b>VALOR OBJETIVO:</b></td>
+<td style="width: 10%;" align="center"><b>VALOR OBTENIDO:</b></td>
+<td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
 </tr>
 <tr style="font-size:9px height: 100px;">
 <td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>

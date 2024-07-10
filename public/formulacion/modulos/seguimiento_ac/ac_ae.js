@@ -402,7 +402,7 @@
                     name: 'monto',
                     allowBlank: false,
                     allowNegative: false,
-                    allowDecimals: false,
+                    allowDecimals: true,
                     emptyText: '0',
                     maxLength: 14
                 }]

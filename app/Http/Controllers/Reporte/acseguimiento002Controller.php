@@ -36,7 +36,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(30, 20);
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);        
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
@@ -55,7 +55,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
         $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -302,17 +302,20 @@ $html23.= '
 <th colspan="11" style="width: 100%;"><b>METAS FISICAS</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 18%;">ACTIVIDAD</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. MED</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PROGRAMADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">MODIFICADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">ACTUALIZADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 18%;" rowspan="2">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 16%;" colspan="2">FECHA PROGRAMADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">OBTENIDO AL CORTE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;" rowspan="2">LOCALIZACIÓN</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">RESPONSABLE</th>
+</tr>
+<tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">INICIO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">TERMINO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">OBTENIDO AL CORTE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNIC / PARROQ</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;">RESPONSABLE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FINAL</th>
 </tr>
 </thead>
 ';        
@@ -336,12 +339,12 @@ $contar=$contar+1;
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
 		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->nu_meta_modificada.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_meta_modificada.'</td>
                 <td style="width: 8%;" align="center">'.$item->nu_meta_actualizada.'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$item->nu_obtenido.'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
@@ -356,11 +359,17 @@ $contar=$contar+1;
       }
 $html23.='      
 <tr style="font-size:9px">
-<td colspan="3" style="width: 40%;" align="justify"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_re_esperado.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN A BENEFICIAR:</b> '.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>POBLACIÓN BENEFICIADA:</b> '.$data->nu_po_beneficiada.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS A GENERAR:</b> '.$data->nu_em_previsto.'</td>
-<td colspan="3" style="width: 15%;" align="justify"><b>EMPLEOS GENERADOS:</b> '.$data->nu_em_generado.'</td>
+<td colspan="3" style="width: 60%;" align="justify" rowspan="2"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b>'.$data->tx_re_esperado.'</td>
+<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN A BENEFICIAR:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN BENEFICIADA:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS A GENERAR:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>

@@ -347,6 +347,7 @@ class formatresController extends Controller
             'mo_comprometido',
             'mo_causado',
             'mo_pagado',
+            't01.id_tab_origen',
             DB::raw("to_char(t01.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
             DB::raw("to_char(t01.fecha_fin, 'dd-mm-YYYY') as fecha_fin")
         )

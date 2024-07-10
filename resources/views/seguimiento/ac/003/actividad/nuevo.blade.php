@@ -94,13 +94,11 @@ this.storeCO_UNIDADES_MEDIDA.load();
 });
 
 this.tx_prog_anual = new Ext.form.NumberField({
-	fieldLabel:'PROGRAMADO ANUAL',
+	fieldLabel:'META MODIFICADA',
 	name:'programado_anual',
-	value:this.OBJ.tx_prog_anual,
 	allowBlank:false,
 	width:200,
 	maxLength: 8,
-	emptyText: '0',
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 99999999,
@@ -213,7 +211,7 @@ this.guardar = new Ext.Button({
         if (forma004ActividadEditar.main.store_lista.getCount() == 0) {
             Ext.Msg.alert("Alerta", "Debe agregar las metas financieras");
             return false;
-        }         
+        }        
 //*****Array del Grid********//
 	listado = paqueteComunJS.funcion.getJsonByObjStore({
 		store:forma004ActividadEditar.main.gridPanel_.getStore()
@@ -230,7 +228,7 @@ this.guardar = new Ext.Button({
 		for(datos in action.result.msg){
 			errores += action.result.msg[datos] + '<br>';
 		}
-                Ext.MessageBox.alert('Error en transacción', errores);
+                Ext.MessageBox.alert('Error en transacción', action.result.msg);
             },
             success: function(form, action) {
                  if(action.result.success){
@@ -244,7 +242,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma003ActividadLista.main.store_lista.load();
+                 forma002ActividadLista.main.store_lista.load();
                  forma004ActividadEditar.main.winformPanel_.close();
              }
         });
@@ -267,7 +265,7 @@ this.fieldset1 = new Ext.form.FieldSet({
         items:[
 		this.nb_meta,
 		this.id_tab_unidad_medida,
-//		this.tx_prog_anual,
+		this.tx_prog_anual,
 		this.comFechaInCul,
 		this.nb_responsable
 		]
@@ -340,7 +338,7 @@ width:814,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma003ActividadLista.main.mascara.hide();
+forma002ActividadLista.main.mascara.hide();
 
 },
 eliminarRequerimiento:function(){

@@ -179,7 +179,7 @@ this.storeCO_FUENTE_FINANCIAMIENTO.load();
 });
 
 this.mo_presupuesto = new Ext.form.NumberField({
-	fieldLabel:'PRESUPUESTO BS.',
+	fieldLabel:'PRESUPUESTO MODIFICADO',
 	name:'presupuesto',
 	value:this.OBJ.mo_presupuesto,
 	allowBlank:false,
@@ -187,13 +187,7 @@ this.mo_presupuesto = new Ext.form.NumberField({
 	minLength : 1,
 	maxLength: 20,
 	autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 20},
-	blankText: '0.00',
-	//decimalPrecision: 2,
-	allowNegative: false,
-   	//style: 'text-align: right',
-	emptyText: '0.00',
-	decimalPrecision: 0,
-	allowDecimals: false
+	blankText: '0.00'
 });
 
 this.co_partida = new Ext.form.ComboBox({

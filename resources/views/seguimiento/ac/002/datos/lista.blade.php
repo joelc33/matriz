@@ -46,7 +46,7 @@ this.editar= new Ext.Button({
 this.editar.disable();
 
 this.enviar = new Ext.Button({
-	text:'Enviar Actividades',
+	text:'Validar',
 	iconCls: 'icon-report',
 	handler:function(){
 	this.codigo  = forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');

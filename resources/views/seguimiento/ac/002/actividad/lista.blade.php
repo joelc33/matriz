@@ -50,6 +50,36 @@ this.editar= new Ext.Button({
 
 this.editar.disable();
 
+this.eliminar= new Ext.Button({
+	text:'Eliminar',
+	iconCls: 'icon-eliminar',
+	handler: function(boton){
+		this.codigo  = forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+		Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Eliminar esta Actividad?', function(boton){
+		if(boton=="yes"){
+	        Ext.Ajax.request({
+	            method:'POST',
+	            url:'{{ URL::to('ac/seguimiento/002/actividad/eliminar') }}',
+	            params:{
+			_token: '{{ csrf_token() }}',
+	                id: forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+	            },
+	            success:function(result, request ) {
+	                obj = Ext.util.JSON.decode(result.responseText);
+	                if(obj.success=="true"){
+			    forma002ActividadLista.main.store_lista.load();
+	                    Ext.Msg.alert("Notificación",obj.msg);
+	                }else{
+	                    Ext.Msg.alert("Notificación",obj.msg);
+	                }
+	                forma002ActividadLista.main.mascara.hide();
+	            }});
+		}});
+	}
+});
+
+this.eliminar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -115,7 +145,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     height:510,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.nuevo,'-',
+				this.nuevo,'-',this.eliminar,'-',
 			@endif
                         @if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
@@ -137,6 +167,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002ActividadLista.main.editar.enable();
+                        if(forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_origen')==2){
+                        forma002ActividadLista.main.eliminar.enable();    
+                        }else{
+                        forma002ActividadLista.main.eliminar.disable();      
+                        }
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -169,6 +204,7 @@ this.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma002ActividadLista.main.editar.disable();
+forma002ActividadLista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -187,6 +223,7 @@ getLista: function(){
     {name: 'fecha_fin'},
     {name: 'nb_responsable'},
     {name: 'in_cargado'},
+    {name: 'id_tab_origen'},
     {
         name: 'programado',
         convert: function(v, r) {

@@ -507,6 +507,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('actividad/guardar', 'formadosController@guardar');
         Route::post('actividad/enviar', 'formadosController@enviar');
         Route::post('actividad/enviar/{id}', 'formadosController@enviar');
+        Route::post('actividad/eliminar', 'formadosController@eliminar');
         Route::post('actividad/enviarAprobar', 'formadosController@cargar');
         Route::get('actividad/financiera/nuevo/{id}', 'formadosController@nuevoFinanciera');
         Route::post('actividad/financiera/partida', 'formadosController@partida');
