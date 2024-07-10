@@ -37,7 +37,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(30, 20);
         $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);        
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 3', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
@@ -56,7 +56,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
         $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -219,7 +219,7 @@ class acseguimiento003Controller extends Controller
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -354,24 +354,22 @@ $html23.= '
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 <thead>
 <tr align="center" bgcolor="#BDBDBD">
-<th colspan="11" style="width: 100%;"><b>METAS FINANCIERAS</b></th>
+<th colspan="11" style="width: 16%;" rowspan="2"><b>ACTIVIDADES</b></th>
+<th colspan="11" style="width: 48%;"><b>METAS FINANCIERAS</b></th>
+<th colspan="11" style="width: 36%;"><b>ASIGNACIÓN PRESUPUESTARIA</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 16%;" rowspan="2">ACTIVIDAD</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO PROGRAM. ANUAL (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO ACTUALIZADO ANUAL (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 28%;" colspan="4">ASIGNACIÓN PRESUPUESTARIA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">FUENTE FINANCIAMIENTO (AÑO)</th>
-</tr>
-<tr style="font-size:6px">
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">SECTOR</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">"PROY. Y/O A. CENTRAL."</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">ACCIÓN ESP.</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">PART.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FUENTE FINANCIAMIENTO (AÑO)</th>
 </tr>
 </thead>
 ';        
@@ -385,13 +383,22 @@ $mo_actualizado_anual = 0;
 $mo_comprometido = 0;
 $mo_causado = 0;
 $mo_pagado = 0;
+$i = 1;
+$id = 0;
 
       foreach($actividad as $item) {
           
-
+          
+             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
+            ->get();         
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+             }
+          
+             if($id==$item->id){
+             
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 16%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
@@ -403,8 +410,27 @@ $mo_pagado = 0;
                 <td style="width: 7%;" align="center">0'.$item->nu_numero.'</td>
                 <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
 		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
-                $html23.='</tr>';
+                $html23.='</tr>'; 
+             }else{
+                 
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
+                <td style="width: 7%;" align="center">'.$item->co_sector.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
+                <td style="width: 7%;" align="center">0'.$item->nu_numero.'</td>
+                <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
+		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';                 
                 
+             }
+                $id =$item->id;
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
                 $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
@@ -418,16 +444,7 @@ $mo_pagado = 0;
 
 $html23.='      
 <tr style="font-size:6px" nobr="true">
-		<td style="width: 16%;"  nobr="true"><b>SUB TOTAL POR  ACCION ESPECIFICA</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
-		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
-</tr>
-<tr style="font-size:6px" nobr="true">
-		<td style="width: 16%;"  nobr="true"><b>SUB TOTAL POR ACCION CENTRALIZADA</b></td>
+		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION CENTRALIZADA</b></td>
 		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_accion).'</b></td>
 		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_accion).'</b></td>
                 <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_accion).'</b></td>
@@ -445,7 +462,7 @@ $html23.='
 		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
+<td colspan="12" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
 </tr>'        ;
       
 $html23.='
