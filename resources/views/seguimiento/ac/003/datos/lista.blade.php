@@ -45,6 +45,38 @@ this.editar= new Ext.Button({
 
 this.editar.disable();
 
+this.enviar = new Ext.Button({
+	text:'Validar',
+	iconCls: 'icon-report',
+	handler:function(){
+//	this.codigo  = forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');
+//
+//        Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los cambios? <br><b>Nota:</b> No podra realizar mas modificaciones! <br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+//        if(boton=="yes"){
+//
+//        Ext.Ajax.request({
+//            method:'POST',
+//           url:"{{ URL::to('ac/seguimiento/002/actividad/enviarAprobar') }}",
+//            params:{
+//		_token: '{{ csrf_token() }}',
+//                id: forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id')
+//            },
+//            success:function(result, request ) {
+//                obj = Ext.util.JSON.decode(result.responseText);
+//                if(obj.success=="true"){
+//                    Ext.Msg.alert("Notificación",obj.msg);
+//                }else{
+//                    Ext.Msg.alert("Notificación",obj.msg);
+//                }
+//
+//            }});
+//
+//			}
+//			});
+	}
+});
+this.enviar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -110,7 +142,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.editar,'-',
+				this.editar,'-',this.enviar,'-',
 			@endif
 				this.buscador
     ],
@@ -129,6 +161,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma003DetalleLista{!! $data['id'] !!}.main.editar.enable();
+                        forma003DetalleLista{!! $data['id'] !!}.main.enviar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -148,6 +181,7 @@ this.store_lista.baseParams.ac = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma003DetalleLista{!! $data['id'] !!}.main.editar.disable();
+forma003DetalleLista{!! $data['id'] !!}.main.enviar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
