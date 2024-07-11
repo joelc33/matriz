@@ -107,12 +107,12 @@ class ejecucionController extends Controller
     public function detalle()
     {
         $data = tab_meta_financiera::select(
-            DB::raw('sum(mo_presupuesto) as mo_presupuesto'),
-            DB::raw('sum(mo_modificado_anual) as mo_modificado_anual'),
-            DB::raw('sum(mo_actualizado_anual) as mo_actualizado_anual'),
-            DB::raw('sum(mo_comprometido) as mo_comprometido'),
-            DB::raw('sum(mo_causado) as mo_causado'),
-            DB::raw('sum(mo_pagado) as mo_pagado'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
+                DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
             'ac_seguimiento.tab_meta_financiera.co_partida'
         )
         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
@@ -126,12 +126,12 @@ class ejecucionController extends Controller
         $rol_planificador = array(3, 8);
         if (in_array(Session::get('rol'), $rol_planificador)) {
             $data = tab_meta_financiera::select(
-                DB::raw('sum(mo_presupuesto) as mo_presupuesto'),
-                DB::raw('sum(mo_modificado_anual) as mo_modificado_anual'),
-                DB::raw('sum(mo_actualizado_anual) as mo_actualizado_anual'),
-                DB::raw('sum(mo_comprometido) as mo_comprometido'),
-                DB::raw('sum(mo_causado) as mo_causado'),
-                DB::raw('sum(mo_pagado) as mo_pagado'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
+                DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
                 'ac_seguimiento.tab_meta_financiera.co_partida'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
