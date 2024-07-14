@@ -282,27 +282,27 @@ class acseguimiento003Controller extends Controller
                 $mo_causado_ejecutor = 0;
                 $mo_pagado_ejecutor = 0;                
                 
-      foreach($actividad_accion as $item) {
+      foreach($actividad_accion as $item1) {
           
 
-                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item->mo_presupuesto;
-                $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item->mo_modificado_anual;
-                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item->mo_presupuesto + $item->mo_modificado_anual);
-                $mo_comprometido_accion = $mo_comprometido_accion + $item->mo_comprometido;
-                $mo_causado_accion = $mo_causado_accion + $item->mo_causado;
-                $mo_pagado_accion = $mo_pagado_accion + $item->mo_pagado;
+                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
+                $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual);
+                $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
+                $mo_causado_accion = $mo_causado_accion + $item1->mo_causado;
+                $mo_pagado_accion = $mo_pagado_accion + $item1->mo_pagado;
 
       } 
       
-      foreach($actividad_ejecutor as $item) {
+      foreach($actividad_ejecutor as $item2) {
           
 
-                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item->mo_presupuesto;
-                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item->mo_presupuesto + $item->mo_modificado_anual);
-                $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item->mo_comprometido;
-                $mo_causado_ejecutor = $mo_causado_ejecutor + $item->mo_causado;
-                $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item->mo_pagado;
+                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
+                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual);
+                $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
+                $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
+                $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
 
       }      
           
