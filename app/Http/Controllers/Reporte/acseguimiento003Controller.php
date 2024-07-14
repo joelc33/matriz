@@ -247,7 +247,7 @@ class acseguimiento003Controller extends Controller
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
-            ->where('t03.id_ejecutor', '=', $data->id_ejecutor)
+            ->where('t05.id_ejecutor', '=', $data->id_ejecutor)
             ->where('t05.id', '=', $id)
             ->orderBy('codigo', 'ASC')
             ->get();    
