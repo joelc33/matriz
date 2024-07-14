@@ -219,8 +219,8 @@ class acseguimiento003Controller extends Controller
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
-            'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
             'co_sector')
@@ -235,8 +235,8 @@ class acseguimiento003Controller extends Controller
             ->orderBy('codigo', 'ASC')
             ->get();
             
-            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
-            'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
+            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
             'co_sector')
@@ -252,8 +252,8 @@ class acseguimiento003Controller extends Controller
             ->orderBy('codigo', 'ASC')
             ->get();    
             
-            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
-            'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida',
+            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
             'co_sector')
