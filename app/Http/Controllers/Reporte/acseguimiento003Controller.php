@@ -472,7 +472,7 @@ $html23.='
 		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="12" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
+<td colspan="9" style="width: 100%;height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
 </tr>'        ;
       
 $html23.='
