@@ -212,6 +212,14 @@ class acseguimiento003Controller extends Controller
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get(); 
+        
+            
+                $mo_presupuesto_anual_accion = 0;
+                $mo_modificado_anual_accion = 0;
+                $mo_actualizado_anual_accion = 0;
+                $mo_comprometido_accion = 0;
+                $mo_causado_accion = 0;
+                $mo_pagado_accion = 0;            
             
             foreach($data as $data) {
             
@@ -247,7 +255,6 @@ class acseguimiento003Controller extends Controller
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
-            ->where('t05.id_ejecutor', '=', $data->id_ejecutor)
             ->where('t05.id', '=', $id)
             ->orderBy('codigo', 'ASC')
             ->get();    
@@ -268,12 +275,7 @@ class acseguimiento003Controller extends Controller
             ->orderBy('codigo', 'ASC')
             ->get();             
             
-                $mo_presupuesto_anual_accion = 0;
-                $mo_modificado_anual_accion = 0;
-                $mo_actualizado_anual_accion = 0;
-                $mo_comprometido_accion = 0;
-                $mo_causado_accion = 0;
-                $mo_pagado_accion = 0;
+
                 
                 $mo_presupuesto_anual_ejecutor = 0;
                 $mo_modificado_anual_ejecutor = 0;
