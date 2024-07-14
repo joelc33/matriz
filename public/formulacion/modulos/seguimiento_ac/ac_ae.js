@@ -428,8 +428,8 @@
                 xtype: 'numberfield',
                 allowBlank: false,
                 allowNegative: false,
-                allowDecimals: false,
-                minValue: 1,
+                allowDecimals: true,
+                minValue: 0,
                 emptyText: '0',
                 maxLength: 14
             });

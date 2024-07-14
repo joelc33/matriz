@@ -233,10 +233,10 @@ class acseguimiento004Controller extends Controller
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
-            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
-            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
-            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
-            })                    
+//            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
+//            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
+//            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
+//            })                    
              ->where(function ($query) {
              $query->where('tab_meta_fisica.nu_meta_modificada', '!=', 0)
              ->whereOr('mo_modificado_anual', '!=', 0);

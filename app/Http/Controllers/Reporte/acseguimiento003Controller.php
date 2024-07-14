@@ -444,6 +444,15 @@ $id = 0;
 
 $html23.='      
 <tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION ESPECÍFICA</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION CENTRALIZADA</b></td>
 		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_accion).'</b></td>
 		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_accion).'</b></td>

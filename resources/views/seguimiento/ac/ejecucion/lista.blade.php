@@ -108,11 +108,11 @@ this.ficha_acumulada= new Ext.Button({
                         if(acejecucionLista.main.id_tab_ejecutores.getValue()!='' || acejecucionLista.main.id_tab_ejecutores.getValue()!=null){
 			this.codigo  = acejecucionLista.main.id_tab_ejecutores.getValue();
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha/ejecucion') }}/'+this.codigo
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/ejecucion') }}/{!! $lapso->id !!}/'+this.codigo
 			});
                         }else{
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha/ejecucion') }}'
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/ejecucion') }}/{!! $lapso->id !!}'
 			});                            
                         }
     }
