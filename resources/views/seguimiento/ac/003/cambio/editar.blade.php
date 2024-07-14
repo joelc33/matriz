@@ -43,8 +43,8 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
-        readOnly:(this.OBJ.in_enviado==true)?true:(this.OBJ.id_tab_origen==2)?true:false,
-        style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',
+	readOnly:true,
+	style:'background:#f2d7d5;',  
         validationEvent: 'blur',
 	validator: function(value){
 		tedm=value;
@@ -61,8 +61,9 @@ this.mo_actualizado_anual = new Ext.form.NumberField({
 	value:formatoNumero(this.OBJ.mo_presupuesto + (this.OBJ.mo_modificado_anual?this.OBJ.mo_modificado_anual:0)),
 	allowBlank:false,
         readOnly:true,
-        style:'background:#f2d7d5;',        
 	width:200,
+	readOnly:true,
+	style:'background:#f2d7d5;',          
 	allowDecimals: true,
 	allowNegative: false
 });
@@ -77,8 +78,8 @@ this.mo_comprometido = new Ext.form.NumberField({
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
-        readOnly:(this.OBJ.in_enviado==true)?true:false,
-        style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',        
+	readOnly:true,
+	style:'background:#f2d7d5;',          
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
@@ -95,8 +96,8 @@ this.mo_causado = new Ext.form.NumberField({
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
-        readOnly:(this.OBJ.in_enviado==true)?true:false,
-        style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',         
+	readOnly:true,
+	style:'background:#f2d7d5;',          
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
@@ -113,8 +114,8 @@ this.mo_pagado = new Ext.form.NumberField({
 	decimalPrecision: 2,
  	minValue : 0,
  	maxValue : 999999999999999999999,
-        readOnly:(this.OBJ.in_enviado==true)?true:false,
-        style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',         
+	readOnly:true,
+	style:'background:#f2d7d5;',          
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
@@ -130,6 +131,112 @@ this.fieldset2 = new Ext.form.FieldSet({
 		this.mo_causado,
 		this.mo_pagado
 	]
+});
+
+this.aprobar = new Ext.Button({
+    text:'Aprobar',
+    iconCls: 'icon-fin',
+    handler:function(){
+
+        if(!forma003ActividadEditar.main.formPanel_.getForm().isValid()){
+            Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+            return false;
+        }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea aprobar los cambios solicitados?<br><b>Nota:</b> No se podran modificar los cambios.', function(boton){
+				if(boton=="yes"){
+
+                                forma003ActividadEditar.main.formPanel_.getForm().submit({
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/003/cambio/aprobar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/003/cambio/aprobar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
+            failure: function(form, action) {
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
+                Ext.MessageBox.alert('Error en transacción', errores);
+            },
+            success: function(form, action) {
+                 if(action.result.success){
+                     Ext.MessageBox.show({
+                         title: 'Mensaje',
+                         msg: action.result.msg,
+                         closable: false,
+                         icon: Ext.MessageBox.INFO,
+                         resizable: false,
+			 								 	 animEl: document.body,
+                         buttons: Ext.MessageBox.OK
+                     });
+                 }
+                 forma003ActividadListaCambio.main.store_lista.load();
+                 forma003ListaCambio.main.store_lista.load();
+                 forma003ActividadEditar.main.winformPanel_.close();
+             }
+        });
+
+			}
+			});
+
+    }
+});
+
+this.negar = new Ext.Button({
+    text:'Negar',
+    iconCls: 'icon-cancelar',
+    handler:function(){
+
+        if(!forma003ActividadEditar.main.formPanel_.getForm().isValid()){
+            Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+            return false;
+        }
+
+				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea negar los cambios solicitados?<br><b>Nota:</b> El Ejecutor tendra que solicitar de nuevo los cambios.', function(boton){
+				if(boton=="yes"){
+
+        forma003ActividadEditar.main.formPanel_.getForm().submit({
+						method:'POST',
+						@if(empty($data->id))
+							url:'{{ URL::to('seguimiento/ac/003/cambio/negar') }}',
+						@else
+							url:'{{ URL::to('seguimiento/ac/003/cambio/negar') }}/{!! $data->id !!}',
+						@endif
+						waitMsg: 'Enviando datos, por favor espere..',
+						waitTitle:'Enviando',
+            failure: function(form, action) {
+						var errores = '';
+						for(datos in action.result.msg){
+							errores += action.result.msg[datos] + '<br>';
+						}
+                Ext.MessageBox.alert('Error en transacción', errores);
+            },
+            success: function(form, action) {
+                 if(action.result.success){
+                     Ext.MessageBox.show({
+                         title: 'Mensaje',
+                         msg: action.result.msg,
+                         closable: false,
+                         icon: Ext.MessageBox.INFO,
+                         resizable: false,
+			 								 	 animEl: document.body,
+                         buttons: Ext.MessageBox.OK
+                     });
+                 }
+                 forma003ActividadListaCambio.main.store_lista.load();
+                 forma003ListaCambio.main.store_lista.load();
+                 forma003ActividadEditar.main.winformPanel_.close();
+             }
+        });
+
+			}
+			});
+
+    }
 });
 
 this.guardar = new Ext.Button({
@@ -232,7 +339,7 @@ this.winformPanel_ = new Ext.Window({
     title:'Formulario: METAS FINANCIERAS',
     modal:true,
     constrain:true,
-width:814,
+    width:814,
     frame:true,
     closabled:true,
     autoHeight:true,
@@ -241,16 +348,16 @@ width:814,
     ],
     buttons:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				@if($data->in_enviado==false)
-					this.guardar,'-',
-				@endif
+                        @if($data->id_tab_estatus!=6)			
+                            this.aprobar,this.negar,
 			@endif
+                        @endif
         this.salir
     ],
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma003ActividadLista.main.mascara.hide();
+forma003ActividadListaCambio.main.mascara.hide();
 }
 };
 Ext.onReady(forma003ActividadEditar.main.init, forma003ActividadEditar.main);

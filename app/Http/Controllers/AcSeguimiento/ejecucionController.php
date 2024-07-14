@@ -4,6 +4,7 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 
 //*******agregar esta linea******//
 use matriz\Models\AcSegto\tab_meta_financiera;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
 use Input;
@@ -31,9 +32,12 @@ class ejecucionController extends Controller
     *
     * @return Response
     */
-    public function lista()
+    public function lista($id)
     {
-        return View::make('seguimiento.ac.ejecucion.lista');
+                $lapso = tab_lapso::where('id', '=', $id)
+        ->first();
+        $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
+        return View::make('seguimiento.ac.ejecucion.lista')->with('data', $data)->with('lapso', $lapso);
     }
 
     /**
@@ -46,7 +50,8 @@ class ejecucionController extends Controller
         try {
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
-            $variable = Input::get('variable');
+            $variable = Input::get('id_ejecutor');
+            $lapso = Input::get('id_tab_lapso');
 
             $tab_meta_financiera = tab_meta_financiera::select(
                 'tx_nombre',
@@ -56,6 +61,8 @@ class ejecucionController extends Controller
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
+                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
+                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),                    
                 'ac_seguimiento.tab_meta_financiera.co_partida'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
@@ -67,6 +74,7 @@ class ejecucionController extends Controller
                   ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
             })
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t03.id_tab_lapso', '=', $lapso)
             ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('tx_nombre');
@@ -79,7 +87,7 @@ class ejecucionController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_meta_financiera->where('co_partida', 'ILIKE', "%$variable%");
+                    $tab_meta_financiera->where('t03.id_ejecutor', '=', $variable);
                 }
 
                 $response['success']  = 'true';

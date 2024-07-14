@@ -42,6 +42,27 @@ class formatresController extends Controller
         
         return View::make('seguimiento.ac.003.lista')->with('data', $data);
     }
+    
+        public function listaCambio()
+    {
+        return View::make('seguimiento.ac.003.cambio.lista');
+    }    
+    
+        public function listaCambioAe($id)
+    {
+            
+        $data = tab_ac_ae::select(
+            'tab_ac_ae.id',
+            'nu_codigo',
+            'de_nombre'
+        )
+        ->join('ac_seguimiento.tab_ac as t01', 'tab_ac_ae.id_tab_ac', '=', 't01.id')
+        ->join('mantenimiento.tab_ac_ae_predefinida as t02', 'tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't02.id')
+        ->where('tab_ac_ae.id', '=', $id)
+        ->first();
+        
+        return View::make('seguimiento.ac.003.cambio.listaAe')->with('data', $data);            
+    }    
 
     /**
      * Display a listing of the resource.
@@ -104,7 +125,144 @@ class formatresController extends Controller
             return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
         }
     }
+    
+    public function storeListaCambio()
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
 
+            $tab_forma_003 = tab_meta_financiera::join('ac_seguimiento.tab_meta_fisica as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't06.id')        
+            ->join('ac_seguimiento.tab_ac_ae as t05', 't06.id_tab_ac_ae', '=', 't05.id')        
+            ->join('ac_seguimiento.tab_ac as t01', 't05.id_tab_ac', '=', 't01.id')
+            ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
+            ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
+            ->join('mantenimiento.tab_ac_ae_predefinida as t07', 't05.id_tab_ac_ae_predefinida', '=', 't07.id')
+            ->select(
+                'tx_ejecutor',
+                't01.id as id_ac',    
+                't02.in_activo',
+                'id_tab_ac_ae',
+                'nu_codigo',
+                'de_ac',
+                'de_lapso',
+                't01.id_ejecutor',
+                'de_nombre',
+                't05.in_003' 
+            )
+            ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t01.in_activo', '=', true)
+            ->where('in_enviado', '=', true)
+                    ->groupBy('t01.id')
+            ->groupBy('tx_ejecutor')
+                    ->groupBy('t02.in_activo')
+                   ->groupBy('t05.in_003')
+                    ->groupBy('id_tab_ac_ae')
+                    ->groupBy('nu_codigo')
+                    ->groupBy('de_ac')
+                    ->groupBy('de_lapso')
+                    ->groupBy('t01.id_ejecutor')
+                    ->groupBy('de_nombre')
+                    ;
+
+            $rol_planificador = array(3, 8);
+            if (in_array(Session::get('rol'), $rol_planificador)) {
+                $tab_forma_003->where('t01.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+            }
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_forma_003->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_003->count();
+                $tab_forma_003->skip($start)->take($limit);
+                $response['data']  = $tab_forma_003->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_003->count();
+                $tab_forma_003->skip($start)->take($limit);
+
+                $response['data']  = $tab_forma_003->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
+        }
+    }    
+
+    
+    public function storeListaCambioAe()
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
+            
+            $tab_forma_003 = tab_meta_financiera::select(
+                'ac_seguimiento.tab_meta_financiera.id',
+                'id_tab_meta_fisica',
+                'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle',
+                'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
+                'mo_presupuesto',
+                'co_partida',
+                'id_tab_fuente_financiamiento',
+                'ac_seguimiento.tab_meta_financiera.in_activo',
+                'ac_seguimiento.tab_meta_financiera.in_cargado',
+                'codigo',
+                'nb_meta',
+                'de_fuente_financiamiento',
+                'nu_numero',
+                'nu_original',
+                'co_sector',
+                'ac_seguimiento.tab_meta_financiera.id_tab_estatus',
+                'de_estatus'
+            )
+             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+             ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 't01.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
+             ->join('mantenimiento.tab_estatus as t08', 't08.id', '=', 'ac_seguimiento.tab_meta_financiera.id_tab_estatus')       
+            ->where('t05.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('id_tab_ac_ae', '=', Input::get('ac_ae'))
+            ->where('t05.in_activo', '=', true)
+            ->where('in_enviado', '=', true)
+            ->where('ac_seguimiento.tab_meta_financiera.in_cargado', '=', true);           
+
+            $rol_planificador = array(3, 8);
+            if (in_array(Session::get('rol'), $rol_planificador)) {
+                $tab_forma_003->where('t05.id_tab_ejecutores', '=', Session::get('id_tab_ejecutores'));
+            }
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_forma_003->where('nb_meta', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_003->count();
+                $tab_forma_003->skip($start)->take($limit);
+                $response['data']  = $tab_forma_003->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_forma_003->count();
+                $tab_forma_003->skip($start)->take($limit);
+                $response['data']  = $tab_forma_003->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
+        }
+    }    
     /**
     * Display a listing of the resource.
     *
@@ -168,6 +326,47 @@ class formatresController extends Controller
         return View::make('seguimiento.ac.003.datos.lista')->with('data', $data);
     }
 
+    public function datosCambio($id)
+    {
+        $data = tab_meta_financiera::select(
+            'ac_seguimiento.tab_meta_financiera.id',
+            'id_tab_meta_fisica',
+            'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle',
+            'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
+            'mo_presupuesto',
+            'co_partida',
+            'id_tab_fuente_financiamiento',
+            'ac_seguimiento.tab_meta_financiera.in_activo',
+            'ac_seguimiento.tab_meta_financiera.in_cargado',
+            'codigo',
+            'nb_meta',
+            'de_fuente_financiamiento',
+            'nu_numero',
+            'nu_original',
+            'co_sector',
+            'mo_modificado_anual',
+            'mo_actualizado_anual',
+            'mo_comprometido',
+            'mo_causado',
+            'mo_pagado',
+            't01.id_tab_origen',
+            'ac_seguimiento.tab_meta_financiera.id_tab_estatus',
+            DB::raw("to_char(t01.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+            DB::raw("to_char(t01.fecha_fin, 'dd-mm-YYYY') as fecha_fin")
+        )
+         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+         ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
+         ->join('ac_seguimiento.tab_ac_ae as t03', 't01.id_tab_ac_ae', '=', 't03.id')
+         ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+         ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+         ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+         ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
+        ->where('ac_seguimiento.tab_meta_financiera.id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.003.cambio.editar')->with('data', $data);
+    }    
+    
     /**
     * Display a listing of the resource.
     *
@@ -348,6 +547,7 @@ class formatresController extends Controller
             'mo_causado',
             'mo_pagado',
             't01.id_tab_origen',
+            'ac_seguimiento.tab_meta_financiera.in_enviado',
             DB::raw("to_char(t01.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
             DB::raw("to_char(t01.fecha_fin, 'dd-mm-YYYY') as fecha_fin")
         )
@@ -427,6 +627,7 @@ class formatresController extends Controller
                 $tabla->mo_causado = Input::get("causado");
                 $tabla->mo_pagado = Input::get("pagado");
                 $tabla->in_cargado = true;
+                $tabla->id_tab_estatus = 5;
                 $tabla->save();
                 
                 $data = tab_meta_fisica::join('ac_seguimiento.tab_ac_ae as t05', 'tab_meta_fisica.id_tab_ac_ae', '=', 't05.id')
@@ -448,9 +649,9 @@ class formatresController extends Controller
                 
                 if($cant==0){
                     
-                $tabla = tab_ac::find($data->id);
-                $tabla->in_003 = true;
-                $tabla->save();
+//                $tabla = tab_ac::find($data->id);
+//                $tabla->in_003 = true;
+//                $tabla->save();
                 
                 }
 
@@ -530,6 +731,188 @@ class formatresController extends Controller
 
         }
     }
+    
+    public function negar($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
+
+            try {
+                $validator= Validator::make(Input::all(), tab_meta_financiera::$validarEditar);
+                if ($validator->fails()) {
+                    return Response::json(array(
+                      'success' => false,
+                      'msg' => $validator->getMessageBag()->toArray()
+                    ));
+                }
+                $tabla = tab_meta_financiera::find($id);
+                $tabla->in_cargado = false; 
+                $tabla->in_enviado = false; 
+                $tabla->id_tab_estatus = 7;
+                $tabla->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Solicitud Negada con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        }
+    }    
+    
+    
+    public function aprobar($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
+
+            try {
+                $validator= Validator::make(Input::all(), tab_meta_financiera::$validarEditar);
+                if ($validator->fails()) {
+                    return Response::json(array(
+                      'success' => false,
+                      'msg' => $validator->getMessageBag()->toArray()
+                    ));
+                }
+
+                
+                $tabla_meta = tab_meta_financiera::find($id);
+                $tabla_meta->id_tab_estatus = 6;
+                $tabla_meta->save();                
+                
+                    $data = tab_meta_financiera::join('ac_seguimiento.tab_meta_fisica as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't06.id')        
+                ->join('ac_seguimiento.tab_ac_ae as t05', 't06.id_tab_ac_ae', '=', 't05.id')
+                ->select(
+                    't05.id_tab_ac',
+                    't06.id_tab_ac_ae'
+                )
+                ->where('ac_seguimiento.tab_meta_financiera.id', '=', $id)
+                ->first();         
+                
+                
+                $cant = tab_ac_ae::join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_ac_ae.id', '=', 't01.id_tab_ac_ae')
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 't01.id', '=', 't02.id_tab_meta_fisica')         
+                ->where('ac_seguimiento.tab_ac_ae.id', '=', $data->id_tab_ac_ae)
+                ->whereNotIn('t02.id_tab_estatus', [6])
+                ->count();
+                
+//        var_dump($cant);
+//        exit();
+                if($cant==0){
+                
+                $tabla_ae = tab_ac_ae::find($data->id_tab_ac_ae);
+                $tabla_ae->in_003 = true;
+                $tabla_ae->save();                
+                
+                }
+                
+                $cant1 = tab_ac::join('ac_seguimiento.tab_ac_ae as t03', 'ac_seguimiento.tab_ac.id', '=', 't03.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t01', 't03.id', '=', 't01.id_tab_ac_ae')
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 't01.id', '=', 't02.id_tab_meta_fisica')         
+                ->where('tab_ac.id', '=', $data->id_tab_ac)
+                ->whereNotIn('t02.id_tab_estatus', [6])
+                ->count(); 
+                
+                if($cant1==0){
+                
+                $tabla_ac = tab_ac::find($data->id_tab_ac);
+                $tabla_ac->in_003 = true;
+                $tabla_ac->save();                
+                
+                }                
+        
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Datos aprobados con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        } 
+    }    
+    
+    public function cargar()
+    {
+        DB::beginTransaction();
+        try {
+            
+                $cant = tab_ac_ae::join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_ac_ae.id', '=', 't01.id_tab_ac_ae')
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 't01.id', '=', 't02.id_tab_meta_fisica')         
+                ->where('tab_ac_ae.id', '=', Input::get("id"))
+                ->where('t02.in_cargado','=', false)
+                ->count();            
+                
+                if($cant>0){
+             $response['success']  = 'true';
+            $response['msg']  = 'Tiene Actividades Pendientes por cargar, verifique!';
+            return Response::json($response, 200);                   
+                }else{
+                    
+                $cant1 = tab_ac_ae::join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_ac_ae.id', '=', 't01.id_tab_ac_ae')
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 't01.id', '=', 't02.id_tab_meta_fisica')         
+                ->where('tab_ac_ae.id', '=', Input::get("id"))
+                ->where('t02.in_enviado','=', false)
+                ->count();                                     
+                 
+             if($cant1>0){    
+              
+            $data = tab_meta_financiera::select(
+                'ac_seguimiento.tab_meta_financiera.id'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->where('id_tab_ac_ae', '=', Input::get("id"))
+            ->get();                        
+                
+
+                
+                foreach ($data as $lista){   
+
+            $tabla = tab_meta_financiera::find($lista->id);
+            $tabla->in_enviado = true;
+            $tabla->save();  
+                      
+                } 
+                
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Actividades enviadas con Exito!';
+            return Response::json($response, 200);                 
+                 
+             }else{
+                    
+              $response['success']  = 'true';
+            $response['msg']  = 'No Tiene Actividades Pendientes por validar!';
+            return Response::json($response, 200); 
+            
+             }
+                }
+            
+
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
     
     public function nuevoActividad($id)
     {

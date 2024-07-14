@@ -761,7 +761,7 @@ class formadosController extends Controller
              }else{
                     
               $response['success']  = 'true';
-            $response['msg']  = 'No Tiene Actividades Pendientes por cargar!';
+            $response['msg']  = 'No Tiene Actividades Pendientes por validar!';
             return Response::json($response, 200); 
             
              }

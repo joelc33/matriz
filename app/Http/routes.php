@@ -159,6 +159,8 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/ficha/003/{id}', 'acseguimiento003Controller@ficha003');
         Route::get('ac/seguimiento/ficha/004/{id}', 'acseguimiento004Controller@ficha004');
         Route::get('ac/seguimiento/ficha/005/{id}', 'acseguimiento005Controller@ficha005');
+        Route::get('ac/seguimiento/ficha/ejecucion/{id_lapso}', 'acseguimientoejecucionController@fichaEjecucion');
+        Route::get('ac/seguimiento/ficha/ejecucion/{id_lapso}/{id}', 'acseguimientoejecucionController@fichaEjecucion');
         Route::get('ac/seguimiento', 'acseguimientoController@reporte');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');
         Route::get('poa/proyecto/todo', 'proyectoController@poaTodo');
@@ -538,7 +540,19 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::get('actividad/nuevo/{id}', 'formatresController@nuevoActividad');
         Route::get('actividad/editar/{id}', 'formatresController@editarActividad');
         Route::post('actividad/guardar/{id}', 'formatresController@guardar');
+        Route::post('actividad/enviarAprobar', 'formatresController@cargar');
     });
+    
+    //*Modulo de Accion Centralizada Forma 002*/
+    Route::group(['prefix' => 'seguimiento/ac/003/cambio'], function () {
+        Route::get('lista', 'formatresController@listaCambio');
+        Route::get('listaAe/{id}', 'formatresController@listaCambioAe');
+        Route::post('storeLista', 'formatresController@storeListaCambio');
+        Route::post('storeListaAe', 'formatresController@storeListaCambioAe');
+        Route::get('editar/{id}', 'formatresController@datosCambio');
+        Route::post('aprobar/{id}', 'formatresController@aprobar');
+        Route::post('negar/{id}', 'formatresController@negar');
+    });     
     //*Modulo de Accion Centralizada Forma 004*/
     Route::group(['prefix' => 'ac/seguimiento/004'], function () {
         Route::get('lista/{id}', 'formacuatroController@lista');

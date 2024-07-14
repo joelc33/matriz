@@ -49,30 +49,30 @@ this.enviar = new Ext.Button({
 	text:'Validar',
 	iconCls: 'icon-report',
 	handler:function(){
-//	this.codigo  = forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');
-//
-//        Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los cambios? <br><b>Nota:</b> No podra realizar mas modificaciones! <br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
-//        if(boton=="yes"){
-//
-//        Ext.Ajax.request({
-//            method:'POST',
-//           url:"{{ URL::to('ac/seguimiento/002/actividad/enviarAprobar') }}",
-//            params:{
-//		_token: '{{ csrf_token() }}',
-//                id: forma002DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id')
-//            },
-//            success:function(result, request ) {
-//                obj = Ext.util.JSON.decode(result.responseText);
-//                if(obj.success=="true"){
-//                    Ext.Msg.alert("Notificación",obj.msg);
-//                }else{
-//                    Ext.Msg.alert("Notificación",obj.msg);
-//                }
-//
-//            }});
-//
-//			}
-//			});
+	this.codigo  = forma003DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id');
+
+        Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los cambios? <br><b>Nota:</b> No podra realizar mas modificaciones! <br><b>Nota:</b> Debe esperar por aprobacion de parte de Planificacion.', function(boton){
+        if(boton=="yes"){
+
+        Ext.Ajax.request({
+            method:'POST',
+           url:"{{ URL::to('ac/seguimiento/003/actividad/enviarAprobar') }}",
+            params:{
+		_token: '{{ csrf_token() }}',
+                id: forma003DetalleLista{!! $data['id'] !!}.main.gridPanel_.getSelectionModel().getSelected().get('id')
+            },
+            success:function(result, request ) {
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success=="true"){
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }else{
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }
+
+            }});
+
+			}
+			});
 	}
 });
 this.enviar.disable();

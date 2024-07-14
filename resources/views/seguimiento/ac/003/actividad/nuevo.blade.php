@@ -338,7 +338,7 @@ width:814,
     buttonAlign:'center'
 });
 this.winformPanel_.show();
-forma002ActividadLista.main.mascara.hide();
+forma003ActividadLista.main.mascara.hide();
 
 },
 eliminarRequerimiento:function(){
