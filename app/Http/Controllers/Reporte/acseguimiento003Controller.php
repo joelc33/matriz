@@ -212,8 +212,7 @@ class acseguimiento003Controller extends Controller
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get(); 
-        
-            
+
                 $mo_presupuesto_anual_accion = 0;
                 $mo_modificado_anual_accion = 0;
                 $mo_actualizado_anual_accion = 0;
