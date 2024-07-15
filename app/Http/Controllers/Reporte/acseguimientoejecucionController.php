@@ -253,7 +253,7 @@ $html23.= '
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 <thead>
 <tr style="font-size:9px">
-<td style="width: 100%;"><b>COD_EJECUTOR / UNIDAD EJECUTORA RESPONSABLE: '.$ejecutor.'</b> </td>
+<td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
 </tr>
 <tr style="font-size:7px">
 <td  style="width: 30%;" ><b>SECTOR:</b> '.$tx_sector.'</td>

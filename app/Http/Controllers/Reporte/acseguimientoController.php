@@ -7,6 +7,7 @@ use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_001;
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\Ac\tab_meta_fisica;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Input;
 use Response;
@@ -82,9 +83,13 @@ class acseguimientoController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-      public function reporte()
+      public function reporte($id)
       {
-          return View::make('reporte.seguimiento.ac');
+          
+        $lapso = tab_lapso::where('id', '=', $id)
+        ->first();
+        $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
+        return View::make('reporte.seguimiento.ac')->with('data', $data)->with('lapso', $lapso);          
       }
 
       /**
