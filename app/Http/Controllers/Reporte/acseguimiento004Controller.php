@@ -222,8 +222,8 @@ class acseguimiento004Controller extends Controller
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','mo_presupuesto','mo_modificado_anual','mo_actualizado_anual',
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(tab_meta_fisicas.nu_meta_modificada,0) as nu_meta_actualizada'),        
-            'nu_numero','tab_meta_fisica.nu_meta_modificada',
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisicas.nu_meta_modificada,0) as nu_meta_actualizada'),        
+            'nu_numero','ac_seguimiento.tab_meta_fisica.nu_meta_modificada',
             'nu_original',
             'co_sector')
             ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
