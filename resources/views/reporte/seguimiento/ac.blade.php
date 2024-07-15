@@ -100,12 +100,12 @@ this.botones = new this.GrupoBotones({
 									iconCls:'icon-pdf',
 									handler: this.onImprimir
 								},
+                                                                {
+                                                                        text:'Limpiar',  // Limpiar campos del formulario
+                                                                        iconCls:'icon-limpiar',
+                                                                        handler: this.onLimpiar
+                                                                }
 							@endif
-							{
-								text:'Limpiar',  // Limpiar campos del formulario
-								iconCls:'icon-limpiar',
-								handler: this.onLimpiar
-							}
 						]
 				}]
 });
@@ -118,7 +118,7 @@ this.formpanel = new Ext.form.FormPanel({
 	id: 'forma',
 	labelWidth: 120,
 	iconCls:'icon-reporteest',
-	title: 'SEGUIMIENTO - ACCION CENTRALIZADA',
+	title: 'SEGUIMIENTO - EJECUTOR',
 	items:[
 		this.botones
 	]
