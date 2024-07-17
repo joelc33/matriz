@@ -1157,7 +1157,7 @@
                         self.editarAccion.enable();
                         self.eliminar.enable();
                         } else {
-                        self.editarAccion.enable();
+                        self.editarAccion.disable();
                         self.eliminar.disable();
                         }
                     } else {
