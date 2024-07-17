@@ -255,7 +255,7 @@
                 idIndex: 0,
                 fields: [
                     'co_tipo_fondo', 'tx_tipo_fondo',
-                    {name: 'monto', type: 'int'}
+                    {name: 'monto', type: 'numeric'}
                 ]
             });
 
@@ -451,7 +451,7 @@
                     id = fue.co_tipo_fondo;
                     if ( !self.store_fondos.getById( id ) ) {
                         monto = self.fld_monto.getValue();
-                        monto = monto === '' ? 0 : parseInt(monto, 10);
+                        monto = monto === '' ? 0 : monto;
                         if ( monto === 0 ) {
                             return;
                         }
@@ -545,7 +545,7 @@
                             fuentes.push(enviar);
                         });
 
-                        if (parseInt(forma.getValues().monto, 10) !== suma) {
+                        if (parseFloat(forma.getValues().monto) !== parseFloat(suma)) {
                             Ext.Msg.alert('Alerta', 'La suma de los montos de las Fuentes de Financiamiento no coincide con el monto declarado para la AE');
                             return false;
                         }
@@ -1157,7 +1157,7 @@
                         self.editarAccion.enable();
                         self.eliminar.enable();
                         } else {
-                        self.editarAccion.disable();
+                        self.editarAccion.enable();
                         self.eliminar.disable();
                         }
                     } else {
@@ -1189,7 +1189,7 @@
                         self.editarAccion.enable();
                         self.eliminar.enable();
                         } else {
-                        self.editarAccion.disable();
+                        self.editarAccion.enable();
                         self.eliminar.disable();
                         }
                     } else {
