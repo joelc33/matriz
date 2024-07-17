@@ -461,11 +461,12 @@ class formadosController extends Controller
                 ->first();   
                 
                 $data2 = tab_meta_fisica::select(
-                 DB::raw("coalesce(sum(mo_presupuesto),0) as mo_presupuesto")
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_presupuesto")
                 )
                 ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
                 ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
-                ->first();     
+                ->first();
+                               
                 $mo_actividad = 0;
                 $mo_ae = $data1->mo_ae;
                 $mo_presupuesto = $data2->mo_presupuesto;
@@ -514,8 +515,41 @@ class formadosController extends Controller
                 $tab_meta_financiera->save();    
                 }                
                 
+                $data4 = tab_meta_fisica::select(
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_fondo"),'id_tab_fuente_financiamiento'
+                )
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
+                ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
+                ->groupBy('id_tab_fuente_financiamiento')
+                ->get();
                 
 
+                
+                foreach($data4 as $item) {
+                    
+                $data3 = tab_ac_ae_fuente::select(
+                 DB::raw("coalesce(sum(mo_fondo),0) as mo_fondo"),'de_fuente_financiamiento'
+                )
+                ->join('mantenimiento.tab_fuente_financiamiento as t01', 'tab_ac_ae_fuente.id_tab_tipo_fondo', '=', 't01.id_tab_tipo_fondo')
+                ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
+                ->where('t01.id', '=', $item->id_tab_fuente_financiamiento)
+                ->groupBy('de_fuente_financiamiento')
+                ->first();  
+                
+     
+
+                if($item->mo_fondo>$data3->mo_fondo){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es mayor que el cargado en la accion especifica, verifique!'
+                ));
+                
+                }                
+                
+                }
+                
+                
                 DB::commit();
                 return Response::json(array(
                   'success' => true,

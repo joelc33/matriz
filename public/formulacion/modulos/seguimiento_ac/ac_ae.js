@@ -541,7 +541,7 @@
                             var enviar = {};
                             enviar.co_tipo_fondo = r.data.co_tipo_fondo;
                             enviar.monto = r.data.monto;
-                            suma += r.data.monto;
+                            suma += parseFloat(r.data.monto);
                             fuentes.push(enviar);
                         });
 

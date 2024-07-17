@@ -242,7 +242,7 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadLista.main.store_lista.load();
+                 forma003ActividadLista.main.store_lista.load();
                  forma004ActividadEditar.main.winformPanel_.close();
              }
         });
