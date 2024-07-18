@@ -934,7 +934,6 @@ EOT;
                         $params['id_tab_ejecutores'] = $res_ejecutor['id_tab_ejecutores'];
                         $params['id_ejecutor'] = $res_ejecutor['id_ejecutor'];
                         $params['mo_ae_calculado'] = $params['mo_ae'];
-                        $params['id_tab_origen'] = 2;
 			$paraTransaccion->StartTrans();
 
 			$llave = null;
@@ -961,7 +960,7 @@ EOT;
 				$params = array_merge( $pk, $params );
 				$params['in_activo'] = 'TRUE';
 				$params['created_at'] = date( \DateTime::ISO8601 );
-
+                                $params['id_tab_origen'] = 2;
 				$id_tab_ac_ae = $comunes->InsertConID( $tabla , $params, 'id');
 
 				$llave = array(

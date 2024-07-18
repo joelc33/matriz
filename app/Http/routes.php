@@ -539,6 +539,11 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('actividad/storeLista', 'formatresController@actividadstoreLista');
         Route::get('actividad/nuevo/{id}', 'formatresController@nuevoActividad');
         Route::get('actividad/editar/{id}', 'formatresController@editarActividad');
+        Route::get('actividad/editarFinanciera/{id}', 'formatresController@editarFinanciera');
+        Route::post('actividad/financiera/storeLista/{id}', 'formatresController@financierastoreLista');
+        Route::get('actividad/financiera/nuevo/{id}', 'formatresController@nuevoFinanciera');
+        Route::post('actividad/financiera/guardar', 'formatresController@guardarFinanciera');
+        Route::post('actividad/financiera/guardar/{id}', 'formatresController@guardarFinanciera');
         Route::post('actividad/guardar/{id}', 'formatresController@guardar');
         Route::post('actividad/enviarAprobar', 'formatresController@cargar');
     });

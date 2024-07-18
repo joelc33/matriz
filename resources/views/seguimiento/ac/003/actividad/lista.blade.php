@@ -32,6 +32,23 @@ this.nuevo= new Ext.Button({
         });
     }
 });
+
+this.editar_financiera= new Ext.Button({
+    text:'Editar Metas Financieras',
+    iconCls: 'icon-editar',
+    handler:function(){
+        this.codigo  = forma003ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_meta_fisica');
+	forma003ActividadLista.main.mascara.show();
+        this.msg = Ext.get('forma003Actividad');
+        this.msg.load({
+          url:"{{ URL::to('ac/seguimiento/003/actividad/editarFinanciera') }}/"+this.codigo,
+         scripts: true,
+         text: "Cargando.."
+        });
+    }
+});
+
+this.editar_financiera.disable();
 //Editar un registro
 this.editar= new Ext.Button({
     text:'Editar Actividades',
@@ -115,7 +132,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     height:510,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.nuevo,'-',
+				this.nuevo,'-',this.editar_financiera,'-',
 			@endif
                         @if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',
@@ -125,6 +142,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'id_tab_meta_fisica',hidden:true, menuDisabled:true,dataIndex: 'id_tab_meta_fisica'},
 		/*{header: 'Codigo', width:50,  menuDisabled:true, sortable: true, dataIndex: 'codigo'},*/
 		{header: 'Actividad', width:250,  menuDisabled:true, sortable: true, dataIndex: 'actividad'},
     {header: 'Fuente Financimiento', width:220,  menuDisabled:true, sortable: true,  dataIndex: 'de_fuente_financiamiento'},
@@ -137,6 +155,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma003ActividadLista.main.editar.enable();
+                        if(forma003ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('in_enviado')==false){
+                        forma003ActividadLista.main.editar_financiera.enable();
+                    }else{
+                       forma003ActividadLista.main.editar_financiera.disable(); 
+                        }
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -169,6 +192,7 @@ this.store_lista.baseParams.ac_ae = '{{ $data['id'] }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma003ActividadLista.main.editar.disable();
+forma003ActividadLista.main.editar_financiera.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -180,11 +204,13 @@ getLista: function(){
     root:'data',
     fields:[
     {name: 'id'},
+    {name: 'id_tab_meta_fisica'},
 		{name: 'codigo'},
     {name: 'nb_meta'},
     {name: 'de_fuente_financiamiento'},
     {name: 'mo_presupuesto'},
     {name: 'in_cargado'},
+    {name: 'in_enviado'},
     {
         name: 'categoria',
         convert: function(v, r) {

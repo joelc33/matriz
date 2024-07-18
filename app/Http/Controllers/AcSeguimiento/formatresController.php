@@ -8,6 +8,7 @@ use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\Mantenimiento\tab_lapso;
+use matriz\Models\AcSegto\tab_ac_ae_fuente;
 use View;
 use Validator;
 use Input;
@@ -484,7 +485,8 @@ class formatresController extends Controller
                 'de_fuente_financiamiento',
                 'nu_numero',
                 'nu_original',
-                'co_sector'
+                'co_sector',
+                'in_enviado'
             )
              ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
              ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
@@ -504,12 +506,12 @@ class formatresController extends Controller
                 $response['success']  = 'true';
                 $response['total'] = $tab_meta_financiera->count();
                 $tab_meta_financiera->skip($start)->take($limit);
-                $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_meta_financiera->count();
                 $tab_meta_financiera->skip($start)->take($limit);
-                $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
@@ -732,6 +734,144 @@ class formatresController extends Controller
         }
     }
     
+    public function guardarFinanciera($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
+
+            try {
+                $validator= Validator::make(Input::all(), tab_meta_financiera::$validarEditarMeta);
+                if ($validator->fails()) {
+                    return Response::json(array(
+                      'success' => false,
+                      'msg' => $validator->getMessageBag()->toArray()
+                    ));
+                }
+                $tabla = tab_meta_financiera::find($id);
+                $tabla->id_tab_municipio_detalle = Input::get("municipio");
+                $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+                $tabla->mo_presupuesto = Input::get("presupuesto");
+                $tabla->co_partida = Input::get("partida");
+                $tabla->id_tab_fuente_financiamiento = Input::get("fuente_financiamiento");
+                $tabla->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Editado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        } else {
+
+            try {
+                $validator = Validator::make(Input::all(), tab_meta_financiera::$validarCrearMeta);
+                if ($validator->fails()) {
+                    return Response::json(array(
+                      'success' => false,
+                      'msg' => $validator->getMessageBag()->toArray()
+                    ));
+                }
+                
+                $data1 = tab_meta_fisica::select(
+                    't01.mo_ae','t01.id'
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
+                ->where('ac_seguimiento.tab_meta_fisica.id', '=', Input::get("meta_fisica"))
+                ->first();   
+                
+                $data2 = tab_meta_fisica::select(
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_presupuesto")
+                )
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
+                ->where('id_tab_ac_ae', '=', $data1->id)
+                ->first();
+                               
+                $mo_ae = $data1->mo_ae;
+                $mo_presupuesto = $data2->mo_presupuesto;
+
+                $mo_actividad = Input::get("presupuesto");
+
+                
+                if(($mo_presupuesto+$mo_actividad)>$mo_ae){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma de las actividades excede el monto de la accion especifica, verifique!'
+                ));
+                
+                }                
+                
+                $tabla = new tab_meta_financiera();
+                $tabla->id_tab_meta_fisica = Input::get("meta_fisica");
+                $tabla->id_tab_municipio_detalle = Input::get("municipio");
+                $tabla->id_tab_parroquia_detalle = Input::get("parroquia");
+                $tabla->mo_presupuesto = 0;
+                $tabla->mo_modificado_anual = Input::get("presupuesto");             
+                $tabla->co_partida = Input::get("partida");
+                $tabla->id_tab_fuente_financiamiento = Input::get("fuente_financiamiento");
+                $tabla->id_tab_origen = 2;
+                $tabla->in_cargado = false;
+                $tabla->in_activo = true;
+                $tabla->save();
+                
+                $data4 = tab_meta_fisica::select(
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_fondo"),'id_tab_fuente_financiamiento'
+                )
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
+                ->where('id_tab_ac_ae', '=', $data1->id)
+                ->groupBy('id_tab_fuente_financiamiento')
+                ->get();
+                
+
+                
+                foreach($data4 as $item) {
+                    
+                $data3 = tab_ac_ae_fuente::select(
+                 DB::raw("coalesce(sum(mo_fondo),0) as mo_fondo"),'de_fuente_financiamiento'
+                )
+                ->join('mantenimiento.tab_fuente_financiamiento as t01', 'tab_ac_ae_fuente.id_tab_tipo_fondo', '=', 't01.id_tab_tipo_fondo')
+                ->where('id_tab_ac_ae', '=', $data1->id)
+                ->where('t01.id', '=', $item->id_tab_fuente_financiamiento)
+                ->groupBy('de_fuente_financiamiento')
+                ->first();  
+                
+     
+
+                if($item->mo_fondo>$data3->mo_fondo){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es mayor que el cargado en la accion especifica, verifique!'
+                ));
+                
+                }                
+                
+                }                
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Guardado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+        }
+    }    
+    
     public function negar($id = null)
     {
         DB::beginTransaction();
@@ -869,7 +1009,36 @@ class formatresController extends Controller
                 ->where('t02.in_enviado','=', false)
                 ->count();                                     
                  
-             if($cant1>0){    
+             if($cant1>0){  
+                 
+                 
+                $data1 = tab_ac_ae::select(
+                    'mo_ae'
+                )
+                ->where('id', '=', Input::get("id"))
+                ->first();   
+                
+                $data2 = tab_meta_fisica::select(
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_presupuesto")
+                )
+                ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
+                ->where('id_tab_ac_ae', '=', Input::get("id"))
+                ->first();
+                               
+
+                $mo_ae = $data1->mo_ae;
+                $mo_presupuesto = $data2->mo_presupuesto;
+                
+
+                
+                if($mo_presupuesto!=$mo_ae){
+            $response['success']  = 'true';
+            $response['msg']  = 'La suma de las actividades no es igual al monto de la accion especifica, verifique!';
+            return Response::json($response, 200); 
+                
+                }                 
+                 
+                 
               
             $data = tab_meta_financiera::select(
                 'ac_seguimiento.tab_meta_financiera.id'
@@ -930,6 +1099,105 @@ class formatresController extends Controller
         return View::make('seguimiento.ac.003.actividad.nuevo')
         ->with('data', $data)
         ->with('fecha', $limite);
+    }
+
+    public function editarFinanciera($id)
+    {
+        $data = tab_meta_fisica::select(
+            'id',
+            'id_tab_ac_ae',
+            'codigo',
+            'nb_meta',
+            'id_tab_unidad_medida',
+            'tx_prog_anual',
+            'fecha_inicio',
+            'fecha_fin',
+            'nb_responsable',
+            'in_activo',
+            'created_at',
+            'updated_at',
+            'nu_meta_modificada',
+            DB::raw("tx_prog_anual::numeric +  nu_meta_modificada as nu_meta_actualizada"),
+            'nu_obtenido',
+            'nu_corte',
+            'id_tab_municipio_detalle',
+            'id_tab_parroquia_detalle',
+            'in_cargado',
+            'de_desvio',
+            DB::raw("EXTRACT(year FROM fecha_inicio::DATE) as id_tab_ejercicio_fiscal")
+        )
+        ->where('id', '=', $id)
+        ->first();
+
+        $fechaI = '01-01-'.($data->id_tab_ejercicio_fiscal);
+        $fechaF = '31-12-'.($data->id_tab_ejercicio_fiscal);
+
+        $limite = json_encode(array('fe_ini' => $fechaI, 'fe_fin' => $fechaF ));
+
+        //$data = json_encode(array_merge( $data->toArray(), $limite ));
+
+        return View::make('seguimiento.ac.003.actividad.editarFinanciera')
+        ->with('data', $data)
+        ->with('fecha', $limite);
     }    
 
+    public function financierastoreLista($id)
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
+
+            $tab_meta_financiera = tab_meta_financiera::select(
+                'ac_seguimiento.tab_meta_financiera.id',
+                'id_tab_meta_fisica',
+                'ac_seguimiento.tab_meta_financiera.id_tab_municipio_detalle',
+                'ac_seguimiento.tab_meta_financiera.id_tab_parroquia_detalle',
+                DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_presupuesto'),
+                'co_partida',
+                'id_tab_fuente_financiamiento',
+                'ac_seguimiento.tab_meta_financiera.in_activo',
+                'ac_seguimiento.tab_meta_financiera.in_cargado',
+                'de_fuente_financiamiento',
+                'id_tab_origen'
+            )
+             ->join('mantenimiento.tab_fuente_financiamiento as t02', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't02.id')
+             ->where('id_tab_meta_fisica', '=', $id)
+             ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true);
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_meta_financiera->where('de_fuente_financiamiento', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_meta_financiera->count();
+                $tab_meta_financiera->skip($start)->take($limit);
+                $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_meta_financiera->count();
+                $tab_meta_financiera->skip($start)->take($limit);
+                $response['data']  = $tab_meta_financiera->orderby('ac_seguimiento.tab_meta_financiera.id', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 200);
+        }
+    }   
+    
+    public function nuevoFinanciera($id)
+    {
+
+        $data = tab_meta_fisica::select('ac_seguimiento.tab_meta_fisica.id as id_tab_meta_fisica', 'id_tab_ac_ae','id_tab_ac_ae_predefinida')
+        ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')         
+        ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.003.actividad.nuevoFinanciera')
+        ->with('data', $data);
+    }    
+    
 }

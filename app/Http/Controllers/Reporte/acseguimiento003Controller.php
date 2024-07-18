@@ -394,6 +394,8 @@ $id = 0;
             ->get();         
              if($tab_meta_financiera->count()>1){
                 $i =  $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
              }
           
              if($id==$item->id){

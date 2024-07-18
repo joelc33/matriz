@@ -238,8 +238,8 @@ class acseguimiento004Controller extends Controller
 //            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
 //            })                    
              ->where(function ($query) {
-             $query->where('tab_meta_fisica.nu_meta_modificada', '!=', 0)
-             ->whereOr('mo_modificado_anual', '!=', 0);
+             $query->orWhere('tab_meta_fisica.nu_meta_modificada', '!=', 0)
+             ->orWhere('mo_modificado_anual', '!=', 0);
              })
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
