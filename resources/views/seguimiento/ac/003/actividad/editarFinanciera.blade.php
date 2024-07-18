@@ -385,6 +385,7 @@ this.eliminar = new Ext.Button({
 	                    Ext.Msg.alert("Notificación",obj.msg);
 	                }
 	                forma004ActividadEditar.main.mascara.hide();
+                        forma004ActividadEditar.main.store_lista.load();
 	            }});
 		}});
 	}
