@@ -1189,7 +1189,7 @@
                         self.editarAccion.enable();
                         self.eliminar.enable();
                         } else {
-                        self.editarAccion.disable();
+                        self.editarAccion.enable();
                         self.eliminar.disable();
                         }
                     } else {
