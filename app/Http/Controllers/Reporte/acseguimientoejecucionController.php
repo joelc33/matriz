@@ -259,7 +259,7 @@ if($tx_sector!=''){
 
 		$html23.='
 		<tr style="font-size:7px" >
-                <td style="width: 30%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
+                <td style="width: 20%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
                 <td style="width: 10%;" >'.$this->formatoDinero($mo_presupuesto).'</td>
                 <td style="width: 10%;" >'.$this->formatoDinero($mo_modificado_anual).'</td>
                 <td style="width: 10%;" >'.$this->formatoDinero($mo_actualizado_anual).'</td>
