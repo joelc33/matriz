@@ -31,7 +31,7 @@ class PDFseguimientoAC extends TCPDF
     {
 
         $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
-        $pdf->setXY(30, 15);
+        $pdf->setXY(30, 5);
 //        $pdf->SetFont('', 'B', 11);
 //        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
 //        $pdf->setXY(30, 20);
@@ -267,6 +267,13 @@ if($tx_sector!=''){
                 <td style="width: 10%;" >'.$this->formatoDinero($mo_causado).'</td>
                 <td style="width: 10%;" >'.$this->formatoDinero($mo_pagado).'</td>';
                 $html23.='</tr>';
+                
+                $mo_presupuesto = 0;
+                $mo_modificado_anual = 0;
+                $mo_actualizado_anual = 0;
+                $mo_comprometido = 0;
+                $mo_causado = 0;
+                $mo_pagado = 0;  
 
    $html23.='
 </tbody>
