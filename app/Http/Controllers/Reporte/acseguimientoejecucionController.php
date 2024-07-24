@@ -164,7 +164,7 @@ class acseguimientoejecucionController extends Controller
             ->groupBy('de_lapso')
             ->groupBy('de_fuente_financiamiento')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
-            ->orderby('ac_seguimiento.tab_meta_financiera.t18b.tx_codigo', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
+            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
             
             }else{
             $data =  tab_meta_financiera::select(
@@ -206,7 +206,7 @@ class acseguimientoejecucionController extends Controller
             ->groupBy('tx_nombre')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
             ->groupBy('de_fuente_financiamiento')
-            ->orderby('ac_seguimiento.tab_meta_financiera.t18b.tx_codigo', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
+            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
             }   
 //            $data->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();
 //        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
