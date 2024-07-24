@@ -32,11 +32,11 @@ class PDFseguimientoAC extends TCPDF
 
         $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
         $pdf->setXY(30, 15);
-        $pdf->SetFont('', 'B', 11);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-        $pdf->setXY(30, 20);
-        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
-        $pdf->setY(30);
+//        $pdf->SetFont('', 'B', 11);
+//        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+//        $pdf->setXY(30, 20);
+//        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+        $pdf->setY(10);
         $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
@@ -181,7 +181,7 @@ class acseguimiento001Controller extends Controller
           $pdf->SetSubject('Seguimiento AC');
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
+          $pdf->SetTopMargin(30);
           $pdf->SetPrintHeader(true);
           $pdf->SetPrintFooter(true);
           // set auto page breaks
