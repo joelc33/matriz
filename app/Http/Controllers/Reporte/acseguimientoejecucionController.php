@@ -220,7 +220,7 @@ class acseguimientoejecucionController extends Controller
           $pdf->SetSubject('Seguimiento AC');
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
+          $pdf->SetTopMargin(35);
           $pdf->SetPrintHeader(true);
           $pdf->SetPrintFooter(true);
           // set auto page breaks
