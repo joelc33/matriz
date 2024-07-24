@@ -32,10 +32,10 @@ class PDFseguimientoAC extends TCPDF
 
         $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
         $pdf->setXY(30, 15);
-        $pdf->SetFont('', 'B', 11);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-        $pdf->setXY(30, 20);
-        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
+//        $pdf->SetFont('', 'B', 11);
+//        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+//        $pdf->setXY(30, 20);
+//        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
         $pdf->setY(30);
         $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);        
@@ -309,6 +309,77 @@ $html23.='
 
          }
      }else{
+         
+         if($item->tx_sector){
+          $tx_sector = $item->tx_sector;   
+          $ejecutor = $item->id_ejecutor.' - '.$item->tx_ejecutor;
+         }else{
+          $tx_sector = 'TODOS'; 
+          $ejecutor = 'TODOS';
+         }
+$pdf->AddPage();
+
+$html23='';
+$html23.= '
+<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+<thead>
+<tr style="font-size:9px">
+<td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
+</tr>
+<tr style="font-size:7px">
+<td  style="width: 30%;" ><b>SECTOR:</b> '.$tx_sector.'</td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>CAUSADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PAGADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
+</tr>
+<tr style="font-size:7px">
+<td style="width: 30%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
+</tr>
+<tr style="font-size:7px">
+<td style="width: 10%;" align="center"><b>CÓDIGO</b></td>
+<td style="width: 20%;" align="center"><b>DENOMINACIÓN</b></td>
+</tr>
+</thead>
+';  
+$html23.='
+<tbody>';   
+
+         if($data->count()>0){ 
+      foreach($data as $item) {
+
+
+		$html23.='
+		<tr style="font-size:7px" >
+		<td style="width: 10%;" align="center">'.$item->co_partida.'</td>
+                <td style="width: 20%;" >'.$item->tx_nombre.'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_presupuesto).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_comprometido).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_causado).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_pagado).'</td>                                 
+                <td style="width: 10%;" >'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';
+
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                $de_lapso = $item->de_lapso;
+                $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
+
+
+      }
+ 
+
+         }         
+         
          
      }
                   
