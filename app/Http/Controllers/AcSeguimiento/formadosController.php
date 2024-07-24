@@ -342,6 +342,7 @@ class formadosController extends Controller
                 'ac_seguimiento.tab_meta_fisica.in_activo',
                 'de_unidad_medida',
                 'id_tab_origen',
+                'id_tab_estatus',
                 'in_cargado',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
@@ -513,7 +514,15 @@ class formadosController extends Controller
                 $tab_meta_financiera->in_cargado = false;
                 $tab_meta_financiera->in_activo = true;
                 $tab_meta_financiera->save();    
-                }                
+                
+                $municipio = $lista['co_municipio'];
+                $parroquia = $lista['co_parroquia'];                
+                
+                }   
+                
+                $tabla->id_tab_parroquia_detalle = $parroquia;
+                $tabla->id_tab_municipio_detalle = $municipio;
+                $tabla->save();                
                 
                 $data4 = tab_meta_fisica::select(
                  DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_fondo"),'id_tab_fuente_financiamiento'

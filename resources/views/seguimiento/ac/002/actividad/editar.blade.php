@@ -172,8 +172,8 @@ this.id_tab_municipio_detalle = new Ext.form.ComboBox({
 	mode: 'local',
 	width:400,
 	itemSelector: 'div.search-item',
-	readOnly:this.OBJ.in_bloquear_002,
-	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',        
+	readOnly:true,
+	style:'background:#f2d7d5;',        
 	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
 	resizable:true,
 	allowBlank:false,
@@ -224,8 +224,8 @@ this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
 	mode: 'local',
 	width:400,
 	resizable:true,
-	readOnly:this.OBJ.in_bloquear_002,
-	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',        
+	readOnly:true,
+	style:'background:#f2d7d5;',        
 	allowBlank:false
 });
 
