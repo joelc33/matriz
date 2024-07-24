@@ -208,6 +208,7 @@ class acseguimiento003Controller extends Controller
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
             't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'ac_seguimiento.tab_ac.de_observacion_003'
         )
         ->where('t21.id_tab_ac', '=', $id)
@@ -271,6 +272,7 @@ class acseguimiento003Controller extends Controller
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
             ->where('t03.id_ejecutor', '=', $data->id_ejecutor)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
             ->orderBy('codigo', 'ASC')
             ->get();             
             
