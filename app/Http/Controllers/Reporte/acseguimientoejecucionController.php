@@ -42,9 +42,9 @@ class PDFseguimientoAC extends TCPDF
         $pdf->MultiCell(277, 5, 'REPORTE DE LA EJECUCIÓN DEL PRESUPUESTO DE LOS EGRESOS POR SECTORES Y PARTIDAS', 0, 'C', 0, 0, '', '', true);
         $pdf->Ln(5);
         $pdf->MultiCell(277, 5, 'EJECUCIÓN PRESUPUESTARIA', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
-//        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
-        $pdf->Ln(5);        
+//        $pdf->Ln(5);
+////        $pdf->MultiCell(275, 5, Session::get("periodo"), 0, 'R', 0, 0, '', '', true);
+//        $pdf->Ln(5);        
 
         return $pdf;
     }
