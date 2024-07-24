@@ -168,7 +168,7 @@ class acseguimientoejecucionController extends Controller
             
             }else{
             $data =  tab_meta_financiera::select(
-                'tx_nombre',
+                    'tx_nombre',
                 DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
@@ -179,6 +179,7 @@ class acseguimientoejecucionController extends Controller
                 DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),                    
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                     'de_fuente_financiamiento',
+                    't18b.tx_codigo as tx_sector',
                     'de_lapso',
                     't03.id_tab_ejercicio_fiscal'
             )
@@ -190,13 +191,19 @@ class acseguimientoejecucionController extends Controller
             ->join('mantenimiento.tab_partidas as t04', function ($j) {
                 $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
                   ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
-            })           
+            })
+            ->join('mantenimiento.tab_sectores as t18a', 't03.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
-            ->groupBy('tx_nombre')
+            ->groupBy('tx_sector')
             ->groupBy('de_lapso')
+            ->groupBy('tx_nombre')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
             ->groupBy('de_fuente_financiamiento')
             ->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
@@ -237,154 +244,18 @@ class acseguimientoejecucionController extends Controller
           
 foreach($data as $item) {
     
-     if($tx_sector==''){
          
-         if($item->tx_sector){
-          $tx_sector = $item->tx_sector;   
-          $ejecutor = $item->id_ejecutor.' - '.$item->tx_ejecutor;
-         }else{
-          $tx_sector = 'TODOS'; 
-          $ejecutor = 'TODOS';
-         }
-$pdf->AddPage();
-
-$html23='';
-$html23.= '
-<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
-<thead>
-<tr style="font-size:9px">
-<td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
-</tr>
-<tr style="font-size:7px">
-<td  style="width: 30%;" ><b>SECTOR:</b> '.$tx_sector.'</td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>CAUSADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PAGADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
-</tr>
-<tr style="font-size:7px">
-<td style="width: 30%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
-</tr>
-<tr style="font-size:7px">
-<td style="width: 10%;" align="center"><b>CÓDIGO</b></td>
-<td style="width: 20%;" align="center"><b>DENOMINACIÓN</b></td>
-</tr>
-</thead>
-';  
-$html23.='
-<tbody>';   
-
-         if($data->count()>0){ 
-      foreach($data as $item) {
-
-
-		$html23.='
-		<tr style="font-size:7px" >
-		<td style="width: 10%;" align="center">'.$item->co_partida.'</td>
-                <td style="width: 20%;" >'.$item->tx_nombre.'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_presupuesto).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_comprometido).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_causado).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 10%;" >'.$item->de_fuente_financiamiento.'</td>';
-                $html23.='</tr>';
-
-                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
-                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
-                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
-                $mo_causado = $mo_causado + $item->mo_causado;
-                $mo_pagado = $mo_pagado + $item->mo_pagado;
                 $de_lapso = $item->de_lapso;
                 $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
-
-
-      }
- 
-
-         }
-     }else{
          
-         if($item->tx_sector){
-          $tx_sector = $item->tx_sector;   
-          $ejecutor = $item->id_ejecutor.' - '.$item->tx_ejecutor;
-         }else{
-          $tx_sector = 'TODOS'; 
-          $ejecutor = 'TODOS';
-         }
-$pdf->AddPage();
-
-$html23='';
-$html23.= '
-<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
-<thead>
-<tr style="font-size:9px">
-<td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
-</tr>
-<tr style="font-size:7px">
-<td  style="width: 30%;" ><b>SECTOR:</b> '.$tx_sector.'</td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>CAUSADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PAGADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
-</tr>
-<tr style="font-size:7px">
-<td style="width: 30%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
-</tr>
-<tr style="font-size:7px">
-<td style="width: 10%;" align="center"><b>CÓDIGO</b></td>
-<td style="width: 20%;" align="center"><b>DENOMINACIÓN</b></td>
-</tr>
-</thead>
-';  
-$html23.='
-<tbody>';   
-
-         if($data->count()>0){ 
-      foreach($data as $item) {
-
-
-		$html23.='
-		<tr style="font-size:7px" >
-		<td style="width: 10%;" align="center">'.$item->co_partida.'</td>
-                <td style="width: 20%;" >'.$item->tx_nombre.'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_presupuesto).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_comprometido).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_causado).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 10%;" >'.$item->de_fuente_financiamiento.'</td>';
-                $html23.='</tr>';
-
-                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
-                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
-                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
-                $mo_causado = $mo_causado + $item->mo_causado;
-                $mo_pagado = $mo_pagado + $item->mo_pagado;
-                $de_lapso = $item->de_lapso;
-                $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
-
-
-      }
- 
-
-         }         
+         if($tx_sector!=$item->tx_sector){
+             
          
-         
-     }
-                  
+          
+if($tx_sector!=''){
+    
       
-}
+
 
 		$html23.='
 		<tr style="font-size:7px" >
@@ -440,8 +311,160 @@ $html23.='
    
           $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
           $pdf->SetX(140);
-          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
-          $pdf->lastPage();
+          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');   
+    
+}         
+         
+             
+$pdf->AddPage();
+
+         if($item->tx_sector){
+          $tx_sector = $item->tx_sector;   
+          $ejecutor = $item->id_ejecutor.' - '.$item->tx_ejecutor;
+         }else{
+          $tx_sector = 'TODOS'; 
+          $ejecutor = 'TODOS';
+         }    
+
+$html23='';
+$html23.= '
+<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+<thead>
+<tr style="font-size:9px">
+<td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
+</tr>
+<tr style="font-size:7px">
+<td  style="width: 30%;" ><b>SECTOR:</b> '.$tx_sector.'</td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>CAUSADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>PAGADO</b></td>
+<td rowspan="3" style="width: 10%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
+</tr>
+<tr style="font-size:7px">
+<td style="width: 30%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
+</tr>
+<tr style="font-size:7px">
+<td style="width: 10%;" align="center"><b>CÓDIGO</b></td>
+<td style="width: 20%;" align="center"><b>DENOMINACIÓN</b></td>
+</tr>
+</thead>
+';  
+$html23.='
+<tbody>';  
+
+		$html23.='
+		<tr style="font-size:7px" >
+		<td style="width: 10%;" align="center">'.$item->co_partida.'</td>
+                <td style="width: 20%;" >'.$item->tx_nombre.'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_presupuesto).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_comprometido).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_causado).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_pagado).'</td>                                 
+                <td style="width: 10%;" >'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';
+
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                $de_lapso = $item->de_lapso;
+                $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
+
+            $tx_sector = $item->tx_sector;
+
+
+         }else{
+             
+ 		$html23.='
+		<tr style="font-size:7px" >
+		<td style="width: 10%;" align="center">'.$item->co_partida.'</td>
+                <td style="width: 20%;" >'.$item->tx_nombre.'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_presupuesto).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_comprometido).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_causado).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($item->mo_pagado).'</td>                                 
+                <td style="width: 10%;" >'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';
+
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                $de_lapso = $item->de_lapso;
+                $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;            
+         }
+
+
+     }
+                  
+
+
+		$html23.='
+		<tr style="font-size:7px" >
+                <td style="width: 30%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_presupuesto).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_modificado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_actualizado_anual).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_comprometido).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_causado).'</td>
+                <td style="width: 10%;" >'.$this->formatoDinero($mo_pagado).'</td>';
+                $html23.='</tr>';
+
+   $html23.='
+</tbody>
+</table>';  
+   
+   $html1 = '
+<table border="0.1" style="font-size:9px" cellpadding="3" >
+<tbody>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 30%;" align="center"><b>TITULAR</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>FIRMA Y SELLO</b></td>
+<td style="width: 35%;" align="center"><b>FIRMA Y SELLO</b></td>
+<td style="width: 30%;" align="center"><b>FIRMA Y SELLO</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 30%; height: 40px;" align="center"><b></b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+<td style="width: 35%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+<td style="width: 30%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 30%; height: 40px;" align="center"><b></b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>C.I. </b></td>
+<td style="width: 35%;" align="center"><b>C.I. </b></td>
+<td style="width: 30%;" align="center"><b>C.I. </b></td>
+</tr>
+</tbody>
+</table>
+';
+   
+          $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+          $pdf->SetX(140);
+          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, ''); 
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
       }      
 
