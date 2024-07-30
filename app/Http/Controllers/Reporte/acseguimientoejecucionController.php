@@ -241,6 +241,8 @@ class acseguimientoejecucionController extends Controller
                 $mo_comprometido = 0;
                 $mo_causado = 0;
                 $mo_pagado = 0;          
+                
+                $id_partida = 0;
           
 foreach($data as $item) {
     
@@ -252,20 +254,17 @@ foreach($data as $item) {
              
          
           
-if($tx_sector!=''){
+                if($tx_sector!=''){
     
-      
-
-
 		$html23.='
 		<tr style="font-size:7px" >
                 <td style="width: 20%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_presupuesto).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_modificado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_actualizado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_comprometido).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_causado).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_pagado).'</td>';
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>';
                 $html23.='</tr>';
                 
                 $mo_presupuesto = 0;
@@ -278,6 +277,14 @@ if($tx_sector!=''){
    $html23.='
 </tbody>
 </table>';  
+             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+//   var_dump($pdf->getY());
+//   exit();
+   
+      	if($pdf->getY()>140){
+            $pdf->addPage();
+            $pdf->setY(35);
+         }
    
    $html1 = '
 <table border="0.1" style="font-size:9px" cellpadding="3" >
@@ -316,7 +323,7 @@ if($tx_sector!=''){
 </table>
 ';
    
-          $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+
           $pdf->SetX(140);
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');   
     
@@ -362,10 +369,77 @@ $html23.= '
 $html23.='
 <tbody>';  
 
+
+            if($id!=null){
+             $tab_meta_financiera = tab_meta_financiera::select(                  
+                'ac_seguimiento.tab_meta_financiera.co_partida'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+            ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+            ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')
+            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_partidas as t04', function ($j) {
+                $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+                  ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
+            })
+            ->join('mantenimiento.tab_sectores as t18a', 't03.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })      
+            ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.id_ejecutor', '=', $id)
+            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t18b.tx_codigo', '=', $item->tx_sector)
+            ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
+            ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
+            ->groupBy('de_fuente_financiamiento')
+            ->get(); 
+            
+            }else{
+             
+             $tab_meta_financiera = tab_meta_financiera::select(                  
+                'ac_seguimiento.tab_meta_financiera.co_partida'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+            ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+            ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')
+            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_partidas as t04', function ($j) {
+                $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+                  ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
+            })
+            ->join('mantenimiento.tab_sectores as t18a', 't03.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })      
+            ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t18b.tx_codigo', '=', $item->tx_sector)
+            ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
+            ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
+            ->groupBy('de_fuente_financiamiento')
+            ->get();                
+                
+            }
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
+             }
+
+//             var_dump($i);
+//             exit();
+             
+             if($id_partida==$item->co_partida){
+
 		$html23.='
 		<tr style="font-size:7px" >
-		<td style="width: 5%;" align="center">'.$item->co_partida.'</td>
-                <td style="width: 15%;" >'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
@@ -374,7 +448,26 @@ $html23.='
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
                 <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
+                
+             }else{
+                 
+		$html23.='
+		<tr style="font-size:7px" >
+		<td style="width: 5%;" align="center" rowspan="'.$i.'">'.$item->co_partida.'</td>
+                <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
+                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';
+                 
+             }
 
+             
+             
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
                 $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
@@ -389,10 +482,76 @@ $html23.='
 
          }else{
              
+            if($id!=null){
+             $tab_meta_financiera = tab_meta_financiera::select(                  
+                'ac_seguimiento.tab_meta_financiera.co_partida'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+            ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+            ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')
+            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_partidas as t04', function ($j) {
+                $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+                  ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
+            })
+            ->join('mantenimiento.tab_sectores as t18a', 't03.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })      
+            ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.id_ejecutor', '=', $id)
+            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t18b.tx_codigo', '=', $item->tx_sector)
+            ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
+            ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
+            ->groupBy('de_fuente_financiamiento')
+            ->get(); 
+            
+            }else{
+             
+             $tab_meta_financiera = tab_meta_financiera::select(                  
+                'ac_seguimiento.tab_meta_financiera.co_partida'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+            ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+            ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')
+            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_partidas as t04', function ($j) {
+                $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+                  ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
+            })
+            ->join('mantenimiento.tab_sectores as t18a', 't03.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })      
+            ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t18b.tx_codigo', '=', $item->tx_sector)
+            ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
+            ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
+            ->groupBy('de_fuente_financiamiento')
+            ->get();                
+                
+            }              
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
+             }
+
+//             var_dump($i);
+//             exit();
+             
+             if($id_partida==$item->co_partida){
+
 		$html23.='
 		<tr style="font-size:7px" >
-		<td style="width: 5%;" align="center">'.$item->co_partida.'</td>
-                <td style="width: 15%;" >'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
@@ -401,6 +560,23 @@ $html23.='
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
                 <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
+                
+             }else{
+                 
+		$html23.='
+		<tr style="font-size:7px" >
+		<td style="width: 5%;" align="center" rowspan="'.$i.'">'.$item->co_partida.'</td>
+                <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
+                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';
+                 
+             }
 
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
@@ -412,7 +588,8 @@ $html23.='
                 $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;            
          }
 
-
+        $id_partida =$item->co_partida;
+         
      }
                   
 
@@ -420,17 +597,24 @@ $html23.='
 		$html23.='
 		<tr style="font-size:7px" >
                 <td style="width: 20%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_presupuesto).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_modificado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_actualizado_anual).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_comprometido).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_causado).'</td>
-                <td style="width: 10%;" >'.$this->formatoDinero($mo_pagado).'</td>';
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>';
                 $html23.='</tr>';
 
    $html23.='
 </tbody>
 </table>';  
+   
+             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+   
+      	if($pdf->getY()>140){
+            $pdf->addPage();
+            $pdf->setY(35);
+         }
    
    $html1 = '
 <table border="0.1" style="font-size:9px" cellpadding="3" >
@@ -469,7 +653,7 @@ $html23.='
 </table>
 ';
    
-          $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+
           $pdf->SetX(140);
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, ''); 
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
