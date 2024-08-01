@@ -1061,7 +1061,7 @@ class formatresController extends Controller
                 
      
 
-                if($item->mo_fondo>$data3->mo_fondo){
+                if($item->mo_fondo!=$data3->mo_fondo){
                 
                 return Response::json(array(
                   'success' => false,
