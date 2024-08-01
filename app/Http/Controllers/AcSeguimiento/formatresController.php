@@ -1065,7 +1065,7 @@ class formatresController extends Controller
                 
                 return Response::json(array(
                   'success' => false,
-                  'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es mayor que el cargado en la accion especifica, verifique!'
+                  'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es distinto al cargado en la accion especifica, verifique!'
                 ));
                 
                 }                 
