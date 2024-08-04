@@ -377,17 +377,14 @@ $html23.= '
 <td style="width: 100%;"><b>'.$ejecutor.'</b> </td>
 </tr>
 <tr style="font-size:7px">
-<td  style="width: 20%;" ><b>SECTOR:</b> '.$tx_sector.'</td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>CAUSADO</b></td>
-<td rowspan="3" style="width: 10%;" align="center"><b>PAGADO</b></td>
-<td rowspan="3" style="width: 20%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
-</tr>
-<tr style="font-size:7px">
 <td style="width: 20%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>CAUSADO</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>PAGADO</b></td>
+<td rowspan="2" style="width: 20%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
 </tr>
 <tr style="font-size:7px">
 <td style="width: 5%;" align="center"><b>CÓDIGO</b></td>
@@ -397,6 +394,12 @@ $html23.= '
 ';  
 $html23.='
 <tbody>';  
+
+		$html23.='
+		<tr style="font-size:7px" >
+                <td  style="width: 20%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                $html23.='</tr>';   
+
 }
 
             if($id!=null){
@@ -631,7 +634,8 @@ $html23.='
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>';
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>
+                <td style="width: 20%;" align="right"></td>';
                 $html23.='</tr>';
 
    $html23.='
