@@ -134,7 +134,7 @@ class acseguimientoejecucionController extends Controller
                 'tx_ejecutor',
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
-                'de_lapso',
+                'dia_mes_fin',
                 't03.id_tab_ejercicio_fiscal'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
@@ -142,7 +142,8 @@ class acseguimientoejecucionController extends Controller
             ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
             ->join('mantenimiento.tab_ejecutores as t05', 't05.id_ejecutor', '=', 't03.id_ejecutor')
             ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')  
-            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')        
+            ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_tipo_periodo as t08', 't07.id_tab_tipo_periodo', '=', 't08.id')        
             ->join('mantenimiento.tab_partidas as t04', function ($j) {
                 $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
                   ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
@@ -161,10 +162,26 @@ class acseguimientoejecucionController extends Controller
             ->groupBy('tx_ejecutor')
             ->groupBy('tx_sector')
             ->groupBy('tx_nombre')
-            ->groupBy('de_lapso')
+            ->groupBy('dia_mes_fin')
             ->groupBy('de_fuente_financiamiento')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
-            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
+            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();    
+            
+            
+            $data_responsables = tab_ac::join('ac_seguimiento.tab_ac_responsable as t01', 't01.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')                    
+            ->select(
+            'realizador_nombres',
+            'registrador_nombres',
+            'autorizador_nombres',
+            'realizador_cedula',
+            'registrador_cedula',
+            'autorizador_cedula'
+        )
+        ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+        ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $id)
+        ->first();            
+            
             
             }else{
             $data =  tab_meta_financiera::select(
@@ -180,7 +197,7 @@ class acseguimientoejecucionController extends Controller
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                     'de_fuente_financiamiento',
                     't18b.tx_codigo as tx_sector',
-                    'de_lapso',
+                    'dia_mes_fin',
                     't03.id_tab_ejercicio_fiscal'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
@@ -188,6 +205,7 @@ class acseguimientoejecucionController extends Controller
             ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
             ->join('mantenimiento.tab_fuente_financiamiento as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_fuente_financiamiento', '=', 't06.id')
             ->join('mantenimiento.tab_lapso as t07', 't03.id_tab_lapso', '=', 't07.id')
+            ->join('mantenimiento.tab_tipo_periodo as t08', 't07.id_tab_tipo_periodo', '=', 't08.id')
             ->join('mantenimiento.tab_partidas as t04', function ($j) {
                 $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
                   ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
@@ -202,11 +220,13 @@ class acseguimientoejecucionController extends Controller
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('tx_sector')
-            ->groupBy('de_lapso')
+            ->groupBy('dia_mes_fin')
             ->groupBy('tx_nombre')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
             ->groupBy('de_fuente_financiamiento')
-            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();                 
+            ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get(); 
+            
+            $data_responsables = '';
             }   
 //            $data->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();
 //        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
@@ -225,7 +245,7 @@ class acseguimientoejecucionController extends Controller
           $pdf->SetPrintFooter(true);
           // set auto page breaks
           $pdf->SetAutoPageBreak(true, 10);
-//          $pdf->AddPage();
+          $pdf->AddPage();
 
           $pdf->SetFont('','',11);
 
@@ -243,11 +263,14 @@ class acseguimientoejecucionController extends Controller
                 $mo_pagado = 0;          
                 
                 $id_partida = 0;
+                
+                
+                
           
 foreach($data as $item) {
     
          
-                $de_lapso = $item->de_lapso;
+                $de_lapso = $item->dia_mes_fin;
                 $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
          
          if($tx_sector!=$item->tx_sector){
@@ -256,28 +279,34 @@ foreach($data as $item) {
           
                 if($tx_sector!=''){
     
+//		$html23.='
+//		<tr style="font-size:7px" >
+//                <td style="width: 20%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
+//                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>';
+//                $html23.='</tr>';
+                
+//                $mo_presupuesto = 0;
+//                $mo_modificado_anual = 0;
+//                $mo_actualizado_anual = 0;
+//                $mo_comprometido = 0;
+//                $mo_causado = 0;
+//                $mo_pagado = 0;  
+
+//   $html23.='
+//</tbody>
+//</table>';  
+  
 		$html23.='
 		<tr style="font-size:7px" >
-                <td style="width: 20%;" colspan="2" align="right"> TOTAL EJECUTADO AL '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
-                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>';
-                $html23.='</tr>';
-                
-                $mo_presupuesto = 0;
-                $mo_modificado_anual = 0;
-                $mo_actualizado_anual = 0;
-                $mo_comprometido = 0;
-                $mo_causado = 0;
-                $mo_pagado = 0;  
-
-   $html23.='
-</tbody>
-</table>';  
-             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
+                <td  style="width: 20%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                $html23.='</tr>';                    
+               
+//             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
 //   var_dump($pdf->getY());
 //   exit();
    
@@ -324,13 +353,13 @@ foreach($data as $item) {
 ';
    
 
-          $pdf->SetX(140);
-          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');   
+//          $pdf->SetX(140);
+//          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');   
     
-}         
+}else{         
          
              
-$pdf->AddPage();
+//$pdf->AddPage();
 
          if($item->id_ejecutor){
           $tx_sector = $item->tx_sector;   
@@ -368,7 +397,7 @@ $html23.= '
 ';  
 $html23.='
 <tbody>';  
-
+}
 
             if($id!=null){
              $tab_meta_financiera = tab_meta_financiera::select(                  
@@ -474,7 +503,7 @@ $html23.='
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
                 $mo_pagado = $mo_pagado + $item->mo_pagado;
-                $de_lapso = $item->de_lapso;
+                $de_lapso = $item->dia_mes_fin;
                 $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;
 
             $tx_sector = $item->tx_sector;
@@ -584,7 +613,7 @@ $html23.='
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
                 $mo_pagado = $mo_pagado + $item->mo_pagado;
-                $de_lapso = $item->de_lapso;
+                $de_lapso = $item->dia_mes_fin;
                 $id_tab_ejercicio_fiscal = $item->id_tab_ejercicio_fiscal;            
          }
 
@@ -616,6 +645,8 @@ $html23.='
             $pdf->setY(35);
          }
    
+         
+         if($data_responsables==''){
    $html1 = '
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
@@ -652,6 +683,46 @@ $html23.='
 </tbody>
 </table>
 ';
+         }else{
+             
+   $html1 = '
+<table border="0.1" style="font-size:9px" cellpadding="3" >
+<tbody>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 30%;" align="center"><b>TITULAR</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>FIRMA Y SELLO</b></td>
+<td style="width: 35%;" align="center"><b>FIRMA Y SELLO</b></td>
+<td style="width: 30%;" align="center"><b>FIRMA Y SELLO</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 35%; height: 40px;" align="center"><b></b></td>
+<td style="width: 30%; height: 40px;" align="center"><b></b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+<td style="width: 35%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+<td style="width: 30%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%; height: 20px;" align="center"><b>'.$data_responsables->realizador_nombres.'</b></td>
+<td style="width: 35%; height: 20px;" align="center">'.$data_responsables->registrador_nombres.'<b></b></td>
+<td style="width: 30%; height: 20px;" align="center">'.$data_responsables->autorizador_nombres.'<b></b></td>
+</tr>
+<tr style="font-size:8px">
+<td style="width: 35%;" align="center"><b>C.I. '.$data_responsables->realizador_cedula.'</b></td>
+<td style="width: 35%;" align="center"><b>C.I. '.$data_responsables->registrador_cedula.'</b></td>
+<td style="width: 30%;" align="center"><b>C.I. '.$data_responsables->autorizador_cedula.'</b></td>
+</tr>
+</tbody>
+</table>
+';             
+             
+         }
    
 
           $pdf->SetX(140);
