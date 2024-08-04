@@ -303,7 +303,7 @@ foreach($data as $item) {
   
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 20%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
                 $html23.='</tr>';                    
                
 //             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
@@ -397,7 +397,7 @@ $html23.='
 
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 20%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
                 $html23.='</tr>';   
 
 }
