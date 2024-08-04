@@ -275,7 +275,7 @@ foreach($data as $item) {
          
          if($tx_sector!=$item->tx_sector){
              
-         
+          $id_partida = 0;
           
                 if($tx_sector!=''){
     
