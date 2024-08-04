@@ -713,7 +713,7 @@ $html23.='
 <td style="width: 30%;" align="center"><b>NOMBRE Y APELLIDO</b></td>
 </tr>
 <tr style="font-size:8px">
-<td style="width: 35%; height: 20px;" align="center"><b>'.$data_responsables->realizador_nombres.'</b></td>
+<td style="width: 35%; height: 20px;" align="center">'.$data_responsables->realizador_nombres.'<b></b></td>
 <td style="width: 35%; height: 20px;" align="center">'.$data_responsables->registrador_nombres.'<b></b></td>
 <td style="width: 30%; height: 20px;" align="center">'.$data_responsables->autorizador_nombres.'<b></b></td>
 </tr>
