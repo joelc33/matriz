@@ -132,7 +132,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     height:510,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.nuevo,'-',this.editar_financiera,'-',
+				this.editar_financiera,'-',
 			@endif
                         @if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 				this.editar,'-',

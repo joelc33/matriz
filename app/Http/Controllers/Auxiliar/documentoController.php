@@ -24,6 +24,7 @@ use matriz\Models\Mantenimiento\tab_municipio_detalle;
 use matriz\Models\Mantenimiento\tab_parroquia_detalle;
 use matriz\Models\Mantenimiento\tab_municipio;
 use matriz\Models\Mantenimiento\tab_periodo;
+use matriz\Models\Mantenimiento\tab_tipo_periodo;
 use matriz\Models\Mantenimiento\tab_lapso;
 use matriz\Models\Mantenimiento\tab_unidad_medida;
 use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
@@ -514,6 +515,22 @@ class documentoController extends Controller
         return Response::json($response, 200);
     }
 
+    public function tipoPeriodo()
+    {
+        
+        $excluir = tab_lapso::select('id_tab_tipo_periodo')
+        ->where('id_tab_periodo', '=', Input::get('periodo'))
+        ->where('id_tab_ejercicio_fiscal', '=', Input::get('anio'))
+        ->get()->toArray();    
+        
+        $response['success']  = 'true';
+        $response['data']  = tab_tipo_periodo::select('id', 'de_tipo_periodo')
+        ->where('id_tab_periodo', '=', Input::get('periodo'))
+        ->whereNotIn('id', $excluir)
+        ->where('in_activo', '=', true)->orderby('id', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }    
+    
     /**
      * Show the form for creating a new resource.
      *

@@ -119,7 +119,8 @@ class lapsoController extends Controller
             'fe_inicio',
             'fe_fin',
             'in_activo',
-            'de_lapso'
+            'de_lapso',
+            'id_tab_tipo_periodo'
         )
         ->where('id', '=', $id)
         ->first();
@@ -151,6 +152,7 @@ class lapsoController extends Controller
                 $tabla->fe_inicio = Input::get("fecha_inicio");
                 $tabla->fe_fin = Input::get("fecha_cierre");
                 $tabla->de_lapso = Input::get("descripcion");
+                $tabla->id_tab_tipo_periodo = Input::get("tipo_periodo");
                 $tabla->save();     
                 
 
@@ -185,6 +187,7 @@ class lapsoController extends Controller
                 $lapso->fe_inicio = Input::get("fecha_inicio");
                 $lapso->fe_fin = Input::get("fecha_cierre");
                 $lapso->de_lapso = Input::get("descripcion");
+                $lapso->id_tab_tipo_periodo = Input::get("tipo_periodo");
                 $lapso->in_activo = 'TRUE';
                 $lapso->save();
                 

@@ -117,6 +117,7 @@ Route::group(['namespace' => 'Auxiliar'], function () {
         Route::post('parroquia/todo', 'documentoController@parroquiaTodo');
         Route::get('municipio', 'documentoController@municipio');
         Route::get('periodo', 'documentoController@periodo');
+        Route::post('periodo/tipo', 'documentoController@tipoPeriodo');
         Route::get('lapso', 'documentoController@lapso');
         Route::get('unidadmedida', 'documentoController@unidadmedida');
         Route::get('fuentefinanciamiento', 'documentoController@fuentefinanciamiento');
