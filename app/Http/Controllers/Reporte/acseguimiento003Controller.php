@@ -358,20 +358,20 @@ $html23.= '
 <thead>
 <tr align="center" bgcolor="#BDBDBD">
 <th colspan="11" style="width: 16%;" rowspan="2"><b>ACTIVIDADES</b></th>
-<th colspan="11" style="width: 48%;"><b>METAS FINANCIERAS</b></th>
-<th colspan="11" style="width: 36%;"><b>CATEGORÍA PRESUPUESTARIA</b></th>
+<th colspan="11" style="width: 54%;"><b>METAS FINANCIERAS</b></th>
+<th colspan="11" style="width: 30%;"><b>CATEGORÍA PRESUPUESTARIA</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO PROGRAM. ANUAL (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO ACTUALIZADO ANUAL (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">SECTOR</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO PROGRAM. ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO ACTUALIZADO ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">SECTOR</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">PROY. Y/O A. CENTRAL.</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">ACCIÓN ESP.</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">PART.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">ACCIÓN ESP.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">PART.</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">FUENTE FINANCIAMIENTO</th>
 </tr>
 </thead>
@@ -404,16 +404,16 @@ $id = 0;
              
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
-		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
-                <td style="width: 7%;" align="center">'.$item->co_sector.'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
+                <td style="width: 5%;" align="center">'.$item->co_sector.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
-                <td style="width: 7%;" align="center">0'.$item->nu_numero.'</td>
-                <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
+                <td style="width: 5%;" align="center">0'.$item->nu_numero.'</td>
+                <td style="width: 5%;" align="center">'.$item->co_partida.'</td>
 		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>'; 
              }else{
@@ -421,16 +421,16 @@ $id = 0;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
-		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
-                <td style="width: 7%;" align="center">'.$item->co_sector.'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
+                <td style="width: 5%;" align="center">'.$item->co_sector.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
-                <td style="width: 7%;" align="center">0'.$item->nu_numero.'</td>
-                <td style="width: 7%;" align="center">'.$item->co_partida.'</td>
+                <td style="width: 5%;" align="center">0'.$item->nu_numero.'</td>
+                <td style="width: 5%;" align="center">'.$item->co_partida.'</td>
 		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';                 
                 
@@ -450,30 +450,30 @@ $id = 0;
 $html23.='      
 <tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION ESPECÍFICA</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
-		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
 </tr>
 <tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION CENTRALIZADA</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_accion).'</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_accion).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_accion).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_accion).'</b></td>                    
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado_accion).'</b></td>
-		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado_accion).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_accion).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_accion).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_accion).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_accion).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado_accion).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado_accion).'</b></td>
 </tr>
 <tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true"> <b>PRESUPUESTO TOTAL EJECUTOR:</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_ejecutor).'</b></td>
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_ejecutor).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_ejecutor).'</b></td>
-                <td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_ejecutor).'</b></td>                    
-		<td style="width: 8%;"  align="center"><b>'.$this->formatoDinero($mo_causado_ejecutor).'</b></td>
-		<td style="width: 8%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_ejecutor).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_ejecutor).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_ejecutor).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_ejecutor).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado_ejecutor).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="9" style="width: 100%;height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
