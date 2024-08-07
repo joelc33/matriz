@@ -105,7 +105,7 @@ class acseguimiento003Controller extends Controller
 		    break;
 		}
 	    }
-	    return "Bs. ".$numero;
+	    return $numero;
 	}
       /**
        * Display a listing of the resource.
