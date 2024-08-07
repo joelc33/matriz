@@ -369,10 +369,10 @@ $html23.= '
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">SECTOR</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">"PROY. Y/O A. CENTRAL."</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;">PROY. Y/O A. CENTRAL.</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">ACCIÓN ESP.</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;">PART.</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FUENTE FINANCIAMIENTO (AÑO)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FUENTE FINANCIAMIENTO</th>
 </tr>
 </thead>
 ';        
