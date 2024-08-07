@@ -220,7 +220,7 @@ class acseguimiento004Controller extends Controller
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
             DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),        
             'nu_numero',DB::raw('coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
