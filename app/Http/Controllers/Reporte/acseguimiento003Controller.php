@@ -363,7 +363,7 @@ $html23.= '
 </tr>
 <tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO PROGRAM. ANUAL (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO ACTUALIZADO ANUAL (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
