@@ -24,7 +24,7 @@ this._token = new Ext.form.Hidden({
 });
 //</token>
 
-this.datos1 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.codigo+'</p>';
+this.datos1 = '<p class="registro_detalle"><b>Código: </b>'+this.OBJ.cod+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Actividad: </b>'+this.OBJ.nb_meta+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Fecha Programada: </b>'+this.OBJ.fecha_inicio+' - '+this.OBJ.fecha_fin+'</p>';
 this.datos1 +='<p class="registro_detalle"><b>Programado: </b>'+this.OBJ.tx_prog_anual+' '+this.OBJ.de_unidad_medida+'</p>';

@@ -107,7 +107,11 @@ this.nu_obtenido = new Ext.form.NumberField({
         	if(isNaN(tedm)){tedm = parseFloat(0);}
 		tedf=forma002ActividadEditar.main.nu_meta_actualizada.getValue();
         	if(isNaN(tedf)){tedf = parseFloat(0);}
+                if(tedf==0){
+                forma002ActividadEditar.main.nu_corte.setValue(0);    
+                }else{
 		forma002ActividadEditar.main.nu_corte.setValue((parseFloat(tedm)*100)/parseFloat(tedf));
+                }
 	}         
 });
 
@@ -118,9 +122,9 @@ this.nu_corte = new Ext.form.NumberField({
 	allowBlank:false,
 	width:200,
 	decimalPrecision: 2,
-// 	minValue : 0,
-// 	maxValue : 100,
-//	msgTarget : 'Rango Entre 0 y 9',
+ 	minValue : 0,
+ 	maxValue : 100,
+	msgTarget : 'Rango Entre 0 y 9',
 	readOnly:true,
 	style:'background:#f2d7d5;',             
 	allowDecimals: true,
