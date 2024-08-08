@@ -401,7 +401,7 @@ class formadosController extends Controller
         $data = tab_meta_fisica::select(
             'ac_seguimiento.tab_meta_fisica.id',
             'id_tab_ac_ae',
-            'codigo',
+            'codigo as cod',
             'nb_meta',
             'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida',
             'tx_prog_anual',
