@@ -368,7 +368,7 @@ $html23.='
                 $html23.='</tr>';                   
                     
                 }
-
+                $id =$item->id;
                 $de_desvio=$item->de_desvio;
           
       }
