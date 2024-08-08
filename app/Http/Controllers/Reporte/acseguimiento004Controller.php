@@ -220,7 +220,7 @@ class acseguimiento004Controller extends Controller
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_actualizado_anual'),
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_actualizado_anual'),
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
             DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),        
             'nu_numero',DB::raw('coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
@@ -313,14 +313,27 @@ $html23.= '
 </thead>
 ';
 
-foreach($actividad as $item) {        
+$i = 1;
+$id = 0;
+$de_desvio = '';
+
+foreach($actividad as $item) { 
+    
+            $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
+            ->get();         
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
+             }
        
 $html23.='
 <tbody>';
 
+                if($id==$item->id){
+
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 30%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 10%;"  align="center">'.$item->tx_prog_anual.'</td>
 		<td style="width: 10%;"  align="center">'.$item->nu_meta_modificada.'</td>
                 <td style="width: 10%;" align="center">'.$item->nu_meta_actualizada.'</td>
@@ -329,14 +342,41 @@ $html23.='
 		<td style="width: 10%;" align="center">'.$item->mo_modificado_anual.'</td>
                 <td style="width: 10%;" align="center">'.$item->mo_actualizado_anual.'</td>';
                 $html23.='</tr>';
+
+                
+                }else{
+                    
+                 if($de_desvio==''){
+                     
+                 }else{
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$item->de_desvio.'</td>';
-                $html23.='</tr>';                
+                $html23.='</tr>';                        
+                 }
+                    
+ 		$html23.='
+		<tr style="font-size:6px" nobr="true">
+		<td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
+		<td style="width: 10%;"  align="center">'.$item->tx_prog_anual.'</td>
+		<td style="width: 10%;"  align="center">'.$item->nu_meta_modificada.'</td>
+                <td style="width: 10%;" align="center">'.$item->nu_meta_actualizada.'</td>
+                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
+		<td style="width: 10%;"  align="center">'.$item->mo_presupuesto.'</td>
+		<td style="width: 10%;" align="center">'.$item->mo_modificado_anual.'</td>
+                <td style="width: 10%;" align="center">'.$item->mo_actualizado_anual.'</td>';
+                $html23.='</tr>';                   
+                    
+                }
 
-                
+                $de_desvio=$item->de_desvio;
           
-      }        
+      }
+      
+        $html23.='
+        <tr style="font-size:6px" nobr="true">
+        <td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+        $html23.='</tr>';  
 
 $html23.='
 </tbody>
