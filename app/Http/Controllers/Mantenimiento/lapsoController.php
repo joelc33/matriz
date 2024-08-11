@@ -231,7 +231,7 @@ class lapsoController extends Controller
                 $tabla->id_tab_sectores = $arreglo_ac->id_tab_sectores;
                 $tabla->id_tab_estatus = $arreglo_ac->id_tab_estatus;
                 $tabla->id_tab_situacion_presupuestaria = $arreglo_ac->id_tab_situacion_presupuestaria;
-                $tabla->id_tab_tipo_registro = 1;
+                $tabla->id_tab_tipo_registro = $arreglo_ac->id_tab_tipo_registro;
                 $tabla->co_new_etapa = $arreglo_ac->co_new_etapa;
                 $tabla->de_ac = $arreglo_ac->de_ac;
                 $tabla->mo_ac = $arreglo_ac->mo_ac;
@@ -246,12 +246,23 @@ class lapsoController extends Controller
                 $tabla->tx_re_esperado = $arreglo_ac->tx_re_esperado;
                 $tabla->pp_anual = $arreglo_ac->pp_anual;
                 $tabla->id_tab_lapso = $lapso->id;
-                $tabla->id_tab_origen = 1;
+                $tabla->id_tab_origen = $arreglo_ac->id_tab_origen;
                 $tabla->in_activo = 'TRUE';
                 $tabla->in_001 = false;
                 $tabla->in_005 = false;
                 $tabla->in_bloquear_001 = false;
                 $tabla->in_bloquear_005 = false;
+                
+                $tabla->de_observacion_001 = $arreglo_ac->de_observacion_001;
+                $tabla->de_observacion_005 = $arreglo_ac->de_observacion_005;
+                $tabla->nu_po_beneficiada = $arreglo_ac->nu_po_beneficiada;
+                $tabla->nu_em_generado = $arreglo_ac->nu_em_generado;
+                $tabla->tx_pr_objetivo = $arreglo_ac->tx_pr_objetivo;
+                $tabla->tx_pr_programado = $arreglo_ac->tx_pr_programado;
+                $tabla->de_observacion_003 = $arreglo_ac->de_observacion_003;
+                $tabla->de_observacion_002 = $arreglo_ac->de_observacion_002;
+                $tabla->tx_pr_obtenido = $arreglo_ac->tx_pr_obtenido;                
+                
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->save();  
                 
