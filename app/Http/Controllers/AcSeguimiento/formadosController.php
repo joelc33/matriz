@@ -422,11 +422,13 @@ class formadosController extends Controller
             'ac_seguimiento.tab_meta_fisica.id_tab_parroquia_detalle',
             'in_bloquear_002',
             'ac_seguimiento.tab_meta_fisica.id_tab_origen',
-            't04.id as codigo'
+            't04.id as codigo',
+            't05.id_tab_tipo_periodo'
         )
         ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
         ->join('ac_seguimiento.tab_ac_ae as t02', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't02.id')
         ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+        ->join('mantenimiento.tab_lapso as t05', 't03.id_tab_lapso', '=', 't05.id')
         ->leftjoin('ac_seguimiento.tab_forma_002 as t04', 't04.id_tab_meta_fisica', '=', 'ac_seguimiento.tab_meta_fisica.id')
         ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
         ->first();
