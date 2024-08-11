@@ -372,6 +372,8 @@ class lapsoController extends Controller
             $tab_ac_vinculo = tab_ac_vinculo::where('id_tab_ac', '=', $arreglo_ac->id)
             ->first(); 
                         
+            if($tab_ac_vinculo){
+            
                     $tab_vinculo = new tab_ac_vinculo();
                     $tab_vinculo->id_tab_ac = $tabla->id;
                     $tab_vinculo->co_area_estrategica = $tab_ac_vinculo->co_area_estrategica;
@@ -386,9 +388,12 @@ class lapsoController extends Controller
                     $tab_vinculo->in_activo = 'TRUE';
                     $tab_vinculo->save();   
                     
+            }
                     $tab_ac_responsable = tab_ac_responsable::where('id_tab_ac', '=', $arreglo_ac->id)
                     ->first(); 
                
+                    if($tab_ac_responsable){
+                    
                     $tab_responsable = new tab_ac_responsable();
                     $tab_responsable->id_tab_ac = $tabla->id;
                     $tab_responsable->realizador_nombres = $tab_ac_responsable->realizador_nombres;
@@ -410,7 +415,9 @@ class lapsoController extends Controller
                     $tab_responsable->autorizador_telefono = $tab_ac_responsable->autorizador_telefono;
                     $tab_responsable->autorizador_unidad = $tab_ac_responsable->autorizador_unidad;
                     $tab_responsable->in_activo = 'TRUE';
-                    $tab_responsable->save();                    
+                    $tab_responsable->save(); 
+                    
+                    }
 
         }            
             
