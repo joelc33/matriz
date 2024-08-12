@@ -631,7 +631,7 @@ $contar=0;
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('t02.codigo', '=', $item->codigo)
-                ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+//                ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();           
           
