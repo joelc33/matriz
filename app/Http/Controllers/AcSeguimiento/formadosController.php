@@ -654,6 +654,38 @@ class formadosController extends Controller
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
                 }
+                
+                
+                $data1 = tab_meta_fisica::select(
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo'
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
+                ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
+                ->where('ac_seguimiento.tab_meta_fisica.id', '=', Input::get("id_tab_meta_fisica"))
+                ->first();
+                
+                
+                $data2 = tab_ac::select(
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
+                ->where('t02.codigo', '=', $data1->codigo)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
+                ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
+                ->first();           
+                
+                if(($data2->nu_obtenido+Input::get("obtenido"))>Input::get("meta_actualizada")){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma de las metas obtenidas excede el monto del actualizado, verifique!'
+                ));
+                
+                }                
+              
+                
                 $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
                 $tabla->in_bloquear_002 = false;
                 $tabla->nu_meta_modificada = Input::get("meta_modificada");
@@ -705,6 +737,35 @@ class formadosController extends Controller
                       'success' => false,
                       'msg' => $validator->getMessageBag()->toArray()
                     ));
+                }
+                
+                $data1 = tab_meta_fisica::select(
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo'
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
+                ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
+                ->where('ac_seguimiento.tab_meta_fisica.id', '=', Input::get("id_tab_meta_fisica"))
+                ->first();
+                
+                
+                $data2 = tab_ac::select(
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
+                ->where('t02.codigo', '=', $data1->codigo)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
+                ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
+                ->first();           
+                
+                if(($data2->nu_obtenido+Input::get("obtenido"))>Input::get("meta_actualizada")){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma de las metas obtenidas excede el monto del actualizado, verifique!'
+                ));
+                
                 }
                 
                 $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
