@@ -49,7 +49,7 @@ this.ficha_acumulada= new Ext.Button({
     handler:function(){
 			this.codigo  = forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 			bajar.load({
-				url: '{{ URL::to('reporte/ac/seguimiento/ficha/002') }}/'+this.codigo
+				url: '{{ URL::to('reporte/ac/seguimiento/ficha/002/acumulada') }}/'+this.codigo
 			});
     }
 });
