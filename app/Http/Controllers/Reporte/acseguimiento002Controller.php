@@ -624,7 +624,7 @@ $contar=0;
              
              
                 $data2 = tab_ac::select(
-                 DB::raw("sum(coalesce(nu_obtenido,0)) as nu_obtenido")
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -633,7 +633,10 @@ $contar=0;
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
-                ->first();           
+                ->first(); 
+                
+        var_dump($data->id_proy_ac);
+        exit();
           
 $contar=$contar+1;
 		$html23.='
