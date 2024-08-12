@@ -242,6 +242,7 @@ class acseguimiento003Controller extends Controller
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
+            ->orderBy('co_partida', 'ASC')
             ->get();
             
             $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
