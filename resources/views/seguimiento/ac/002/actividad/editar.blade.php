@@ -55,7 +55,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 // 	minValue : 0,
 // 	maxValue : 999999999999999999999,
 //	msgTarget : 'Rango Entre 0 y 9',
-	readOnly:(this.OBJ.in_bloquear_002==true)?true:(this.OBJ.id_tab_origen==2)?this.OBJ.id_tab_tipo_periodo==19)?true:false,
+	readOnly:(this.OBJ.in_bloquear_002==true)?true:(this.OBJ.id_tab_origen==2)?(this.OBJ.id_tab_tipo_periodo==19)?true:false,
 	style:(this.OBJ.in_bloquear_002==true)?'background:#f2d7d5;':'',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: false,
