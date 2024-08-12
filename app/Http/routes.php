@@ -157,6 +157,7 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('poa/ac/ubicacion/todo/exportar', 'acController@ubicacionTodoExportar');
         Route::get('ac/seguimiento/ficha/001/{id}', 'acseguimiento001Controller@ficha001');
         Route::get('ac/seguimiento/ficha/002/{id}', 'acseguimiento002Controller@ficha002');
+        Route::get('ac/seguimiento/ficha/002/acumulada/{id}', 'acseguimiento002Controller@ficha002Acumulada');
         Route::get('ac/seguimiento/ficha/003/{id}', 'acseguimiento003Controller@ficha003');
         Route::get('ac/seguimiento/ficha/004/{id}', 'acseguimiento004Controller@ficha004');
         Route::get('ac/seguimiento/ficha/005/{id}', 'acseguimiento005Controller@ficha005');
