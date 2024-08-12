@@ -43,7 +43,7 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true,
-        readOnly:(this.OBJ.in_enviado==true)?true:(this.OBJ.id_tab_origen==2)?true:false,
+        readOnly:(this.OBJ.in_enviado==true)?true:(this.OBJ.id_tab_origen==2)?(this.OBJ.id_tab_tipo_periodo==19)?true:false:false,
         style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',
         validationEvent: 'blur',
 	validator: function(value){
