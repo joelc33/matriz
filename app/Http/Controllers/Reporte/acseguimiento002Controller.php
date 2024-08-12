@@ -632,7 +632,7 @@ $contar=0;
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
 //                ->where('t02.codigo', '=', $item->codigo)
 //                ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
-                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+//                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();           
           
 $contar=$contar+1;
