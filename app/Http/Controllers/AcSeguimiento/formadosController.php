@@ -740,7 +740,7 @@ class formadosController extends Controller
                 }
                 
                 $data1 = tab_meta_fisica::select(
-                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo'
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id as id_tab_ac_ae'
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
                 ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
@@ -753,8 +753,10 @@ class formadosController extends Controller
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
+                ->where('t01.id', '=', $data1->id_tab_ac_ae)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
                 ->first();           
