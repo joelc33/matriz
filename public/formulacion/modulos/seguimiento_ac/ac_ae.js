@@ -365,11 +365,13 @@
                     fieldLabel: 'BIEN O SERVICIO',
                     minLength: 3,
                     maxLength: 128,
+                    readOnly:config.ae?true:false,
                     name: 'bien_servicio',
                     allowBlank: false
                 }, {
                     xtype: 'textarea',
                     fieldLabel: 'OBJETIVO INSTITUCIONAL',
+                    readOnly:config.ae?true:false,
                     name: 'objetivo_institucional'
                 }, {
                     xtype: 'hidden',
@@ -379,6 +381,7 @@
                     store: this.store_medida,
                     fieldLabel: 'UNIDAD DE MEDIDA',
                     valueField: 'co_unidades_medida',
+                    readOnly:config.ae?true:false,
                     displayField: 'tx_unidades_medida',
                     hiddenName: 'id_unidad_medida',
                     autoSelect: true,
@@ -392,6 +395,7 @@
                     fieldLabel: 'META',
                     name: 'meta',
                     allowBlank: false,
+                    readOnly:config.ae?true:false,
                     allowNegative: false,
                     decimalPrecision: 0,
                     emptyText: '0',
@@ -1157,11 +1161,11 @@
                         self.editarAccion.enable();
                         self.eliminar.enable();
                         } else {
-                        self.editarAccion.disable();
+                        self.editarAccion.enable();
                         self.eliminar.disable();
                         }
                     } else {
-                        self.editarAccion.disable();
+                        self.editarAccion.enable();
                         self.eliminar.disable();
 
                     }
