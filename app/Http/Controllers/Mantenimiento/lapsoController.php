@@ -348,7 +348,7 @@ class lapsoController extends Controller
                     $tab_meta_financiera->mo_presupuesto = $arreglo_meta_financiera->mo_presupuesto;
                     $tab_meta_financiera->co_partida = $arreglo_meta_financiera->co_partida;
                     $tab_meta_financiera->id_tab_fuente_financiamiento = $arreglo_meta_financiera->id_tab_fuente_financiamiento;
-                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_modificado_anual;
+//                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_modificado_anual;
                     $tab_meta_financiera->mo_actualizado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
                     $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
                     $tab_meta_financiera->id_tab_origen = $arreglo_meta_financiera->id_tab_origen;
