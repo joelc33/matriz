@@ -228,7 +228,7 @@ class acseguimiento003Controller extends Controller
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -239,13 +239,15 @@ class acseguimiento003Controller extends Controller
              ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
-             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')  
+             ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+            ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
             ->orderBy('codigo', 'ASC')
             ->orderBy('co_partida', 'ASC')
             ->get();
             
-            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -263,7 +265,7 @@ class acseguimiento003Controller extends Controller
             ->orderBy('codigo', 'ASC')
             ->get();    
             
-            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -296,7 +298,7 @@ class acseguimiento003Controller extends Controller
 
                 $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
                 $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
-                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual);
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + $item1->mo_actualizado_anual;
                 $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
                 $mo_causado_accion = $mo_causado_accion + $item1->mo_causado;
                 $mo_pagado_accion = $mo_pagado_accion + $item1->mo_pagado;
@@ -308,7 +310,7 @@ class acseguimiento003Controller extends Controller
 
                 $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
                 $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual);
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual + $item2->mo_modificado);
                 $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
                 $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
                 $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
@@ -412,7 +414,7 @@ $id = 0;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -429,7 +431,7 @@ $id = 0;
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -444,7 +446,7 @@ $id = 0;
                 $id =$item->id;
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
                 $mo_pagado = $mo_pagado + $item->mo_pagado;
@@ -619,7 +621,7 @@ $html23.='
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida','id_tab_fuente_financiamiento',
             'nu_numero',
             'nu_original',
@@ -636,7 +638,7 @@ $html23.='
             ->orderBy('co_partida', 'ASC')
             ->get();
             
-            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -654,7 +656,7 @@ $html23.='
             ->orderBy('codigo', 'ASC')
             ->get();    
             
-            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
             DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
             'nu_numero',
             'nu_original',
@@ -700,8 +702,8 @@ $html23.='
           
 
                 $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
-                $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
-                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual);
+                $mo_modificado_anual_accion = $mo_modificado_anual_accion + ($item1->mo_modificado_anual + $item1->mo_modificado);
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual + $item1->mo_modificado);
                 $mo_comprometido_accion = $data2->mo_comprometido;
                 $mo_causado_accion = $data2->mo_causado;
                 $mo_pagado_accion = $data2->mo_pagado;
@@ -725,8 +727,8 @@ $html23.='
                 ->first();          
 
                 $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
-                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual);
+                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + ($item2->mo_modificado_anual + $item2->mo_modificado);
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual + $item2->mo_modificado);
                 $mo_comprometido_ejecutor = $data2->mo_comprometido;
                 $mo_causado_ejecutor = $data2->mo_causado;
                 $mo_pagado_ejecutor = $data2->mo_pagado;
@@ -846,8 +848,8 @@ $id = 0;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual + $item->mo_modificado).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual + $item->mo_modificado)).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($data2->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($data2->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($data2->mo_pagado).'</td>
@@ -863,8 +865,8 @@ $id = 0;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual)).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual + $item->mo_modificado).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero(($item->mo_presupuesto + $item->mo_modificado_anual + $item->mo_modificado)).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($data2->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($data2->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($data2->mo_pagado).'</td>
@@ -878,8 +880,8 @@ $id = 0;
              }
                 $id =$item->id;
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
-                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
+                $mo_modificado_anual = $mo_modificado_anual + ($item->mo_modificado_anual + $item->mo_modificado);
+                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual + $item->mo_modificado);
                 $mo_comprometido = $mo_comprometido + $data2->mo_comprometido;
                 $mo_causado = $mo_causado + $data2->mo_causado;
                 $mo_pagado = $mo_pagado + $data2->mo_pagado;

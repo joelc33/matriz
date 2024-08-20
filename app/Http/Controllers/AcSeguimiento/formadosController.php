@@ -423,6 +423,7 @@ class formadosController extends Controller
             'in_bloquear_002',
             'ac_seguimiento.tab_meta_fisica.id_tab_origen',
             't04.id as codigo',
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as tx_prog_nuevo'),    
             't05.id_tab_tipo_periodo'
         )
         ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
@@ -657,7 +658,7 @@ class formadosController extends Controller
                 
                 
                 $data1 = tab_meta_fisica::select(
-                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo'
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id_tab_ac_ae_predefinida'
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
                 ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
@@ -670,8 +671,10 @@ class formadosController extends Controller
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
                 ->first();           
@@ -689,6 +692,7 @@ class formadosController extends Controller
                 $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
                 $tabla->in_bloquear_002 = false;
                 $tabla->nu_meta_modificada = Input::get("meta_modificada");
+                $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
                 $tabla->nu_obtenido = Input::get("obtenido");
                 $tabla->nb_responsable = Input::get("responsable");
                 $tabla->id_tab_municipio_detalle = Input::get("municipio");
@@ -702,6 +706,7 @@ class formadosController extends Controller
                 $tabla_002 = tab_forma_002::find($id);
                 $tabla_002->id_tab_meta_fisica = Input::get("id_tab_meta_fisica");
                 $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
+                $tabla_002->nu_meta_actualizada = Input::get("meta_actualizada");
                 $tabla_002->resultado = Input::get("resultado");
                 $tabla_002->nu_obtenido = Input::get("obtenido");
                 $tabla_002->observacion = Input::get("observacion");
@@ -740,7 +745,7 @@ class formadosController extends Controller
                 }
                 
                 $data1 = tab_meta_fisica::select(
-                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id as id_tab_ac_ae'
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id_tab_ac_ae_predefinida'
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
                 ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
@@ -756,7 +761,7 @@ class formadosController extends Controller
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
-                ->where('t01.id', '=', $data1->id_tab_ac_ae)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
                 ->first();           
@@ -773,6 +778,7 @@ class formadosController extends Controller
                 $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
                 $tabla->in_bloquear_002 = false;
                 $tabla->nu_meta_modificada = Input::get("meta_modificada");
+                $tabla->nu_meta_actualizada = Input::get("meta_actualizada");
                 $tabla->nu_obtenido = Input::get("obtenido");
                 $tabla->nb_responsable = Input::get("responsable");
                 $tabla->id_tab_municipio_detalle = Input::get("municipio");
@@ -786,6 +792,7 @@ class formadosController extends Controller
                 $tabla_002 = new tab_forma_002();
                 $tabla_002->id_tab_meta_fisica = Input::get("id_tab_meta_fisica");
                 $tabla_002->nu_meta_modificada = Input::get("meta_modificada");
+                $tabla_002->nu_meta_actualizada = Input::get("meta_actualizada");
                 $tabla_002->resultado = Input::get("resultado");
                 $tabla_002->nu_obtenido = Input::get("obtenido");
                 $tabla_002->observacion = Input::get("observacion");

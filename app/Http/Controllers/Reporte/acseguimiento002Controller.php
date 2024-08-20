@@ -106,6 +106,21 @@ class acseguimiento002Controller extends Controller
 	    }
 	    return $numero."%";
 	}
+        
+	function formatoDinero($numero, $fractional=true){
+	    if ($fractional) {
+		$numero = sprintf('%.2f', $numero);
+	    }
+	    while (true) {
+		$replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $numero);
+		if ($replaced != $numero) {
+		    $numero = $replaced;
+		} else {
+		    break;
+		}
+	    }
+	    return $numero;
+	}        
       /**
        * Display a listing of the resource.
        *
@@ -228,7 +243,7 @@ class acseguimiento002Controller extends Controller
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
             'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
+            DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
             ->leftjoin('ac_seguimiento.tab_forma_002 as t002', 'tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
 //            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
@@ -339,12 +354,12 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 7%;" align="center">'.$item->nu_meta_modificada.'</td>
-                <td style="width: 8%;" align="center">'.$item->nu_meta_actualizada.'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+                <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
-                <td style="width: 8%;" align="center">'.$item->nu_obtenido.'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
@@ -367,10 +382,10 @@ $html23.='
 <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
@@ -624,7 +639,7 @@ $contar=0;
              
              
                 $data2 = tab_ac::select(
-                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido")
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -640,13 +655,13 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 7%;" align="center">'.$item->nu_meta_modificada.'</td>
-                <td style="width: 8%;" align="center">'.$item->nu_meta_actualizada.'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+                <td style="width: 7%;" align="center">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero(($item->tx_prog_anual + $data2->nu_meta_modificada)).'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
-                <td style="width: 8%;" align="center">'.$data2->nu_obtenido.'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($data2->nu_obtenido/$nu_meta_actualizada)*100).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($data2->nu_obtenido).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
@@ -668,10 +683,10 @@ $html23.='
 <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>

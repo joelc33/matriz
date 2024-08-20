@@ -49,7 +49,7 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 	validator: function(value){
 		tedm=value;
         	if(isNaN(tedm)){tedm = parseFloat(0);}
-		tedf=forma003ActividadEditar.main.OBJ.mo_presupuesto;
+		tedf=forma003ActividadEditar.main.OBJ.mo_presupuesto_nuevo;
         	if(isNaN(tedf)){tedf = parseFloat(0);}
 		forma003ActividadEditar.main.mo_actualizado_anual.setValue(parseFloat(tedf)+parseFloat(tedm));
 	}        
@@ -58,7 +58,7 @@ this.mo_modificado_anual = new Ext.form.NumberField({
 this.mo_actualizado_anual = new Ext.form.NumberField({
 	fieldLabel:'PRESUPUESTO ACTUALIZADO ANUAL (Bs.)',
 	name:'actualizado_anual',
-	value:formatoNumero(this.OBJ.mo_presupuesto + (this.OBJ.mo_modificado_anual?this.OBJ.mo_modificado_anual:0)),
+	value:parseFloat(this.OBJ.mo_presupuesto) + parseFloat(this.OBJ.mo_modificado),
 	allowBlank:false,
         readOnly:true,
         style:'background:#f2d7d5;',        
@@ -182,7 +182,7 @@ this.guardar = new Ext.Button({
 		for(datos in action.result.msg){
 			errores += action.result.msg[datos] + '<br>';
 		}
-                Ext.MessageBox.alert('Error en transacción', errores);
+                Ext.MessageBox.alert('Error en transacción', action.result.msg);
             },
             success: function(form, action) {
                  if(action.result.success){

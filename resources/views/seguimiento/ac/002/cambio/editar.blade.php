@@ -63,7 +63,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
         	if(isNaN(tedm)){tedm = parseFloat(0);}
 		tedf=forma002ActividadEditar.main.OBJ.tx_prog_anual;
         	if(isNaN(tedf)){tedf = parseFloat(0);}
-		forma002ActividadEditar.main.nu_meta_actualizada.setValue(parseFloat(tedf)+parseFloat(tedm));
+//		forma002ActividadEditar.main.nu_meta_actualizada.setValue(parseFloat(tedf)+parseFloat(tedm));
 	}         
 });
 

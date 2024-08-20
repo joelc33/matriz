@@ -63,7 +63,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 	validator: function(value){
 		tedm=value;
         	if(isNaN(tedm)){tedm = parseFloat(0);}
-		tedf=forma002ActividadEditar.main.OBJ.tx_prog_anual;
+		tedf=forma002ActividadEditar.main.OBJ.tx_prog_nuevo;
         	if(isNaN(tedf)){tedf = parseFloat(0);}
 		forma002ActividadEditar.main.nu_meta_actualizada.setValue(parseFloat(tedf)+parseFloat(tedm));
 	}        
@@ -72,7 +72,7 @@ this.nu_meta_moificada = new Ext.form.NumberField({
 this.nu_meta_actualizada = new Ext.form.NumberField({
 	fieldLabel:'META ACTUALIZADA',
 	name:'meta_actualizada',
-	value:this.OBJ.tx_prog_anual,
+	value:this.OBJ.nu_meta_actualizada,
 	allowBlank:false,
 	width:200,
 	decimalPrecision: 0,

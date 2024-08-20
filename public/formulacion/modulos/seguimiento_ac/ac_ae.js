@@ -285,6 +285,7 @@
                 name: 'fecha_inicio',
                 format: 'd-m-Y',
                 minValue: config.ac.fecha_inicio,
+                readOnly:config.ae?true:false,
                 maxValue: config.ac.fecha_fin,
                 value: config.ac.fecha_inicio,
                 validator: validarFecha
@@ -294,6 +295,7 @@
                 name: 'fecha_fin',
                 format: 'd-m-Y',
                 minValue: config.ac.fecha_inicio,
+                readOnly:config.ae?true:false,
                 maxValue: config.ac.fecha_fin,
                 value: config.ac.fecha_fin,
                 validator: validarFecha
@@ -1165,7 +1167,7 @@
                         self.eliminar.disable();
                         }
                     } else {
-                        self.editarAccion.enable();
+                        self.editarAccion.disable();
                         self.eliminar.disable();
 
                     }

@@ -548,6 +548,8 @@ class formatresController extends Controller
             'mo_comprometido',
             'mo_causado',
             'mo_pagado',
+            'mo_modificado',
+            DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado,0) as mo_presupuesto_nuevo'),
             't01.id_tab_origen',
             'ac_seguimiento.tab_meta_financiera.in_enviado',
             DB::raw("to_char(t01.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
@@ -627,7 +629,7 @@ class formatresController extends Controller
                 
                 
                 $data1 = tab_meta_fisica::select(
-                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo'
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id_tab_ac_ae_predefinida'
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
                 ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
@@ -643,8 +645,10 @@ class formatresController extends Controller
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('ac_seguimiento.tab_meta_financiera as t03', 't03.id_tab_meta_fisica', '=', 't02.id')
+                ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t03.id', [$id])
                 ->first();  
@@ -661,7 +665,7 @@ class formatresController extends Controller
                 
                 $tabla = tab_meta_financiera::find($id);
                 $tabla->mo_modificado_anual = Input::get("modificado_anual");
-                $tabla->mo_actualizado_anual = $tabla->mo_presupuesto + Input::get("modificado_anual");
+                $tabla->mo_actualizado_anual = Input::get("actualizado_anual");
                 $tabla->mo_comprometido = Input::get("comprometido");
                 $tabla->mo_causado = Input::get("causado");
                 $tabla->mo_pagado = Input::get("pagado");

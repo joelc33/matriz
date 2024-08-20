@@ -323,7 +323,7 @@ class lapsoController extends Controller
                     $tabla_meta_fisica->fecha_fin = $arreglo_meta_fisica->fecha_fin;
                     $tabla_meta_fisica->nb_responsable = $arreglo_meta_fisica->nb_responsable;
                     $tabla_meta_fisica->id_tab_origen = $arreglo_meta_fisica->id_tab_origen;
-                    $tabla_meta_fisica->nu_meta_modificada = $arreglo_meta_fisica->nu_meta_modificada;
+                    $tabla_meta_fisica->nu_meta_modificada_periodo = ($arreglo_meta_fisica->nu_meta_modificada + $arreglo_meta_fisica->nu_meta_modificada_periodo);
                     $tabla_meta_fisica->nu_meta_actualizada = $arreglo_meta_fisica->nu_meta_actualizada;
                     $tabla_meta_fisica->id_tab_municipio_detalle = $arreglo_meta_fisica->id_tab_municipio_detalle;
                     $tabla_meta_fisica->id_tab_parroquia_detalle = $arreglo_meta_fisica->id_tab_parroquia_detalle;
@@ -350,6 +350,7 @@ class lapsoController extends Controller
                     $tab_meta_financiera->id_tab_fuente_financiamiento = $arreglo_meta_financiera->id_tab_fuente_financiamiento;
                     $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_modificado_anual;
                     $tab_meta_financiera->mo_actualizado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
+                    $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
                     $tab_meta_financiera->id_tab_origen = $arreglo_meta_financiera->id_tab_origen;
                     $tab_meta_financiera->in_cargado = 'FALSE';
                     $tab_meta_financiera->in_activo = 'TRUE';
