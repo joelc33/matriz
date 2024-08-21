@@ -629,7 +629,7 @@ class formatresController extends Controller
                 
                 
                 $data1 = tab_meta_fisica::select(
-                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id_tab_ac_ae_predefinida'
+                't02.nu_codigo','t02.id_tab_ejercicio_fiscal','ac_seguimiento.tab_meta_fisica.codigo','t01.id_tab_ac_ae_predefinida','t03.co_partida'
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't01.id')
                 ->join('ac_seguimiento.tab_ac as t02', 't01.id_tab_ac', '=', 't02.id')
@@ -649,6 +649,7 @@ class formatresController extends Controller
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
+                ->where('t03.co_partida', '=', $data1->co_partida)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t03.id', [$id])
                 ->first();  
