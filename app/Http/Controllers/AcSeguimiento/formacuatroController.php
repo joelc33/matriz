@@ -68,6 +68,11 @@ class formacuatroController extends Controller
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 DB::raw("NOW() between t02.fe_inicio and t02.fe_fin as activo"),
+                DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+                inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+                inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
+                where (t.nu_meta_modificada != 0 or t02.mo_modificado_anual != 0) and de_desvio is null
+                and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_desvio"),
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',

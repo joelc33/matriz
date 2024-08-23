@@ -289,6 +289,7 @@ class formadosController extends Controller
             'nu_em_previsto',
             'nu_po_beneficiada',
             'nu_em_generado', 
+            'pp_anual as tx_pr_objetivo',
             'tx_pr_programado as producto_programado',
             'tx_re_esperado',
             'tx_pr_obtenido',
@@ -589,6 +590,7 @@ class formadosController extends Controller
                 $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->tx_pr_programado = Input::get("producto_programado");
                 $tabla->tx_pr_obtenido = Input::get("tx_pr_obtenido");
+                $tabla->pp_anual = Input::get("tx_pr_objetivo");
                 $tabla->de_observacion_002 = Input::get("de_observacion_002");
                 $tabla->save();
 

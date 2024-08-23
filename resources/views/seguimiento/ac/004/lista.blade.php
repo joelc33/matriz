@@ -1,7 +1,7 @@
 <script type="text/javascript">
 Ext.ns("forma004Lista");
 function change(val){
-	if(val==true){
+	if(val==0){
 	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/check.png') }}" style="cursor:pointer;">'+' <span style="color:green;"> Cargado</span>'+'</div></tpl>';
 	}else{
 	    return '<tpl><div style="margin-bottom: -4px; margin-top: -4px;" class="x-grid-row">'+'<img src="{{ asset('images/16x16/seguimiento.png') }}" style="cursor:pointer;">'+' <span style="color:red;"> Pendiente</span>'+'</div></tpl>';
@@ -142,7 +142,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Ejecutor', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
 		{header: 'Codigo', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_codigo'},
     {header: 'Descripcion', width:200,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_ac'},
-    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'in_004'},
+    {header: 'Estatus', width:80,  menuDisabled:true, sortable: true, renderer: change, dataIndex: 'pend_desvio'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -239,6 +239,7 @@ getLista: function(){
                     {name: 'de_lapso'},
                     {name: 'activo'},
                     {name: 'in_004'},
+                    {name: 'pend_desvio'},
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {

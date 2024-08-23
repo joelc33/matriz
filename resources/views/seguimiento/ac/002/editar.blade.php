@@ -34,6 +34,16 @@ this.producto_obtenido = new Ext.form.TextArea({
 	maxLength: 6000
 });
 
+this.tx_pr_objetivo = new Ext.form.TextArea({
+	fieldLabel: 'PRODUCTO PROGRAMADO DEL OBJETIVO',
+	name: 'tx_pr_objetivo',
+	value:this.OBJ.tx_pr_objetivo,
+	allowBlank: false,
+	width:400,
+	height: 75,
+	maxLength: 6000
+});
+
 this.producto_programado = new Ext.form.TextArea({
 	fieldLabel: 'RESULTADOS OBTENIDOS',
 	name: 'producto_programado',
@@ -177,6 +187,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.nu_po_beneficiada,                
                 this.nu_em_previsto,
                 this.nu_em_generado,
+                this.tx_pr_objetivo,
                 this.producto_obtenido,
                 this.producto_programado,
                 this.observaciones
