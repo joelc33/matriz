@@ -105,7 +105,7 @@ class acseguimientoejecucionController extends Controller
 		    break;
 		}
 	    }
-	    return "Bs. ".$numero;
+	    return $numero;
 	}
       /**
        * Display a listing of the resource.
@@ -121,14 +121,12 @@ class acseguimientoejecucionController extends Controller
                 
             $data =  tab_meta_financiera::select(
                 'tx_nombre',
-                DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
-                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
-                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
-                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),                    
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                 't03.id_ejecutor',
                 'tx_ejecutor',
@@ -186,14 +184,12 @@ class acseguimientoejecucionController extends Controller
             }else{
             $data =  tab_meta_financiera::select(
                     'tx_nombre',
-                DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
-                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
-                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
-                DB::raw('(sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0))) -  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),                    
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                     'de_fuente_financiamiento',
                     't18b.tx_codigo as tx_sector',

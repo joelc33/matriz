@@ -215,12 +215,7 @@ class acseguimiento003Controller extends Controller
         ->where('t21.id_tab_ac', '=', $id)
         ->get(); 
 
-                $mo_presupuesto_anual_accion = 0;
-                $mo_modificado_anual_accion = 0;
-                $mo_actualizado_anual_accion = 0;
-                $mo_comprometido_accion = 0;
-                $mo_causado_accion = 0;
-                $mo_pagado_accion = 0;            
+           
             
             foreach($data as $data) {
             
@@ -262,6 +257,7 @@ class acseguimiento003Controller extends Controller
              ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
              ->where('t05.nu_codigo', '=', $data->id_proy_ac)
             ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
             ->orderBy('codigo', 'ASC')
             ->get();    
             
@@ -291,12 +287,19 @@ class acseguimiento003Controller extends Controller
                 $mo_actualizado_anual_ejecutor = 0;
                 $mo_comprometido_ejecutor = 0;
                 $mo_causado_ejecutor = 0;
-                $mo_pagado_ejecutor = 0;                
+                $mo_pagado_ejecutor = 0;
+
+                $mo_presupuesto_anual_accion = 0;
+                $mo_modificado_anual_accion = 0;
+                $mo_actualizado_anual_accion = 0;
+                $mo_comprometido_accion = 0;
+                $mo_causado_accion = 0;
+                $mo_pagado_accion = 0;                 
                 
       foreach($actividad_accion as $item1) {
           
 
-                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
+                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado);
                 $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
                 $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + $item1->mo_actualizado_anual;
                 $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
@@ -308,9 +311,9 @@ class acseguimiento003Controller extends Controller
       foreach($actividad_ejecutor as $item2) {
           
 
-                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
+                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado);
                 $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual + $item2->mo_modificado);
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + $item2->mo_actualizado_anual;
                 $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
                 $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
                 $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
@@ -412,7 +415,7 @@ $id = 0;
              
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
@@ -429,7 +432,7 @@ $id = 0;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
@@ -444,7 +447,7 @@ $id = 0;
                 
              }
                 $id =$item->id;
-                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_presupuesto = $mo_presupuesto + ($item->mo_presupuesto + $item->mo_modificado);
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
                 $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;

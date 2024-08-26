@@ -6,7 +6,7 @@ namespace matriz\Http\Controllers\Reporte;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_001;
 use matriz\Models\AcSegto\tab_ac;
-use matriz\Models\Ac\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Input;
@@ -33,16 +33,6 @@ class PDFseguimientoAC extends TCPDF
 
         $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
         $pdf->setXY(30, 15);
-        $pdf->SetFont('', 'B', 11);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-        $pdf->setXY(30, 20);
-        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
-        $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'MARCO NORMATIVO INSTITUCIONAL', 0, 'C', 0, 0, '', '', true);
 
         return $pdf;
     }
@@ -52,9 +42,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(10, -10);
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 7);
-        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+        $pdf->writeHTMLCell(280, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -91,91 +79,104 @@ class acseguimientoController extends Controller
         $data = json_encode(array("id_ejecutor" => Session::get('ejecutor')));
         return View::make('reporte.seguimiento.ac')->with('data', $data)->with('lapso', $lapso);          
       }
+      
+	function formatoDinero($numero, $fractional=true){
+	    if ($fractional) {
+		$numero = sprintf('%.2f', $numero);
+	    }
+	    while (true) {
+		$replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $numero);
+		if ($replaced != $numero) {
+		    $numero = $replaced;
+		} else {
+		    break;
+		}
+	    }
+	    return $numero;
+	}
+        
+	public function formatoPorcentaje($numero, $fractional=true){
+	    if ($fractional) {
+		$numero = sprintf('%.2f', $numero);
+	    }
+	    while (true) {
+		$replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $numero);
+		if ($replaced != $numero) {
+		    $numero = $replaced;
+		} else {
+		    break;
+		}
+	    }
+	    return $numero."%";
+	}
+
+	public function encabezado2($pdf){
+            $pdf->setY(10);
+            $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);        
+            $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);
+            $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(10);
+            
+            return $pdf;
+	}        
 
       /**
        * Display a listing of the resource.
        *
        * @return \Illuminate\Http\Response
        */
-      public function ficha001($id)
+      public function fichaConsolidado($id_tab_lapso,$id=null)
       {
-
           
+            if($id!=null){
 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->join('t46_acciones_centralizadas as t46', function ($join) {
-            $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
-            ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
-            })                
-            ->join('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
-            ->join('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
             ->select(
-            'nu_codigo',
-            'id_tab_ejecutores',
-            'id_tab_ejercicio_fiscal',
+            'ac_seguimiento.tab_ac.id_ejecutor',
             'tx_ejecutor',
             't45.tx_descripcion as tx_area_estrategica',        
-            'id_tab_ac_predefinida',
-            'id_tab_sectores',
-            'id_tab_estatus',
-            'id_tab_situacion_presupuestaria',
-            'id_tab_tipo_registro',
-            'co_new_etapa',
-            'de_ac',
-            'mo_ac',
-            'mo_calculado',
-            'fe_inicio',
-            'fe_fin',
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
-            'ac_seguimiento.tab_ac.inst_objetivos',
-            'ac_seguimiento.tab_ac.nu_po_beneficiar',
-            'ac_seguimiento.tab_ac.nu_em_previsto',
-            'ac_seguimiento.tab_ac.tx_re_esperado',
-            'id_tab_lapso',
-            'in_bloquear_001',
-            'de_observacion_001'
-        )
-        ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();
-          
-//          var_dump($data->nu_codigo);
-//          exit();
-          
-          /******Objetivos*********/
-
-	$htmlObjetivo = '
-<table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
-	<tr align="left">
-		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor.'</td>
-	</tr>
-	<tr align="left">
-		<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$data->tx_area_estrategica.'</td>
-	</tr>
-	<tr>
-		<td><b>MISIÓN</b></td>
-		<td><b>VISIÓN</b></td>
-	</tr>
-	<tr>
-		<td height="100" align="justify">'.$data->inst_mision.'</td>
-		<td height="100" align="justify">'.$data->inst_vision.'</td>
-	</tr>
-<thead>
-	<tr>
-		<td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
-	</tr>
-</thead>
-<tbody>
-	<tr nobr="true">
-		<td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$data->inst_objetivos).'</td>
-	</tr>
-</tbody>
-</table>';
-
-        
-
-        
+            'ac_seguimiento.tab_ac.inst_objetivos'                   
+            )
+            ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $id)
+            ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+            ->groupBy('tx_ejecutor')
+            ->groupBy('tab_ac.id_ejecutor')
+            ->groupBy('tx_area_estrategica')
+            ->groupBy('tab_ac.inst_mision')
+            ->groupBy('tab_ac.inst_vision')
+            ->groupBy('tab_ac.inst_objetivos')                    
+            ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();
+            }else{
+                
+            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')   
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            ->select(
+            'ac_seguimiento.tab_ac.id_ejecutor',
+            'tx_ejecutor',
+            't45.tx_descripcion as tx_area_estrategica',        
+            'ac_seguimiento.tab_ac.inst_mision',
+            'ac_seguimiento.tab_ac.inst_vision',
+            'ac_seguimiento.tab_ac.inst_objetivos'  
+            )
+            ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+            ->groupBy('tx_ejecutor')
+            ->groupBy('tab_ac.id_ejecutor')
+            ->groupBy('tx_area_estrategica')
+            ->groupBy('tab_ac.inst_mision')
+            ->groupBy('tab_ac.inst_vision')
+            ->groupBy('tab_ac.inst_objetivos')
+            ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();    
+            }
+                       
 
           $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
           $pdf->SetCreator('Sistema POA, Yoser Perez');
@@ -184,33 +185,76 @@ class acseguimientoController extends Controller
           $pdf->SetSubject('Seguimiento AC');
           $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
           $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
+          $pdf->SetTopMargin(35);
           $pdf->SetPrintHeader(true);
           $pdf->SetPrintFooter(true);
           // set auto page breaks
           $pdf->SetAutoPageBreak(true, 10);
-          $pdf->AddPage();
           $pdf->SetFont('','',11);
-//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
-          $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
-          $pdf->lastPage();
-          $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
-      }
-      
-      
-      public function ficha002($id)
-      {
+ 
+          $pdf->Ln(-3);
 
-            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->join('t46_acciones_centralizadas as t46', function ($join) {
-            $join->on('t46.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
-            ->on('t46.id_ejercicio', '=', 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
-            ->on('t46.id_accion', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida');
-            })
-            ->join('t52_ac_predefinidas as t52', 't52.id', '=', 't46.id_accion')
-            ->leftjoin('t47_ac_accion_especifica as t47', 't47.id_accion_centralizada', '=', 't46.id')
-            ->leftjoin('t49_ac_planes as t49', 't49.id_accion_centralizada', '=', 't46.id')
-            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't47.id_accion')
+
+            foreach($data as $item) {
+            
+                $pdf->AddPage();
+                
+            $pdf->SetY(75);
+            $pdf->SetFont('','B',18);
+            $pdf->SetTextColor(0,0,0);
+            $pdf->Write(0, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Ln(5);
+            $pdf->Write(0, 'AÑO '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Ln(10);
+            $pdf->Write(0, $item->tx_ejecutor, '', 0, 'C', true, 0, false, false, 0);
+            $pdf->SetY(190);
+            $pdf->SetFont('','',11);            
+            $pdf->Write(0, 'Maracaibo, '.'Diciembre de '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
+            $pdf->AddPage();
+            
+            $pdf->setY(10);
+            $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);
+            $pdf->MultiCell(277, 5, 'FORMULARIO Nº 1', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);
+            $pdf->MultiCell(277, 5, 'MARCO NORMATIVO INSTITUCIONAL', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(10);            
+            
+            $htmlObjetivo = '
+    <table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
+            <tr align="left">
+                    <td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$item->tx_ejecutor.'</td>
+            </tr>
+            <tr align="left">
+                    <td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$item->tx_area_estrategica.'</td>
+            </tr>
+            <tr>
+                    <td><b>MISIÓN</b></td>
+                    <td><b>VISIÓN</b></td>
+            </tr>
+            <tr>
+                    <td height="100" align="justify">'.$item->inst_mision.'</td>
+                    <td height="100" align="justify">'.$item->inst_vision.'</td>
+            </tr>
+    <thead>
+            <tr>
+                    <td colspan="2"><b>OBJETIVOS INSTITUCIONALES</b></td>
+            </tr>
+    </thead>
+    <tbody>
+            <tr nobr="true">
+                    <td colspan="2" height="100" align="justify">'.str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$item->inst_objetivos).'</td>
+            </tr>
+    </tbody>
+    </table>';            
+           $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, ''); 
+            
+            $data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
+            ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')        
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
             ->leftjoin('t45_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
@@ -232,7 +276,7 @@ class acseguimientoController extends Controller
             ->on('t45c.edo_reg', '=', DB::raw('true'))        
             ->on('t45c.nu_nivel', '=', DB::raw('4'));
             })            
-            ->join('mantenimiento.tab_sectores as t18a', 't46.id_subsector', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18a', 'ac_seguimiento.tab_ac.id_tab_sectores', '=', 't18a.id')
             ->join('mantenimiento.tab_sectores as t18b', function ($join) {
             $join->on('t18a.co_sector', '=', 't18b.co_sector')
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
@@ -261,8 +305,7 @@ class acseguimientoController extends Controller
             ->on('t20c.nu_nivel', '=', DB::raw('4'));
             })            
             ->select(
-            't46.id as id_accion_centralizada',
-            't46.id_ejecutor',
+            'ac_seguimiento.tab_ac.id_ejecutor',
             'tx_ejecutor',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
@@ -273,27 +316,61 @@ class acseguimientoController extends Controller
             't45a.tx_descripcion as tx_ambito_estado', 
             't45b.tx_descripcion as tx_macroproblema',
             't45c.tx_descripcion as tx_nodos',
-            'objetivo_institucional as tx_objetivo_institucional',
-            DB::raw("'AC' || t04.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0') as id_proy_ac"),
+            't21.objetivo_institucional as tx_objetivo_institucional',
+            DB::raw("'AC' || t04.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
             't52.nombre',
             DB::raw('t53.numero::text as tx_codigo_ae'),
             't53.nombre as tx_nombre_ae',
-            't47.id_ejecutor as id_ejecutor_ae',
-            'tx_pr_objetivo',
-            't47.id_accion as co_ae'        
+            't21.id_ejecutor as id_ejecutor_ae',
+            'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+            't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.tx_re_esperado',
+            'ac_seguimiento.tab_ac.nu_po_beneficiar',
+            'ac_seguimiento.tab_ac.nu_em_previsto',
+            'ac_seguimiento.tab_ac.nu_po_beneficiada',
+            'ac_seguimiento.tab_ac.nu_em_generado',
+            'ac_seguimiento.tab_ac.tx_pr_programado',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido',
+            'id_tab_tipo_periodo',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
+            'ac_seguimiento.tab_ac.de_observacion_002',
+            'ac_seguimiento.tab_ac.de_observacion_003'                    
         )
-        ->where('ac_seguimiento.tab_ac.id', '=', $id)
-        ->first();
-          
-
-            $actividad = tab_meta_fisica::select('co_metas', 't69_metas_ac.codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin','nb_responsable','de_unidad_medida as tx_unidades_medida')
-            ->join('mantenimiento.tab_unidad_medida as t21', 't69_metas_ac.co_unidades_medida', '=', 't21.id')             
-            ->where('id_accion_centralizada', '=', $data->id_accion_centralizada)
-            ->where('co_ac_acc_espec', '=', $data->co_ae)
-            ->where('t69_metas_ac.edo_reg', '=', true)
+        ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
+        ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+        ->get(); 
+            
+          foreach($data2 as $data) {
+              
+           $pdf->AddPage();
+           
+           $this->encabezado2($pdf);
+           
+           
+            $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
+            'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
+            DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as nu_meta_modificada_periodo'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
+            DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
+            ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
+            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', 'tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
+            ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 'tab_meta_fisica.id_tab_municipio_detalle', '=', 't64.id')
+            ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 'tab_meta_fisica.id_tab_parroquia_detalle', '=', 't65.id')            
+            ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->get();
-
+            
+            $obtenido = '';
+             $resultado = '';
+              $observacion = '';
+            
+            foreach($actividad as $item) {
+                
+             $obtenido.=  $item->nu_obtenido.' '.$item->tx_unidades_medida.',';
+             $resultado.=  $item->resultado.'-';
+             $observacion.=  $item->observacion.'-';
+            }
           
 $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -331,7 +408,8 @@ $html1 = '
 <td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 100%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
 </tr>
 </tbody>
 </table>
@@ -345,17 +423,20 @@ $html23.= '
 <th colspan="11" style="width: 100%;"><b>METAS FISICAS</b></th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 18%;">ACTIVIDAD</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;">U. MED</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PROGRAMADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">MODIFICADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">ACTUALIZADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 18%;" rowspan="2">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 16%;" colspan="2">FECHA PROGRAMADA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">OBTENIDO AL CORTE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;" rowspan="2">LOCALIZACIÓN</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">RESPONSABLE</th>
+</tr>
+<tr style="font-size:6px">
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;">INICIO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">TERMINO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">OBTENIDO AL CORTE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">MUNIC / PARROQ</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;">RESPONSABLE</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FINAL</th>
 </tr>
 </thead>
 ';        
@@ -366,71 +447,361 @@ $cantidad = $actividad->count();
 
 $contar=0;
       foreach($actividad as $item) {
+ 
+          if($item->nu_meta_actualizada==0){
+             $nu_meta_actualizada =  1;
+          }else{
+            $nu_meta_actualizada =  $item->nu_meta_actualizada;  
+          }
           
-//                               var_dump($item->nb_responsable);
-//          exit();
 $contar=$contar+1;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
+                <td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada_periodo).'</td>
+                <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual.'</td>
-                <td style="width: 10%;"  align="center">'.$item->tx_prog_anual.'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
+                <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
-//                				if($cantidad>$contar){
-//					$html23.='</tr>
-//					<tr style="font-size:6px" nobr="true">';
-//				}else{
-//					$html23.='';
-//				}
+
                 
           
-      }        
-//$html23.='</tr>';
+      }
+$html23.='      
+<tr style="font-size:9px">
+<td colspan="3" style="width: 60%;" align="justify" rowspan="2"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b>'.$data->tx_re_esperado.'</td>
+<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN A BENEFICIAR:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN BENEFICIADA:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS A GENERAR:</b></td>
+<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="16" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_002.'</td>
+</tr>';   
+
 $html23.='
 </tbody>
 </table>';
 
-          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
-          $pdf->SetCreator('Sistema POA, Yoser Perez');
-          $pdf->SetAuthor('Yoser Perez');
-          $pdf->SetTitle('Seguimiento AC');
-          $pdf->SetSubject('Seguimiento AC');
-          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
-          $pdf->SetMargins(10,10,10);
-          $pdf->SetTopMargin(50);
-          $pdf->SetPrintHeader(false);
-          $pdf->SetPrintFooter(true);
-          // set auto page breaks
-          $pdf->SetAutoPageBreak(true, 10);
+          $pdf->SetFont('','',11);
+          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
+          $pdf->Ln(-3);
+          $pdf->writeHTML($html23, true, false, false, false, '');
+          
+                 $mo_presupuesto_anual_accion = 0;
+                $mo_modificado_anual_accion = 0;
+                $mo_actualizado_anual_accion = 0;
+                $mo_comprometido_accion = 0;
+                $mo_causado_accion = 0;
+                $mo_pagado_accion = 0; 
+                
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')  
+             ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
+            ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+            ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
+            ->orderBy('codigo', 'ASC')
+            ->orderBy('co_partida', 'ASC')
+            ->get();
+            
+            $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')   
+             ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
+             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+            ->orderBy('codigo', 'ASC')
+            ->get();    
+            
+            $actividad_ejecutor = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
+            ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
+            ->where('t03.id_ejecutor', '=', $data->id_ejecutor)
+            ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
+            ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+            ->orderBy('codigo', 'ASC')
+            ->get();             
+            
+
+                
+                $mo_presupuesto_anual_ejecutor = 0;
+                $mo_modificado_anual_ejecutor = 0;
+                $mo_actualizado_anual_ejecutor = 0;
+                $mo_comprometido_ejecutor = 0;
+                $mo_causado_ejecutor = 0;
+                $mo_pagado_ejecutor = 0;                
+                
+      foreach($actividad_accion as $item1) {
+          
+
+                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado);
+                $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + $item1->mo_actualizado_anual;
+                $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
+                $mo_causado_accion = $mo_causado_accion + $item1->mo_causado;
+                $mo_pagado_accion = $mo_pagado_accion + $item1->mo_pagado;
+
+      } 
+      
+      foreach($actividad_ejecutor as $item2) {
+          
+
+                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado);
+                $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + $item2->mo_actualizado_anual;
+                $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
+                $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
+                $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
+
+      }      
+          
+$html1 = '
+<table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+<tbody>
+<tr style="font-size:9px">
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2" style="width: 30%;" align="justify"><b>OBJETIVO HISTORICO:</b> '.$data->tx_objetivo_historico.'</td>
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$data->tx_objetivo_nacional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$data->tx_objetivo_estrategico.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" align="justify"><b>OBJETIVO GENERAL:</b> '.$data->tx_objetivo_general.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> '.$data->tx_ambito_estado.'</td>
+<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$data->tx_macroproblema.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
+</tr>
+</tbody>
+</table>
+';
+
+$html23='';
+$html23.= '
+<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+<thead>
+<tr align="center" bgcolor="#BDBDBD">
+<th colspan="11" style="width: 16%;" rowspan="2"><b>ACTIVIDADES</b></th>
+<th colspan="11" style="width: 54%;"><b>METAS FINANCIERAS</b></th>
+<th colspan="11" style="width: 30%;"><b>CATEGORÍA PRESUPUESTARIA</b></th>
+</tr>
+<tr style="font-size:6px">
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO PROGRAM. ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO MODIFICADO ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO ACTUALIZADO ANUAL (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO COMPROM. AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">PRESUPUESTO CAUSADO AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 9%;">PRESUPUESTO PAGADO AL CORTE (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">SECTOR</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;">PROY. Y/O A. CENTRAL.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">ACCIÓN ESP.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 5%;">PART.</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">FUENTE FINANCIAMIENTO</th>
+</tr>
+</thead>
+';        
+       
+$html23.='
+<tbody>';
+
+$mo_presupuesto = 0;
+$mo_modificado_anual = 0;
+$mo_actualizado_anual = 0;
+$mo_comprometido = 0;
+$mo_causado = 0;
+$mo_pagado = 0;
+$i = 1;
+$id = 0;
+
+      foreach($actividad as $item) {
+          
+          
+             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
+            ->get();         
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
+             }
+          
+             if($id==$item->id){
+             
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+                <td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
+                <td style="width: 5%;" align="center">'.$item->co_sector.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
+                <td style="width: 5%;" align="center">0'.$item->nu_numero.'</td>
+                <td style="width: 5%;" align="center">'.$item->co_partida.'</td>
+		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>'; 
+             }else{
+                 
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
+                <td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
+		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
+                <td style="width: 5%;" align="center">'.$item->co_sector.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_original.'</td>
+                <td style="width: 5%;" align="center">0'.$item->nu_numero.'</td>
+                <td style="width: 5%;" align="center">'.$item->co_partida.'</td>
+		<td style="width: 8%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                $html23.='</tr>';                 
+                
+             }
+                $id =$item->id;
+                $mo_presupuesto = $mo_presupuesto + ($item->mo_presupuesto + $item->mo_modificado);
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                
+
+          
+      }        
+
+$html23.='      
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION ESPECÍFICA</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"><b>TOTAL POR ACCION CENTRALIZADA</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_accion).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_accion).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_accion).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_accion).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado_accion).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado_accion).'</b></td>
+</tr>
+<tr style="font-size:6px" nobr="true">
+		<td style="width: 16%;"  nobr="true"> <b>PRESUPUESTO TOTAL EJECUTOR:</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_presupuesto_anual_ejecutor).'</b></td>
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_modificado_anual_ejecutor).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_actualizado_anual_ejecutor).'</b></td>
+                <td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_comprometido_ejecutor).'</b></td>                    
+		<td style="width: 9%;"  align="center"><b>'.$this->formatoDinero($mo_causado_ejecutor).'</b></td>
+		<td style="width: 9%;" align="center"><b>'.$this->formatoDinero($mo_pagado_ejecutor).'</b></td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="9" style="width: 100%;height: 30px;" align="justify"><b>OBSERVACIONES:</b>  '.$data->de_observacion_003.'</td>
+</tr>'        ;
+      
+$html23.='
+</tbody>
+</table>';
+
+
           $pdf->AddPage();
-            $pdf->Image(public_path().'/images/zulia_escudo.png', 10, 10, 20, 18, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
-        $pdf->setXY(30, 15);
-        $pdf->SetFont('', 'B', 11);
-        $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
-                $pdf->setXY(30, 20);
-        $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.Session::get("ejercicio"), 0, 'L', 0, 0, '', '', true);
-        $pdf->setY(30);
-        $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ANUAL (P.O.A)', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);        
-        $pdf->MultiCell(277, 5, 'FORMULARIO Nº 2', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
-        $pdf->MultiCell(277, 5, 'METAS FÍSICAS', 0, 'C', 0, 0, '', '', true);
-        $pdf->Ln(5);
+
           $pdf->SetFont('','',11);
 //          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
           $pdf->Ln(-3);
-          $pdf->writeHTML($html23, true, false, false, false, '');
-          $pdf->lastPage();
+          $pdf->writeHTML($html23, true, false, false, false, '');          
+          
+          
+
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+           
+            }   
+
+          $pdf->SetX(140);
+          
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
-      }      
+      }
+      
+     
 
 }

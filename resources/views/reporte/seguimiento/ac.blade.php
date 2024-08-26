@@ -98,7 +98,7 @@ this.botones = new this.GrupoBotones({
                                                                 {
 									text:'REPORTE TODOS',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
-									handler: this.onImprimir
+									handler: this.onImprimir1
 								},
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
@@ -131,13 +131,16 @@ if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
     Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
     return false;
 }
-//	bajar.load({
+
+        this.codigo  = parametroSeguimientoAC.main.id_tab_ejecutores.getValue();
+	bajar.load({
+            url: '{{ URL::to('reporte/ac/seguimiento/ficha/consolidado') }}/{!! $lapso->id !!}/'+this.codigo
 //		url: '{{ URL::to('reporte/poa/ac/ubicacion') }}?'+parametroSeguimientoAC.main.formpanel.getForm().getValues(true)
-//	});
+	});
 },
 onImprimir1 : function() {
 	bajar.load({
-		url: '{{ URL::to('reporte/poa/ac/ubicacion/todo') }}'
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/consolidado') }}/{!! $lapso->id !!}/'
 	});
 },
 onExportar1 : function() {

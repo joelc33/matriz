@@ -242,7 +242,8 @@ class acseguimiento002Controller extends Controller
           Session::put('periodo',$periodo);               
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
-            'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
+            'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
+            DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as nu_meta_modificada_periodo'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
             DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
             ->leftjoin('ac_seguimiento.tab_forma_002 as t002', 'tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
@@ -354,7 +355,7 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada_periodo).'</td>
                 <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
