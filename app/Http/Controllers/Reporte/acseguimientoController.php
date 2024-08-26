@@ -122,6 +122,18 @@ class acseguimientoController extends Controller
             return $pdf;
 	}        
 
+	public function encabezado3($pdf){
+            $pdf->setY(10);
+            $pdf->MultiCell(277, 5, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);        
+            $pdf->MultiCell(277, 5, 'FORMULARIO Nº 3', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);
+            $pdf->MultiCell(277, 5, 'METAS FINANCIERAS', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(10);
+            
+            return $pdf;
+	}        
+        
       /**
        * Display a listing of the resource.
        *
@@ -776,6 +788,7 @@ $html23.='
 
 
           $pdf->AddPage();
+          $this->encabezado3($pdf);
 
           $pdf->SetFont('','',11);
 //          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
