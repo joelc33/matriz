@@ -405,13 +405,13 @@ class formacuatroController extends Controller
         if($id!=''||$id!=null) {
 
             try {
-//                $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditarMeta);
-//                if ($validator->fails()) {
-//                    return Response::json(array(
-//                      'success' => false,
-//                      'msg' => $validator->getMessageBag()->toArray()
-//                    ));
-//                }
+                $validator= Validator::make(Input::all(), tab_meta_fisica::$validarEditarDesvio);
+                if ($validator->fails()) {
+                    return Response::json(array(
+                      'success' => false,
+                      'msg' => $validator->getMessageBag()->toArray()
+                    ));
+                }
                 $tabla = tab_meta_fisica::find($id);
                 $tabla->nb_meta = Input::get("actividad");
                 $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
