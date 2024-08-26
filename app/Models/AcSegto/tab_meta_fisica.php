@@ -49,8 +49,8 @@ class tab_meta_fisica extends Model
         "actividad" => "required",
         "unidad_medida" => "required|numeric",
         "programado_anual" => "required|numeric",
-//        "fecha_inicio" => "required|date_format:d/m/Y|before:fecha_culminacion",
-//        "fecha_culminacion" => "required|date_format:d/m/Y|after:fecha_inicio",
+        "fecha_inicio" => "required|date_format:d/m/Y|before:fecha_culminacion",
+        "fecha_culminacion" => "required|date_format:d/m/Y|after:fecha_inicio",
         "responsable" => "required",
         "desvio" => "required"
     );    
