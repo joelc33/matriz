@@ -547,11 +547,12 @@
                             var enviar = {};
                             enviar.co_tipo_fondo = r.data.co_tipo_fondo;
                             enviar.monto = r.data.monto;
-                            suma += parseFloat(r.data.monto);
+                            suma += r.data.monto;
                             fuentes.push(enviar);
                         });
 
-                        if (parseFloat(forma.getValues().monto) !== parseFloat(suma)) {
+                        if (parseFloat(forma.getValues().monto) !== parseFloat(suma).toFixed(2)) {                            
+                            
                             Ext.Msg.alert('Alerta', 'La suma de los montos de las Fuentes de Financiamiento no coincide con el monto declarado para la AE');
                             return false;
                         }
