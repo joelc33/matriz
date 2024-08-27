@@ -490,7 +490,7 @@ class formadosController extends Controller
                
                 $tabla = new tab_meta_fisica();
                 $tabla->id_tab_ac_ae = Input::get("ac_ae");
-                $tabla->nb_meta = Input::get("actividad");
+                $tabla->nb_meta = str_replace('"', '', Input::get("actividad"));
                 $tabla->id_tab_unidad_medida = Input::get("unidad_medida");
                 $tabla->tx_prog_anual = 0;
                 $tabla->nu_meta_modificada = Input::get("programado_anual");
