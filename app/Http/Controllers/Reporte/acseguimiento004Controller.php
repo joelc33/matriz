@@ -351,7 +351,7 @@ $html23.='
                  }else{
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
                 $html23.='</tr>';                        
                  }
                     
@@ -375,7 +375,7 @@ $html23.='
       
         $html23.='
         <tr style="font-size:6px" nobr="true">
-        <td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
         $html23.='</tr>';  
 
 $html23.='
@@ -634,7 +634,7 @@ $html23.='
                  }else{
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$item->de_desvio.'</td>';
+		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
                 $html23.='</tr>';                        
                  }
                     
@@ -658,7 +658,7 @@ $html23.='
       
         $html23.='
         <tr style="font-size:6px" nobr="true">
-        <td style="width: 100%;"  nobr="true">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
         $html23.='</tr>';  
 
 $html23.='
