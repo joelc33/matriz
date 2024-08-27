@@ -111,19 +111,19 @@ this.guardar = new Ext.Button({
             return false;
         }
         
-        if(forma002Editar.main.nu_po_beneficiar.getValue()>0){
+
         if(forma002Editar.main.nu_po_beneficiada.getValue()>forma002Editar.main.nu_po_beneficiar.getValue()){
             Ext.Msg.alert("Alerta","La poblacion beneficiada no puede ser mayor a la del poa");
             return false;
         }
-        }
+
         
-        if(forma002Editar.main.nu_em_previsto.getValue()>0){
+
         if(forma002Editar.main.nu_em_generado.getValue()>forma002Editar.main.nu_em_previsto.getValue()){
             Ext.Msg.alert("Alerta","la cantidad de empleos generados no puede ser mayor a la del poa");
             return false;
         }
-        }
+        
 
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea guardar los cambios?.', function(boton){
 				if(boton=="yes"){
