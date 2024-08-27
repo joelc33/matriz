@@ -595,6 +595,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::get('nuevo/{id}', 'formacincoController@datosNuevo');
         Route::get('editar/{id}', 'formacincoController@datos');
         Route::get('datos/lista/{id}', 'formacincoController@datosLista');
+        Route::post('eliminar', 'formacincoController@eliminar');
         Route::post('guardar', 'formacincoController@guardar');
         Route::post('guardar/{id}', 'formacincoController@guardar');
         Route::post('enviar', 'formacincoController@enviar');

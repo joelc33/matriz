@@ -52,6 +52,36 @@ this.editar= new Ext.Button({
 
 this.editar.disable();
 
+this.eliminar= new Ext.Button({
+	text:'Eliminar',
+	iconCls: 'icon-eliminar',
+	handler: function(boton){
+		this.codigo  = forma005ListaDatos.main.gridPanel_.getSelectionModel().getSelected().get('id');
+		Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Eliminar?', function(boton){
+		if(boton=="yes"){
+	        Ext.Ajax.request({
+	            method:'POST',
+	            url:'{{ URL::to('ac/seguimiento/005/eliminar') }}',
+	            params:{
+			_token: '{{ csrf_token() }}',
+	                id: forma005ListaDatos.main.gridPanel_.getSelectionModel().getSelected().get('id')
+	            },
+	            success:function(result, request ) {
+	                obj = Ext.util.JSON.decode(result.responseText);
+	                if(obj.success=="true"){
+			    forma005ListaDatos.main.store_lista.load();
+	                    Ext.Msg.alert("Notificación",obj.msg);
+	                }else{
+	                    Ext.Msg.alert("Notificación",obj.msg);
+	                }
+	                forma005ListaDatos.main.mascara.hide();
+	            }});
+		}});
+	}
+});
+
+this.eliminar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -120,7 +150,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				this.nuevo,'-',
 			@endif
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.editar,'-',
+				this.editar,'-',this.eliminar,'-',
 			@endif                        
 				this.buscador
     ],
@@ -138,6 +168,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma005ListaDatos.main.editar.enable();
+                        forma005ListaDatos.main.eliminar.enable();
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -170,6 +201,7 @@ this.store_lista.baseParams.id_tab_ac = '{{ $id_tab_ac }}';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 forma005ListaDatos.main.editar.disable();
+forma005ListaDatos.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
