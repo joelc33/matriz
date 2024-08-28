@@ -480,7 +480,7 @@ class formadosController extends Controller
                 } 
                 $mo_actividad_nuevo = ($mo_presupuesto+$mo_actividad);
                 
-                                    var_dump($mo_actividad_nuevo);
+                                    var_dump((float)$mo_ae);
                     exit();
                 
                 if($mo_actividad_nuevo>$mo_ae){
