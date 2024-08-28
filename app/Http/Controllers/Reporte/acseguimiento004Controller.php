@@ -590,9 +590,9 @@ $html23.= '
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS ACTUALIZADAS</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 10%;">PARTIDA PRESUPUESTARIA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO POA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO MODIFICADO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO ACTUALIZADO</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO POA (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO MODIFICADO (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO ACTUALIZADO (Bs.)</th>
 </tr>
 </thead>
 ';
