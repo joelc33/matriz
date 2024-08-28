@@ -480,10 +480,8 @@ class formadosController extends Controller
                 } 
                 $mo_actividad_nuevo = ($mo_presupuesto+$mo_actividad);
                 
-                                    var_dump((float)$mo_ae);
-                    exit();
                 
-                if($mo_actividad_nuevo>$mo_ae){
+                if($mo_actividad_nuevo>(float)$mo_ae){
                     
                     var_dump($mo_ae);
                     exit();
@@ -494,6 +492,9 @@ class formadosController extends Controller
                 ));
                 
                 }
+                
+                                                    var_dump((float)$mo_ae);
+                    exit();
                
                 $tabla = new tab_meta_fisica();
                 $tabla->id_tab_ac_ae = Input::get("ac_ae");
