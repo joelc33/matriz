@@ -482,9 +482,6 @@ class formadosController extends Controller
                 
                 
                 if(round($mo_actividad_nuevo,2)>round($mo_ae,2)){
-                    
-                    var_dump($mo_presupuesto);
-                    exit();
                 
                 return Response::json(array(
                   'success' => false,
@@ -492,9 +489,6 @@ class formadosController extends Controller
                 ));
                 
                 }
-                
-                                                    var_dump((float)$mo_ae);
-                    exit();
                
                 $tabla = new tab_meta_fisica();
                 $tabla->id_tab_ac_ae = Input::get("ac_ae");

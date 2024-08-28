@@ -842,12 +842,10 @@ class formatresController extends Controller
 
                 $mo_actividad = Input::get("presupuesto");
                 
-                $mo_actividad_nuevo = $mo_presupuesto+$mo_actividad;
-
+                $mo_actividad_nuevo = ($mo_presupuesto+$mo_actividad);
                 
-                if(($mo_presupuesto+$mo_actividad)>$mo_ae){
-                    
-
+                
+                if(round($mo_actividad_nuevo,2)>round($mo_ae,2)){
                 
                 return Response::json(array(
                   'success' => false,
