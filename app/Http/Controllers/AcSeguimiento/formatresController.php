@@ -841,9 +841,14 @@ class formatresController extends Controller
                 $mo_presupuesto = $data2->mo_presupuesto;
 
                 $mo_actividad = Input::get("presupuesto");
+                
+                $mo_actividad_nuevo = $mo_presupuesto+$mo_actividad;
 
                 
-                if(($mo_presupuesto+$mo_actividad)>$mo_ae){
+                if($mo_actividad_nuevo>$mo_ae){
+                    
+                    var_dump($mo_actividad_nuevo);
+                    exit();
                 
                 return Response::json(array(
                   'success' => false,
