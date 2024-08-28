@@ -847,8 +847,7 @@ class formatresController extends Controller
                 
                 if(($mo_presupuesto+$mo_actividad)>$mo_ae){
                     
-                    var_dump($mo_presupuesto+$mo_actividad);
-                    exit();   
+
                 
                 return Response::json(array(
                   'success' => false,
