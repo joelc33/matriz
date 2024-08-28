@@ -478,8 +478,12 @@ class formadosController extends Controller
                 foreach ($detalle as $lista){
                 $mo_actividad = $mo_actividad + $lista['mo_presupuesto'];
                 } 
+                $mo_actividad_nuevo = ($mo_presupuesto+$mo_actividad);
                 
-                if(($mo_presupuesto+$mo_actividad)>$mo_ae){
+                                    var_dump($mo_actividad_nuevo);
+                    exit();
+                
+                if($mo_actividad_nuevo>$mo_ae){
                     
                     var_dump($mo_ae);
                     exit();
