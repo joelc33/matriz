@@ -222,6 +222,11 @@ this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
+        
+        if(metafinancieraEditar.main.mo_presupuesto.getValue()<=0){
+            Ext.Msg.alert("Alerta","El monto del presupuesto modificado debe ser mayor a 0");
+            return false;
+        }         
 
 	if(metafinancieraEditar.main.formPanel_.form.isValid()){
 		var e = new forma004ActividadEditar.main.Registro({

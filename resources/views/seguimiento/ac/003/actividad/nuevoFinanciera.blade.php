@@ -237,6 +237,12 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+        if(metafinancieraEditar.main.mo_presupuesto.getValue()<=0){
+            Ext.Msg.alert("Alerta","El monto del presupuesto modificado debe ser mayor a 0");
+            return false;
+        }        
+        
         metafinancieraEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
