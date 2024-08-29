@@ -319,10 +319,10 @@ $de_desvio = '';
 
 foreach($actividad as $item) { 
     
-            $tab_meta_financiera = tab_meta_financiera::join('ac_seguimiento.tab_meta_fisica as t01', 't01.id', '=', 'tab_meta_financiera.id_tab_meta_fisica')
-             ->where('id_tab_meta_fisica', '=', $item->id)
+            $tab_meta_financiera = tab_meta_fisica::join('ac_seguimiento.tab_meta_financiera as t01', 't01.id_tab_meta_fisica', '=', 'tab_meta_fisica.id')
+             ->where('tab_meta_fisica.id', '=', $item->id)
              ->where(function ($query) {
-             $query->orWhere('t01.nu_meta_modificada', '!=', 0)
+             $query->orWhere('tab_meta_fisica.nu_meta_modificada', '!=', 0)
              ->orWhere('mo_modificado_anual', '!=', 0);
              })    
             ->get();       
