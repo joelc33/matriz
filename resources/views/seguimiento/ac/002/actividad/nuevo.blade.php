@@ -98,12 +98,12 @@ this.tx_prog_anual = new Ext.form.NumberField({
 	name:'programado_anual',
 	allowBlank:false,
 	width:200,
-	maxLength: 8,
+	maxLength: 15,
 	decimalPrecision: 0,
  	minValue : 0,
  	maxValue : 99999999,
 	msgTarget : 'Rango Entre 0 y 9',
-	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 8},
+	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 15},
 	allowDecimals: false,
 	allowNegative: false
 });
