@@ -199,6 +199,7 @@ class acseguimientoController extends Controller
             )
             ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $id_ejecutor)
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
             ->groupBy('tx_ejecutor')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
@@ -226,6 +227,7 @@ class acseguimientoController extends Controller
             'id_tab_tipo_periodo'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)        
             ->groupBy('tx_ejecutor')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
@@ -420,6 +422,7 @@ class acseguimientoController extends Controller
             'ac_seguimiento.tab_ac.id'                    
         )
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
+        ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
         ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
         ->get(); 
             
@@ -1174,7 +1177,7 @@ $html1 = '
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
             })             
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true) 
+            ->where('t03.in_activo', '=', true) 
             ->where('t03.id_ejecutor', '=', $id_ejecutor)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
@@ -1338,7 +1341,7 @@ $html23.='
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.in_activo', '=', true)
             ->where('t03.id_ejecutor', '=', $id_ejecutor)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item3->tx_sector)
@@ -1367,7 +1370,7 @@ $html23.='
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.in_activo', '=', true)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item3->tx_sector)
             ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item3->co_partida)        
@@ -1450,7 +1453,7 @@ $html23.='
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.in_activo', '=', true)
             ->where('t03.id_ejecutor', '=', $id_ejecutor)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item3->tx_sector)
@@ -1479,7 +1482,7 @@ $html23.='
             ->on('t18b.nu_nivel', '=', DB::raw('1'));
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.in_activo', '=', true)
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item3->tx_sector)
             ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item3->co_partida)        

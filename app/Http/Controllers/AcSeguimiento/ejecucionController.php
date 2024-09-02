@@ -85,7 +85,7 @@ class ejecucionController extends Controller
             })
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('t03.id_tab_lapso', '<=', $lapso)
-            ->where('ac_seguimiento.tab_meta_financiera.in_activo', '=', true)
+            ->where('t03.in_activo', '=', true)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('tx_nombre');
 
