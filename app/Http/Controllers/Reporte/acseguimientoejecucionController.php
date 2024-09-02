@@ -133,7 +133,8 @@ class acseguimientoejecucionController extends Controller
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
                 'dia_mes_fin',
-                't03.id_tab_ejercicio_fiscal'
+                't03.id_tab_ejercicio_fiscal',
+                't03.de_sector'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
             ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
@@ -163,6 +164,7 @@ class acseguimientoejecucionController extends Controller
             ->groupBy('dia_mes_fin')
             ->groupBy('de_fuente_financiamiento')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
+            ->groupBy('t03.de_sector')
             ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();    
             
             
@@ -299,7 +301,7 @@ foreach($data as $item) {
   
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->de_sector.'</td>';
                 $html23.='</tr>';                    
                
 //             $pdf->writeHTML(Helper::htmlComprimir($html23), true, false, false, false, '');
@@ -393,7 +395,7 @@ $html23.='
 
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->tx_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item->de_sector.'</td>';
                 $html23.='</tr>';   
 
 }
