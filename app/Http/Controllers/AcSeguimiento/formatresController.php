@@ -757,7 +757,7 @@ class formatresController extends Controller
             try {
                 
                 $tabla = tab_ac::find($id);
-                $tabla->de_observacion_003 = Input::get("observaciones");
+                $tabla->de_observacion_003 = str_replace('"', '', Input::get("observaciones"));
                 $tabla->save();
 
                 DB::commit();

@@ -590,10 +590,10 @@ class formadosController extends Controller
                 $tabla = tab_ac::find($id);
                 $tabla->nu_po_beneficiada = Input::get("nu_po_beneficiada");
                 $tabla->nu_em_generado = Input::get("nu_em_generado");
-                $tabla->tx_pr_programado = Input::get("producto_programado");
-                $tabla->tx_pr_obtenido = Input::get("tx_pr_obtenido");
-                $tabla->pp_anual = Input::get("tx_pr_objetivo");
-                $tabla->de_observacion_002 = Input::get("de_observacion_002");
+                $tabla->tx_pr_programado = str_replace('"', '', Input::get("producto_programado"));
+                $tabla->tx_pr_obtenido = str_replace('"', '', Input::get("tx_pr_obtenido"));
+                $tabla->pp_anual = str_replace('"', '', Input::get("tx_pr_objetivo"));
+                $tabla->de_observacion_002 = str_replace('"', '', Input::get("de_observacion_002"));
                 $tabla->save();
 
                 DB::commit();
