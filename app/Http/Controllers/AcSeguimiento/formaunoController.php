@@ -766,5 +766,27 @@ class formaunoController extends Controller
         }
     }
 
+    public function eliminar()
+    {
+        DB::beginTransaction();
+        try {
+            $tabla = tab_ac::find(Input::get("id"));
+            $tabla->in_activo = false;
+            $tabla->save();
+
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Registro borrado con Exito!';
+            return Response::json($response, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
 
 }

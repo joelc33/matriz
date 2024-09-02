@@ -86,6 +86,38 @@ this.cargar = new Ext.Button({
 });
 
 this.cargar.disable();
+
+
+this.eliminar= new Ext.Button({
+    text:'Eliminar Ac',
+    iconCls: 'icon-cancelar',
+    handler:function(){
+	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Eliminar esta Ac?', function(boton){
+	if(boton=="yes"){
+        Ext.Ajax.request({
+            method:'POST',
+            url:'{{ URL::to('ac/seguimiento/001/eliminar') }}',
+            params:{
+		_token: '{{ csrf_token() }}',
+                id: forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+            },
+            success:function(result, request ) {
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success=="true"){
+		    forma001Lista.main.store_lista.load();
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }else{
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }
+                forma001Lista.main.mascara.hide();
+            }});
+	}});
+    }
+});
+
+this.eliminar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -153,6 +185,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
 			@endif
+                        @if( in_array( array( 'de_privilegio' => 'aplicacion.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
+			  this.eliminar,'-',
+			@endif
 				this.buscador
     ],
     columns: [
@@ -173,12 +208,14 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.editar.enable();
                         forma001Lista.main.cargar.enable();
+                        forma001Lista.main.eliminar.enable();
                     }else{
                         forma001Lista.main.ficha.enable();
                         forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.nueva.disable();
                         forma001Lista.main.editar.disable();
                         forma001Lista.main.cargar.disable();
+                        forma001Lista.main.eliminar.disable();
                     }
 		}},
     bbar: new Ext.PagingToolbar({
@@ -244,6 +281,7 @@ forma001Lista.main.ficha.disable();
 forma001Lista.main.ficha_acumulada.disable();
 forma001Lista.main.editar.disable();
 forma001Lista.main.cargar.disable();
+forma001Lista.main.eliminar.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

@@ -487,6 +487,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('guardar', 'formaunoController@guardar');
         Route::post('guardar/{id}', 'formaunoController@guardar');
         Route::post('enviar/{id}', 'formaunoController@enviar');
+        Route::post('eliminar', 'formaunoController@eliminar');
     });
     //*Modulo de Accion Centralizada Forma 001*/
     Route::group(['prefix' => 'seguimiento/ac/001/cambio'], function () {
