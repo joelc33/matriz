@@ -118,6 +118,23 @@ this.eliminar= new Ext.Button({
 
 this.eliminar.disable();
 
+this.editar_sector= new Ext.Button({
+	text:'Editar Sector',
+	iconCls: 'icon-editar',
+	handler:function(){
+	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma001Lista.main.mascara.show();
+			this.msg = Ext.get('formularioEditar');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/001/editarSector') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+	}
+});
+
+this.eliminar.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -186,7 +203,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			  this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
 			@endif
                         @if( in_array( array( 'de_privilegio' => 'aplicacion.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.eliminar,'-',
+			  this.eliminar,'-',this.editar_sector,'-',
 			@endif
 				this.buscador
     ],
@@ -208,7 +225,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.editar.enable();
                         forma001Lista.main.cargar.enable();
+                        forma001Lista.main.editar_sector.enable();
+                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_origen')==2){
                         forma001Lista.main.eliminar.enable();
+                        }else{
+                        forma001Lista.main.eliminar.disable();
+                            }
                     }else{
                         forma001Lista.main.ficha.enable();
                         forma001Lista.main.ficha_acumulada.enable();
@@ -216,6 +238,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.editar.disable();
                         forma001Lista.main.cargar.disable();
                         forma001Lista.main.eliminar.disable();
+                        forma001Lista.main.editar_sector.disable();
                     }
 		}},
     bbar: new Ext.PagingToolbar({
@@ -282,6 +305,7 @@ forma001Lista.main.ficha_acumulada.disable();
 forma001Lista.main.editar.disable();
 forma001Lista.main.cargar.disable();
 forma001Lista.main.eliminar.disable();
+forma001Lista.main.editar_sector.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -300,6 +324,7 @@ getLista: function(){
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
                     {name: 'activo'},
+                    {name: 'id_tab_origen'},
 				{name: 'in_001'},
 				{
 						name: 'ejecutor',

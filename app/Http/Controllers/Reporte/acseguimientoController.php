@@ -280,7 +280,12 @@ class acseguimientoController extends Controller
                 }                
             
                 $pdf->AddPage();
-                
+                $pdf->SetFont('','B',12);
+            $pdf->setY(10);
+            $pdf->MultiCell(277, 5, 'REPÚBLICA BOLIVARIANA DE VENEZUELA', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(10);        
+            $pdf->MultiCell(277, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);                
             $pdf->SetY(75);
             $pdf->SetFont('','B',18);
             $pdf->SetTextColor(0,0,0);

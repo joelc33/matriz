@@ -76,7 +76,8 @@ class formaunoController extends Controller
                 'de_ac',
                 'de_lapso',
                 'in_001',
-                'ac_seguimiento.tab_ac.id_ejecutor'
+                'ac_seguimiento.tab_ac.id_ejecutor',
+                'ac_seguimiento.tab_ac.id_tab_origen'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('t02.id', '=', $id_lapso)
@@ -206,6 +207,18 @@ class formaunoController extends Controller
         //return View::make('seguimiento.ac.001.datos.lista')->with('data',$data);
         return View::make('seguimiento.ac.001.datos.editar')->with('data', $data);
     }
+    
+    public function datosSector($id)
+    {
+        $data = tab_ac::select(
+            'id',
+            'de_sector'
+        )
+        ->where('id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.001.datos.editarSector')->with('data', $data);
+    }    
 
     /**
      * Update the specified resource in storage.
@@ -312,6 +325,34 @@ class formaunoController extends Controller
             }
         }
     }
+    
+    public function guardarSector($id = null)
+    {
+        DB::beginTransaction();
+
+            try {
+                
+
+                $tabla = tab_ac::find($id);
+                $tabla->de_sector = Input::get("de_sector");
+                $tabla->save();                             
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Editado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        
+    }    
 
     /**
      * Update the specified resource in storage.
