@@ -20,7 +20,7 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
 //objeto store
 this.store_lista = this.getLista();
-
+<?php $rol_planificador = array( 3, 8); ?>
 //Editar un registro
 this.ficha= new Ext.Button({
     text:'Ver Ficha',
@@ -199,13 +199,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
+                        @if (in_array(Session::get('rol'), $rol_planificador))
+                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
+                        @else
+                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',this.eliminar,'-',this.editar_sector,'-',   
 			@endif
-                        @if( in_array( array( 'de_privilegio' => 'aplicacion.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.eliminar,'-',this.editar_sector,'-',
-			@endif
-				this.buscador
+                        this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
