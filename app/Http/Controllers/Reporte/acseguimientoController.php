@@ -430,6 +430,7 @@ class acseguimientoController extends Controller
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
         ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')
         ->get(); 
             
           foreach($data2 as $data) {
@@ -592,6 +593,10 @@ $html23.='
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
           $pdf->Ln(-3);
           $pdf->writeHTML($html23, true, false, false, false, '');
+          
+          }
+          
+          foreach($data2 as $data) {
           
                  $mo_presupuesto_anual_accion = 0;
                 $mo_modificado_anual_accion = 0;
@@ -872,9 +877,10 @@ $html23.='
 //          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
           $pdf->Ln(-3);
-          $pdf->writeHTML($html23, true, false, false, false, '');          
+          $pdf->writeHTML($html23, true, false, false, false, '');       
+          }
           
-          
+          foreach($data2 as $data) {
           
             $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_actualizado_anual'),
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
@@ -1049,7 +1055,11 @@ $html23.='
           $pdf->writeHTML($html23, true, false, false, false, '');          
 }  
 
-
+          }
+          
+          foreach($data2 as $data) {
+              
+              
             $actividad = tab_forma_005::join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
             ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
             ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
