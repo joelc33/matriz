@@ -107,7 +107,8 @@
                         this.store_accion.load({
                             params: {
                                 id_ejecutor: config.ac.id_ejecutor,
-                                codigo: config.ac.id
+                                codigo: config.ac.id,
+                                id_tab_lapso: config.ac.id_tab_lapso
                             }
                         });   
 	    this.id_ejecutor = new Ext.form.ComboBox({
@@ -132,7 +133,8 @@
                         self.accion_id.clearValue();
                         self.store_accion.load({
                             params: {
-                                id_ejecutor: this.getValue()
+                                id_ejecutor: this.getValue(),
+                                id_tab_lapso: config.ac.id_tab_lapso
                             }
                         });                                  
 			this.collapse();

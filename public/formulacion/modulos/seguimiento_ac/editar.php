@@ -6,7 +6,9 @@ if (array_key_exists( 'codigo', $_POST ) ) {
     $id_accion = $_POST['codigo'];
 }
 
-
+if (array_key_exists( 'id_tab_lapso', $_POST ) ) {
+    $id_tab_lapso = $_POST['id_tab_lapso'];
+}
 
 $accion = null;
 $local = $usuario->co_rol > 2; //es planificador local?
@@ -42,6 +44,7 @@ EOT;
 		$id_ejercicio = $res['id_ejercicio'];
 		$contenedor = "ac_{$id_accion}";
 		$accion['es_local'] = $local;
+                $accion['id_tab_lapso'] = $id_tab_lapso;
 	if ( $local ) { //planificador local sólo lectura
             if($accion['id_tab_tipo_registro']==1){
             $accion['bloqueado'] = true; 
@@ -94,6 +97,7 @@ EOT;
 		'monto' => null,
 		'co_sector' => null,
 		'id_subsector' => null,
+                'id_tab_lapso' => $id_tab_lapso,
 		'fecha_inicio' => "01-01-{$id_ejercicio}",
 		'fecha_fin' => "31-12-{$id_ejercicio}",
                 'inst_mision' => $ejecutor['inst_mision'],

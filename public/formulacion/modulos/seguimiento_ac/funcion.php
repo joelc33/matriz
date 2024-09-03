@@ -137,12 +137,14 @@ EOT;
 	case 2:
         $codigo = $_POST['codigo'];
             
+        $id_tab_lapso = $_POST['id_tab_lapso'];
+            
         if ($codigo!=''||$codigo!=null) {              
 
 	$res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true order by id;");
         }else{
             
-        $res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true and id not in (select id_tab_ac_predefinida from ac_seguimiento.tab_ac where id_tab_ejercicio_fiscal = ".$_SESSION['ejercicio_fiscal']." and id_ejecutor = '".$_POST['id_ejecutor']."') order by id;");
+        $res = $comunes->ObtenerFilasBySqlSelect("select id, de_nombre, de_accion from mantenimiento.tab_ac_predefinida WHERE in_activo is true and id not in (select id_tab_ac_predefinida from ac_seguimiento.tab_ac where id_tab_ejercicio_fiscal = ".$_SESSION['ejercicio_fiscal']." and in_activo = true and id_tab_lapso = ".$id_tab_lapso." and id_ejecutor = '".$_POST['id_ejecutor']."') order by id;");
              
         }
 	if ($res) {
@@ -1457,7 +1459,7 @@ EOT;
                                 $params['de_ac'] = $res_desc['de_nombre'];
                                 $params['id_tab_lapso'] = $res_lapso['id'];
                                 $params['mo_calculado'] = $params['mo_ac'];
-                                $params['id_tab_origen'] = 1;
+                                $params['id_tab_origen'] = 2;
                                 $params['nu_codigo'] = 'AC'.$params['id_ejecutor'].$params['id_tab_ejercicio_fiscal'].str_pad($params['id_tab_ac_predefinida'], 5,'0', STR_PAD_LEFT );
 				$params['created_at'] = date( \DateTime::ISO8601 );
                                 $params['updated_at'] = date( \DateTime::ISO8601 );
