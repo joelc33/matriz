@@ -179,12 +179,12 @@ class formatresController extends Controller
                 }
 
                 $response['success']  = 'true';
-                $response['total'] = $tab_forma_003->count();
+                $response['total'] = $tab_forma_003->get()->count();
                 $tab_forma_003->skip($start)->take($limit);
                 $response['data']  = $tab_forma_003->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
-                $response['total'] = $tab_forma_003->count();
+                $response['total'] = $tab_forma_003->get()->count();
                 $tab_forma_003->skip($start)->take($limit);
 
                 $response['data']  = $tab_forma_003->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
