@@ -1057,9 +1057,12 @@ $html23.='
 
           }
           
+          $id_ac = '';
+          
           foreach($data2 as $data) {
               
-              
+            if($id_ac!=$data->id){
+                
             $actividad = tab_forma_005::join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
             ->join('mantenimiento.tab_ejecutores as t02', 't01.id_tab_ejecutores', '=', 't02.id')
             ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
@@ -1152,9 +1155,9 @@ $html1 = '
       }        
          }
          
-         
+            }
 
-
+        $id_ac = $data->id;
 
       }
       
