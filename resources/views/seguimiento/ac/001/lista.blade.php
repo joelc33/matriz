@@ -226,7 +226,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.editar.enable();
                         forma001Lista.main.cargar.enable();
                         forma001Lista.main.editar_sector.enable();
-                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_origen')==2){
+                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
                         forma001Lista.main.eliminar.enable();
                         }else{
                         forma001Lista.main.eliminar.disable();
@@ -324,7 +324,7 @@ getLista: function(){
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
                     {name: 'activo'},
-                    {name: 'id_tab_origen'},
+                    {name: 'id_tab_tipo_registro'},
 				{name: 'in_001'},
 				{
 						name: 'ejecutor',

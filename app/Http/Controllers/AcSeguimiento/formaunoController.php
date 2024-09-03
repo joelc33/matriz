@@ -77,7 +77,7 @@ class formaunoController extends Controller
                 'de_lapso',
                 'in_001',
                 'ac_seguimiento.tab_ac.id_ejecutor',
-                'ac_seguimiento.tab_ac.id_tab_origen'
+                'ac_seguimiento.tab_ac.id_tab_tipo_registro'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('t02.id', '=', $id_lapso)
