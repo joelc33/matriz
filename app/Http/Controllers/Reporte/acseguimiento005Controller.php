@@ -192,7 +192,8 @@ class acseguimiento005Controller extends Controller
             'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
-            't21.id as id_tab_ac_ae'        
+            't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.de_sector'
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();          
@@ -254,7 +255,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">

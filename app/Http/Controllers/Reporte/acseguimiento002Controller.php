@@ -228,7 +228,8 @@ class acseguimiento002Controller extends Controller
             'ac_seguimiento.tab_ac.tx_pr_programado',
             'ac_seguimiento.tab_ac.tx_pr_obtenido',
             'id_tab_tipo_periodo',
-            'ac_seguimiento.tab_ac.de_observacion_002'                    
+            'ac_seguimiento.tab_ac.de_observacion_002',
+            'ac_seguimiento.tab_ac.de_sector'                    
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();  
@@ -273,7 +274,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
@@ -515,7 +516,8 @@ $html23.='
             'ac_seguimiento.tab_ac.tx_pr_obtenido',
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'id_tab_tipo_periodo',
-            'ac_seguimiento.tab_ac.de_observacion_002'                    
+            'ac_seguimiento.tab_ac.de_observacion_002',
+            'ac_seguimiento.tab_ac.de_sector'                    
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();  
@@ -560,7 +562,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">

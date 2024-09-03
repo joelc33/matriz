@@ -424,7 +424,8 @@ class acseguimientoController extends Controller
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'ac_seguimiento.tab_ac.de_observacion_002',
             'ac_seguimiento.tab_ac.de_observacion_003',
-            'ac_seguimiento.tab_ac.id'                    
+            'ac_seguimiento.tab_ac.id',
+            'ac_seguimiento.tab_ac.de_sector'                    
         )
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
@@ -466,7 +467,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
@@ -694,7 +695,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
@@ -905,7 +906,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
@@ -1081,7 +1082,7 @@ $html1 = '
 <tbody>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
-<td style="width: 15%;"><b>SECTOR:</b> '.$data->tx_sector.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
@@ -1162,8 +1163,7 @@ $html1 = '
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
                 'dia_mes_fin',
-                't03.id_tab_ejercicio_fiscal',
-                't03.de_sector'
+                't03.id_tab_ejercicio_fiscal'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
             ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
@@ -1193,7 +1193,6 @@ $html1 = '
             ->groupBy('dia_mes_fin')
             ->groupBy('de_fuente_financiamiento')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
-            ->groupBy('t03.de_sector')
             ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();    
             
             
@@ -1236,7 +1235,7 @@ foreach($data3 as $item3) {
   
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item3->de_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item3->tx_sector.'</td>';
                 $html23.='</tr>';                    
                
    
@@ -1322,7 +1321,7 @@ $html23.='
 
 		$html23.='
 		<tr style="font-size:7px" >
-                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item3->de_sector.'</td>';
+                <td  style="width: 100%;" ><b>SECTOR:</b> '.$item3->tx_sector.'</td>';
                 $html23.='</tr>';   
 
 }

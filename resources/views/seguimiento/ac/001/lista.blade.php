@@ -52,7 +52,7 @@ this.nueva = new Ext.Button({
 	text:'Agregar AC',
 	iconCls: 'icon-nuevo',
         handler:function(){
-            addTab(99,'Agregar AC','formulacion/modulos/seguimiento_ac/editar.php','load','icon-nuevo','');
+            addTab(99,'Agregar AC','formulacion/modulos/seguimiento_ac/editar.php','load','icon-nuevo','id_tab_lapso='+forma001Lista.main.OBJ.id);
 	}
 });
 if(this.OBJ.activo==false){
@@ -66,7 +66,7 @@ this.editar = new Ext.Button({
             this.nu_codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('nu_codigo');
             this.panelCambio = Ext.getCmp('tabpanel');
             this.panelCambio.remove(this.codigo);
-            addTab(this.codigo,'EDITAR A.C: '+this.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+this.codigo);
+            addTab(this.codigo,'EDITAR A.C: '+this.nu_codigo,'formulacion/modulos/seguimiento_ac/editar.php','load','icon-editar','codigo='+this.codigo+'&id_tab_lapso='+forma001Lista.main.OBJ.id);
 	}
 });
 
