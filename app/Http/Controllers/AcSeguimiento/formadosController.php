@@ -973,7 +973,7 @@ class formadosController extends Controller
                 }
 
                 $response['success']  = 'true';
-                $response['total'] = $tab_forma_002->count();
+                $response['total'] = $tab_forma_002->get()->count();
                 $tab_forma_002->skip($start)->take($limit);
                 $response['data']  = $tab_forma_002->orderby('t01.id_ejecutor', 'ASC')->orderby('nu_codigo', 'ASC')->get()->toArray();
             } else {
