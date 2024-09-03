@@ -430,7 +430,7 @@ class acseguimientoController extends Controller
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
         ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
-        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')
+        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')->orderby('t21.id_tab_ac_ae_predefinida', 'ASC')
         ->get(); 
             
           foreach($data2 as $data) {
