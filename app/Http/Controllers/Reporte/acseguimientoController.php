@@ -227,7 +227,8 @@ class acseguimientoController extends Controller
             'id_tab_tipo_periodo'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
-            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)        
+            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+            ->where('ac_seguimiento.tab_ac.in_abierta', '=', false)
             ->groupBy('tx_ejecutor')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
