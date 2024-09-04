@@ -92,6 +92,7 @@ class formatresController extends Controller
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
+                'in_abierta',
                 'in_003',
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )

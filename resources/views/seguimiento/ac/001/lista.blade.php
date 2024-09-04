@@ -135,6 +135,36 @@ this.editar_sector= new Ext.Button({
 
 this.eliminar.disable();
 
+this.extender= new Ext.Button({
+    text:'Extender Ac',
+    iconCls: 'icon-buscar',
+    handler:function(){
+	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Extender esta Ac?', function(boton){
+	if(boton=="yes"){
+        Ext.Ajax.request({
+            method:'POST',
+            url:'{{ URL::to('ac/seguimiento/001/extender') }}',
+            params:{
+		_token: '{{ csrf_token() }}',
+                id: forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id')
+            },
+            success:function(result, request ) {
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success=="true"){
+		    forma001Lista.main.store_lista.load();
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }else{
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }
+                forma001Lista.main.mascara.hide();
+            }});
+	}});
+    }
+});
+
+this.extender.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -202,7 +232,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         @if (in_array(Session::get('rol'), $rol_planificador))
                         this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
                         @else
-                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',this.eliminar,'-',this.editar_sector,'-',   
+                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',this.eliminar,'-',this.editar_sector,'-',this.extender,'-',   
 			@endif
                         this.buscador
     ],
@@ -219,19 +249,35 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
+                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('in_abierta')==true){
 			forma001Lista.main.ficha.enable();
                         forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.editar.enable();
+                        forma001Lista.main.nueva.enable();
                         forma001Lista.main.cargar.enable();
                         forma001Lista.main.editar_sector.enable();
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
                         forma001Lista.main.eliminar.enable();
                         }else{
                         forma001Lista.main.eliminar.disable();
-                            }
+                            }                            
+
                     }else{
+                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
+			forma001Lista.main.ficha.enable();
+                        forma001Lista.main.ficha_acumulada.enable();
+                        forma001Lista.main.editar.enable();
+                        forma001Lista.main.cargar.enable();
+                        forma001Lista.main.nueva.enable();
+                        forma001Lista.main.editar_sector.enable();
+                        if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
+                        forma001Lista.main.eliminar.enable();
+                        }else{
+                        forma001Lista.main.eliminar.disable();
+                            }
+                        }else{                        
                         forma001Lista.main.ficha.enable();
+                        forma001Lista.main.extender.enable();
                         forma001Lista.main.ficha_acumulada.enable();
                         forma001Lista.main.nueva.disable();
                         forma001Lista.main.editar.disable();
@@ -239,6 +285,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.eliminar.disable();
                         forma001Lista.main.editar_sector.disable();
                     }
+                }
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -305,6 +352,7 @@ forma001Lista.main.editar.disable();
 forma001Lista.main.cargar.disable();
 forma001Lista.main.eliminar.disable();
 forma001Lista.main.editar_sector.disable();
+forma001Lista.main.extender.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();
@@ -323,6 +371,7 @@ getLista: function(){
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
                     {name: 'activo'},
+                    {name: 'in_abierta'},
                     {name: 'id_tab_tipo_registro'},
 				{name: 'in_001'},
 				{

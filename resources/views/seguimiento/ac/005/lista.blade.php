@@ -154,6 +154,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoScroll:true,
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
+            if(forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('in_abierta')==true){
+			forma005Lista.main.ficha.enable();
+                        forma005Lista.main.ficha_acumulada.enable();
+                        forma005Lista.main.cargar.enable();                
+            }else{
                         if(forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma005Lista.main.ficha.enable();
                         forma005Lista.main.ficha_acumulada.enable();
@@ -163,6 +168,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma005Lista.main.ficha_acumulada.enable();
                         forma005Lista.main.cargar.disable();
                     }
+                }
 		}},
     bbar: new Ext.PagingToolbar({
         pageSize: 20,
@@ -244,6 +250,7 @@ getLista: function(){
                                 {name: 'activo'},
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
+                    {name: 'in_abierta'},
 				{name: 'in_005'},
 				{
 						name: 'ejecutor',

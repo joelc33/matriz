@@ -76,6 +76,7 @@ class formaunoController extends Controller
                 'de_ac',
                 'de_lapso',
                 'in_001',
+                'in_abierta',
                 'ac_seguimiento.tab_ac.id_ejecutor',
                 'ac_seguimiento.tab_ac.id_tab_tipo_registro'
             )
@@ -819,6 +820,29 @@ class formaunoController extends Controller
 
             $response['success']  = 'true';
             $response['msg']  = 'Registro borrado con Exito!';
+            return Response::json($response, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
+    
+    public function extender()
+    {
+        DB::beginTransaction();
+        try {
+            $tabla = tab_ac::find(Input::get("id"));
+            $tabla->in_abierta = true;
+            $tabla->save();
+
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Proceso Realizado con Exito!';
             return Response::json($response, 200);
 
         } catch (\Illuminate\Database\QueryException $e) {

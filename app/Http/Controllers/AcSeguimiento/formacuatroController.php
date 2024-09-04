@@ -77,6 +77,7 @@ class formacuatroController extends Controller
                 'de_ac',
                 'de_lapso',
                 'in_004',
+                'in_abierta',
                 'ac_seguimiento.tab_ac.id_ejecutor'
             )
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))

@@ -76,6 +76,7 @@ class formadosController extends Controller
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
+                'in_abierta',
                 'ac_seguimiento.tab_ac.id_ejecutor',
                 'in_002'
             )
