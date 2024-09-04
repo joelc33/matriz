@@ -216,7 +216,8 @@ class lapsoController extends Controller
         if($data){
       
         $tab_ac = tab_ac::where('id_tab_lapso', '=', $data->id)
-        ->where('in_activo', '=', true)        
+        ->where('in_activo', '=', true)
+        ->where('in_abierta', '=', false)
         ->orderby('id_ejecutor', 'ASC')
         ->orderby('id_tab_ac_predefinida', 'ASC')
         ->get();  
