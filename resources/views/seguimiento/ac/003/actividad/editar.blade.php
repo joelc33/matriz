@@ -147,6 +147,8 @@ this.guardar = new Ext.Button({
             return false;
         }
         
+        if(forma003ActividadEditar.main.OBJ.id_tab_tipo_periodo==19){        
+        
          if(forma003ActividadEditar.main.mo_modificado_anual.getValue()>forma003ActividadEditar.main.mo_actualizado_anual.getValue()){
             Ext.Msg.alert("Alerta","El monto modificado no puede ser mayor al inicial o aprobado");
             return false;
@@ -167,7 +169,10 @@ this.guardar = new Ext.Button({
          if(forma003ActividadEditar.main.mo_pagado.getValue()>forma003ActividadEditar.main.mo_causado.getValue()){
             Ext.Msg.alert("Alerta","El monto pagado no puede ser mayor al causado");
             return false;
-        }           
+        } 
+        
+        }
+        
         forma003ActividadEditar.main.formPanel_.getForm().submit({
 		method:'POST',
 	@if(empty($data->id))
