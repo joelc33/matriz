@@ -574,10 +574,10 @@ $html23.='
 <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
@@ -1262,8 +1262,8 @@ foreach($data3 as $item3) {
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">
@@ -1593,8 +1593,8 @@ $html23.='
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">
@@ -1631,8 +1631,8 @@ $html23.='
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">

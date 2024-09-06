@@ -384,10 +384,10 @@ $html23.='
 <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
@@ -686,10 +686,10 @@ $html23.='
 <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiar).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_po_beneficiada).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_previsto).'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$this->formatoDinero($data->nu_em_generado).'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> '.$data->tx_pr_programado.'</td>
