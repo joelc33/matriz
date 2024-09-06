@@ -315,8 +315,8 @@ foreach($data as $item) {
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">
@@ -651,8 +651,8 @@ $html23.='
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">
@@ -689,8 +689,8 @@ $html23.='
 <table border="0.1" style="font-size:9px" cellpadding="3" >
 <tbody>
 <tr style="font-size:8px">
-<td style="width: 35%;" align="center"><b>PLANIFICACIÓN Y CONTROL DE GESTIÓN</b></td>
-<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS / PRESUPUESTO</b></td>
+<td style="width: 35%;" align="center"><b>PLANIFICACIÓN, PRESUPUESTO Y CONTROL DE GESTIÓN</b></td>
+<td style="width: 35%;" align="center"><b>ADMINISTRACIÓN Y FINANZAS</b></td>
 <td style="width: 30%;" align="center"><b>TITULAR</b></td>
 </tr>
 <tr style="font-size:8px">

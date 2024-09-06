@@ -641,7 +641,7 @@ class formatresController extends Controller
                 
                 
                 $data2 = tab_ac::select(
-                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido")
+                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -662,6 +662,24 @@ class formatresController extends Controller
                 return Response::json(array(
                   'success' => false,
                   'msg' => 'La suma del presupuesto comprometido excede el monto del presupuesto actualizado, verifique!'
+                ));
+                
+                } 
+                
+                if(($data2->mo_causado+Input::get("causado"))>($data2->mo_comprometido+Input::get("comprometido"))){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma del presupuesto causado excede el monto del presupuesto comprometido, verifique!'
+                ));
+                
+                }
+
+                if(($data2->mo_pagado+Input::get("pagado"))>($data2->mo_causado+Input::get("causado"))){
+                
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La suma del presupuesto pagado excede el monto del presupuesto causado, verifique!'
                 ));
                 
                 }                
