@@ -233,7 +233,7 @@ class lapsoController extends Controller
                 $tabla->id_tab_sectores = $arreglo_ac->id_tab_sectores;
                 $tabla->id_tab_estatus = $arreglo_ac->id_tab_estatus;
                 $tabla->id_tab_situacion_presupuestaria = $arreglo_ac->id_tab_situacion_presupuestaria;
-                $tabla->id_tab_tipo_registro = $arreglo_ac->id_tab_tipo_registro;
+                $tabla->id_tab_tipo_registro = 1;
                 $tabla->co_new_etapa = $arreglo_ac->co_new_etapa;
                 $tabla->de_ac = $arreglo_ac->de_ac;
                 $tabla->mo_ac = $arreglo_ac->mo_ac;
@@ -248,7 +248,7 @@ class lapsoController extends Controller
                 $tabla->tx_re_esperado = $arreglo_ac->tx_re_esperado;
                 $tabla->pp_anual = $arreglo_ac->pp_anual;
                 $tabla->id_tab_lapso = $lapso->id;
-                $tabla->id_tab_origen = $arreglo_ac->id_tab_origen;
+                $tabla->id_tab_origen = 1;
                 $tabla->in_activo = 'TRUE';
                 $tabla->in_001 = false;
                 $tabla->in_005 = false;
@@ -325,7 +325,7 @@ class lapsoController extends Controller
                     $tabla_meta_fisica->fecha_inicio = $arreglo_meta_fisica->fecha_inicio;
                     $tabla_meta_fisica->fecha_fin = $arreglo_meta_fisica->fecha_fin;
                     $tabla_meta_fisica->nb_responsable = $arreglo_meta_fisica->nb_responsable;
-                    $tabla_meta_fisica->id_tab_origen = $arreglo_meta_fisica->id_tab_origen;
+                    $tabla_meta_fisica->id_tab_origen = 1;
                     $tabla_meta_fisica->nu_meta_modificada_periodo = ($arreglo_meta_fisica->nu_meta_modificada + $arreglo_meta_fisica->nu_meta_modificada_periodo);
                     $tabla_meta_fisica->nu_meta_actualizada = $arreglo_meta_fisica->nu_meta_actualizada;
                     $tabla_meta_fisica->id_tab_municipio_detalle = $arreglo_meta_fisica->id_tab_municipio_detalle;
@@ -354,7 +354,7 @@ class lapsoController extends Controller
 //                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_modificado_anual;
                     $tab_meta_financiera->mo_actualizado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
                     $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
-                    $tab_meta_financiera->id_tab_origen = $arreglo_meta_financiera->id_tab_origen;
+                    $tab_meta_financiera->id_tab_origen = 1;
                     $tab_meta_financiera->in_cargado = 'FALSE';
                     $tab_meta_financiera->in_activo = 'TRUE';
                     $tab_meta_financiera->save(); 
