@@ -517,7 +517,8 @@ $html23.='
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'id_tab_tipo_periodo',
             'ac_seguimiento.tab_ac.de_observacion_002',
-            'ac_seguimiento.tab_ac.de_sector'                    
+            'ac_seguimiento.tab_ac.de_sector',
+            't21.id_tab_ac_ae_predefinida'                  
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();  
@@ -648,7 +649,7 @@ $contar=0;
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
-                ->where('t01.id', '=', $data->id_tab_ac_ae)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
