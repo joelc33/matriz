@@ -25,9 +25,19 @@ this.inst_mision = new Ext.form.TextArea({
 });
 
 this.producto_obtenido = new Ext.form.TextArea({
-	fieldLabel: 'PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL',
+	fieldLabel: 'PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL(TRI)',
 	name: 'tx_pr_obtenido',
 	value:this.OBJ.tx_pr_obtenido,
+	allowBlank: false,
+	width:400,
+	height: 75,
+	maxLength: 6000
+});
+
+this.producto_obtenido_a = new Ext.form.TextArea({
+	fieldLabel: 'PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL(ACU)',
+	name: 'tx_pr_obtenido_a',
+	value:this.OBJ.tx_pr_obtenido_a,
 	allowBlank: false,
 	width:400,
 	height: 75,
@@ -189,6 +199,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.nu_em_generado,
                 this.tx_pr_objetivo,
                 this.producto_obtenido,
+                this.producto_obtenido_a,
                 this.producto_programado,
                 this.observaciones
 	]

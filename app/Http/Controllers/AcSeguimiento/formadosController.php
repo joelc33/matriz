@@ -294,6 +294,7 @@ class formadosController extends Controller
             'tx_pr_programado as producto_programado',
             'tx_re_esperado',
             'tx_pr_obtenido',
+            'tx_pr_obtenido_a',
             'de_observacion_002',
             'in_activo',
             'id_tab_lapso',
@@ -593,6 +594,7 @@ class formadosController extends Controller
                 $tabla->nu_em_generado = Input::get("nu_em_generado");
                 $tabla->tx_pr_programado = str_replace('"', '', Input::get("producto_programado"));
                 $tabla->tx_pr_obtenido = str_replace('"', '', Input::get("tx_pr_obtenido"));
+                $tabla->tx_pr_obtenido_a = str_replace('"', '', Input::get("tx_pr_obtenido_a"));
                 $tabla->pp_anual = str_replace('"', '', Input::get("tx_pr_objetivo"));
                 $tabla->de_observacion_002 = str_replace('"', '', Input::get("de_observacion_002"));
                 $tabla->save();
