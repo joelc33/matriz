@@ -55,8 +55,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 7);
-//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+        $pdf->SetFont('', '', 9);
+        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -220,7 +220,25 @@ class acseguimiento003Controller extends Controller
             
             foreach($data as $data) {
             
-        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+                if($data->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                }   
             
           Session::put('periodo',$periodo); 
 
@@ -300,9 +318,9 @@ class acseguimiento003Controller extends Controller
       foreach($actividad_accion as $item1) {
           
 
-                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado);
+                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
                 $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
-                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + $item1->mo_actualizado_anual;
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual);
                 $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
                 $mo_causado_accion = $mo_causado_accion + $item1->mo_causado;
                 $mo_pagado_accion = $mo_pagado_accion + $item1->mo_pagado;
@@ -312,9 +330,9 @@ class acseguimiento003Controller extends Controller
       foreach($actividad_ejecutor as $item2) {
           
 
-                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado);
+                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
                 $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + $item2->mo_actualizado_anual;
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual);
                 $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
                 $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
                 $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
@@ -416,9 +434,9 @@ $id = 0;
              
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -433,9 +451,9 @@ $id = 0;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -448,9 +466,9 @@ $id = 0;
                 
              }
                 $id =$item->id;
-                $mo_presupuesto = $mo_presupuesto + ($item->mo_presupuesto + $item->mo_modificado);
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
                 $mo_pagado = $mo_pagado + $item->mo_pagado;
@@ -601,6 +619,7 @@ $html23.='
             't21.id_ejecutor as id_ejecutor_ae',
             'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
             'ac_seguimiento.tab_ac.tx_pr_obtenido',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido_a',
             'ac_seguimiento.tab_ac.de_observacion_003',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
             DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
@@ -622,7 +641,25 @@ $html23.='
             
             foreach($data as $data) {
             
-        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+                if($data->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                } 
             
           Session::put('periodo',$periodo); 
 
@@ -777,7 +814,7 @@ $html1 = '
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
-<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido_a.'</td>
 </tr>
 </tbody>
 </table>
