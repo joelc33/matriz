@@ -366,7 +366,7 @@ $contar=0;
           if($item->nu_meta_actualizada==0){
              $nu_meta_actualizada =  1;
           }else{
-            $nu_meta_actualizada =  $item->nu_meta_actualizada;  
+            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada;  
           }
           
 $contar=$contar+1;
@@ -374,9 +374,9 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada_periodo).'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
                 <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>                    
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada).'</td>                    
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
