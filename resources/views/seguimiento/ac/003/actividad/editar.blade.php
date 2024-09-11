@@ -80,8 +80,7 @@ this.mo_comprometido = new Ext.form.NumberField({
         style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',        
 	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
-	allowDecimals: true,
-	allowNegative: false
+	allowDecimals: true
 });
 
 this.mo_causado = new Ext.form.NumberField({
