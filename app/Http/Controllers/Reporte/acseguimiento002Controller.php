@@ -54,8 +54,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 7);
-//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+        $pdf->SetFont('', '', 9);
+        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -238,7 +238,25 @@ class acseguimiento002Controller extends Controller
           
           foreach($data as $data) {
               
-        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+                if($data->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                }   
             
           Session::put('periodo',$periodo);               
 
@@ -528,7 +546,25 @@ $html23.='
           
           foreach($data as $data) {
               
-        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+                if($data->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                }   
             
           Session::put('periodo',$periodo);               
 

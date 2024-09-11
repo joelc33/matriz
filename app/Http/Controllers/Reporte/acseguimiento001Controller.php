@@ -54,8 +54,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 7);
-//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+        $pdf->SetFont('', '', 9);
+        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -124,6 +124,7 @@ class acseguimiento001Controller extends Controller
             'ac_seguimiento.tab_ac.nu_po_beneficiar',
             'ac_seguimiento.tab_ac.nu_em_previsto',
             'ac_seguimiento.tab_ac.tx_re_esperado',
+            't02.id_tab_tipo_periodo',
             'id_tab_lapso',
             'in_bloquear_001',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -133,7 +134,27 @@ class acseguimiento001Controller extends Controller
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();
             
-        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
+                if($data->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.$data->id_tab_ejercicio_fiscal;    
+                }
+                
+                if($data->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.$data->id_tab_ejercicio_fiscal;    
+                }
+
+                if($data->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.$data->id_tab_ejercicio_fiscal;    
+                }
+
+                if($data->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.$data->id_tab_ejercicio_fiscal;    
+                }            
+            
+        
             
           Session::put('periodo',$periodo);
 //          var_dump($data->nu_codigo);

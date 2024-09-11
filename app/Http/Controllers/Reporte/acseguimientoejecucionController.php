@@ -7,6 +7,7 @@ use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_005;
 use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Input;
 use Response;
@@ -55,8 +56,8 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->writeHTMLCell(250, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 7);
-//        $pdf->writeHTMLCell(15, 0, '', '', $pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, 0, 0, true, 'C', true);
+        $pdf->SetFont('', '', 9);
+        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
 
         return $pdf;
     }
@@ -115,8 +116,36 @@ class acseguimientoejecucionController extends Controller
       
       public function fichaEjecucion($id_tab_lapso,$id=null)
       {
+          
+        $data_lapso = tab_lapso::select(
+            'id_tab_tipo_periodo'
+        )
+        ->where('id', '=', $id_tab_lapso)
+        ->first();          
 
       
+                if($data_lapso->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data_lapso->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                }        
+                
+                Session::put('periodo',$periodo);                
+        
             if($id!=null){
                 
             $data =  tab_meta_financiera::select(
@@ -223,11 +252,7 @@ class acseguimientoejecucionController extends Controller
             ->orderby('tx_sector', 'ASC')->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get(); 
             
             $data_responsables = '';
-            }   
-//            $data->orderby('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')->get();
-//        $periodo = 'LAPSO '.$data->fe_inicio.' - '.$data->fe_fin;    
-//            
-//          Session::put('periodo',$periodo);             
+            }                
 
           $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
           $pdf->SetCreator('Sistema POA, Yoser Perez');

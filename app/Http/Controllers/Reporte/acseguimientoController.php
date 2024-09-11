@@ -43,8 +43,9 @@ class PDFseguimientoAC extends TCPDF
         $pdf->setXY(10, -10);
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->writeHTMLCell(280, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-
+        $pdf->writeHTMLCell(265, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
+        $pdf->SetFont('', '', 9);
+        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
         return $pdf;
     }
 
@@ -178,6 +179,35 @@ class acseguimientoController extends Controller
        */
       public function fichaConsolidado($id_tab_lapso,$id_ejecutor=null)
       {
+          
+        $data_lapso = tab_lapso::select(
+            'id_tab_tipo_periodo'
+        )
+        ->where('id', '=', $id_tab_lapso)
+        ->first();          
+
+      
+                if($data_lapso->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T/'.Session::get("ejercicio");    
+                }
+                
+                if($data_lapso->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T/'.Session::get("ejercicio");    
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T/'.Session::get("ejercicio");    
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T/'.Session::get("ejercicio");    
+                }        
+                
+                Session::put('periodo',$periodo);          
           
             if($id_ejecutor!=null){
 
