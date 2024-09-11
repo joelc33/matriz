@@ -75,7 +75,6 @@ this.mo_comprometido = new Ext.form.NumberField({
 	width:200,
 	maxLength: 20,
 	decimalPrecision: 2,
- 	minValue : 0,
  	maxValue : 999999999999999999999,
         readOnly:(this.OBJ.in_enviado==true)?true:false,
         style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',        
