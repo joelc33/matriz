@@ -263,7 +263,7 @@ class lapsoController extends Controller
                 $tabla->tx_pr_programado = $arreglo_ac->tx_pr_programado;
                 $tabla->de_observacion_003 = $arreglo_ac->de_observacion_003;
                 $tabla->de_observacion_002 = $arreglo_ac->de_observacion_002;
-                $tabla->tx_pr_obtenido = $arreglo_ac->tx_pr_obtenido;
+                $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
                 $tabla->de_sector = $arreglo_ac->de_sector;                
                 
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
