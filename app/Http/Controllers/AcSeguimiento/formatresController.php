@@ -850,7 +850,7 @@ class formatresController extends Controller
                 ->first();   
                 
                 $data2 = tab_meta_fisica::select(
-                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) as mo_presupuesto")
+                 DB::raw("coalesce(sum(mo_presupuesto),0) + coalesce(sum(mo_modificado_anual),0) + coalesce(sum(mo_modificado),0) as mo_presupuesto")
                 )
                 ->join('ac_seguimiento.tab_meta_financiera as t02', 'ac_seguimiento.tab_meta_fisica.id', '=', 't02.id_tab_meta_fisica')
                 ->where('id_tab_ac_ae', '=', $data1->id)
