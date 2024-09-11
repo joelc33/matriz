@@ -78,7 +78,6 @@ this.mo_comprometido = new Ext.form.NumberField({
  	maxValue : 999999999999999999999,
         readOnly:(this.OBJ.in_enviado==true)?true:false,
         style:(this.OBJ.in_enviado==true)?'background:#f2d7d5;':'',        
-	msgTarget : 'Rango Entre 0 y 9',
 	autoCreate: {tag: "input", type: "numeric", autocomplete: "off", maxlength: 20},
 	allowDecimals: true
 });
