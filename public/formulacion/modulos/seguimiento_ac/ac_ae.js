@@ -409,7 +409,6 @@
                     allowBlank: false,
                     allowNegative: false,
                     allowDecimals: true,
-                    emptyText: '0',
                     maxLength: 14
                 }]
             });
@@ -436,7 +435,6 @@
                 allowNegative: false,
                 allowDecimals: true,
                 minValue: 0,
-                emptyText: '0',
                 maxLength: 14
             });
 
@@ -458,9 +456,9 @@
                     if ( !self.store_fondos.getById( id ) ) {
                         monto = self.fld_monto.getValue();
                         monto = monto === '' ? 0 : monto;
-                        if ( monto === 0 ) {
-                            return;
-                        }
+//                        if ( monto === 0 ) {
+//                            return;
+//                        }
                         fue.monto = monto;
                         r = new self.store_fondos.recordType(fue, id);
                         self.store_fondos.add(r);

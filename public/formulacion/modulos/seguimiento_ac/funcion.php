@@ -905,7 +905,7 @@ EOT;
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
 			$validador = v::key( 'id_tab_unidad_medida', v::intero()->positive()->notEmpty() )
-				->key( 'mo_ae', v::numeric()->positive()->notEmpty() )
+				->key( 'mo_ae', v::numeric() )
 				->key( 'meta', v::intero()->positive()->notEmpty() )
 				->key( 'bien_servicio', v::stringcadena()->length( 3, 128 ) )
 				->key( 'fecha_inicio',  $fechas )
