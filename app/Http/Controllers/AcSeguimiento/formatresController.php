@@ -657,7 +657,7 @@ class formatresController extends Controller
                 ->first();  
                 
                 
-                if(($data2->mo_comprometido+Input::get("comprometido"))>Input::get("actualizado_anual")){
+                if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round(Input::get("actualizado_anual"),2)){
                 
                 return Response::json(array(
                   'success' => false,
