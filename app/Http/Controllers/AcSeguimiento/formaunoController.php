@@ -894,6 +894,7 @@ class formaunoController extends Controller
         
         $data1_ac = tab_ac::where('nu_codigo', '=', $data_ac->nu_codigo)
         ->where('id_tab_lapso', '=', $data1->id)
+        ->where('in_activo', '=', false)
         ->first();  
         
         if($data1_ac){
