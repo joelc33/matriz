@@ -658,9 +658,6 @@ class formatresController extends Controller
                 
                 
                 if(($data2->mo_comprometido+Input::get("comprometido"))>Input::get("actualizado_anual")){
-                    
-                    var_dump($data1->nu_codigo);
-                    exit();
                 
                 return Response::json(array(
                   'success' => false,
