@@ -411,8 +411,7 @@
                         allowDecimals: true,
                         minLength: 1,
                         maxLength: 14,
-                        allowNegative: false,
-                        emptyText: '0',
+                        allowNegative: false
                     }, {
 			xtype: 'numberfield',
 			fieldLabel: '1.9.1. POBLACIÓN A BENEFICIAR',

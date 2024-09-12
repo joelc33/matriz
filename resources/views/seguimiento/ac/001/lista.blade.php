@@ -165,6 +165,37 @@ this.extender= new Ext.Button({
 
 this.extender.disable();
 
+this.crear= new Ext.Button({
+    text:'Crear Periodo',
+    iconCls: 'icon-nuevo',
+    handler:function(){
+	this.codigo  = forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea Crear el siguente Periodo?', function(boton){
+	if(boton=="yes"){
+        Ext.Ajax.request({
+            method:'POST',
+            url:'{{ URL::to('ac/seguimiento/001/crearPeriodo') }}',
+            params:{
+		_token: '{{ csrf_token() }}',
+                id: forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id'),
+                id_tab_lapso: forma001Lista.main.OBJ.id
+            },
+            success:function(result, request ) {
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success=="true"){
+		    forma001Lista.main.store_lista.load();
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }else{
+                    Ext.Msg.alert("Notificación",obj.msg);
+                }
+                forma001Lista.main.mascara.hide();
+            }});
+	}});
+    }
+});
+
+this.crear.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -232,7 +263,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         @if (in_array(Session::get('rol'), $rol_planificador))
                         this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',
                         @else
-                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',this.eliminar,'-',this.editar_sector,'-',this.extender,'-',   
+                        this.ficha,'-',this.nueva,'-',this.editar,'-',this.cargar,'-',this.eliminar,'-',this.editar_sector,'-',this.extender,'-',this.crear,'-',  
 			@endif
                         this.buscador
     ],
@@ -252,6 +283,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('in_abierta')==true){
 			forma001Lista.main.ficha.enable();
                         forma001Lista.main.ficha_acumulada.enable();
+                        forma001Lista.main.crear.enable();
                         forma001Lista.main.editar.enable();
                         forma001Lista.main.nueva.enable();
                         forma001Lista.main.cargar.enable();
@@ -353,6 +385,7 @@ forma001Lista.main.cargar.disable();
 forma001Lista.main.eliminar.disable();
 forma001Lista.main.editar_sector.disable();
 forma001Lista.main.extender.disable();
+forma001Lista.main.crear.disable();
 });
 this.store_lista.on('beforeload',function(){
 panel_detalle.collapse();

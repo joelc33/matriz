@@ -6,6 +6,13 @@ namespace matriz\Http\Controllers\AcSeguimiento;
 use matriz\Models\AcSegto\tab_ac;
 use matriz\Models\AcSegto\tab_forma_001;
 use matriz\Models\Mantenimiento\tab_lapso;
+use matriz\Models\AcSegto\tab_ac_ae;
+use matriz\Models\AcSegto\tab_meta_fisica;
+use matriz\Models\AcSegto\tab_meta_financiera;
+use matriz\Models\AcSegto\tab_ac_ae_fuente;
+use matriz\Models\AcSegto\tab_ac_localizacion;
+use matriz\Models\AcSegto\tab_ac_vinculo;
+use matriz\Models\AcSegto\tab_ac_responsable;
 use View;
 use Validator;
 use Input;
@@ -837,6 +844,306 @@ class formaunoController extends Controller
         try {
             $tabla = tab_ac::find(Input::get("id"));
             $tabla->in_abierta = true;
+            $tabla->save();
+
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Proceso Realizado con Exito!';
+            return Response::json($response, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    } 
+    
+    
+    public function crearPeriodo()
+    {
+        DB::beginTransaction();
+        try {
+            
+        $data = tab_lapso::where('id', '=', Input::get("id_tab_lapso"))
+        ->first();  
+        
+        $data1 = tab_lapso::select(
+            'id',
+            'id_tab_ejercicio_fiscal',
+            'id_tab_periodo',
+            'nu_lapso',
+            'fe_inicio',
+            'fe_fin',
+            'in_activo',
+            'de_lapso',
+            'id_tab_tipo_periodo'
+        )
+        ->where('id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+        ->where('id_tab_periodo', '=', $data->id_tab_periodo)
+        ->where('id', '>', $data->id)
+        ->orderby('mantenimiento.tab_lapso.id', 'ASC')
+        ->first();
+        
+        if($data1){
+ 
+        $data_ac = tab_ac::where('id', '=', Input::get("id"))
+        ->first();  
+        
+        $data1_ac = tab_ac::where('nu_codigo', '=', $data_ac->nu_codigo)
+        ->where('id_tab_lapso', '=', $data1->id)
+        ->first();  
+        
+        if($data1_ac){
+ 
+            $response['success']  = 'true';
+            $response['msg']  = 'El Siguiente periodo para la Ac seleccionada ya ah sido creado, Verifique!';
+            return Response::json($response, 200);            
+            
+        }else{
+            
+        $tab_ac = tab_ac::where('id', '=', Input::get("id"))
+        ->orderby('id_ejecutor', 'ASC')
+        ->orderby('id_tab_ac_predefinida', 'ASC')
+        ->get();            
+            
+        foreach ($tab_ac as $arreglo_ac) {
+            
+                $tabla = new tab_ac();
+                $tabla->nu_codigo = $arreglo_ac->nu_codigo;
+                $tabla->id_ejecutor = $arreglo_ac->id_ejecutor;
+                $tabla->id_tab_ejecutores = $arreglo_ac->id_tab_ejecutores;
+                $tabla->id_tab_ejercicio_fiscal = $arreglo_ac->id_tab_ejercicio_fiscal;
+                $tabla->id_tab_ac_predefinida = $arreglo_ac->id_tab_ac_predefinida;
+                $tabla->id_tab_sectores = $arreglo_ac->id_tab_sectores;
+                $tabla->id_tab_estatus = $arreglo_ac->id_tab_estatus;
+                $tabla->id_tab_situacion_presupuestaria = $arreglo_ac->id_tab_situacion_presupuestaria;
+                $tabla->id_tab_tipo_registro = 1;
+                $tabla->co_new_etapa = $arreglo_ac->co_new_etapa;
+                $tabla->de_ac = $arreglo_ac->de_ac;
+                $tabla->mo_ac = $arreglo_ac->mo_ac;
+                $tabla->mo_calculado = $arreglo_ac->mo_calculado;
+                $tabla->fe_inicio = $arreglo_ac->fe_inicio;
+                $tabla->fe_fin = $arreglo_ac->fe_fin;
+                $tabla->inst_mision = $arreglo_ac->inst_mision;
+                $tabla->inst_vision = $arreglo_ac->inst_vision;
+                $tabla->inst_objetivos = $arreglo_ac->inst_objetivos;
+                $tabla->nu_po_beneficiar = $arreglo_ac->nu_po_beneficiar;
+                $tabla->nu_em_previsto = $arreglo_ac->nu_em_previsto;
+                $tabla->tx_re_esperado = $arreglo_ac->tx_re_esperado;
+                $tabla->pp_anual = $arreglo_ac->pp_anual;
+                $tabla->id_tab_lapso = $data1->id;
+                $tabla->id_tab_origen = 1;
+                $tabla->in_activo = 'TRUE';
+                $tabla->in_001 = false;
+                $tabla->in_005 = false;
+                $tabla->in_bloquear_001 = false;
+                $tabla->in_bloquear_005 = false;
+                
+                $tabla->de_observacion_001 = $arreglo_ac->de_observacion_001;
+                $tabla->de_observacion_005 = $arreglo_ac->de_observacion_005;
+                $tabla->nu_po_beneficiada = $arreglo_ac->nu_po_beneficiada;
+                $tabla->nu_em_generado = $arreglo_ac->nu_em_generado;
+                $tabla->tx_pr_objetivo = $arreglo_ac->tx_pr_objetivo;
+                $tabla->tx_pr_programado = $arreglo_ac->tx_pr_programado;
+                $tabla->de_observacion_003 = $arreglo_ac->de_observacion_003;
+                $tabla->de_observacion_002 = $arreglo_ac->de_observacion_002;
+                $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
+                $tabla->de_sector = $arreglo_ac->de_sector;                
+                
+//                $tabla->id_accion_centralizada = $arreglo_ac->id;
+                $tabla->save();  
+                
+            $tab_ac_ae = tab_ac_ae::where('id_tab_ac', '=', $arreglo_ac->id)
+            ->orderby('id_tab_ac_ae_predefinida', 'ASC')
+            ->get();
+            
+            foreach ($tab_ac_ae as $arreglo_ac_ae) {
+                
+                    $tabla_ac_ae= new tab_ac_ae();
+                    $tabla_ac_ae->id_tab_ac = $tabla->id;
+                    $tabla_ac_ae->id_tab_ac_ae_predefinida = $arreglo_ac_ae->id_tab_ac_ae_predefinida;
+                    $tabla_ac_ae->id_ejecutor = $arreglo_ac_ae->id_ejecutor;
+                    $tabla_ac_ae->id_tab_ejecutores = $arreglo_ac->id_tab_ejecutores;
+                    $tabla_ac_ae->bien_servicio = $arreglo_ac_ae->bien_servicio;
+                    $tabla_ac_ae->id_tab_unidad_medida = $arreglo_ac_ae->id_tab_unidad_medida;
+                    $tabla_ac_ae->meta = $arreglo_ac_ae->meta;
+                    $tabla_ac_ae->ponderacion = $arreglo_ac_ae->ponderacion;
+                    $tabla_ac_ae->id_tab_tipo_fondo = $arreglo_ac_ae->id_tab_tipo_fondo;
+                    $tabla_ac_ae->mo_ae = $arreglo_ac_ae->mo_ae;
+                    $tabla_ac_ae->mo_ae_calculado = $arreglo_ac_ae->mo_ae_calculado;
+                    $tabla_ac_ae->fecha_inicio = $arreglo_ac_ae->fecha_inicio;
+                    $tabla_ac_ae->fecha_fin = $arreglo_ac_ae->fecha_fin;
+                    $tabla_ac_ae->objetivo_institucional = $arreglo_ac_ae->objetivo_institucional;
+                    $tabla_ac_ae->id_tab_origen = 1;
+                    $tabla_ac_ae->in_activo = 'TRUE';
+//                    $tabla_ac_ae->id_accion_centralizada = $arreglo_ac_ae->id_accion_centralizada;
+                    $tabla_ac_ae->save(); 
+                    
+            $tab_ac_ae_fuente = tab_ac_ae_fuente::where('id_tab_ac_ae', '=', $arreglo_ac_ae->id)
+            ->orderby('id', 'ASC')
+            ->get();  
+            
+                    foreach ($tab_ac_ae_fuente as $arreglo_ac_ae_fuente) {
+                
+                    $tabla_ac_ae_fuente = new tab_ac_ae_fuente();
+                    $tabla_ac_ae_fuente->id_tab_ac_ae = $tabla_ac_ae->id;
+                    $tabla_ac_ae_fuente->id_tab_tipo_fondo = $arreglo_ac_ae_fuente->id_tab_tipo_fondo;
+                    $tabla_ac_ae_fuente->mo_fondo = $arreglo_ac_ae_fuente->mo_fondo;
+                    $tabla_ac_ae_fuente->in_activo = 'TRUE';
+                    $tabla_ac_ae_fuente->save(); 
+                    
+                        }
+                        
+            $tab_meta_fisica = tab_meta_fisica::where('id_tab_ac_ae', '=', $arreglo_ac_ae->id)
+            ->orderby('id', 'ASC')
+            ->get();  
+            
+                    foreach ($tab_meta_fisica as $arreglo_meta_fisica) {
+                
+                    $tabla_meta_fisica = new tab_meta_fisica();
+                    $tabla_meta_fisica->id_tab_ac_ae = $tabla_ac_ae->id;
+                    $tabla_meta_fisica->codigo = $arreglo_meta_fisica->codigo;
+                    $tabla_meta_fisica->nb_meta = $arreglo_meta_fisica->nb_meta;
+                    $tabla_meta_fisica->id_tab_unidad_medida = $arreglo_meta_fisica->id_tab_unidad_medida;
+//                    $tabla_meta_fisica->tx_prog_anual = $arreglo_meta_fisica->tx_prog_anual;
+                    $tabla_meta_fisica->tx_prog_anual = 0;
+                    $tabla_meta_fisica->fecha_inicio = $arreglo_meta_fisica->fecha_inicio;
+                    $tabla_meta_fisica->fecha_fin = $arreglo_meta_fisica->fecha_fin;
+                    $tabla_meta_fisica->nb_responsable = $arreglo_meta_fisica->nb_responsable;
+                    $tabla_meta_fisica->id_tab_origen = 1;
+//                    $tabla_meta_fisica->nu_meta_modificada_periodo = ($arreglo_meta_fisica->nu_meta_modificada + $arreglo_meta_fisica->nu_meta_modificada_periodo);
+                    $tabla_meta_fisica->nu_meta_modificada_periodo = 0;
+                    $tabla_meta_fisica->nu_meta_modificada = $arreglo_meta_fisica->nu_meta_actualizada;
+                    $tabla_meta_fisica->nu_meta_actualizada = $arreglo_meta_fisica->nu_meta_actualizada;
+                    $tabla_meta_fisica->id_tab_municipio_detalle = $arreglo_meta_fisica->id_tab_municipio_detalle;
+                    $tabla_meta_fisica->id_tab_parroquia_detalle = $arreglo_meta_fisica->id_tab_parroquia_detalle;
+                    $tabla_meta_fisica->de_desvio = $arreglo_meta_fisica->de_desvio;
+                    $tabla_meta_fisica->resultado = $arreglo_meta_fisica->resultado;
+                    $tabla_meta_fisica->observacion = $arreglo_meta_fisica->observacion;
+                    $tabla_meta_fisica->in_cargado = 'FALSE';
+                    $tabla_meta_fisica->in_activo = 'TRUE';
+                    $tabla_meta_fisica->save(); 
+                    
+                    
+            $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $arreglo_meta_fisica->id)
+            ->orderby('id', 'ASC')
+            ->get();  
+            
+                    foreach ($tab_meta_financiera as $arreglo_meta_financiera) {
+                
+                    $tab_meta_financiera = new tab_meta_financiera();
+                    $tab_meta_financiera->id_tab_meta_fisica = $tabla_meta_fisica->id;
+                    $tab_meta_financiera->id_tab_municipio_detalle = $arreglo_meta_financiera->id_tab_municipio_detalle;
+                    $tab_meta_financiera->id_tab_parroquia_detalle = $arreglo_meta_financiera->id_tab_parroquia_detalle;
+//                    $tab_meta_financiera->mo_presupuesto = $arreglo_meta_financiera->mo_presupuesto;
+                    $tab_meta_financiera->mo_presupuesto = 0;
+                    $tab_meta_financiera->co_partida = $arreglo_meta_financiera->co_partida;
+                    $tab_meta_financiera->id_tab_fuente_financiamiento = $arreglo_meta_financiera->id_tab_fuente_financiamiento;
+                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
+                    $tab_meta_financiera->mo_actualizado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
+//                    $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
+                    $tab_meta_financiera->mo_modificado = 0;
+                    $tab_meta_financiera->id_tab_origen = 1;
+                    $tab_meta_financiera->in_cargado = 'FALSE';
+                    $tab_meta_financiera->in_activo = 'TRUE';
+                    $tab_meta_financiera->save(); 
+                    
+                        }                     
+                    
+                    
+                    
+                    
+                        }                        
+                    
+                                
+            }
+            
+            $tab_ac_localizacion = tab_ac_localizacion::where('id_tab_ac', '=', $arreglo_ac->id)
+            ->orderby('id', 'ASC')
+            ->get();  
+            
+                    foreach ($tab_ac_localizacion as $arreglo_tab_ac_localizacion) {
+                
+                    $tab_ac_localizacion = new tab_ac_localizacion();
+                    $tab_ac_localizacion->id_tab_ac = $tabla->id;
+                    $tab_ac_localizacion->id_tab_municipio = $arreglo_tab_ac_localizacion->id_tab_municipio;
+                    $tab_ac_localizacion->id_tab_parroquia = $arreglo_tab_ac_localizacion->id_tab_parroquia;
+                    $tab_ac_localizacion->in_activo = 'TRUE';
+                    $tab_ac_localizacion->save(); 
+                    
+                        }            
+            
+            $tab_ac_vinculo = tab_ac_vinculo::where('id_tab_ac', '=', $arreglo_ac->id)
+            ->first(); 
+                        
+            if($tab_ac_vinculo){
+            
+                    $tab_vinculo = new tab_ac_vinculo();
+                    $tab_vinculo->id_tab_ac = $tabla->id;
+                    $tab_vinculo->co_area_estrategica = $tab_ac_vinculo->co_area_estrategica;
+                    $tab_vinculo->co_ambito_estado = $tab_ac_vinculo->co_ambito_estado;
+                    $tab_vinculo->co_objetivo_estado = $tab_ac_vinculo->co_objetivo_estado;
+                    $tab_vinculo->co_macroproblema = $tab_ac_vinculo->co_macroproblema;
+                    $tab_vinculo->co_nodos = $tab_ac_vinculo->co_nodos;
+                    $tab_vinculo->co_objetivo_historico = $tab_ac_vinculo->co_objetivo_historico;
+                    $tab_vinculo->co_objetivo_nacional = $tab_ac_vinculo->co_objetivo_nacional;
+                    $tab_vinculo->co_objetivo_estrategico = $tab_ac_vinculo->co_objetivo_estrategico;
+                    $tab_vinculo->co_objetivo_general = $tab_ac_vinculo->co_objetivo_general;                  
+                    $tab_vinculo->in_activo = 'TRUE';
+                    $tab_vinculo->save();   
+                    
+            }
+                    $tab_ac_responsable = tab_ac_responsable::where('id_tab_ac', '=', $arreglo_ac->id)
+                    ->first(); 
+               
+                    if($tab_ac_responsable){
+                    
+                    $tab_responsable = new tab_ac_responsable();
+                    $tab_responsable->id_tab_ac = $tabla->id;
+                    $tab_responsable->realizador_nombres = $tab_ac_responsable->realizador_nombres;
+                    $tab_responsable->realizador_cedula = $tab_ac_responsable->realizador_cedula;
+                    $tab_responsable->realizador_cargo = $tab_ac_responsable->realizador_cargo;
+                    $tab_responsable->realizador_correo = $tab_ac_responsable->realizador_correo;
+                    $tab_responsable->realizador_telefono = $tab_ac_responsable->realizador_telefono;
+                    $tab_responsable->realizador_unidad = $tab_ac_responsable->realizador_unidad;
+                    $tab_responsable->registrador_nombres = $tab_ac_responsable->registrador_nombres;
+                    $tab_responsable->registrador_cedula = $tab_ac_responsable->registrador_cedula;
+                    $tab_responsable->registrador_cargo = $tab_ac_responsable->registrador_cargo;
+                    $tab_responsable->registrador_correo = $tab_ac_responsable->registrador_correo;
+                    $tab_responsable->registrador_telefono = $tab_ac_responsable->registrador_telefono;
+                    $tab_responsable->registrador_unidad = $tab_ac_responsable->registrador_unidad;
+                    $tab_responsable->autorizador_nombres = $tab_ac_responsable->autorizador_nombres;
+                    $tab_responsable->autorizador_cedula = $tab_ac_responsable->autorizador_cedula;
+                    $tab_responsable->autorizador_cargo = $tab_ac_responsable->autorizador_cargo;
+                    $tab_responsable->autorizador_correo = $tab_ac_responsable->autorizador_correo;
+                    $tab_responsable->autorizador_telefono = $tab_ac_responsable->autorizador_telefono;
+                    $tab_responsable->autorizador_unidad = $tab_ac_responsable->autorizador_unidad;
+                    $tab_responsable->in_activo = 'TRUE';
+                    $tab_responsable->save(); 
+                    
+                    }
+
+        }         
+        
+            
+        }
+                    
+            
+        }else{
+            
+            $response['success']  = 'true';
+            $response['msg']  = 'No existe un periodo siguente, Verifique!';
+            return Response::json($response, 200);             
+            
+        }
+        
+
+            
+            $tabla = tab_ac::find(Input::get("id"));
+            $tabla->in_abierta = false;
             $tabla->save();
 
             DB::commit();

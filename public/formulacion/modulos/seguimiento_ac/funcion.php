@@ -1379,7 +1379,7 @@ EOT;
 				->key( 'nu_em_previsto', v::numeric() )
 				->key( 'tx_re_esperado', v::stringcadena()  )
                                 ->key( 'pp_anual', v::stringcadena() )
-                                ->key( 'mo_ac', v::numeric()->notEmpty() );
+                                ->key( 'mo_ac', v::numeric() );
                         
                       
 
