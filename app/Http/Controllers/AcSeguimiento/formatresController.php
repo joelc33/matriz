@@ -666,10 +666,7 @@ class formatresController extends Controller
                 
                 } 
                 
-                if((round($data2->mo_causado+Input::get("causado"),2))>(round($data2->mo_comprometido+Input::get("comprometido"),0))){
-                
-                    var_dump(round(Input::get("comprometido"),2))   ;
-                    exit();
+                if((round($data2->mo_causado+Input::get("causado"),2))>(round($data2->mo_comprometido+Input::get("comprometido"),2))){
                     
                 return Response::json(array(
                   'success' => false,
