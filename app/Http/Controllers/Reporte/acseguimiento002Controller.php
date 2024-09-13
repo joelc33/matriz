@@ -368,6 +368,11 @@ $contar=0;
           }else{
             $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada;  
           }
+           
+          if($nu_meta_actualizada==0){
+            $nu_meta_actualizada =  1;  
+          }
+          
           
 $contar=$contar+1;
 		$html23.='
@@ -548,22 +553,22 @@ $html23.='
               
                 if($data->id_tab_tipo_periodo==19){
                     
-                    $periodo = '1T/'.Session::get("ejercicio");    
+                    $periodo = '1TA/'.Session::get("ejercicio");    
                 }
                 
                 if($data->id_tab_tipo_periodo==20){
                     
-                    $periodo = '2T/'.Session::get("ejercicio");    
+                    $periodo = '2TA/'.Session::get("ejercicio");    
                 }
 
                 if($data->id_tab_tipo_periodo==21){
                     
-                    $periodo = '3T/'.Session::get("ejercicio");    
+                    $periodo = '3TA/'.Session::get("ejercicio");    
                 }
 
                 if($data->id_tab_tipo_periodo==22){
                     
-                    $periodo = '4T/'.Session::get("ejercicio");    
+                    $periodo = '4TA/'.Session::get("ejercicio");    
                 }   
             
           Session::put('periodo',$periodo);               

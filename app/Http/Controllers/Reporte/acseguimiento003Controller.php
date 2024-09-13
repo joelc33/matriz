@@ -643,22 +643,22 @@ $html23.='
             
                 if($data->id_tab_tipo_periodo==19){
                     
-                    $periodo = '1T/'.Session::get("ejercicio");    
+                    $periodo = '1TA/'.Session::get("ejercicio");    
                 }
                 
                 if($data->id_tab_tipo_periodo==20){
                     
-                    $periodo = '2T/'.Session::get("ejercicio");    
+                    $periodo = '2TA/'.Session::get("ejercicio");    
                 }
 
                 if($data->id_tab_tipo_periodo==21){
                     
-                    $periodo = '3T/'.Session::get("ejercicio");    
+                    $periodo = '3TA/'.Session::get("ejercicio");    
                 }
 
                 if($data->id_tab_tipo_periodo==22){
                     
-                    $periodo = '4T/'.Session::get("ejercicio");    
+                    $periodo = '4TA/'.Session::get("ejercicio");    
                 } 
             
           Session::put('periodo',$periodo); 

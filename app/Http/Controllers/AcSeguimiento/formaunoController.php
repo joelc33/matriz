@@ -894,7 +894,7 @@ class formaunoController extends Controller
         
         $data1_ac = tab_ac::where('nu_codigo', '=', $data_ac->nu_codigo)
         ->where('id_tab_lapso', '=', $data1->id)
-        ->where('in_activo', '=', false)
+//        ->where('in_activo', '=', false)
         ->first();  
         
         if($data1_ac){
@@ -1009,15 +1009,15 @@ class formaunoController extends Controller
                     $tabla_meta_fisica->codigo = $arreglo_meta_fisica->codigo;
                     $tabla_meta_fisica->nb_meta = $arreglo_meta_fisica->nb_meta;
                     $tabla_meta_fisica->id_tab_unidad_medida = $arreglo_meta_fisica->id_tab_unidad_medida;
-//                    $tabla_meta_fisica->tx_prog_anual = $arreglo_meta_fisica->tx_prog_anual;
-                    $tabla_meta_fisica->tx_prog_anual = 0;
+                    $tabla_meta_fisica->tx_prog_anual = $arreglo_meta_fisica->tx_prog_anual;
+//                    $tabla_meta_fisica->tx_prog_anual = 0;
                     $tabla_meta_fisica->fecha_inicio = $arreglo_meta_fisica->fecha_inicio;
                     $tabla_meta_fisica->fecha_fin = $arreglo_meta_fisica->fecha_fin;
                     $tabla_meta_fisica->nb_responsable = $arreglo_meta_fisica->nb_responsable;
                     $tabla_meta_fisica->id_tab_origen = 1;
-//                    $tabla_meta_fisica->nu_meta_modificada_periodo = ($arreglo_meta_fisica->nu_meta_modificada + $arreglo_meta_fisica->nu_meta_modificada_periodo);
-                    $tabla_meta_fisica->nu_meta_modificada_periodo = 0;
-                    $tabla_meta_fisica->nu_meta_modificada = $arreglo_meta_fisica->nu_meta_actualizada;
+                    $tabla_meta_fisica->nu_meta_modificada_periodo = ($arreglo_meta_fisica->nu_meta_modificada + $arreglo_meta_fisica->nu_meta_modificada_periodo);
+//                    $tabla_meta_fisica->nu_meta_modificada_periodo = 0;
+//                    $tabla_meta_fisica->nu_meta_modificada = $arreglo_meta_fisica->nu_meta_actualizada;
                     $tabla_meta_fisica->nu_meta_actualizada = $arreglo_meta_fisica->nu_meta_actualizada;
                     $tabla_meta_fisica->id_tab_municipio_detalle = $arreglo_meta_fisica->id_tab_municipio_detalle;
                     $tabla_meta_fisica->id_tab_parroquia_detalle = $arreglo_meta_fisica->id_tab_parroquia_detalle;
@@ -1039,14 +1039,14 @@ class formaunoController extends Controller
                     $tab_meta_financiera->id_tab_meta_fisica = $tabla_meta_fisica->id;
                     $tab_meta_financiera->id_tab_municipio_detalle = $arreglo_meta_financiera->id_tab_municipio_detalle;
                     $tab_meta_financiera->id_tab_parroquia_detalle = $arreglo_meta_financiera->id_tab_parroquia_detalle;
-//                    $tab_meta_financiera->mo_presupuesto = $arreglo_meta_financiera->mo_presupuesto;
-                    $tab_meta_financiera->mo_presupuesto = 0;
+                    $tab_meta_financiera->mo_presupuesto = $arreglo_meta_financiera->mo_presupuesto;
+//                    $tab_meta_financiera->mo_presupuesto = 0;
                     $tab_meta_financiera->co_partida = $arreglo_meta_financiera->co_partida;
                     $tab_meta_financiera->id_tab_fuente_financiamiento = $arreglo_meta_financiera->id_tab_fuente_financiamiento;
-                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
+//                    $tab_meta_financiera->mo_modificado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
                     $tab_meta_financiera->mo_actualizado_anual = $arreglo_meta_financiera->mo_actualizado_anual;
-//                    $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
-                    $tab_meta_financiera->mo_modificado = 0;
+                    $tab_meta_financiera->mo_modificado = ($arreglo_meta_financiera->mo_modificado_anual + $arreglo_meta_financiera->mo_modificado);
+//                    $tab_meta_financiera->mo_modificado = 0;
                     $tab_meta_financiera->id_tab_origen = 1;
                     $tab_meta_financiera->in_cargado = 'FALSE';
                     $tab_meta_financiera->in_activo = 'TRUE';

@@ -573,7 +573,7 @@ $contar=0;
           if($item->nu_meta_actualizada==0){
              $nu_meta_actualizada =  1;
           }else{
-            $nu_meta_actualizada =  $item->nu_meta_actualizada;  
+            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada;
           }
           
 $contar=$contar+1;
@@ -581,9 +581,9 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 18%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-                <td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada_periodo).'</td>
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
                 <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>                    
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada).'</td>                 
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
@@ -705,9 +705,9 @@ $html23.='
       foreach($actividad_accion as $item1) {
           
 
-                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado);
+                $mo_presupuesto_anual_accion = $mo_presupuesto_anual_accion + $item1->mo_presupuesto;
                 $mo_modificado_anual_accion = $mo_modificado_anual_accion + $item1->mo_modificado_anual;
-                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + $item1->mo_actualizado_anual;
+                $mo_actualizado_anual_accion = $mo_actualizado_anual_accion + ($item1->mo_presupuesto + $item1->mo_modificado_anual);
                 $mo_comprometido_accion = $mo_comprometido_accion + $item1->mo_comprometido;
                 $mo_causado_accion = $mo_causado_accion + $item1->mo_causado;
                 $mo_pagado_accion = $mo_pagado_accion + $item1->mo_pagado;
@@ -717,9 +717,9 @@ $html23.='
       foreach($actividad_ejecutor as $item2) {
           
 
-                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado);
+                $mo_presupuesto_anual_ejecutor = $mo_presupuesto_anual_ejecutor + $item2->mo_presupuesto;
                 $mo_modificado_anual_ejecutor = $mo_modificado_anual_ejecutor + $item2->mo_modificado_anual;
-                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + $item2->mo_actualizado_anual;
+                $mo_actualizado_anual_ejecutor = $mo_actualizado_anual_ejecutor + ($item2->mo_presupuesto + $item2->mo_modificado_anual);
                 $mo_comprometido_ejecutor = $mo_comprometido_ejecutor + $item2->mo_comprometido;
                 $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
                 $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
@@ -821,9 +821,9 @@ $id = 0;
              
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-                <td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -838,9 +838,9 @@ $id = 0;
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-                <td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado).'</td>
+		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_presupuesto + $item->mo_modificado_anual).'</td>
                 <td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_comprometido).'</td>                    
 		<td style="width: 9%;"  align="center">'.$this->formatoDinero($item->mo_causado).'</td>
 		<td style="width: 9%;" align="center">'.$this->formatoDinero($item->mo_pagado).'</td>
@@ -853,9 +853,9 @@ $id = 0;
                 
              }
                 $id =$item->id;
-                $mo_presupuesto = $mo_presupuesto + ($item->mo_presupuesto + $item->mo_modificado);
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
-                $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
                 $mo_pagado = $mo_pagado + $item->mo_pagado;
