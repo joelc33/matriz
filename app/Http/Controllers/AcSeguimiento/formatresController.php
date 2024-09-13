@@ -666,7 +666,7 @@ class formatresController extends Controller
                 
                 } 
                 
-                if(($data2->mo_causado+Input::get("causado"))>($data2->mo_comprometido+Input::get("comprometido"))){
+                if((round($data2->mo_causado+Input::get("causado"),2))>(round($data2->mo_comprometido+Input::get("comprometido"),0))){
                 
                 return Response::json(array(
                   'success' => false,
@@ -675,7 +675,7 @@ class formatresController extends Controller
                 
                 }
 
-                if(($data2->mo_pagado+Input::get("pagado"))>($data2->mo_causado+Input::get("causado"))){
+                if((round($data2->mo_pagado+Input::get("pagado"),2))>(round($data2->mo_causado+Input::get("causado"),2))){
                 
                 return Response::json(array(
                   'success' => false,
