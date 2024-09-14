@@ -658,7 +658,7 @@ class formatresController extends Controller
                
                 
                 $data3 = tab_ac::select(
-                DB::raw("coalesce(sum(tx_prog_anual::numeric),0) as tx_prog_anual")
+                DB::raw("coalesce(sum(mo_presupuesto),0) as mo_presupuesto")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -673,10 +673,10 @@ class formatresController extends Controller
                 ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $data1->id_tab_lapso)
                 ->first();                
                 
-                                    var_dump(round($data1->id_tab_lapso,2));
+                                    var_dump(round($data3->mo_presupuesto+$data2->mo_modificado_anual+Input::get("modificado_anual"),2));
                             exit();
                 
-                if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data3->tx_prog_anual+$data2->mo_modificado_anual+Input::get("modificado_anual"),2)){
+                if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data3->mo_presupuesto+$data2->mo_modificado_anual+Input::get("modificado_anual"),2)){
                 
 
                     
