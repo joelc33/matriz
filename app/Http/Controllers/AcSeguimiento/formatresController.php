@@ -673,7 +673,7 @@ class formatresController extends Controller
                 ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $data1->id_tab_lapso)
                 ->first();                
                 
-                                    var_dump(round($data3->tx_prog_anual,2));
+                                    var_dump(round($data1->id_tab_lapso,2));
                             exit();
                 
                 if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data3->tx_prog_anual+$data2->mo_modificado_anual+Input::get("modificado_anual"),2)){
