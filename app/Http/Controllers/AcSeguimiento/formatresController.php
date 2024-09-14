@@ -641,7 +641,7 @@ class formatresController extends Controller
                 
                 
                 $data2 = tab_ac::select(
-                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(mo_modificado_anual),0) as mo_modificado_anual")
+                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(mo_modificado_anual),0) as mo_modificado_anual"),DB::raw("coalesce(sum(tx_prog_anual),0) as tx_prog_anual")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -656,7 +656,7 @@ class formatresController extends Controller
 //                ->whereNotIn('t03.id', [$id])
                 ->first();  
                
-                                    var_dump(round($data2->mo_comprometido,2));
+                                    var_dump(round($data2->tx_prog_anual+$data2->mo_modificado_anual,2));
                             exit();
                 
                 if((round($data2->mo_comprometido,2))>round(Input::get("actualizado_anual"),2)){
