@@ -653,7 +653,7 @@ class formatresController extends Controller
                 ->where('t03.co_partida', '=', $data1->co_partida)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $data1->id_tab_fuente_financiamiento)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
-//                ->whereNotIn('t03.id', [$id])
+                ->whereNotIn('t03.id', [$id])
                 ->first();  
                
                 
