@@ -641,7 +641,7 @@ class formatresController extends Controller
                 
                 
                 $data2 = tab_ac::select(
-                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(actualizado_anual),0) as actualizado_anual")
+                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(mo_actualizado_anual),0) as mo_actualizado_anual")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -657,9 +657,9 @@ class formatresController extends Controller
                 ->first();  
                 
                 
-                if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data2->actualizado_anual+Input::get("actualizado_anual"),2)){
+                if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data2->mo_actualizado_anual+Input::get("actualizado_anual"),2)){
                 
-                    var_dump(round($data2->actualizado_anual,2));
+                    var_dump(round($data2->mo_actualizado_anual,2));
                             exit();
                     
                 return Response::json(array(
