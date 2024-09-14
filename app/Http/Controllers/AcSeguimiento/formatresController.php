@@ -641,7 +641,7 @@ class formatresController extends Controller
                 
                 
                 $data2 = tab_ac::select(
-                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(mo_modificado_anual),0) as mo_modificado_anual"),DB::raw("coalesce(sum(tx_prog_anual),0) as tx_prog_anual")
+                 DB::raw("coalesce(sum(mo_comprometido),0) as mo_comprometido"),DB::raw("coalesce(sum(mo_causado),0) as mo_causado"),DB::raw("coalesce(sum(mo_pagado),0) as mo_pagado"),DB::raw("coalesce(sum(mo_modificado_anual),0) as mo_modificado_anual")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
