@@ -659,7 +659,7 @@ class formatresController extends Controller
                 
                 if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round(Input::get("actualizado_anual"),2)){
                 
-                    var_dump(round($data2->mo_comprometido,2));
+                    var_dump(round($data2->mo_comprometido+Input::get("comprometido"),2));
                             exit();
                     
                 return Response::json(array(
