@@ -673,13 +673,10 @@ class formatresController extends Controller
                 ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $data1->id_tab_lapso)
                 ->first();                
                 
-                                    var_dump(round($data2->mo_comprometido+Input::get("comprometido"),2));
-                            exit();
+
                 
                 if((round($data2->mo_comprometido+Input::get("comprometido"),2))>round($data3->mo_presupuesto+$data2->mo_modificado_anual+Input::get("modificado_anual"),2)){
-                
 
-                    
                 return Response::json(array(
                   'success' => false,
                   'msg' => 'La suma del presupuesto comprometido excede el monto del presupuesto actualizado, verifique!'
