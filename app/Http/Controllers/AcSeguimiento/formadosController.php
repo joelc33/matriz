@@ -769,6 +769,7 @@ class formadosController extends Controller
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
                 ->where('t02.codigo', '=', $data1->codigo)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t02.id', [Input::get("id_tab_meta_fisica")])
                 ->first();           

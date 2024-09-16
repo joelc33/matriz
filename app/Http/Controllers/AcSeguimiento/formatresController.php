@@ -651,6 +651,7 @@ class formatresController extends Controller
                 ->where('t02.codigo', '=', $data1->codigo)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('t03.co_partida', '=', $data1->co_partida)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $data1->id_tab_fuente_financiamiento)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->whereNotIn('t03.id', [$id])
@@ -669,6 +670,7 @@ class formatresController extends Controller
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('t03.co_partida', '=', $data1->co_partida)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $data1->id_tab_fuente_financiamiento)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
                 ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $data1->id_tab_lapso)
                 ->first();                
