@@ -774,6 +774,9 @@ class formadosController extends Controller
                 ->first();           
                 
                 if(($data2->nu_obtenido+Input::get("obtenido"))>Input::get("meta_actualizada")){
+                    
+                    var_dump($data2->nu_obtenido+Input::get("obtenido"));
+                    exit();
                 
                 return Response::json(array(
                   'success' => false,
