@@ -455,7 +455,7 @@
                     id = fue.co_tipo_fondo;
                     if ( !self.store_fondos.getById( id ) ) {
                         monto = self.fld_monto.getValue();
-                        monto = monto === '' ? 0 : monto;
+//                        monto = monto === '' ? 0 : monto;
 //                        if ( monto === 0 ) {
 //                            return;
 //                        }
@@ -541,13 +541,18 @@
                             return false;
                         }
 
+                         console.log(self.store_fondos.getCount());
+
                         self.store_fondos.each(function(r){
                             var enviar = {};
                             enviar.co_tipo_fondo = r.data.co_tipo_fondo;
                             enviar.monto = r.data.monto;
-                            suma += r.data.monto;
+                            suma += parseFloat(r.data.monto);
                             fuentes.push(enviar);
+                            console.log(r.data.monto);
                         });
+                        
+                         console.log(suma);
 
                         if (parseFloat(forma.getValues().monto).toFixed(2) !== parseFloat(suma).toFixed(2)) {
                             
