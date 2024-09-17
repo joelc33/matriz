@@ -123,7 +123,7 @@ class acseguimientoejecucionController extends Controller
         ->where('id', '=', $id_tab_lapso)
         ->first();      
         
-                     $tab_lapso = tab_lapso::where('id', '<=', $lapso)
+                     $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
             ->get();  
              
               $i =  $tab_lapso->count();
