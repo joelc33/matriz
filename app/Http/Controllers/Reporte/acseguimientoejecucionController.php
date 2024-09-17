@@ -121,7 +121,12 @@ class acseguimientoejecucionController extends Controller
             'id_tab_tipo_periodo'
         )
         ->where('id', '=', $id_tab_lapso)
-        ->first();          
+        ->first();      
+        
+                     $tab_lapso = tab_lapso::where('id', '<=', $lapso)
+            ->get();  
+             
+              $i =  $tab_lapso->count();
 
       
                 if($data_lapso->id_tab_tipo_periodo==19){
@@ -150,9 +155,9 @@ class acseguimientoejecucionController extends Controller
                 
             $data =  tab_meta_financiera::select(
                 'tx_nombre',
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
-                DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
