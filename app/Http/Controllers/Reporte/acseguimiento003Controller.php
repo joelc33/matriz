@@ -667,8 +667,9 @@ $html23.='
             
           Session::put('periodo',$periodo); 
 
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
-            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida','id_tab_fuente_financiamiento',
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+            DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),DB::raw('sum(coalesce(mo_modificado,0)) as mo_modificado'),
+            'de_fuente_financiamiento','co_partida','id_tab_fuente_financiamiento',
             'nu_numero',
             'nu_original',
             'co_sector')
@@ -682,6 +683,14 @@ $html23.='
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->orderBy('co_partida', 'ASC')
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+             ->groupBy('id_tab_fuente_financiamiento')
+             ->groupBy('de_fuente_financiamiento')
+             ->groupBy('nu_numero') 
+            ->groupBy('nu_original') 
+            ->groupBy('co_sector') 
             ->get();
             
             $actividad_accion = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
@@ -882,16 +891,41 @@ $id = 0;
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();          
           
-          
-             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
-            ->get();         
+            $tab_meta_financiera = tab_meta_fisica::select('codigo','nb_meta',DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
+            DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),DB::raw('sum(coalesce(mo_modificado,0)) as mo_modificado'),
+            'de_fuente_financiamiento','co_partida','id_tab_fuente_financiamiento',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')                  
+            ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+            ->where('codigo', '=', $item->codigo)
+            ->orderBy('codigo', 'ASC')
+            ->orderBy('co_partida', 'ASC')
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+             ->groupBy('id_tab_fuente_financiamiento')
+             ->groupBy('de_fuente_financiamiento')
+             ->groupBy('nu_numero') 
+            ->groupBy('nu_original') 
+            ->groupBy('co_sector') 
+            ->get();          
+//             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
+//            ->get();         
              if($tab_meta_financiera->count()>1){
                 $i =  $tab_meta_financiera->count();
              }else{
              $i = 1;    
              }
           
-             if($id==$item->id){
+             if($id==$item->codigo){
              
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
@@ -926,7 +960,7 @@ $id = 0;
                 $html23.='</tr>';                 
                 
              }
-                $id =$item->id;
+                $id =$item->codigo;
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + ($item->mo_modificado_anual + $item->mo_modificado);
                 $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual + $item->mo_modificado);
