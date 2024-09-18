@@ -368,12 +368,12 @@ $contar=0;
              $nu_meta_actualizada =  1;
              $obtenido = 0;
           }else{
-            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada; 
-             $obtenido = ($item->nu_obtenido/$nu_meta_actualizada)*100;
-          }
-           
-          if($nu_meta_actualizada==0){
-            $nu_meta_actualizada =  1;  
+            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada;
+            if($nu_meta_actualizada==0){
+                 $obtenido = 0;
+            }else{
+              $obtenido = ($item->nu_obtenido/$nu_meta_actualizada)*100;   
+            }
           }
           
           
