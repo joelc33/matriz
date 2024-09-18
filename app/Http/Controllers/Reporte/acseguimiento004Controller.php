@@ -7,6 +7,7 @@ use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_001;
 use matriz\Models\AcSegto\tab_ac;
+use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Input;
 use Response;
@@ -522,7 +523,9 @@ $html23.='
             't21.id as id_tab_ac_ae',
             'id_tab_tipo_periodo',
             'ac_seguimiento.tab_ac.de_observacion_003',
-            'ac_seguimiento.tab_ac.de_sector'
+            'ac_seguimiento.tab_ac.de_sector',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
+            't21.id_tab_ac_ae_predefinida'
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();   
@@ -550,29 +553,38 @@ $html23.='
                 }    
             
           Session::put('periodo',$periodo); 
+          
+          
+          
+             $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+            ->get();  
+             
+              $j =  $tab_lapso->count();
 
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_actualizado_anual'),
-            'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),        
-            'nu_numero',DB::raw('coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
-            'nu_original',
-            'co_sector')
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',
+            'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
+                    DB::raw("string_agg(de_desvio, ', ' ORDER BY de_desvio) as de_desvio"),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
             ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
             ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
              ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
              ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
              ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
-             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')
-//            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
-//            $join->on('tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
-//            ->on('t002.id_tab_estatus', '=', DB::raw('6'));
-//            })                    
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
              ->where(function ($query) {
              $query->orWhere('tab_meta_fisica.nu_meta_modificada', '!=', 0)
              ->orWhere('mo_modificado_anual', '!=', 0);
              })
-            ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
             ->orderBy('codigo', 'ASC')
             ->get();
           
@@ -648,13 +660,27 @@ $i = 1;
 $id = 0;
 $de_desvio = '';
 
-foreach($actividad as $item) { 
+foreach($actividad as $item) {
+    
+    
+                    $data2 = tab_ac::select(
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
+                ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+                ->where('t02.codigo', '=', $item->codigo)
+                ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+                ->first();
     
             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
             ->where('mo_modificado_anual', '!=', 0)    
             ->get();         
              if($tab_meta_financiera->count()>1){
-                $i =  $tab_meta_financiera->count();
+                $i =  1;
              }else{
              $i = 1;    
              }
@@ -662,53 +688,39 @@ foreach($actividad as $item) {
 $html23.='
 <tbody>';
 
-                if($id==$item->id){
+
 
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
+                <td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>
+		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
+                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $data2->nu_meta_modificada).'</td>
                 <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
 		<td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
                 $html23.='</tr>';
 
-                
-                }else{
+
                     
-                 if($de_desvio==''){
-                     
-                 }else{
+
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$item->de_desvio.'</td>';
                 $html23.='</tr>';                        
-                 }
+                 
                     
- 		$html23.='
-		<tr style="font-size:6px" nobr="true">
-		<td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>
-                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
-                $html23.='</tr>';                   
-                    
-                }
+
                 $id =$item->id;
                 $de_desvio=$item->de_desvio;
           
       }
       
-        $html23.='
-        <tr style="font-size:6px" nobr="true">
-        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
-        $html23.='</tr>';  
+//        $html23.='
+//        <tr style="font-size:6px" nobr="true">
+//        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+//        $html23.='</tr>';  
 
 $html23.='
 </tbody>
