@@ -675,6 +675,30 @@ foreach($actividad as $item) {
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();
+                    
+            $data3 = tab_meta_fisica::select(
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('tab_meta_fisica.codigo', '=', $item->codigo)
+            ->where('t22.co_partida', '=', $item->co_partida)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+            ->orderBy('codigo', 'ASC')
+            ->first();                    
+                    
     
             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
             ->where('mo_modificado_anual', '!=', 0)    
@@ -697,9 +721,9 @@ $html23.='
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
                 <td style="width: 10%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $data2->nu_meta_modificada).'</td>
                 <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
+		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data3->mo_presupuesto).'</td>
+		<td style="width: 10%;" align="center">'.$this->formatoDinero($data3->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="center">'.$this->formatoDinero($data3->mo_actualizado_anual).'</td>';
                 $html23.='</tr>';
 
 
