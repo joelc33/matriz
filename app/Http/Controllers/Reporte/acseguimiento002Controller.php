@@ -366,8 +366,10 @@ $contar=0;
  
           if($item->nu_meta_actualizada==0){
              $nu_meta_actualizada =  1;
+             $obtenido = 0;
           }else{
-            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada;  
+            $nu_meta_actualizada =  $item->tx_prog_anual + $item->nu_meta_modificada; 
+             $obtenido = ($item->nu_obtenido/$nu_meta_actualizada)*100;
           }
            
           if($nu_meta_actualizada==0){
@@ -386,7 +388,7 @@ $contar=$contar+1;
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($item->nu_obtenido/$nu_meta_actualizada)*100).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje($obtenido).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
