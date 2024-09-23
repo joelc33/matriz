@@ -1157,21 +1157,32 @@ $html23.='
               // Set the active Excel worksheet to sheet 0
               $objPHPExcel->setActiveSheetIndex(0);
               // Rename sheet
-              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
-//              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
-//              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(30);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-//              $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setAutoSize(true);
-              $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(10);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(10);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(10);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+////              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(30);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+////              $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setAutoSize(true);
               $objPHPExcel->getActiveSheet()->setTitle('Mestas financieras '.$periodo);
               $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray(
                   array(
@@ -1298,7 +1309,9 @@ $html23.='
 //                  $final = $rowCount+2;
 //                  $objPHPExcel->getActiveSheet()->mergeCells('A'.$rowCount.':A'.$final);
 //                  $objPHPExcel->getActiveSheet()->mergeCells('B'.$rowCount.':B'.$final);
-//                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':A'.$final)->getAlignment()->setWrapText(true);
+                  $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setWrapText(true);
+                  $objPHPExcel->getActiveSheet()->getStyle('A2')->getAlignment()->setWrapText(true);
+                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount)->getAlignment()->setWrapText(true);
 //                  $objPHPExcel->getActiveSheet()->getStyle('B'.$rowCount.':B'.$final)->getAlignment()->setWrapText(true);
                   // Set thin black border outline around column
                   $styleThinBlackBorderOutline = array(
@@ -1340,7 +1353,24 @@ $html23.='
                           )
                       )
               );
-              $rowCount++;    
+              $rowCount++; 
+              $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          )
+                      )
+              );              
+              
+              $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->getAlignment()->setWrapText(true);
               $objPHPExcel->setActiveSheetIndex(0)
               ->setCellValue('A'.$rowCount, 'ACTIVIDADES')
               ->setCellValue('B'.$rowCount, 'PRESUPUESTO PROGRAM. ANUAL (Bs.)')
@@ -1386,6 +1416,7 @@ $html23.='
 
                     
                   $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
+                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->getAlignment()->setWrapText(true);
                   $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $item->codigo.' - '.$item->nb_meta, PHPExcel_Cell_DataType::TYPE_STRING);
                   $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $item->mo_presupuesto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                   $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $item->mo_modificado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
@@ -1410,7 +1441,21 @@ $html23.='
             }
             
             
-                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
+              $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          )
+                      )
+              );
                   $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, ' TOTAL ACCION ESPECIFICA ', PHPExcel_Cell_DataType::TYPE_STRING);
                   $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $mo_presupuesto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                   $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $mo_modificado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
