@@ -1412,10 +1412,26 @@ $html23.='
             $mo_causado = 0;
             $mo_pagado = 0;             
                   
-            foreach($actividad as $item) {      
-
-                    
+            foreach($actividad as $item) {  
+            $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
+            ->get();         
+             if($tab_meta_financiera->count()>1){
+                $i =  $tab_meta_financiera->count();
+                 $final = $rowCount + ($i-1);
+                  $objPHPExcel->getActiveSheet()->mergeCells('A'.$rowCount.':A'.$final);  
+             }else{
+             $i = 1; 
+             }
+                 
+                 
                   $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
+                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':A'.$final)->applyFromArray(
+                  array(
+                          'alignment' => array(
+                              'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                          )
+                      )
+              ); 
                   $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->getAlignment()->setWrapText(true);
                   $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $item->codigo.' - '.$item->nb_meta, PHPExcel_Cell_DataType::TYPE_STRING);
                   $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $item->mo_presupuesto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
