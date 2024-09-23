@@ -1205,17 +1205,27 @@ class formadosController extends Controller
                 ->whereNotIn('id_tab_estatus', [6])
                 ->count();
                 
-                if($cant==0){
-                    
-                $tabla = tab_ac::find($data->id);
-                $tabla->in_002 = true;
-                $tabla->save();
+                if($cant==0){                    
                 
                 $tabla_ae = tab_ac_ae::find($data->id_tab_ac_ae);
                 $tabla_ae->in_002 = true;
                 $tabla_ae->save();                
                 
                 }
+                
+                $cant1 = tab_ac::join('ac_seguimiento.tab_ac_ae as t03', 'ac_seguimiento.tab_ac.id', '=', 't03.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t01', 't03.id', '=', 't01.id_tab_ac_ae')        
+                ->where('tab_ac.id', '=', $data->id)
+                ->whereNotIn('t01.id_tab_estatus', [6])
+                ->count(); 
+                
+                if($cant1==0){
+                
+                $tabla = tab_ac::find($data->id);
+                $tabla->in_002 = true;
+                $tabla->save();              
+                
+                }                
         
                 DB::commit();
                 return Response::json(array(
