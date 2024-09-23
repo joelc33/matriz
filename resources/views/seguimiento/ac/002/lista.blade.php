@@ -29,6 +29,8 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
+<?php $rol_planificador = array( 3, 8); ?>
+
 //Editar un registro
 this.ficha= new Ext.Button({
     text:'Ver Ficha',
@@ -82,6 +84,17 @@ this.cargar = new Ext.Button({
 });
 
 this.cargar.disable();
+
+this.pendientes= new Ext.Button({
+    text:'ACsXvalidar',
+    iconCls: 'icon-excel',
+    handler:function(){
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/002/pendientes') }}/'+forma002Lista.main.OBJ.id
+	});
+    }
+});
+
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -151,6 +164,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			  this.ficha,'-',this.ficha_acumulada,'-',this.editar,'-',this.cargar,'-',
 			@endif
 				this.buscador
+                        @if (in_array(Session::get('rol'), $rol_planificador))
+                        @else
+                        ,'-',this.pendientes
+			@endif
     ],
     columns: [
     new Ext.grid.RowNumberer(),

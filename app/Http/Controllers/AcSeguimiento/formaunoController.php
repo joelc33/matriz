@@ -1021,7 +1021,7 @@ class formaunoController extends Controller
                     $tabla_meta_fisica->nu_meta_actualizada = $arreglo_meta_fisica->nu_meta_actualizada;
                     $tabla_meta_fisica->id_tab_municipio_detalle = $arreglo_meta_fisica->id_tab_municipio_detalle;
                     $tabla_meta_fisica->id_tab_parroquia_detalle = $arreglo_meta_fisica->id_tab_parroquia_detalle;
-                    $tabla_meta_fisica->de_desvio = $arreglo_meta_fisica->de_desvio;
+//                    $tabla_meta_fisica->de_desvio = $arreglo_meta_fisica->de_desvio;
                     $tabla_meta_fisica->resultado = $arreglo_meta_fisica->resultado;
                     $tabla_meta_fisica->observacion = $arreglo_meta_fisica->observacion;
                     $tabla_meta_fisica->in_cargado = 'FALSE';
