@@ -1028,6 +1028,422 @@ $html23.='
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
       }
+      
+      public function exportar($id)
+      {
+
+          DB::beginTransaction();
+
+          try {
+
+            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
+            ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')        
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
+            ->on('t49.co_objetivo_estado', '=', 't45b.co_objetivo_zulia')
+            ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
+            ->on('t45b.edo_reg', '=', DB::raw('true'))        
+            ->on('t45b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
+            ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')       
+            ->on('t45c.edo_reg', '=', DB::raw('true'))        
+            ->on('t45c.nu_nivel', '=', DB::raw('4'));
+            })            
+            ->join('mantenimiento.tab_sectores as t18a', 'ac_seguimiento.tab_ac.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t20_planes as t20', function ($join) {
+            $join->on('t49.co_objetivo_historico', '=', 't20.co_objetivo_historico')
+            ->on('t20.nu_nivel', '=', DB::raw('1'));
+            }) 
+            ->leftjoin('t20_planes as t20a', function ($join) {
+            $join->on('t49.co_objetivo_nacional', '=', 't20a.co_objetivo_nacional')
+            ->on('t49.co_objetivo_historico', '=', 't20a.co_objetivo_historico')        
+            ->on('t20a.nu_nivel', '=', DB::raw('2'));
+            })
+            ->leftjoin('t20_planes as t20b', function ($join) {
+            $join->on('t49.co_objetivo_estrategico', '=', 't20b.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20b.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20b.co_objetivo_nacional')        
+            ->on('t20b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t20_planes as t20c', function ($join) {
+            $join->on('t49.co_objetivo_general', '=', 't20c.co_objetivo_general')
+            ->on('t49.co_objetivo_estrategico', '=', 't20c.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20c.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20c.co_objetivo_nacional')
+            ->on('t20c.edo_reg', '=', DB::raw('true'))        
+            ->on('t20c.nu_nivel', '=', DB::raw('4'));
+            })            
+            ->select(
+            'ac_seguimiento.tab_ac.id_ejecutor',
+            'tx_ejecutor',
+            't18b.tx_codigo as tx_sector',
+            't45.tx_descripcion as tx_area_estrategica',
+            't20.tx_descripcion as tx_objetivo_historico',
+            't20a.tx_descripcion as tx_objetivo_nacional',
+            't20b.tx_descripcion as tx_objetivo_estrategico',
+            't20c.tx_descripcion as tx_objetivo_general',
+            't45a.tx_descripcion as tx_ambito_estado', 
+            't45b.tx_descripcion as tx_macroproblema',
+            't45c.tx_descripcion as tx_nodos',
+            't21.objetivo_institucional as tx_objetivo_institucional',
+            DB::raw("'AC' || t04.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
+            't52.nombre',
+            DB::raw('t53.numero::text as tx_codigo_ae'),
+            't53.nombre as tx_nombre_ae',
+            't21.id_ejecutor as id_ejecutor_ae',
+            'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido_a',
+            'ac_seguimiento.tab_ac.de_observacion_003',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+            't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
+            'id_tab_tipo_periodo',
+            'ac_seguimiento.tab_ac.de_observacion_003',
+            'ac_seguimiento.tab_ac.de_sector'
+        )
+        ->where('t21.id_tab_ac', '=', $id)
+        ->get();
+
+            foreach ($data as $item1) {
+                if($item1->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1T '.Session::get("ejercicio");    
+                }
+                
+                if($item1->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2T '.Session::get("ejercicio");    
+                }
+
+                if($item1->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3T '.Session::get("ejercicio");    
+                }
+
+                if($item1->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4T '.Session::get("ejercicio");    
+                }
+            }
+              // Instantiate a new PHPExcel object
+              $objPHPExcel = new PHPExcel();
+              // Set properties
+              $objPHPExcel->getProperties()->setCreator("Isilio Vilchez");
+              $objPHPExcel->getProperties()->setLastModifiedBy("SEG");
+              $objPHPExcel->getProperties()->setTitle("Listado");
+              $objPHPExcel->getProperties()->setSubject("Reporte");
+              $objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+              // Set the active Excel worksheet to sheet 0
+              $objPHPExcel->setActiveSheetIndex(0);
+              // Rename sheet
+              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+//              $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setAutoSize(true);
+              $objPHPExcel->getActiveSheet()->setTitle('Mestas financieras '.$periodo);
+              $objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          ),
+                          'fill' => array(
+                              'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                                  'rotation'   => 90,
+                              'startcolor' => array(
+                                  'argb' => 'FFA0A0A0'
+                              ),
+                              'endcolor'   => array(
+                                  'argb' => 'FFFFFFFF'
+                              )
+                          )
+                      )
+              );
+              $objPHPExcel->getActiveSheet()->getStyle('A2')->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          ),
+                          'fill' => array(
+                              'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                                  'rotation'   => 90,
+                              'startcolor' => array(
+                                  'argb' => 'FFA0A0A0'
+                              ),
+                              'endcolor'   => array(
+                                  'argb' => 'FFFFFFFF'
+                              )
+                          )
+                      )
+              );
+              $objPHPExcel->getActiveSheet()->getStyle('A3')->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          ),
+                          'fill' => array(
+                              'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                                  'rotation'   => 90,
+                              'startcolor' => array(
+                                  'argb' => 'FFA0A0A0'
+                              ),
+                              'endcolor'   => array(
+                                  'argb' => 'FFFFFFFF'
+                              )
+                          )
+                      )
+              );              
+//              $objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
+//                  array(
+//                          'alignment' => array(
+//                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//                          ),
+//                          'borders' => array(
+//                              'left'     => array(
+//                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+//                              )
+//                          )
+//                      )
+//              );
+//
+//              $objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
+//                  array(
+//                          'alignment' => array(
+//                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//                          )
+//                      )
+//              );
+//
+//              $objPHPExcel->getActiveSheet()->getStyle('H1')->applyFromArray(
+//                  array(
+//                          'borders' => array(
+//                              'right'     => array(
+//                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+//                              )
+//                          )
+//                      )
+//              );
+              // Initialise the Excel row number
+              $rowCount = 3;
+              // Iterate through each result from the SQL query in turn
+              // We fetch each database result row into $row in turn
+
+//              $objPHPExcel->setActiveSheetIndex(0)
+//              ->setCellValue('A1', 'PERIODO')
+//              ->setCellValue('B1', 'EJECUTOR')
+//              ->setCellValue('C1', 'CODIGO')
+//              ->setCellValue('D1', 'DESCRIPCION');
+
+              // Make bold cells
+//              $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+
+              foreach ($data as $key => $value) {
+                                  
+                  
+//                  $final = $rowCount+2;
+//                  $objPHPExcel->getActiveSheet()->mergeCells('A'.$rowCount.':A'.$final);
+//                  $objPHPExcel->getActiveSheet()->mergeCells('B'.$rowCount.':B'.$final);
+//                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':A'.$final)->getAlignment()->setWrapText(true);
+//                  $objPHPExcel->getActiveSheet()->getStyle('B'.$rowCount.':B'.$final)->getAlignment()->setWrapText(true);
+                  // Set thin black border outline around column
+                  $styleThinBlackBorderOutline = array(
+                      'borders' => array(
+                          'outline' => array(
+                              'style' => PHPExcel_Style_Border::BORDER_THIN,
+                              'color' => array('argb' => 'FF000000'),
+                          ),
+                      ),
+                  );
+                  
+//                  $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray($styleThinBlackBorderOutline);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('A1', $value->id_ejecutor.' - '.$value->tx_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('A2', $value->id_proy_ac.' - '.$value->nombre, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->tx_codigo_ae.' - '.$value->tx_nombre_ae, PHPExcel_Cell_DataType::TYPE_STRING); 
+
+              $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray(
+                  array(
+                          'font'    => array(
+                              'bold'      => true
+                          ),
+                          'alignment' => array(
+                              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                          ),
+                          'borders' => array(
+                              'top'     => array(
+                                  'style' => PHPExcel_Style_Border::BORDER_THIN
+                              )
+                          ),
+                          'fill' => array(
+                              'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                                  'rotation'   => 90,
+                              'startcolor' => array(
+                                  'argb' => 'FFA0A0A0'
+                              ),
+                              'endcolor'   => array(
+                                  'argb' => 'FFFFFFFF'
+                              )
+                          )
+                      )
+              );
+              $rowCount++;    
+              $objPHPExcel->setActiveSheetIndex(0)
+              ->setCellValue('A'.$rowCount, 'ACTIVIDADES')
+              ->setCellValue('B'.$rowCount, 'PRESUPUESTO PROGRAM. ANUAL (Bs.)')
+              ->setCellValue('C'.$rowCount, 'PRESUPUESTO MODIFICADO ANUAL (Bs.)')
+              ->setCellValue('D'.$rowCount, 'PRESUPUESTO ACTUALIZADO ANUAL (Bs.)')
+              ->setCellValue('E'.$rowCount, 'PRESUPUESTO COMPROM. AL CORTE (Bs.)')
+              ->setCellValue('F'.$rowCount, 'PRESUPUESTO CAUSADO AL CORTE (Bs.)')
+              ->setCellValue('G'.$rowCount, 'PRESUPUESTO PAGADO AL CORTE (Bs.)')
+              ->setCellValue('H'.$rowCount, 'SECTOR')
+              ->setCellValue('I'.$rowCount, 'PROY. Y/O A. CENTRAL.')
+              ->setCellValue('J'.$rowCount, 'ACCIÓN ESPECIFICA')
+              ->setCellValue('K'.$rowCount, 'PARTIDA')
+              ->setCellValue('L'.$rowCount, 'FUENTE FINANCIAMIENTO');  
+              $rowCount++;
+                  
+             $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),DB::raw('coalesce(mo_actualizado_anual,0) as mo_actualizado_anual'),
+            DB::raw('coalesce(mo_comprometido,0) as mo_comprometido'),DB::raw('coalesce(mo_causado,0) as mo_causado'),DB::raw('coalesce(mo_pagado,0) as mo_pagado'),'de_fuente_financiamiento','co_partida',
+            'nu_numero',
+            'nu_original',
+            'co_sector')
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id')  
+             ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
+            ->where('id_tab_ac_ae', '=', $value->id_tab_ac_ae)
+            ->where('id_tab_tipo_periodo', '=', $value->id_tab_tipo_periodo)
+            ->orderBy('codigo', 'ASC')
+            ->orderBy('co_partida', 'ASC')
+            ->get();  
+             
+            $mo_presupuesto = 0;
+            $mo_modificado_anual = 0;
+            $mo_actualizado_anual = 0;
+            $mo_comprometido = 0;
+            $mo_causado = 0;
+            $mo_pagado = 0;             
+                  
+            foreach($actividad as $item) {      
+
+                    
+                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $item->codigo.' - '.$item->nb_meta, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $item->mo_presupuesto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $item->mo_modificado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('D'.$rowCount, $item->mo_presupuesto + $item->mo_modificado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $item->mo_comprometido, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $item->mo_causado, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $item->mo_pagado, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('H'.$rowCount, $item->co_sector, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $item->nu_original, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('J'.$rowCount, $item->nu_numero, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $item->co_partida, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $item->de_fuente_financiamiento, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $rowCount++;
+                
+                $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
+                $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_actualizado_anual = $mo_actualizado_anual + ($item->mo_presupuesto + $item->mo_modificado_anual);
+                $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
+                $mo_causado = $mo_causado + $item->mo_causado;
+                $mo_pagado = $mo_pagado + $item->mo_pagado;
+                  
+            }
+            
+            
+                  $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':L'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, ' TOTAL ACCION ESPECIFICA ', PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $mo_presupuesto, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $mo_modificado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('D'.$rowCount, $mo_actualizado_anual, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $mo_comprometido, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $mo_causado, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $mo_pagado, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                  $rowCount++; 
+                  $rowCount++;
+            
+              }
+
+              // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+              $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+              // We'll be outputting an excel file
+              header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+              // It will be called file.xls
+              header('Content-Disposition: attachment; filename="METAS_FINANCIERAS_'.Session::get('ejercicio').'_'.date("Y-m-d").'.xlsx"');
+              $objWriter->save('php://output');
+
+              DB::commit();
+
+          } catch (\Illuminate\Database\QueryException $e) {
+              DB::rollback();
+              header('Content-Type: text/html');
+              echo json_encode(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                  //'msg' => array('ERROR ('.$e->getCode().'):'=> 'CODIGO['.$e->getCode().']: Error en Transaccion, verfique e intente de nuevo.')
+              ));
+          }
+
+      }       
 
       public function pendientes($id)
       {
