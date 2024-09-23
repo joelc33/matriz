@@ -643,12 +643,7 @@ $html23.='
         ->where('t21.id_tab_ac', '=', $id)
         ->get(); 
 
-                $mo_presupuesto_anual_accion = 0;
-                $mo_modificado_anual_accion = 0;
-                $mo_actualizado_anual_accion = 0;
-                $mo_comprometido_accion = 0;
-                $mo_causado_accion = 0;
-                $mo_pagado_accion = 0;            
+           
             
             foreach($data as $data) {
             
@@ -739,7 +734,12 @@ $html23.='
             ->orderBy('codigo', 'ASC')
             ->get();             
             
-
+                $mo_presupuesto_anual_accion = 0;
+                $mo_modificado_anual_accion = 0;
+                $mo_actualizado_anual_accion = 0;
+                $mo_comprometido_accion = 0;
+                $mo_causado_accion = 0;
+                $mo_pagado_accion = 0; 
                 
                 $mo_presupuesto_anual_ejecutor = 0;
                 $mo_modificado_anual_ejecutor = 0;
