@@ -1421,6 +1421,7 @@ $html23.='
                   $objPHPExcel->getActiveSheet()->mergeCells('A'.$rowCount.':A'.$final);  
              }else{
              $i = 1; 
+             $final = $rowCount;
              }
                  
                  
