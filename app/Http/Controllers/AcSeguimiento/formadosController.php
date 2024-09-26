@@ -1040,12 +1040,12 @@ class formadosController extends Controller
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_002->count();
                 $tab_forma_002->skip($start)->take($limit);
-                $response['data']  = $tab_forma_002->orderby('ac_seguimiento.tab_forma_002.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_forma_002->orderby('t06.codigo', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_002->count();
                 $tab_forma_002->skip($start)->take($limit);
-                $response['data']  = $tab_forma_002->orderby('ac_seguimiento.tab_forma_002.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_forma_002->orderby('t06.codigo', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
