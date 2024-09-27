@@ -291,7 +291,6 @@ class formacuatroController extends Controller
                 'de_unidad_medida',
                 'ac_seguimiento.tab_meta_fisica.in_cargado',
                 'in_004',
-                DB::raw("count(ac_seguimiento.tab_meta_fisica.id) as total"),
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
             )
