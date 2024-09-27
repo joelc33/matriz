@@ -19,6 +19,8 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 //objeto store
 this.store_lista = this.getLista();
 
+this.storeCO_TIPO_PERIODO = this.getStoreCO_TIPO_PERIODO();
+
 //Editar un registro
 this.ficha= new Ext.Button({
     text:'Ver Ficha',
@@ -50,6 +52,40 @@ this.editar= new Ext.Button({
 
 this.editar.disable();
 
+this.id_tab_tipo_periodo = new Ext.form.ComboBox({
+	fieldLabel:'Periodo',
+	store: this.storeCO_TIPO_PERIODO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_tipo_periodo',
+	hiddenName:'tipo_periodo',       
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Periodo...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:150,
+	itemSelector: 'div.search-item',
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_tipo_periodo}</div></div></tpl>'),
+	resizable:true,
+	allowBlank:false,
+        listeners:{                        select: function(){
+        forma003ListaCambio.main.store_lista.baseParams={}
+        forma003ListaCambio.main.store_lista.baseParams.BuscarBy = true;
+        forma003ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
+        forma003ListaCambio.main.store_lista.baseParams.variable = forma003ListaCambio.main.buscador.getValue();
+        forma003ListaCambio.main.store_lista.baseParams.id_tab_tipo_periodo = this.getValue();
+        forma003ListaCambio.main.store_lista.baseParams.paginar = 'si';
+        forma003ListaCambio.main.store_lista.load();
+                }                   
+}
+});
+
+
+this.storeCO_TIPO_PERIODO.load({
+    params: {periodo:3, _token:'{{ csrf_token() }}'}
+});
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -78,6 +114,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 		this.applyEmptyText();
 		this.value = '';
 		this.fireEvent('clear', this);
+                forma003ListaCambio.main.id_tab_tipo_periodo.clearValue();
 		forma003ListaCambio.main.store_lista.baseParams={};
 		forma003ListaCambio.main.store_lista.baseParams.paginar = 'si';
 		forma003ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
@@ -97,6 +134,7 @@ this.buscador = new Ext.form.TwinTriggerField({
 			forma003ListaCambio.main.store_lista.baseParams.BuscarBy = true;
 			forma003ListaCambio.main.store_lista.baseParams._token = '{{ csrf_token() }}';
 			forma003ListaCambio.main.store_lista.baseParams[this.paramName] = v;
+                        forma003ListaCambio.main.store_lista.baseParams.id_tab_tipo_periodo = forma003ListaCambio.main.id_tab_tipo_periodo.getValue();
 			forma003ListaCambio.main.store_lista.baseParams.paginar = 'si';
 			forma003ListaCambio.main.store_lista.load();
 		}
@@ -113,7 +151,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.001.ficha', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.editar,'-',
+			  this.editar,'-',this.id_tab_tipo_periodo,'-',
 			@endif
 				this.buscador
     ],
@@ -209,6 +247,17 @@ getLista: function(){
 						}
 				}
 	    ]
+    });
+    return this.store;
+},
+getStoreCO_TIPO_PERIODO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/periodo/tipo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},
+            {name: 'de_tipo_periodo'}
+            ]
     });
     return this.store;
 }

@@ -134,7 +134,7 @@ this.fieldset2 = new Ext.form.FieldSet({
 });
 
 this.aprobar = new Ext.Button({
-    text:'Aprobar',
+    text:'Revisado',
     iconCls: 'icon-fin',
     handler:function(){
 
@@ -174,8 +174,8 @@ this.aprobar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma003ActividadListaCambio.main.store_lista.load();
-                 forma003ListaCambio.main.store_lista.load();
+                 forma003ActividadListaCambio.main.store_lista.reload();
+                 forma003ListaCambio.main.store_lista.reload();
                  forma003ActividadEditar.main.winformPanel_.close();
              }
         });

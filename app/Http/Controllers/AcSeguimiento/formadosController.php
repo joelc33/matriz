@@ -548,12 +548,12 @@ class formadosController extends Controller
                  DB::raw("coalesce(sum(mo_fondo),0) as mo_fondo"),'de_fuente_financiamiento'
                 )
                 ->join('mantenimiento.tab_fuente_financiamiento as t01', 'tab_ac_ae_fuente.id_tab_tipo_fondo', '=', 't01.id_tab_tipo_fondo')
-                ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
+                ->where('id_tab_ac_ae', '=', $data1->id)
                 ->where('t01.id', '=', $item->id_tab_fuente_financiamiento)
                 ->groupBy('de_fuente_financiamiento')
                 ->first();  
                 
-     
+                if($data3){
 
                 if($item->mo_fondo>$data3->mo_fondo){
                 
@@ -562,8 +562,19 @@ class formadosController extends Controller
                   'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es mayor que el cargado en la accion especifica, verifique!'
                 ));
                 
+                } 
+
                 }                
+                else{
+                $data6 = tab_fuente_financiamiento::where('id', '=', $item->id_tab_fuente_financiamiento)
+                ->first();
                 
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La fuente '.$data6->de_fuente_financiamiento.' no se encuentra en la lista de fuentes de la Ae, verifique!'
+                ));                
+                
+                }
                 }
                 
                 
@@ -929,6 +940,7 @@ class formadosController extends Controller
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
             $variable = Input::get('variable');
+            $id_tab_tipo_periodo = Input::get('id_tab_tipo_periodo');
 
             $tab_forma_002 = $this->tab_forma_002
             ->join('ac_seguimiento.tab_meta_fisica as t06', 'ac_seguimiento.tab_forma_002.id_tab_meta_fisica', '=', 't06.id')        
@@ -976,6 +988,10 @@ class formadosController extends Controller
                     $tab_forma_002->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
 
+                if($id_tab_tipo_periodo!="") {
+                    $tab_forma_002->where('id_tab_tipo_periodo', '=', $id_tab_tipo_periodo);
+                }   
+                
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_002->get()->count();
                 $tab_forma_002->skip($start)->take($limit);

@@ -249,7 +249,7 @@ this.fieldset2 = new Ext.form.FieldSet({
 });
 
 this.guardar = new Ext.Button({
-    text:'Aprobar',
+    text:'Revisado',
     iconCls: 'icon-fin',
     handler:function(){
 
@@ -289,8 +289,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadListaCambio.main.store_lista.load();
-                 forma002ListaCambio.main.store_lista.load();
+                 forma002ActividadListaCambio.main.store_lista.reload();
+                 forma002ListaCambio.main.store_lista.reload();
                  forma002ActividadEditar.main.winformPanel_.close();
              }
         });

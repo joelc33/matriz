@@ -8,6 +8,7 @@ use matriz\Models\AcSegto\tab_ac_ae;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\Mantenimiento\tab_lapso;
+use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
 use matriz\Models\AcSegto\tab_ac_ae_fuente;
 use View;
 use Validator;
@@ -134,6 +135,7 @@ class formatresController extends Controller
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
             $variable = Input::get('variable');
+            $id_tab_tipo_periodo = Input::get('id_tab_tipo_periodo');
 
             $tab_forma_003 = tab_meta_financiera::join('ac_seguimiento.tab_meta_fisica as t06', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't06.id')        
             ->join('ac_seguimiento.tab_ac_ae as t05', 't06.id_tab_ac_ae', '=', 't05.id')        
@@ -178,6 +180,10 @@ class formatresController extends Controller
                 if($variable!="") {
                     $tab_forma_003->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
+                
+                if($id_tab_tipo_periodo!="") {
+                    $tab_forma_003->where('id_tab_tipo_periodo', '=', $id_tab_tipo_periodo);
+                }                   
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_003->get()->count();
@@ -926,8 +932,8 @@ class formatresController extends Controller
                 ->where('t01.id', '=', $item->id_tab_fuente_financiamiento)
                 ->groupBy('de_fuente_financiamiento')
                 ->first();  
-                
-     
+
+                if($data3){
 
                 if($item->mo_fondo>$data3->mo_fondo){
                 
@@ -936,8 +942,19 @@ class formatresController extends Controller
                   'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es mayor que el cargado en la accion especifica, verifique!'
                 ));
                 
+                } 
+
                 }                
+                else{
+                $data6 = tab_fuente_financiamiento::where('id', '=', $item->id_tab_fuente_financiamiento)
+                ->first();
                 
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La fuente '.$data6->de_fuente_financiamiento.' no se encuentra en la lista de fuentes de la Ae, verifique!'
+                ));                
+                
+                }
                 }                
 
                 DB::commit();

@@ -395,7 +395,7 @@ this.enviar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                 forma002ActividadLista.main.store_lista.load();
+                 forma002ActividadLista.main.store_lista.reload();
                  forma002ActividadEditar.main.winformPanel_.close();
              }
         });

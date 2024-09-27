@@ -489,6 +489,7 @@ class formaunoController extends Controller
             $start  = Input::get('start', 0);
             $limit  = Input::get('limit', 20);
             $variable = Input::get('variable');
+            $id_tab_tipo_periodo = Input::get('id_tab_tipo_periodo');
 
             $tab_forma_001 = $this->tab_forma_001
             ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_001.id_tab_ac', '=', 't01.id')
@@ -524,6 +525,10 @@ class formaunoController extends Controller
                 if($variable!="") {
                     $tab_forma_001->where('tx_ejecutor', 'ILIKE', "%$variable%");
                 }
+                if($id_tab_tipo_periodo!="") {
+                    $tab_forma_001->where('id_tab_tipo_periodo', '=', $id_tab_tipo_periodo);
+                }                
+                
 
                 $response['success']  = 'true';
                 $response['total'] = $tab_forma_001->count();
