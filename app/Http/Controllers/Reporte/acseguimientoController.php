@@ -3030,7 +3030,7 @@ foreach($data3 as $item3) {
           $tx_sector = $item3->tx_sector;
           $ejecutor = 'EJECUTOR: TODOS';
          }    
-
+$this->encabezado6($pdf);
 $html23='';
 $html23.= '
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
