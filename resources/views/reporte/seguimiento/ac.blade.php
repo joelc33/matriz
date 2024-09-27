@@ -89,11 +89,21 @@ this.botones = new this.GrupoBotones({
 									iconCls:'icon-pdf',
 									handler: this.onImprimir
 								},
+                                                                {
+									text:'REPORTE ACUMULADO',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimirAcumulada
+								},
                                                         @else
                                                                 {
 									text:'REPORTE EJECUTOR',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir
+								},
+                                                                {
+									text:'REPORTE EJECUTOR ACUMULADO',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimirAcumulada
 								},
                                                                 {
 									text:'REPORTE TODOS',  // Generar la impresión en pdf
@@ -137,6 +147,17 @@ if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
             url: '{{ URL::to('reporte/ac/seguimiento/ficha/consolidado') }}/{!! $lapso->id !!}/'+this.codigo
 //		url: '{{ URL::to('reporte/poa/ac/ubicacion') }}?'+parametroSeguimientoAC.main.formpanel.getForm().getValues(true)
 	});
+},
+onImprimirAcumulada : function() {
+if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
+    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
+    return false;
+}
+
+        this.codigo  = parametroSeguimientoAC.main.id_tab_ejecutores.getValue();
+	bajar.load({
+            url: '{{ URL::to('reporte/ac/seguimiento/ficha/consolidado/acumulada') }}/{!! $lapso->id !!}/'+this.codigo
+            });
 },
 onImprimir1 : function() {
 	bajar.load({

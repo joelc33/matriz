@@ -173,6 +173,7 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/ficha/ejecucion/acumulada/{id_lapso}/{id}', 'acseguimientoejecucionController@fichaEjecucionAcumulada');
         Route::get('ac/seguimiento/ficha/consolidado/{id_lapso}', 'acseguimientoController@fichaConsolidado');
         Route::get('ac/seguimiento/ficha/consolidado/{id_lapso}/{id}', 'acseguimientoController@fichaConsolidado');
+        Route::get('ac/seguimiento/ficha/consolidado/acumulada/{id_lapso}/{id}', 'acseguimientoController@fichaConsolidadoAcumulada');
         Route::get('ac/seguimiento/{id}', 'acseguimientoController@reporte');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');
         Route::get('poa/proyecto/todo', 'proyectoController@poaTodo');
