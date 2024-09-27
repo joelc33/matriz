@@ -274,7 +274,7 @@ class formacuatroController extends Controller
     {
         try {
             $start  = Input::get('start', 0);
-            $limit  = Input::get('limit', 20);
+            $limit  = Input::get('limit', 40);
             $variable = Input::get('variable');
 
             $tab_meta_fisica = tab_meta_fisica::select(
