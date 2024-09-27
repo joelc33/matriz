@@ -2002,7 +2002,8 @@ $html23.='
             'ac_seguimiento.tab_ac.de_observacion_002',
             'ac_seguimiento.tab_ac.de_observacion_003',
             'ac_seguimiento.tab_ac.id',
-            'ac_seguimiento.tab_ac.de_sector'                    
+            'ac_seguimiento.tab_ac.de_sector',
+            't21.id_tab_ac_ae_predefinida'                    
         )
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
