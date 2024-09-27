@@ -310,12 +310,12 @@ class formacuatroController extends Controller
                 }
 
                 $response['success']  = 'true';
-                $response['total'] = $tab_meta_fisica->count();
+                $response['total'] = $tab_meta_fisica->get()->count();
                 $tab_meta_fisica->skip($start)->take($limit);
                 $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
-                $response['total'] = $tab_meta_fisica->count();
+                $response['total'] = $tab_meta_fisica->get()->count();
                 $tab_meta_fisica->skip($start)->take($limit);
                 $response['data']  = $tab_meta_fisica->orderby('ac_seguimiento.tab_meta_fisica.id', 'ASC')->get()->toArray();
             }
