@@ -3064,7 +3064,7 @@ $html23.='
 
 }
 
-            if($id!=null){
+            if($id_ejecutor!=null){
              $tab_meta_financiera = tab_meta_financiera::select(                  
                 'ac_seguimiento.tab_meta_financiera.co_partida'
             )
@@ -3176,7 +3176,7 @@ $html23.='
 
          }else{
              
-            if($id!=null){
+            if($id_ejecutor!=null){
              $tab_meta_financiera = tab_meta_financiera::select(                  
                 'ac_seguimiento.tab_meta_financiera.co_partida'
             )
