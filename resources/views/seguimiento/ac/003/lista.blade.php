@@ -109,6 +109,18 @@ this.exportar= new Ext.Button({
 });
 this.exportar.disable();
 
+this.exportar_acumulada= new Ext.Button({
+    text:'Ver Ficha Acumulada',
+    iconCls: 'icon-excel',
+    handler:function(){
+        this.codigo  = forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/003/exportar/acumulada') }}/'+this.codigo
+	});
+    }
+});
+this.exportar_acumulada.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -174,7 +186,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoHeight:true,
     tbar:[
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.ficha_acumulada,'-',this.exportar,'-',this.observaciones,'-',this.cargar,'-',
+			  this.ficha,'-',this.ficha_acumulada,'-',this.exportar,'-',this.exportar_acumulada,'-',this.observaciones,'-',this.cargar,'-',
 			@endif
                         @if (in_array(Session::get('rol'), $rol_planificador))
                         @else
@@ -199,6 +211,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
              		forma003Lista.main.ficha.enable();
                         forma003Lista.main.ficha_acumulada.enable();
                         forma003Lista.main.exportar.enable();
+                        forma003Lista.main.exportar_acumulada.enable();
                         forma003Lista.main.observaciones.enable();
                         forma003Lista.main.cargar.enable();   
                         }else{
@@ -206,12 +219,14 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			forma003Lista.main.ficha.enable();
                         forma003Lista.main.ficha_acumulada.enable();
                         forma003Lista.main.exportar.enable();
+                        forma003Lista.main.exportar_acumulada.enable();
                         forma003Lista.main.observaciones.enable();
                         forma003Lista.main.cargar.enable();
                     }else{
                         forma003Lista.main.ficha.enable();
                         forma003Lista.main.ficha_acumulada.enable();
                         forma003Lista.main.exportar.enable();
+                        forma003Lista.main.exportar_acumulada.enable();
                         forma003Lista.main.observaciones.disable();
                         forma003Lista.main.cargar.disable();
                     }
@@ -279,6 +294,7 @@ this.store_lista.on('load',function(){
 forma003Lista.main.ficha.disable();
 forma003Lista.main.ficha_acumulada.disable();
 forma003Lista.main.exportar.disable();
+forma003Lista.main.exportar_acumulada.disable();
 forma003Lista.main.observaciones.disable();
 forma003Lista.main.cargar.disable();
 });
