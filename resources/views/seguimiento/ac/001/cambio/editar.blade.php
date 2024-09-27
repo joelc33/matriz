@@ -99,7 +99,7 @@ this.nu_em_generado = new Ext.form.TextField({
 });
 
 this.guardar = new Ext.Button({
-    text:'Reviado',
+    text:'Revisado',
     iconCls: 'icon-fin',
     handler:function(){
 
