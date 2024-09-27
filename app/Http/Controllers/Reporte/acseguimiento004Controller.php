@@ -266,7 +266,8 @@ class acseguimiento004Controller extends Controller
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
             ->orderBy('codigo', 'ASC')
             ->get();
-          
+             
+if($actividad->count()>0){
 $html1 = '';
 foreach($actividad as $item) {
             
@@ -418,7 +419,14 @@ $html23.='
           $pdf->Ln(-3);
           $pdf->writeHTML($html23, true, false, false, false, '');
           
-            }
+            
+            
+}else{
+$pdf->AddPage(); 
+$pdf->SetFont('','B',11);
+$pdf->MultiCell(277, 5, 'NO SE ENCONTRARÓN REGISTROS', 0, 'C', 0, 0, '', '', true);
+}      
+}
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
       }      
@@ -588,6 +596,8 @@ $html23.='
             ->orderBy('codigo', 'ASC')
             ->get();
           
+if($actividad->count()>0){             
+             
 $html1 = '';
 foreach($actividad as $item) {
             
@@ -798,7 +808,11 @@ $html23.='
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
           $pdf->Ln(-3);
           $pdf->writeHTML($html23, true, false, false, false, '');
-          
+}else{
+$pdf->AddPage(); 
+$pdf->SetFont('','B',11);
+$pdf->MultiCell(277, 5, 'NO SE ENCONTRARÓN REGISTROS', 0, 'C', 0, 0, '', '', true);
+}     
             }
           $pdf->lastPage();
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D');
