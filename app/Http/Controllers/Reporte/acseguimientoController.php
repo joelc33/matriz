@@ -2713,7 +2713,7 @@ foreach($actividad as $item) {
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
             ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
-            ->where('codigo', '<=', $item->codigo)
+            ->where('codigo', '=', $item->codigo)
              ->groupBy('codigo')
              ->groupBy('nb_meta')
              ->groupBy('co_partida')
