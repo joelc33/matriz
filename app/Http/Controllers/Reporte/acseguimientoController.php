@@ -2131,6 +2131,7 @@ $contar=0;
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t02.codigo', '=', $item->codigo)
+                ->where('t01.id', '=', $data->id_tab_ac_ae)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();          
