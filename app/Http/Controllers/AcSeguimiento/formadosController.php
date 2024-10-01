@@ -549,7 +549,7 @@ class formadosController extends Controller
                  DB::raw("coalesce(sum(mo_fondo),0) as mo_fondo"),'de_fuente_financiamiento'
                 )
                 ->join('mantenimiento.tab_fuente_financiamiento as t01', 'tab_ac_ae_fuente.id_tab_tipo_fondo', '=', 't01.id_tab_tipo_fondo')
-                ->where('id_tab_ac_ae', '=', $data1->id)
+                ->where('id_tab_ac_ae', '=', Input::get("ac_ae"))
                 ->where('t01.id', '=', $item->id_tab_fuente_financiamiento)
                 ->groupBy('de_fuente_financiamiento')
                 ->first();  
