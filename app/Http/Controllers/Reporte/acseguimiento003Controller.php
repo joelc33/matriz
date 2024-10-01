@@ -638,7 +638,8 @@ $html23.='
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'id_tab_tipo_periodo',
             'ac_seguimiento.tab_ac.de_observacion_003',
-            'ac_seguimiento.tab_ac.de_sector'
+            'ac_seguimiento.tab_ac.de_sector',
+            't21.id_tab_ac_ae_predefinida'
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get(); 
@@ -892,7 +893,7 @@ $id = 0;
                 ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('t02.codigo', '=', $item->codigo)
-                ->where('t01.id', '=', $data->id_tab_ac_ae)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t03.co_partida', '=', $item->co_partida)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $item->id_tab_fuente_financiamiento)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
@@ -1599,7 +1600,8 @@ $html23.='
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'id_tab_tipo_periodo',
             'ac_seguimiento.tab_ac.de_observacion_003',
-            'ac_seguimiento.tab_ac.de_sector'
+            'ac_seguimiento.tab_ac.de_sector',
+            't21.id_tab_ac_ae_predefinida'
         )
         ->where('t21.id_tab_ac', '=', $id)
         ->get();
@@ -1913,7 +1915,7 @@ $html23.='
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $value->id_proy_ac)
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('t03.co_partida', '=', $item->co_partida)
-                ->where('t01.id', '=', $data->id_tab_ac_ae)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $item->id_tab_fuente_financiamiento)
                 ->where('id_tab_tipo_periodo', '<=', $value->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $value->id_tab_ejercicio_fiscal)
