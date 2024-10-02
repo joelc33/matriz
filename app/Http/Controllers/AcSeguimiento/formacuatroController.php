@@ -62,7 +62,7 @@ class formacuatroController extends Controller
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->select(
                 'ac_seguimiento.tab_ac.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 'ac_seguimiento.tab_ac.id_tab_ejecutores',
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -92,7 +92,7 @@ class formacuatroController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -123,7 +123,7 @@ class formacuatroController extends Controller
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->select(
             'ac_seguimiento.tab_ac.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             'ac_seguimiento.tab_ac.id_tab_ejecutores',
             'ac_seguimiento.tab_ac.in_activo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -191,7 +191,7 @@ class formacuatroController extends Controller
                 'ac_seguimiento.tab_ac_ae.id',
                 'id_tab_ac',
                 'id_tab_ac_ae_predefinida',
-                'id_tab_ejecutores',
+                'ac_seguimiento.tab_ac_ae.id_tab_ejecutores',
                 'bien_servicio',
                 'id_tab_unidad_medida',
                 'meta',
@@ -203,7 +203,7 @@ class formacuatroController extends Controller
                 'nu_numero',
                 'de_nombre',
                 'de_unidad_medida',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't03.id_ejecutor',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
@@ -211,6 +211,7 @@ class formacuatroController extends Controller
             ->join('mantenimiento.tab_ac_ae_predefinida as t01', 'ac_seguimiento.tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't01.id')
             ->join('mantenimiento.tab_unidad_medida as t02', 'ac_seguimiento.tab_ac_ae.id_tab_unidad_medida', '=', 't02.id')
             ->join('mantenimiento.tab_ejecutores as t03', 'ac_seguimiento.tab_ac_ae.id_tab_ejecutores', '=', 't03.id')
+            ->join('ac_seguimiento.tab_ac as t04', 'ac_seguimiento.tab_ac_ae.id_tab_ac', '=', 't04.id')
             ->where('id_tab_ac', '=', Input::get('ac'))
             ->where('ac_seguimiento.tab_ac_ae.in_activo', '=', true);
 

@@ -73,7 +73,7 @@ class formaunoController extends Controller
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->select(
                 'ac_seguimiento.tab_ac.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 'ac_seguimiento.tab_ac.id_tab_ejecutores',
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -99,7 +99,7 @@ class formaunoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -130,7 +130,7 @@ class formaunoController extends Controller
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->select(
             'ac_seguimiento.tab_ac.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             'ac_seguimiento.tab_ac.id_tab_ejecutores',
             'ac_seguimiento.tab_ac.in_activo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -220,7 +220,8 @@ class formaunoController extends Controller
     {
         $data = tab_ac::select(
             'id',
-            'de_sector'
+            'de_sector',
+            'tx_ejecutor_ac'
         )
         ->where('id', '=', $id)
         ->first();
@@ -343,6 +344,7 @@ class formaunoController extends Controller
 
                 $tabla = tab_ac::find($id);
                 $tabla->de_sector = Input::get("de_sector");
+                $tabla->tx_ejecutor_ac = Input::get("tx_ejecutor_ac");
                 $tabla->save();                             
 
                 DB::commit();
@@ -499,7 +501,7 @@ class formaunoController extends Controller
             ->select(
                 'ac_seguimiento.tab_forma_001.id',
                 'ac_seguimiento.tab_forma_001.id_tab_ac',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't01.id_tab_ejecutores',
                 't02.in_activo',
                 'de_estatus',
@@ -523,7 +525,7 @@ class formaunoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_forma_001->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_forma_001->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
                 if($id_tab_tipo_periodo!="") {
                     $tab_forma_001->where('id_tab_tipo_periodo', '=', $id_tab_tipo_periodo);
@@ -562,7 +564,7 @@ class formaunoController extends Controller
         ->leftJoin('autenticacion.tab_usuarios as t04b', 'ac_seguimiento.tab_forma_001.id_usuario_procesa', '=', 't04b.id')
         ->select(
             'ac_seguimiento.tab_forma_001.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't01.id_tab_ejecutores',
             't02.in_activo',
             't04a.da_login as da_login_a',
@@ -957,7 +959,8 @@ class formaunoController extends Controller
                 $tabla->de_observacion_003 = $arreglo_ac->de_observacion_003;
                 $tabla->de_observacion_002 = $arreglo_ac->de_observacion_002;
                 $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
-                $tabla->de_sector = $arreglo_ac->de_sector;                
+                $tabla->de_sector = $arreglo_ac->de_sector; 
+                $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor_ac;
                 
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->save();  

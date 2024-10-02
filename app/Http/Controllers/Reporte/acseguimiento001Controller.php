@@ -107,7 +107,7 @@ class acseguimiento001Controller extends Controller
             'nu_codigo',
             'id_tab_ejecutores',
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
             'id_tab_ac_predefinida',
             'id_tab_sectores',
@@ -165,7 +165,7 @@ class acseguimiento001Controller extends Controller
 	$htmlObjetivo = '
 <table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
 	<tr align="left">
-		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor.'</td>
+		<td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$data->tx_ejecutor_ac.'</td>
 	</tr>
 	<tr align="left">
 		<td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$data->tx_area_estrategica.'</td>

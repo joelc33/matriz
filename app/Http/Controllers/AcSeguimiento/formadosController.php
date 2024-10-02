@@ -68,7 +68,7 @@ class formadosController extends Controller
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->select(
                 'ac_seguimiento.tab_ac.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 'ac_seguimiento.tab_ac.id_tab_ejecutores',
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -93,7 +93,7 @@ class formadosController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -124,7 +124,7 @@ class formadosController extends Controller
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->select(
             'ac_seguimiento.tab_ac.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             'ac_seguimiento.tab_ac.id_tab_ejecutores',
             'ac_seguimiento.tab_ac.in_activo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -192,7 +192,7 @@ class formadosController extends Controller
                 'ac_seguimiento.tab_ac_ae.id',
                 'id_tab_ac',
                 'id_tab_ac_ae_predefinida',
-                'id_tab_ejecutores',
+                'ac_seguimiento.tab_ac_ae.id_tab_ejecutores',
                 'bien_servicio',
                 'id_tab_unidad_medida',
                 'meta',
@@ -204,7 +204,7 @@ class formadosController extends Controller
                 'nu_numero',
                 'de_nombre',
                 'de_unidad_medida',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't03.id_ejecutor',
                 DB::raw("to_char(fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
                 DB::raw("to_char(fecha_fin, 'dd-mm-YYYY') as fecha_fin")
@@ -212,6 +212,7 @@ class formadosController extends Controller
             ->join('mantenimiento.tab_ac_ae_predefinida as t01', 'ac_seguimiento.tab_ac_ae.id_tab_ac_ae_predefinida', '=', 't01.id')
             ->join('mantenimiento.tab_unidad_medida as t02', 'ac_seguimiento.tab_ac_ae.id_tab_unidad_medida', '=', 't02.id')
             ->join('mantenimiento.tab_ejecutores as t03', 'ac_seguimiento.tab_ac_ae.id_tab_ejecutores', '=', 't03.id')
+            ->join('ac_seguimiento.tab_ac as t04', 'ac_seguimiento.tab_ac_ae.id_tab_ac', '=', 't04.id')
             ->where('id_tab_ac', '=', Input::get('ac'))
             ->where('ac_seguimiento.tab_ac_ae.in_activo', '=', true);
 
@@ -952,7 +953,7 @@ class formadosController extends Controller
             ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_002.id_tab_estatus')
             ->join('mantenimiento.tab_ac_ae_predefinida as t07', 't05.id_tab_ac_ae_predefinida', '=', 't07.id')
             ->select(
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't01.id as id_ac',    
                 't02.in_activo',
                 'id_tab_ac_ae',
@@ -967,7 +968,7 @@ class formadosController extends Controller
             ->where('t01.in_activo', '=', true)
             ->where('in_cargado', '=', true)
                     ->groupBy('t01.id')
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
                     ->groupBy('t02.in_activo')
                    ->groupBy('t05.in_002')
                     ->groupBy('id_tab_ac_ae')
@@ -986,7 +987,7 @@ class formadosController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_forma_002->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_forma_002->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 if($id_tab_tipo_periodo!="") {
@@ -1085,7 +1086,7 @@ class formadosController extends Controller
         ->leftJoin('autenticacion.tab_usuarios as t04b', 'ac_seguimiento.tab_forma_002.id_usuario_procesa', '=', 't04b.id')
         ->select(
             'ac_seguimiento.tab_forma_002.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't01.id_tab_ejecutores',
             'nb_meta',
             'de_nombre',

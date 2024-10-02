@@ -264,7 +264,8 @@ class lapsoController extends Controller
                 $tabla->de_observacion_003 = $arreglo_ac->de_observacion_003;
                 $tabla->de_observacion_002 = $arreglo_ac->de_observacion_002;
                 $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
-                $tabla->de_sector = $arreglo_ac->de_sector;                
+                $tabla->de_sector = $arreglo_ac->de_sector; 
+                $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor_ac;
                 
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->save();  
@@ -507,6 +508,7 @@ class lapsoController extends Controller
                 $tabla->in_bloquear_001 = false;
                 $tabla->in_bloquear_005 = false;
                 $tabla->id_accion_centralizada = $arreglo_ac->id;
+                $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor;
                 $tabla->save();  
                 
             $tab_ac_ae = ac_ae::select(

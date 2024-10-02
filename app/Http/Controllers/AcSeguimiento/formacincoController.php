@@ -66,7 +66,7 @@ class formacincoController extends Controller
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->select(
                 'ac_seguimiento.tab_ac.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 'ac_seguimiento.tab_ac.id_tab_ejecutores',
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -91,7 +91,7 @@ class formacincoController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -123,7 +123,7 @@ class formacincoController extends Controller
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->select(
             'ac_seguimiento.tab_ac.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             'ac_seguimiento.tab_ac.id_tab_ejecutores',
             'ac_seguimiento.tab_ac.in_activo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -441,7 +441,7 @@ class formacincoController extends Controller
             ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_005.id_tab_estatus')
             ->select(
                 'ac_seguimiento.tab_forma_005.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't01.id_tab_ejecutores',
                 't02.in_activo',
                 'de_estatus',
@@ -551,7 +551,7 @@ class formacincoController extends Controller
         ->leftJoin('autenticacion.tab_usuarios as t04b', 'ac_seguimiento.tab_forma_005.id_usuario_procesa', '=', 't04b.id')
         ->select(
             'ac_seguimiento.tab_forma_005.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't01.id_tab_ejecutores',
             't02.in_activo',
             't04a.da_login as da_login_a',

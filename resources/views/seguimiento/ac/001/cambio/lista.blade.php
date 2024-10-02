@@ -246,7 +246,7 @@ getLista: function(){
                     {name: 'id_tab_ac'},
 				{name: 'id_ejecutor'},
 				{name: 'id_tab_ejecutores'},
-		    {name: 'tx_ejecutor'},
+		    {name: 'tx_ejecutor_ac'},
 				{name: 'nu_codigo'},
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},
@@ -255,7 +255,7 @@ getLista: function(){
 				{
 						name: 'ejecutor',
 						convert: function(v, r) {
-								return r.id_ejecutor + ' - ' + r.tx_ejecutor;
+								return r.id_ejecutor + ' - ' + r.tx_ejecutor_ac;
 						}
 				},
 				{

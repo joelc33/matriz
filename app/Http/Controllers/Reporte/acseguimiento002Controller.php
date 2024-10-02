@@ -208,7 +208,7 @@ class acseguimiento002Controller extends Controller
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
@@ -299,7 +299,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -520,7 +520,7 @@ $html23.='
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
@@ -614,7 +614,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -782,7 +782,7 @@ $html23.='
             ->join('mantenimiento.tab_lapso as t03', 't01.id_tab_lapso', '=', 't03.id')
             ->join('mantenimiento.tab_ac_ae_predefinida as t07', 't05.id_tab_ac_ae_predefinida', '=', 't07.id')
             ->select(
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't01.id as id_ac',    
                 't02.in_activo',
                 'id_tab_ac_ae',
@@ -798,7 +798,7 @@ $html23.='
             ->where('in_cargado', '=', false)
             ->where('t01.id_tab_lapso', '=', $id)
                     ->groupBy('t01.id')
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
                     ->groupBy('t02.in_activo')
                    ->groupBy('t05.in_002')
                     ->groupBy('id_tab_ac_ae')
@@ -920,7 +920,7 @@ $html23.='
                   );
                   $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':D'.$rowCount)->applyFromArray($styleThinBlackBorderOutline);
                   $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->de_lapso);
-                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor.' - '.$value->tx_ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+                  $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value->id_ejecutor.' - '.$value->tx_ejecutor_ac, PHPExcel_Cell_DataType::TYPE_STRING);
                   $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->nu_codigo, PHPExcel_Cell_DataType::TYPE_STRING);
                   $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->de_nombre, PHPExcel_Cell_DataType::TYPE_STRING);
                   $rowCount++;

@@ -196,7 +196,7 @@ getLista: function(){
 	    {name: 'nu_numero'},
 	    {name: 'de_nombre'},
 	    {name: 'nb_meta'},
-	    {name: 'tx_ejecutor'},
+	    {name: 'tx_ejecutor_ac'},
 	    {name: 'tx_prog_anual'},
 	    {name: 'fecha_inicio'},
 	    {name: 'fecha_fin'},
@@ -205,7 +205,7 @@ getLista: function(){
 			{
 					name: 'ejecutor',
 					convert: function(v, r) {
-							return r.id_ejecutor + ' - ' + r.tx_ejecutor;
+							return r.id_ejecutor + ' - ' + r.tx_ejecutor_ac;
 					}
 			},
 			{

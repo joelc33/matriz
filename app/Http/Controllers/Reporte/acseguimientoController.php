@@ -220,7 +220,7 @@ class acseguimientoController extends Controller
             })
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
@@ -230,7 +230,7 @@ class acseguimientoController extends Controller
             ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $id_ejecutor)
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
             ->groupBy('tab_ac.inst_mision')
@@ -249,7 +249,7 @@ class acseguimientoController extends Controller
             })
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
@@ -259,7 +259,7 @@ class acseguimientoController extends Controller
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
             ->where('ac_seguimiento.tab_ac.in_abierta', '=', false)
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
             ->groupBy('tab_ac.inst_mision')
@@ -324,7 +324,7 @@ class acseguimientoController extends Controller
             $pdf->Ln(5);
             $pdf->Write(0, 'AÑO '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
             $pdf->Ln(10);
-            $pdf->Write(0, $item->tx_ejecutor, '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Write(0, $item->tx_ejecutor_ac, '', 0, 'C', true, 0, false, false, 0);
             $pdf->SetY(190);
             $pdf->SetFont('','',11);            
             $pdf->Write(0, 'Maracaibo, '.$mes.' de '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
@@ -341,7 +341,7 @@ class acseguimientoController extends Controller
             $htmlObjetivo = '
     <table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
             <tr align="left">
-                    <td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$item->tx_ejecutor.'</td>
+                    <td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$item->tx_ejecutor_ac.'</td>
             </tr>
             <tr align="left">
                     <td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$item->tx_area_estrategica.'</td>
@@ -424,7 +424,7 @@ class acseguimientoController extends Controller
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
@@ -498,7 +498,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -738,7 +738,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -950,7 +950,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -1133,7 +1133,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -1211,7 +1211,7 @@ $html1 = '
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                 't03.id_ejecutor',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
                 'dia_mes_fin',
@@ -1239,7 +1239,7 @@ $html1 = '
             ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('t03.id_ejecutor')
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tx_sector')
             ->groupBy('tx_nombre')
             ->groupBy('dia_mes_fin')
@@ -1339,7 +1339,7 @@ foreach($data3 as $item3) {
 
          if($item3->id_ejecutor){
           $tx_sector = $item3->tx_sector;   
-          $ejecutor = $item3->id_ejecutor.' - '.$item3->tx_ejecutor;
+          $ejecutor = $item3->id_ejecutor.' - '.$item3->tx_ejecutor_ac;
          }else{
           $tx_sector = $item3->tx_sector;
           $ejecutor = 'EJECUTOR: TODOS';
@@ -1764,7 +1764,7 @@ $html23.='
             })
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
@@ -1774,7 +1774,7 @@ $html23.='
             ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $id_ejecutor)
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
             ->groupBy('tab_ac.inst_mision')
@@ -1793,7 +1793,7 @@ $html23.='
             })
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
             'ac_seguimiento.tab_ac.inst_mision',
             'ac_seguimiento.tab_ac.inst_vision',
@@ -1803,7 +1803,7 @@ $html23.='
             ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
             ->where('ac_seguimiento.tab_ac.in_abierta', '=', false)
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('tx_area_estrategica')
             ->groupBy('tab_ac.inst_mision')
@@ -1868,7 +1868,7 @@ $html23.='
             $pdf->Ln(5);
             $pdf->Write(0, 'AÑO '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
             $pdf->Ln(10);
-            $pdf->Write(0, $item->tx_ejecutor, '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Write(0, $item->tx_ejecutor_ac, '', 0, 'C', true, 0, false, false, 0);
             $pdf->SetY(190);
             $pdf->SetFont('','',11);            
             $pdf->Write(0, 'Maracaibo, '.$mes.' de '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
@@ -1885,7 +1885,7 @@ $html23.='
             $htmlObjetivo = '
     <table border="0.1" style="width:100%;text-align: center;" cellpadding="3">
             <tr align="left">
-                    <td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$item->tx_ejecutor.'</td>
+                    <td colspan="2"><b>1.2. UNIDAD EJECUTORA RESPONSABLE: </b>'.$item->tx_ejecutor_ac.'</td>
             </tr>
             <tr align="left">
                     <td colspan="2"><b>2.5.1. AREA ESTRATEGICA: </b>'.$item->tx_area_estrategica.'</td>
@@ -1968,7 +1968,7 @@ $html23.='
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
@@ -2042,7 +2042,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -2322,7 +2322,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -2588,7 +2588,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -2832,7 +2832,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>
@@ -2915,7 +2915,7 @@ $html1 = '
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                 't03.id_ejecutor',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
                 't03.id_tab_ejercicio_fiscal'
@@ -2942,7 +2942,7 @@ $html1 = '
             ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('t03.id_ejecutor')
-            ->groupBy('tx_ejecutor')
+            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tx_sector')
             ->groupBy('tx_nombre')
             ->groupBy('de_fuente_financiamiento')
@@ -3071,7 +3071,7 @@ foreach($data3 as $item3) {
 
          if($item3->id_ejecutor){
           $tx_sector = $item3->tx_sector;   
-          $ejecutor = $item3->id_ejecutor.' - '.$item3->tx_ejecutor;
+          $ejecutor = $item3->id_ejecutor.' - '.$item3->tx_ejecutor_ac;
          }else{
           $tx_sector = $item3->tx_sector;
           $ejecutor = 'EJECUTOR: TODOS';

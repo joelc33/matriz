@@ -173,7 +173,7 @@ class acseguimiento005Controller extends Controller
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
@@ -273,7 +273,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr style="font-size:9px">
-<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor.'</td>
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
 <td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
 </tr>

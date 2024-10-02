@@ -63,7 +63,7 @@ class acController extends Controller
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->select(
                 'ac_seguimiento.tab_ac.id',
-                'tx_ejecutor',
+                'tx_ejecutor_ac',
                 'ac_seguimiento.tab_ac.id_tab_ejecutores',
                 'ac_seguimiento.tab_ac.in_activo',
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
@@ -83,7 +83,7 @@ class acController extends Controller
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
-                    $tab_ac->where('tx_ejecutor', 'ILIKE', "%$variable%");
+                    $tab_ac->where('tx_ejecutor_ac', 'ILIKE', "%$variable%");
                 }
 
                 $response['success']  = 'true';
@@ -479,7 +479,7 @@ class acController extends Controller
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->select(
             'ac_seguimiento.tab_ac.id',
-            'tx_ejecutor',
+            'tx_ejecutor_ac',
             'ac_seguimiento.tab_ac.id_tab_ejecutores',
             'ac_seguimiento.tab_ac.in_activo',
             DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),

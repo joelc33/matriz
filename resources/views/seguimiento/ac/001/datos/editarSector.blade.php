@@ -19,6 +19,14 @@ this.de_sector = new Ext.form.TextField({
 	width:400,
 });
 
+this.tx_ejecutor_ac = new Ext.form.TextArea({
+	fieldLabel:'Ejecutor',
+	name:'tx_ejecutor_ac',
+	value:this.OBJ.tx_ejecutor_ac,
+	allowBlank:false,
+	width:400,
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -84,12 +92,13 @@ this.formPanel_ = new Ext.form.FormPanel({
 	bodyStyle:'padding:10px;',
 	items:[
 		this._token,
-		this.de_sector
+		this.de_sector,
+                this.tx_ejecutor_ac
 	]
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'EDITAR SECTOR',
+    title:'EDITAR EJECUTOR/SECTOR',
     modal:true,
     constrain:true,
 width:614,
