@@ -497,7 +497,12 @@ $html1 = '
          if($actividad->count()>0){ 
       foreach($actividad as $item) {
           
+          if($item->de_valor_objetivo_acu==null || $item->de_valor_objetivo_acu==0){
+          $nu_cumplimiento = 0;    
+          }else{
           $nu_cumplimiento = round(($item->de_valor_obtenido_acu/$item->de_valor_objetivo_acu)*100,2);
+          }
+          
           
 $pdf->AddPage();
 $html1 = '
