@@ -168,7 +168,6 @@ class acseguimiento002Controller extends Controller
             })
             ->leftjoin('t45_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
-            ->on('t49.co_objetivo_estado', '=', 't45b.co_objetivo_zulia')
             ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
             ->on('t45b.edo_reg', '=', DB::raw('true'))        
             ->on('t45b.nu_nivel', '=', DB::raw('3'));
@@ -481,7 +480,6 @@ $html23.='
             })
             ->leftjoin('t45_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
-            ->on('t49.co_objetivo_estado', '=', 't45b.co_objetivo_zulia')
             ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
             ->on('t45b.edo_reg', '=', DB::raw('true'))        
             ->on('t45b.nu_nivel', '=', DB::raw('3'));
