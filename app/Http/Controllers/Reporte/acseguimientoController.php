@@ -2813,6 +2813,8 @@ $html23.='
                 'ac_seguimiento.tab_forma_005.de_indicador_descripcion',
                 'ac_seguimiento.tab_forma_005.de_valor_objetivo',
                 'ac_seguimiento.tab_forma_005.de_valor_obtenido',
+                'ac_seguimiento.tab_forma_005.de_valor_objetivo_acu',
+                'ac_seguimiento.tab_forma_005.de_valor_obtenido_acu',                    
                 'ac_seguimiento.tab_forma_005.nu_cumplimiento',
                 'ac_seguimiento.tab_forma_005.de_formula',
                 'de_estatus',
@@ -2825,6 +2827,8 @@ $html23.='
 
          if($actividad->count()>0){ 
       foreach($actividad as $item) {
+          
+          $nu_cumplimiento = round(($item->de_valor_obtenido_acu/$item->de_valor_objetivo_acu)*100,2);
           
 $pdf->AddPage();
 $this->encabezado5($pdf);
@@ -2876,9 +2880,9 @@ $html1 = '
 <td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
-<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
-<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo_acu.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
+<td style="width: 10%;" align="center">'.$nu_cumplimiento.' % </td>
 </tr>
 <tr style="font-size:9px height: 100px;">
 <td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>

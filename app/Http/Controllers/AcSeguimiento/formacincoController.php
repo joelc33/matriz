@@ -199,6 +199,8 @@ class formacincoController extends Controller
                 'nb_indicador_gestion',
                 'de_valor_obtenido',
                 'de_valor_objetivo',
+                'de_valor_obtenido_acu',
+                'de_valor_objetivo_acu',                    
                 'nu_cumplimiento',
                 'de_indicador_descripcion',
                 'de_formula',
@@ -242,6 +244,8 @@ class formacincoController extends Controller
                 $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
                 $tabla->de_valor_obtenido = Input::get("valor_obtenido");
                 $tabla->de_valor_objetivo = Input::get("valor_objetivo");
+                $tabla->de_valor_obtenido_acu = Input::get("valor_obtenido_acu");
+                $tabla->de_valor_objetivo_acu = Input::get("valor_objetivo_acu");                
                 $tabla->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla->de_indicador_descripcion = Input::get("indicador");
                 $tabla->de_formula = Input::get("formula");
@@ -278,6 +282,8 @@ class formacincoController extends Controller
                 $tabla->nb_indicador_gestion = Input::get("nombre_indicador");
                 $tabla->de_valor_obtenido = Input::get("valor_obtenido");
                 $tabla->de_valor_objetivo = Input::get("valor_objetivo");
+                $tabla->de_valor_obtenido_acu = Input::get("valor_obtenido_acu");
+                $tabla->de_valor_objetivo_acu = Input::get("valor_objetivo_acu");                
                 $tabla->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla->de_indicador_descripcion = Input::get("indicador");
                 $tabla->de_formula = Input::get("formula");
@@ -330,6 +336,8 @@ class formacincoController extends Controller
                 $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
                 $tabla_005->de_valor_obtenido = Input::get("valor_obtenido");
                 $tabla_005->de_valor_objetivo = Input::get("valor_objetivo");
+                $tabla_005->de_valor_obtenido_acu = Input::get("valor_obtenido_acu");
+                $tabla_005->de_valor_objetivo_acu = Input::get("valor_objetivo_acu");                
                 $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla_005->de_indicador_descripcion = Input::get("indicador");
                 $tabla_005->de_formula = Input::get("formula");
@@ -376,6 +384,8 @@ class formacincoController extends Controller
                 $tabla_005->nb_indicador_gestion = Input::get("nombre_indicador");
                 $tabla_005->de_valor_obtenido = Input::get("valor_obtenido");
                 $tabla_005->de_valor_objetivo = Input::get("valor_objetivo");
+                $tabla_005->de_valor_obtenido_acu = Input::get("valor_obtenido_acu");
+                $tabla_005->de_valor_objetivo_acu = Input::get("valor_objetivo_acu");                 
                 $tabla_005->nu_cumplimiento = Input::get("cumplimiento");
                 $tabla_005->de_indicador_descripcion = Input::get("indicador");
                 $tabla_005->de_formula = Input::get("formula");

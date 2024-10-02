@@ -167,6 +167,7 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/ficha/004/{id}', 'acseguimiento004Controller@ficha004');
         Route::get('ac/seguimiento/ficha/004/acumulada/{id}', 'acseguimiento004Controller@ficha004Acumulada');
         Route::get('ac/seguimiento/ficha/005/{id}', 'acseguimiento005Controller@ficha005');
+        Route::get('ac/seguimiento/ficha/005/acumulada/{id}', 'acseguimiento005Controller@ficha005Acumulada');
         Route::get('ac/seguimiento/ficha/ejecucion/{id_lapso}', 'acseguimientoejecucionController@fichaEjecucion');
         Route::get('ac/seguimiento/ficha/ejecucion/{id_lapso}/{id}', 'acseguimientoejecucionController@fichaEjecucion');
         Route::get('ac/seguimiento/ficha/ejecucion/acumulada/{id_lapso}', 'acseguimientoejecucionController@fichaEjecucionAcumulada');

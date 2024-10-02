@@ -75,7 +75,7 @@ this.nb_indicador = new Ext.form.TextField({
 });
 
 this.valor_objetivo = new Ext.form.NumberField({
-	fieldLabel:'VALOR OBJETIVO',
+	fieldLabel:'VALOR OBJETIVO (TRI)',
 	name:'valor_objetivo',
 	value:this.OBJ.de_valor_objetivo,
 	width:400,
@@ -95,7 +95,7 @@ this.valor_objetivo = new Ext.form.NumberField({
 });
 
 this.valor_obtenido = new Ext.form.NumberField({
-	fieldLabel:'VALOR OBTENIDO',
+	fieldLabel:'VALOR OBTENIDO (TRI)',
 	name:'valor_obtenido',
 	value:this.OBJ.de_valor_obtenido,
 	width:400,
@@ -112,6 +112,32 @@ this.valor_obtenido = new Ext.form.NumberField({
         	if(isNaN(tedf)){tedf = parseFloat(0);}
 		forma005Editar.main.nu_cumplimiento.setValue((parseFloat(tedm)*100)/parseFloat(tedf));
 	}
+});
+
+this.valor_objetivo_acu = new Ext.form.NumberField({
+	fieldLabel:'VALOR OBJETIVO (ACU)',
+	name:'valor_objetivo_acu',
+	value:this.OBJ.de_valor_objetivo_acu,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':'',
+        validationEvent: 'blur',
+        allowNegative: false     
+});
+
+this.valor_obtenido_acu = new Ext.form.NumberField({
+	fieldLabel:'VALOR OBTENIDO (ACU)',
+	name:'valor_obtenido_acu',
+	value:this.OBJ.de_valor_obtenido_acu,
+	width:400,
+	maxLength: 600,
+	allowBlank:false,
+	readOnly:this.OBJ.in_bloquear_005,
+	style:(this.OBJ.in_bloquear_005==true)?'background:#f2d7d5;':'',
+        validationEvent: 'blur',
+        allowNegative: false
 });
 
 this.nu_cumplimiento = new Ext.form.NumberField({
@@ -174,6 +200,10 @@ this.guardar = new Ext.Button({
             return false;
         }        
 
+        if(forma005Editar.main.valor_obtenido_acu.getValue()>forma005Editar.main.valor_objetivo_acu.getValue()){
+            Ext.Msg.alert("Alerta","El valor obtenido acumulado no puede ser mayor que el valor objetivo acumulado, por favor verifique!");
+            return false;
+        } 
 				Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los datos?', function(boton){
 				if(boton=="yes"){
 
@@ -240,7 +270,9 @@ this.formPanel_ = new Ext.form.FormPanel({
 		this.tp_indicador,
 		this.nb_indicador,
 		this.valor_objetivo,
+                this.valor_objetivo_acu,
 		this.valor_obtenido,
+                this.valor_obtenido_acu,
                 this.nu_cumplimiento,
 		this.de_indicador,
 		this.de_formula,
