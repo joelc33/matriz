@@ -585,7 +585,7 @@ $html23.='
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta','tx_prog_anual','fecha_inicio','fecha_fin',
             'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
+            DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
             ->leftjoin('ac_seguimiento.tab_forma_002 as t002', 'tab_meta_fisica.id', '=', 't002.id_tab_meta_fisica')
 //            ->leftjoin('ac_seguimiento.tab_forma_002 as t002', function ($join) {
@@ -684,15 +684,7 @@ $html23.='
 $cantidad = $actividad->count();
 
 $contar=0;
-      foreach($actividad as $item) {
- 
-          if($item->nu_meta_actualizada==0){
-             $nu_meta_actualizada =  1;
-          }else{
-            $nu_meta_actualizada =  $item->nu_meta_actualizada;  
-          }
-          
-             
+      foreach($actividad as $item) {    
              
                 $data2 = tab_ac::select(
                  DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
@@ -705,7 +697,14 @@ $contar=0;
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
-                ->first();           
+                ->first();  
+                
+            if($item->nu_meta_actualizada==0){
+             $obtenido = 0;
+            }else{
+
+              $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;   
+            }                
           
 $contar=$contar+1;
 		$html23.='
@@ -718,7 +717,7 @@ $contar=$contar+1;
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($data2->nu_obtenido).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje(($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100).'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje().'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
