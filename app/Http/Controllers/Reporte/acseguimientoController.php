@@ -2114,7 +2114,7 @@ $cantidad = $actividad->count();
 $contar=0;
       foreach($actividad as $item) {
  
-                $data2 = tab_ac::select(
+                $data20 = tab_ac::select(
                  DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
@@ -2131,7 +2131,7 @@ $contar=0;
              $obtenido = 0;
             }else{
 
-              $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;   
+              $obtenido = ($data20->nu_obtenido/($item->tx_prog_anual + $data20->nu_meta_modificada))*100;   
             }          
           
 $contar=$contar+1;
