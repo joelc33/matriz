@@ -717,7 +717,7 @@ $contar=$contar+1;
 		<td style="width: 8%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 8%;" align="center">'.$this->formatoDinero($data2->nu_obtenido).'</td>
-                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje().'</td>
+                <td style="width: 9%;" align="center">'.$this->formatoPorcentaje($obtenido).'</td>
                 <td style="width: 10%;"  align="center">'.$item->de_municipio.' / '.$item->de_parroquia.'</td>
 		<td style="width: 9%;" align="center">'.$item->nb_responsable.'</td>';
                 $html23.='</tr>';
