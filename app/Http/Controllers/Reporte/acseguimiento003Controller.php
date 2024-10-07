@@ -295,13 +295,12 @@ class acseguimiento003Controller extends Controller
              ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
              ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
             ->join('mantenimiento.tab_lapso as t08', 't05.id_tab_lapso', '=', 't08.id')
-            ->where('t03.id_ejecutor', '=', $data->id_ejecutor)
+            ->where('t05.id_ejecutor', '=', $data->id_ejecutor)
             ->where('t05.in_activo', '=', true)
             ->where('id_tab_tipo_periodo', '=', $data->id_tab_tipo_periodo)
             ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
             ->orderBy('codigo', 'ASC')
             ->get();             
-            
 
                 
                 $mo_presupuesto_anual_ejecutor = 0;
