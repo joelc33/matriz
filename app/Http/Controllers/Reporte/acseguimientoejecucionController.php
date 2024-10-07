@@ -157,7 +157,8 @@ class acseguimientoejecucionController extends Controller
                 'tx_nombre',
                 DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_modificado,0)) as mo_modificado'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) + sum(coalesce(mo_modificado,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
@@ -220,6 +221,7 @@ class acseguimientoejecucionController extends Controller
                     'tx_nombre',
                 DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_modificado,0)) as mo_modificado'),
                 DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
@@ -283,6 +285,7 @@ class acseguimientoejecucionController extends Controller
 
                 $mo_presupuesto = 0;
                 $mo_modificado_anual = 0;
+                $mo_modificado_anual_acu = 0;
                 $mo_actualizado_anual = 0;
                 $mo_comprometido = 0;
                 $mo_causado = 0;
@@ -406,11 +409,12 @@ $html23.= '
 <td style="width: 20%;" align="center" colspan="2"><b>PARTIDA PRESUPUESTARIA</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO INICIAL</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO MODIFICADO ACU</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>PRESUPUESTO ACTUALIZADO (TOTAL)</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>COMPROMETIDO</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>CAUSADO</b></td>
 <td rowspan="2" style="width: 10%;" align="center"><b>PAGADO</b></td>
-<td rowspan="2" style="width: 20%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
+<td rowspan="2" style="width: 10%;" align="center"><b>FUENTE DE FINANCIAMIENTO</b></td>
 </tr>
 <tr style="font-size:7px">
 <td style="width: 5%;" align="center"><b>CÓDIGO</b></td>
@@ -500,11 +504,12 @@ $html23.='
 		<tr style="font-size:7px" >
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                <td style="width: 10%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
                 
              }else{
@@ -515,11 +520,12 @@ $html23.='
                 <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                <td style="width: 10%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
                  
              }
@@ -528,6 +534,7 @@ $html23.='
              
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_modificado_anual_acu = $mo_modificado_anual_acu + $item->mo_modificado;
                 $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
@@ -612,11 +619,12 @@ $html23.='
 		<tr style="font-size:7px" >
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                <td style="width: 10%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
                 
              }else{
@@ -627,17 +635,19 @@ $html23.='
                 <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_causado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_pagado).'</td>                                 
-                <td style="width: 20%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
+                <td style="width: 10%;" align="center">'.$item->de_fuente_financiamiento.'</td>';
                 $html23.='</tr>';
                  
              }
 
                 $mo_presupuesto = $mo_presupuesto + $item->mo_presupuesto;
                 $mo_modificado_anual = $mo_modificado_anual + $item->mo_modificado_anual;
+                $mo_modificado_anual_acu = $mo_modificado_anual_acu + $item->mo_modificado;
                 $mo_actualizado_anual = $mo_actualizado_anual + $item->mo_actualizado_anual;
                 $mo_comprometido = $mo_comprometido + $item->mo_comprometido;
                 $mo_causado = $mo_causado + $item->mo_causado;
@@ -657,11 +667,12 @@ $html23.='
                 <td style="width: 20%;" colspan="2" align="right"> TOTAL DESDE '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual_acu).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_actualizado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_comprometido).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_causado).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_pagado).'</td>
-                <td style="width: 20%;" align="right"></td>';
+                <td style="width: 10%;" align="right"></td>';
                 $html23.='</tr>';
 
    $html23.='
