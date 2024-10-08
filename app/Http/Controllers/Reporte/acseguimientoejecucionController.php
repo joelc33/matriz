@@ -501,7 +501,7 @@ $html23.='
              if($id_partida==$item->co_partida){
 
 		$html23.='
-		<tr style="font-size:7px" >
+		<tr style="font-size:6px" >
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
@@ -515,7 +515,7 @@ $html23.='
              }else{
                  
 		$html23.='
-		<tr style="font-size:7px" >
+		<tr style="font-size:6px" >
 		<td style="width: 5%;" align="center" rowspan="'.$i.'">'.$item->co_partida.'</td>
                 <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
@@ -616,7 +616,7 @@ $html23.='
              if($id_partida==$item->co_partida){
 
 		$html23.='
-		<tr style="font-size:7px" >
+		<tr style="font-size:6px" >
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_modificado).'</td>
@@ -630,7 +630,7 @@ $html23.='
              }else{
                  
 		$html23.='
-		<tr style="font-size:7px" >
+		<tr style="font-size:6px" >
 		<td style="width: 5%;" align="center" rowspan="'.$i.'">'.$item->co_partida.'</td>
                 <td style="width: 15%;" rowspan="'.$i.'">'.$item->tx_nombre.'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($item->mo_presupuesto).'</td>
@@ -663,7 +663,7 @@ $html23.='
 
 
 		$html23.='
-		<tr style="font-size:7px" >
+		<tr style="font-size:6px" >
                 <td style="width: 20%;" colspan="2" align="right"> TOTAL DESDE '.$de_lapso.' '.$id_tab_ejercicio_fiscal.' </td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_presupuesto).'</td>
                 <td style="width: 10%;" align="right">'.$this->formatoDinero($mo_modificado_anual).'</td>
