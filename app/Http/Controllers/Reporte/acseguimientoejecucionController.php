@@ -779,7 +779,14 @@ $html23.='
             'id_tab_tipo_periodo'
         )
         ->where('id', '=', $id_tab_lapso)
-        ->first();      
+        ->first();  
+        
+        $data_ejecutor = tab_ac::select(
+            'tx_ejecutor_ac'
+        )
+        ->where('id_ejecutor', '=', $id)
+        ->where('id_tab_lapso', '=', $id_tab_lapso)
+        ->first();        
         
                      $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
             ->get();  
@@ -825,7 +832,6 @@ $html23.='
                 DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                 't03.id_ejecutor',
-                'tx_ejecutor_ac',
                 't18b.tx_codigo as tx_sector',
                 'de_fuente_financiamiento',
                 't03.id_tab_ejercicio_fiscal'
@@ -852,7 +858,6 @@ $html23.='
             ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('t03.id_ejecutor')
-            ->groupBy('tx_ejecutor_ac')
             ->groupBy('tx_sector')
             ->groupBy('tx_nombre')
             ->groupBy('de_fuente_financiamiento')
@@ -1049,7 +1054,7 @@ foreach($data as $item) {
 
          if($item->id_ejecutor){
           $tx_sector = $item->tx_sector;   
-          $ejecutor = $item->id_ejecutor.' - '.$item->tx_ejecutor_ac;
+          $ejecutor = $item->id_ejecutor.' - '.$data_ejecutor->tx_ejecutor_ac;
          }else{
           $tx_sector = $item->tx_sector;
           $ejecutor = 'EJECUTOR: TODOS';
