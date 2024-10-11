@@ -515,6 +515,7 @@ class formaunoController extends Controller
                 DB::raw("to_char(ac_seguimiento.tab_forma_001.created_at, 'dd/mm/YYYY hh12:mi AM') as fe_solicitud")
             )
             ->where('t01.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->whereIn('ac_seguimiento.tab_forma_001.id_tab_estatus',[5,6])
             ->where('t01.in_activo', '=', true);
 
             $rol_planificador = array(3, 8);
