@@ -163,11 +163,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
 			  this.ficha,'-',this.ficha_acumulada,'-',this.editar,'-',this.cargar,'-',
 			@endif
-				this.buscador
                         @if (in_array(Session::get('rol'), $rol_planificador))
                         @else
-                        ,'-',this.pendientes
+                        this.pendientes,'-',
 			@endif
+                        this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),

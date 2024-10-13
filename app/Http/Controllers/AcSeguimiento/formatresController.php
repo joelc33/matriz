@@ -869,6 +869,18 @@ class formatresController extends Controller
                     ));
                 }
                 
+                
+             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', Input::get("meta_fisica"))
+             ->where('co_partida', '=', Input::get("partida"))
+             ->where('id_tab_fuente_financiamiento', '=', Input::get("fuente_financiamiento"))
+             ->get();         
+             if($tab_meta_financiera->count()>0){
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'La actividad ya tiene una meta financiera con la partida y fuente seleccionada, verifique!'
+                ));
+             }                
+                
                 $data1 = tab_meta_fisica::select(
                     't01.mo_ae','t01.id'
                 )

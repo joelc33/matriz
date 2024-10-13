@@ -13,6 +13,7 @@ use matriz\Models\AcSegto\tab_ac_ae_fuente;
 use matriz\Models\AcSegto\tab_ac_localizacion;
 use matriz\Models\AcSegto\tab_ac_vinculo;
 use matriz\Models\AcSegto\tab_ac_responsable;
+use matriz\Models\AcSegto\tab_forma_005;
 use View;
 use Validator;
 use Input;
@@ -1135,6 +1136,33 @@ class formaunoController extends Controller
                     $tab_responsable->save(); 
                     
                     }
+                    
+                    $tab_ac_forma_005 = tab_forma_005::where('id_tab_ac', '=', $arreglo_ac->id)
+                    ->get(); 
+               
+                    foreach ($tab_ac_forma_005 as $arreglo_tab_forma_005) {
+                
+                    $tab_forma_005 = new tab_forma_005();
+                    $tab_forma_005->id_tab_ac = $tabla->id;
+                    $tab_forma_005->pp_anual = $arreglo_tab_forma_005->pp_anual;
+                    $tab_forma_005->tp_indicador = $arreglo_tab_forma_005->tp_indicador;
+                    $tab_forma_005->nb_indicador_gestion = $arreglo_tab_forma_005->nb_indicador_gestion;
+                    $tab_forma_005->de_valor_obtenido = $arreglo_tab_forma_005->de_valor_obtenido;
+                    $tab_forma_005->de_valor_objetivo = $arreglo_tab_forma_005->de_valor_objetivo;
+                    $tab_forma_005->nu_cumplimiento = $arreglo_tab_forma_005->nu_cumplimiento;
+                    $tab_forma_005->de_indicador_descripcion = $arreglo_tab_forma_005->de_indicador_descripcion;
+                    $tab_forma_005->de_formula = $arreglo_tab_forma_005->de_formula;
+                    $tab_forma_005->in_005 = $arreglo_tab_forma_005->in_005;
+                    $tab_forma_005->de_observacion = $arreglo_tab_forma_005->de_observacion;
+                    $tab_forma_005->id_usuario_solicita = $arreglo_tab_forma_005->id_usuario_solicita;
+                    $tab_forma_005->id_usuario_procesa = $arreglo_tab_forma_005->id_usuario_procesa;
+                    $tab_forma_005->id_tab_estatus = $arreglo_tab_forma_005->id_tab_estatus;
+                    $tab_forma_005->de_valor_objetivo_acu = $arreglo_tab_forma_005->de_valor_objetivo_acu;
+                    $tab_forma_005->de_valor_obtenido_acu = $arreglo_tab_forma_005->de_valor_obtenido_acu;                    
+                    $tab_forma_005->in_activo = 'TRUE';
+                    $tab_forma_005->save(); 
+                    
+                        }                    
 
         }         
         
