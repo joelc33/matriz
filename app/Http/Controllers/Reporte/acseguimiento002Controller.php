@@ -268,7 +268,7 @@ class acseguimiento002Controller extends Controller
             
           Session::put('periodo',$periodo);               
 
-            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('tx_prog_anual::numeric as tx_prog_anual'),'fecha_inicio','fecha_fin',
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(tx_prog_anual::numeric,0) as tx_prog_anual'),'fecha_inicio','fecha_fin',
             'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
             DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as nu_meta_modificada_periodo'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
             DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
@@ -585,7 +585,7 @@ $html23.='
             
           Session::put('periodo',$periodo);               
 
-            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('tx_prog_anual::numeric as tx_prog_anual'),'fecha_inicio','fecha_fin',
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',DB::raw('coalesce(tx_prog_anual::numeric,0) as tx_prog_anual'),'fecha_inicio','fecha_fin',
             'tab_meta_fisica.nb_responsable','de_unidad_medida as tx_unidades_medida',DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),'de_municipio','de_parroquia','tab_meta_fisica.resultado','tab_meta_fisica.observacion',
             DB::raw('coalesce(tab_meta_fisica.nu_meta_actualizada,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_obtenido,0) as nu_obtenido'))
             ->join('mantenimiento.tab_unidad_medida as t21', 'tab_meta_fisica.id_tab_unidad_medida', '=', 't21.id')
