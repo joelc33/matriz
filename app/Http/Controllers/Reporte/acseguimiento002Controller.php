@@ -349,7 +349,7 @@ $html23.= '
 <th align="center" bgcolor="#BDBDBD" style="width: 16%;" rowspan="2">ACTIVIDAD</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (T. ANT.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA   (T. ANT.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (TRI)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 12%;" colspan="2">FECHA PROGRAMADA</th>
