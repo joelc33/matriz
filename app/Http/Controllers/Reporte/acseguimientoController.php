@@ -548,8 +548,8 @@ $html23.= '
 <th align="center" bgcolor="#BDBDBD" style="width: 16%;" rowspan="2">ACTIVIDAD</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (T. ANT.)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (TRI)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (ACU)</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 12%;" colspan="2">FECHA PROGRAMADA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">OBTENIDO AL CORTE</th>
@@ -588,10 +588,10 @@ $contar=$contar+1;
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 16%;"  nobr="true">'.$item->codigo.' - '.$item->nb_meta.'</td>
 		<td style="width: 7%;"  align="center">'.$item->tx_unidades_medida.'</td>
-		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-                <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_meta_modificada_periodo).'</td>
-                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo).'</td>                    
+		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_meta_modificada_periodo.'</td>
+                <td style="width: 7%;" align="center">'.$item->nu_meta_modificada.'</td>
+                <td style="width: 8%;" align="center">'.$item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo.'</td>                    
 		<td style="width: 6%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 6%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
