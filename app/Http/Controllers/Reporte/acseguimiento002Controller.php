@@ -393,7 +393,7 @@ $contar=$contar+1;
 		<td style="width: 8%;"  align="center">'.$item->tx_prog_anual.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_meta_modificada_periodo.'</td>
                 <td style="width: 7%;" align="center">'.$item->nu_meta_modificada.'</td>
-                <td style="width: 8%;" align="center">'.$item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo.'</td>                    
+                <td style="width: 8%;" align="center">'.($item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo).'</td>                    
 		<td style="width: 6%;"  align="center">'.trim(date_format(date_create($item->fecha_inicio),'d/m/Y')).'</td>
 		<td style="width: 6%;" align="center">'.trim(date_format(date_create($item->fecha_fin),'d/m/Y')).'</td>
                 <td style="width: 7%;" align="center">'.$this->formatoDinero($item->nu_obtenido).'</td>
