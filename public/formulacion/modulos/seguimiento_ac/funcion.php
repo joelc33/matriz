@@ -1430,7 +1430,7 @@ EOT;
                             
                             
 				$sql_ejecutor = <<<EOT
-SELECT id
+SELECT id,tx_ejecutor
 FROM mantenimiento.tab_ejecutores
 WHERE id_ejecutor = ?;
 EOT;
@@ -1456,6 +1456,7 @@ EOT;
 				$params['id_tab_tipo_registro'] = 2;
 				$params['in_activo'] = 'TRUE';
                                 $params['id_tab_ejecutores'] = $res_ejecutor['id'];
+                                $params['tx_ejecutor_ac'] = $res_ejecutor['tx_ejecutor'];
                                 $params['de_ac'] = $res_desc['de_nombre'];
                                 $params['id_tab_lapso'] = $res_lapso['id'];
                                 $params['mo_calculado'] = $params['mo_ac'];
