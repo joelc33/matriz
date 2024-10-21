@@ -219,13 +219,13 @@ class acseguimientoejecucionController extends Controller
             }else{
             $data =  tab_meta_financiera::select(
                     'tx_nombre',
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_modificado,0)) as mo_modificado'),
-                DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado_anual,0)) + sum(coalesce(mo_modificado,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
-                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                    
                 'ac_seguimiento.tab_meta_financiera.co_partida',
                     'de_fuente_financiamiento',
                     't18b.tx_codigo as tx_sector',
@@ -859,20 +859,20 @@ $html23.='
         ->first();            
             
             
-            }else{
+            }else{              
+                
             $data =  tab_meta_financiera::select(
                     'tx_nombre',
-                DB::raw('sum(coalesce(mo_presupuesto,0)) + sum(coalesce(mo_modificado,0)) as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
-                DB::raw('sum(coalesce(mo_actualizado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
                 DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
                 DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
-                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                   
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),                
                 'ac_seguimiento.tab_meta_financiera.co_partida',
-                    'de_fuente_financiamiento',
-                    't18b.tx_codigo as tx_sector',
-                    'dia_mes_fin',
-                    't03.id_tab_ejercicio_fiscal'
+                't18b.tx_codigo as tx_sector',
+                'de_fuente_financiamiento',
+                't03.id_tab_ejercicio_fiscal'
             )
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
             ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
@@ -894,7 +894,6 @@ $html23.='
             ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
             ->groupBy('tx_sector')
-            ->groupBy('dia_mes_fin')
             ->groupBy('tx_nombre')
             ->groupBy('t03.id_tab_ejercicio_fiscal')
             ->groupBy('de_fuente_financiamiento')
@@ -1121,7 +1120,7 @@ $html23.='
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('t03.in_activo', '=', true)
-            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item->tx_sector)
             ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
@@ -1233,7 +1232,7 @@ $html23.='
             })      
             ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->where('t03.in_activo', '=', true)
-            ->where('t03.id_tab_lapso', '=', $id_tab_lapso)
+            ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->where('t18b.tx_codigo', '=', $item->tx_sector)
             ->where('ac_seguimiento.tab_meta_financiera.co_partida', '=', $item->co_partida)        
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
