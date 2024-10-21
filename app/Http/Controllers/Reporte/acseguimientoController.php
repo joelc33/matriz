@@ -302,7 +302,7 @@ class acseguimientoController extends Controller
 
                 if($item->id_tab_tipo_periodo==21){
                     
-                    $mes = 'Octubre';
+                    $mes = 'Septiembre';
                 }
 
                 if($item->id_tab_tipo_periodo==22){
@@ -1870,7 +1870,7 @@ $html23.='
 
                 if($item->id_tab_tipo_periodo==21){
                     
-                    $mes = 'Octubre';
+                    $mes = 'Septiembre';
                 }
 
                 if($item->id_tab_tipo_periodo==22){
