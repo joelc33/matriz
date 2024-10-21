@@ -191,7 +191,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         if(forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma002Lista.main.ficha.enable();
                         forma002Lista.main.ficha_acumulada.enable();
-                        forma002Lista.main.editar.enable();
+                    if(forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('pend_enviar')==0){     
+                    forma002Lista.main.editar.enable();
+                    }else{
+                    forma002Lista.main.editar.disable();    
+                    }
                         forma002Lista.main.cargar.enable();
                     }else{
                         forma002Lista.main.ficha.enable();
@@ -281,6 +285,7 @@ getLista: function(){
 				{name: 'nu_codigo'},
                                 {name: 'in_002'},
                                 {name: 'activo'},
+                                {name: 'pend_enviar'},
                                 {name: 'in_abierta'},
 		    {name: 'de_ac'},
                     {name: 'de_lapso'},

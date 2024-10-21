@@ -74,6 +74,9 @@ class formadosController extends Controller
                 DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 DB::raw("NOW() between t02.fe_inicio and t02.fe_fin as activo"),
+                DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+                inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+                where in_bloquear_002 = true and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_enviar"),
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
