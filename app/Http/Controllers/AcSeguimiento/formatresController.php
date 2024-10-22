@@ -93,7 +93,7 @@ class formatresController extends Controller
                DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
                 inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
                 inner join ac_seguimiento.tab_meta_financiera as t02 on (t.id = t02.id_tab_meta_fisica)
-                where t02.in_cargado = true and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_enviar"),
+                where t02.in_enviado = true and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_enviar"),
                 'nu_codigo',
                 'de_ac',
                 'de_lapso',
