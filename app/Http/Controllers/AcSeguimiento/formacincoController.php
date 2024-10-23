@@ -509,7 +509,7 @@ class formacincoController extends Controller
             ->join('mantenimiento.tab_estatus as t04', 't04.id', '=', 'ac_seguimiento.tab_forma_005.id_tab_estatus')
             ->select(
                 'ac_seguimiento.tab_forma_005.id',
-                'ac_seguimiento.tab_forma_005.pp_anual',
+                't01.pp_anual',
                 'ac_seguimiento.tab_forma_005.tp_indicador',
                 'ac_seguimiento.tab_forma_005.nb_indicador_gestion',
                 'ac_seguimiento.tab_forma_005.de_indicador_descripcion',
