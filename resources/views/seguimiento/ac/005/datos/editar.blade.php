@@ -20,7 +20,7 @@ this.id_tab_ac = new Ext.form.Hidden({
 this.de_programado_anual = new Ext.form.TextArea({
 	fieldLabel: 'PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL',
 	name: 'programado_anual',
-	value:this.OBJ.tx_pr_objetivo,
+	value:this.OBJ.pp_anual,
 	allowBlank: false,
 	width:400,
 	height: 100,
