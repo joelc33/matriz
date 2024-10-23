@@ -211,7 +211,7 @@ class formacincoController extends Controller
                 'tab_forma_005.id_tab_estatus',
                 'tab_forma_005.in_005 as in_bloquear_005'
             )
-            ->join('seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac as t01', 'ac_seguimiento.tab_forma_005.id_tab_ac', '=', 't01.id')
             ->where('tab_forma_005.id', '=', $id)
             ->first();
 
