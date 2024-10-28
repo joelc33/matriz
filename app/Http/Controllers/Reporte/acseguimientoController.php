@@ -935,9 +935,9 @@ $html23.='
           
           foreach($data2 as $data) {
           
-            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) as mo_actualizado_anual'),
+            $actividad = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta',DB::raw('coalesce(mo_presupuesto,0) as mo_presupuesto'),DB::raw('coalesce(mo_modificado_anual,0) as mo_modificado_anual'),DB::raw('coalesce(mo_presupuesto,0) + coalesce(mo_modificado_anual,0) + coalesce(mo_modificado,0) as mo_actualizado_anual'),DB::raw('coalesce(mo_modificado,0) as mo_modificado'),
             'mo_comprometido','mo_causado','mo_pagado','de_fuente_financiamiento','co_partida','de_desvio','tx_prog_anual',
-            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_actualizada'),        
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) + coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada_periodo,0) as nu_meta_actualizada'),DB::raw('coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as nu_meta_modificada_periodo'),        
             'nu_numero',DB::raw('coalesce(ac_seguimiento.tab_meta_fisica.nu_meta_modificada,0) as nu_meta_modificada'),
             'nu_original',
             'co_sector')
@@ -1008,18 +1008,20 @@ $html23.= '
 <table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
 <thead>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 30%;" rowspan="2">ACTIVIDAD</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 30%;" colspan="3">METAS FISICA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 28%;" rowspan="2">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 32%;" colspan="3">METAS FISICA</th>
 <th align="center" bgcolor="#BDBDBD" style="width: 40%;" colspan="4">METAS FINANCIERAS</th>
 </tr>
 <tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS PROGRAMADAS POA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS ACTUALIZADAS</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PARTIDA PRESUPUESTARIA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO POA (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO MODIFICADO (Bs.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO ACTUALIZADO (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">METAS PROGRAMADAS POA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">METAS MODIFICADAS (T.ANT.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">METAS MODIFICADAS</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">METAS ACTUALIZADAS</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PARTIDA PRESUPUESTARIA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO PROGRAMADO POA (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO MODIFICADO (T.ANT.) (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO MODIFICADO (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 8%;">PRESUPUESTO ACTUALIZADO (Bs.)</th>
 </tr>
 </thead>
 ';
@@ -1050,10 +1052,11 @@ $html23.='
 
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
+                <td style="width: 8%;" align="center">'.$item->co_partida.'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_modificado).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
                 $html23.='</tr>';
 
                 
@@ -1070,14 +1073,16 @@ $html23.='
                     
  		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
-                <td style="width: 10%;" align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>
-                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
-		<td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
+		<td style="width: 28%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
+		<td style="width: 8%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+		<td style="width: 8%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->nu_meta_modificada_periodo).'</td>
+                <td style="width: 8%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->nu_meta_modificada).'</td>
+                <td style="width: 8%;" align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->nu_meta_actualizada).'</td>
+                <td style="width: 8%;" align="center">'.$item->co_partida.'</td>                    
+		<td style="width: 8%;"  align="center">'.$this->formatoDinero($item->mo_presupuesto).'</td>
+		<td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_modificado).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_modificado_anual).'</td>
+                <td style="width: 8%;" align="center">'.$this->formatoDinero($item->mo_actualizado_anual).'</td>';
                 $html23.='</tr>';                   
                     
                 }
