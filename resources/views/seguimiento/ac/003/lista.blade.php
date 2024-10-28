@@ -221,9 +221,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma003Lista.main.exportar.enable();
                         forma003Lista.main.exportar_acumulada.enable();
                     if(forma003Lista.main.gridPanel_.getSelectionModel().getSelected().get('pend_enviar')==0){     
-                    forma003Lista.main.observaciones.enable();
+                    forma003Lista.main.observaciones.disable();
                     }else{
-                    forma003Lista.main.observaciones.disable();    
+                    forma003Lista.main.observaciones.enable();    
                     }                        
 
                         forma003Lista.main.cargar.enable();

@@ -192,9 +192,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 			forma002Lista.main.ficha.enable();
                         forma002Lista.main.ficha_acumulada.enable();
                     if(forma002Lista.main.gridPanel_.getSelectionModel().getSelected().get('pend_enviar')==0){     
-                    forma002Lista.main.editar.enable();
+                    forma002Lista.main.editar.disable();
                     }else{
-                    forma002Lista.main.editar.disable();    
+                    forma002Lista.main.editar.enable();    
                     }
                         forma002Lista.main.cargar.enable();
                     }else{
