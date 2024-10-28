@@ -748,9 +748,6 @@ $html23.='
 
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $data2->nu_meta_modificada).'</td>
                 <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data3->mo_presupuesto).'</td>
 		<td style="width: 10%;" align="center">'.$this->formatoDinero($data3->mo_modificado_anual).'</td>
@@ -772,9 +769,9 @@ $html23.='
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
                 <td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($item->tx_prog_anual).'</td>
-		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
-                <td style="width: 10%;" align="center">'.$this->formatoDinero($item->tx_prog_anual + $data2->nu_meta_modificada).'</td>
+		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($data2->nu_meta_modificada).'</td>
+                <td style="width: 10%;" align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual + $data2->nu_meta_modificada).'</td>
                 <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data3->mo_presupuesto).'</td>
 		<td style="width: 10%;" align="center">'.$this->formatoDinero($data3->mo_modificado_anual).'</td>
