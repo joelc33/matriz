@@ -518,12 +518,12 @@ class formatresController extends Controller
                 $response['success']  = 'true';
                 $response['total'] = $tab_meta_financiera->count();
                 $tab_meta_financiera->skip($start)->take($limit);
-                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->orderby('tab_meta_financiera.id', 'ASC')->get()->toArray();
             } else {
                 $response['success']  = 'true';
                 $response['total'] = $tab_meta_financiera->count();
                 $tab_meta_financiera->skip($start)->take($limit);
-                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->get()->toArray();
+                $response['data']  = $tab_meta_financiera->orderby('t01.id', 'ASC')->orderby('tab_meta_financiera.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
