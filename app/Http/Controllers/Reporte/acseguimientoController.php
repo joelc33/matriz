@@ -2142,7 +2142,9 @@ $contar=0;
       foreach($actividad as $item) {
  
                 $data20 = tab_ac::select(
-                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
+                        DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada"),
+                        DB::raw("coalesce(sum(nu_po_beneficiada),0) as nu_po_beneficiada")
                 )
                 ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
@@ -2190,7 +2192,7 @@ $html23.='
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$data20->nu_po_beneficiada.'</td>
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
