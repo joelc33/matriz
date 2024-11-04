@@ -291,7 +291,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
                         forma001Lista.main.eliminar.enable();
                         }else{
-                        forma001Lista.main.eliminar.disable();
+                        forma001Lista.main.eliminar.enable();
                             }                            
 
                     }else{
@@ -305,7 +305,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
                         forma001Lista.main.eliminar.enable();
                         }else{
-                        forma001Lista.main.eliminar.disable();
+                        forma001Lista.main.eliminar.enable();
                             }
                         }else{                        
                         forma001Lista.main.ficha.enable();
@@ -314,7 +314,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.nueva.disable();
                         forma001Lista.main.editar.disable();
                         forma001Lista.main.cargar.disable();
-                        forma001Lista.main.eliminar.disable();
+                        forma001Lista.main.eliminar.enable();
                         forma001Lista.main.editar_sector.disable();
                     }
                 }
