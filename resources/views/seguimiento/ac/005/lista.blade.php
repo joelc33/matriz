@@ -28,6 +28,7 @@ this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
 //objeto store
 this.store_lista = this.getLista();
+<?php $rol_planificador = array( 3, 8); ?>
 
 //Editar un registro
 this.ficha= new Ext.Button({
@@ -71,6 +72,21 @@ this.cargar = new Ext.Button({
                     }
 });
 this.cargar.disable();
+
+this.cargar_admin = new Ext.Button({
+	text:'Editar AE',
+	iconCls: 'icon-editar',
+	handler:function(){
+            this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+                    forma005Lista.main.mascara.show();
+			this.msg = Ext.get('formularioacseguimiento');
+			this.msg.load({
+			 url:"{{ URL::to('ac/seguimiento/005/datos/lista') }}/"+this.codigo,
+			 scripts: true,
+			 text: "Cargando.."
+			});
+                    }
+});
 
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
@@ -136,10 +152,13 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     autoWidth: true,
     autoHeight:true,
     tbar:[
-			@if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-			  this.ficha,'-',this.ficha_acumulada,'-',this.cargar,'-',
+        
+                        @if (in_array(Session::get('rol'), $rol_planificador))
+                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar,'-',
+                        @else
+                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar_admin,'-',
 			@endif
-				this.buscador
+                        this.buscador
     ],
     columns: [
     new Ext.grid.RowNumberer(),
