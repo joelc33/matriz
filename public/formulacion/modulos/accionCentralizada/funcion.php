@@ -1034,6 +1034,16 @@ EOT;
 				);
 				$resultado = $resultado === 'Ok';
 			} else {
+                            
+				$sql_ejecutor = <<<EOT
+SELECT id,tx_ejecutor
+FROM mantenimiento.tab_ejecutores
+WHERE id_ejecutor = ?;
+EOT;
+				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $params['id_ejecutor']); 
+                                $res_ejecutor = $res_ejecutor[0];
+                                $params['tx_ejecutor_poa'] = $res_ejecutor['tx_ejecutor'];
+                            
 				$res = $comunes->InsertConID(
 					$tabla,
 					$params,
