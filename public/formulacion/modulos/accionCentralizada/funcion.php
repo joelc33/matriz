@@ -110,7 +110,6 @@ EOT;
 				'fondos'
 			));
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
-				'id_ejecutor',
 				'bien_servicio',
 				'objetivo_institucional',
 				'monto',
@@ -127,8 +126,7 @@ EOT;
 			$actualiza = v::key( 'id_viejo', v::intero()->notEmpty() );
 
 			$fechas = v::date( 'd-m-Y' )->notEmpty();
-			$validador = v::key( 'id_ejecutor', v::stringcadena()->length( 4, 4, true ) )
-				->key( 'id_unidad_medida', v::intero()->positive()->notEmpty() )
+			$validador = v::key( 'id_unidad_medida', v::intero()->positive()->notEmpty() )
 				->key( 'monto', v::numeric()->positive()->notEmpty() )
 				->key( 'meta', v::intero()->positive()->notEmpty() )
 				->key( 'bien_servicio', v::stringcadena()->length( 3, 128 ) )
@@ -147,6 +145,15 @@ EOT;
 //					->attribute( 'monto', v::intero()->positive() )
 //			);
 //			$reglas->assert( $fondos );
+                        
+				$sql_ejecutor = <<<EOT
+SELECT id_ejecutor
+FROM t46_acciones_centralizadas
+WHERE id = ?;
+EOT;
+				$res_ejecutor = $comunes->ObtenerFilasBySqlSelect($sql_ejecutor, $pk['id_accion_centralizada']); 
+                                $res_ejecutor = $res_ejecutor[0];                        
+                        $params['id_ejecutor'] = $res_ejecutor['id_ejecutor'];                        
 
 			$paraTransaccion->StartTrans();
 

@@ -24,6 +24,7 @@ if($codigo!=''||$codigo!=null){
 			"fecha_inicio"     => trim($row["fecha_inicio"]),
 			"fecha_culminacion"     => trim($row["fecha_fin"]),
 			"nb_responsable"     => trim($row["nb_responsable"]),
+                        "id_ejercicio"     => decode($_POST['id_ejercicio']),
 		));
 	}
 }else{
@@ -31,6 +32,7 @@ if($codigo!=''||$codigo!=null){
 		"co_metas"     => decode($_POST['co_metas']),
 		"co_ac_acc_espec"     => decode($_POST['co_proyecto_acc_espec']),
 		"id_accion_centralizada"     => decode($_POST['id_accion_centralizada']),
+                "id_ejercicio"     => decode($_POST['id_ejercicio']),
 	));
 }
 ?>
@@ -122,8 +124,8 @@ this.fecha_inicio = new Ext.form.DateField({
 	value:this.OBJ.fecha_inicio,
 	allowBlank:false,
 	width:100,
-	/*minValue:'<?php echo $fechaI; ?>',
-	maxValue:'<?php echo $fechaF; ?>',*/
+	minValue:'01-01-'+this.OBJ.id_ejercicio,
+	maxValue:'31-12-'+this.OBJ.id_ejercicio
 });
 
 this.fecha_culminacion = new Ext.form.DateField({
@@ -133,8 +135,8 @@ this.fecha_culminacion = new Ext.form.DateField({
 	value:this.OBJ.fecha_culminacion,
 	allowBlank:false,
 	width:100,
-	/*minValue:'<?php echo $fechaI; ?>',
-	maxValue:'<?php echo $fechaF; ?>',*/
+	minValue:'01-01-'+this.OBJ.id_ejercicio,
+	maxValue:'31-12-'+this.OBJ.id_ejercicio
 });
 
 this.comFechaInCul = new Ext.form.CompositeField({
@@ -317,6 +319,11 @@ this.guardar = new Ext.Button({
 	listado = paqueteComunJS.funcion.getJsonByObjStore({
 		store:metaEditar.main.gridPanel_.getStore()
 	});
+        
+        if (metaEditar.main.store_lista.getCount() == 0) {
+            Ext.Msg.alert("Alerta", "Debe agregar las metas financieras");
+            return false;
+        } 
 	metaEditar.main.JsonDetalle.setValue(listado);
 //**************************//
         metaEditar.main.formPanel_.getForm().submit({

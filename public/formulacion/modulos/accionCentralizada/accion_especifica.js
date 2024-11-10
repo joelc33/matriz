@@ -312,7 +312,7 @@
                     emptyText: 'Seleccione el tipo de Acción Específica',
                     triggerAction: 'all',
                     mode: 'local'
-                }, {
+                },/* {
                     xtype: 'combo',
                     fieldLabel: 'UNIDAD EJECUTORA RESPONSABLE',
                     name: 'id_ejecutor_fld',
@@ -330,7 +330,7 @@
                     emptyText: 'Seleccione Unidad Ejecutora',
                     mode: 'local',
                     store: self.store_unidad
-                }, {
+                },*/ {
                     xtype: 'compositefield',
                     fieldLabel: 'FECHA DE INICIO',
                     items: [

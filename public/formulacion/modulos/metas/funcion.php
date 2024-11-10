@@ -258,7 +258,9 @@ if($_GET['op']==1){
 		"data"      =>  $data
 	));
 }elseif($_GET['op']==5){
-	$sql = "SELECT * FROM mantenimiento.tab_fuente_financiamiento;";
+	$sql = "SELECT * FROM mantenimiento.tab_fuente_financiamiento where id_tab_tipo_fondo in (select t56.id_tipo_fondo
+from t56_ac_ae_fuente as t56
+where t56.id_ac = ".$_POST['id_accion_centralizada']." and t56.id_ae = ".$_POST['co_ac_acc_espec'].");";
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
 	$data= array();
 	foreach($result as $key => $row){
@@ -314,7 +316,7 @@ if($_GET['op']==1){
 	$cantidadTotal = $comunes->getFilas($sql);
 
 	$start = ($_POST["start"] == null)? 0 : $_POST["start"];
-	$limit = ($_POST["limit"] == null)? 10: $_POST["limit"];
+	$limit = ($_POST["limit"] == null)? 20: $_POST["limit"];
 	if($_POST['paginar']=='si'){$sql.= " ORDER BY codigo ASC LIMIT ".$limit." OFFSET ".$start;}
 
 	$result = $comunes->ObtenerFilasBySqlSelect($sql);
@@ -349,7 +351,7 @@ if($_GET['op']==1){
 			$tabla="t69_metas_ac";
 			$tquery="UPDATE";
 			$id = 'co_metas = '.$codigo;
-			$variable["nb_meta"] = decode($_POST['nb_actividad']);
+			$variable["nb_meta"] = decode(str_replace('"', '', $_POST['nb_actividad']));
 			$variable["co_unidades_medida"] = decode($_POST['co_unidades_medida']);
 			$variable["tx_prog_anual"] = decode($_POST['pr_anual']);
 			list($dia, $mes, $anio) = explode("/",$_POST['fecha_inicio']);
@@ -358,7 +360,7 @@ if($_GET['op']==1){
 			list($dia, $mes, $anio) = explode("/",$_POST['fecha_culminacion']);
 			$fecha_culminacion = $anio."-".$mes."-".$dia;
 			$variable["fecha_fin"] = $fecha_culminacion;
-			$variable["nb_responsable"] = decode($_POST['nb_responsable']);
+                        $variable["nb_responsable"] = decode(str_replace('"', '', $_POST['nb_responsable']));
 			$variable["fecha_actualizacion"] = date("Y-m-d H:i:s");
 			$co_metas = $comunes->InsertUpdate($tabla,$variable,$tquery,$id);
 
@@ -404,7 +406,7 @@ if($_GET['op']==1){
 			$primaryKey="co_metas";
 			$variable["id_accion_centralizada"] = decode($id_accion_centralizada);
 			$variable["co_ac_acc_espec"] = decode($co_ac_acc_espec);
-			$variable["nb_meta"] = decode($_POST['nb_actividad']);
+			$variable["nb_meta"] = decode(str_replace('"', '', $_POST['nb_actividad']));
 			$variable["co_unidades_medida"] = decode($_POST['co_unidades_medida']);
 			$variable["tx_prog_anual"] = decode($_POST['pr_anual']);
 			list($dia, $mes, $anio) = explode("/",$_POST['fecha_inicio']);
@@ -413,7 +415,7 @@ if($_GET['op']==1){
 			list($dia, $mes, $anio) = explode("/",$_POST['fecha_culminacion']);
 			$fecha_culminacion = $anio."-".$mes."-".$dia;
 			$variable["fecha_fin"] = $fecha_culminacion;
-			$variable["nb_responsable"] = decode($_POST['nb_responsable']);
+			$variable["nb_responsable"] = decode(str_replace('"', '', $_POST['nb_responsable']));
 			$variable["fecha_creacion"] = date("Y-m-d H:i:s");
 			$variable["edo_reg"] = 'TRUE';
 			$co_metas = $comunes->InsertConID($tabla,$variable,$primaryKey);

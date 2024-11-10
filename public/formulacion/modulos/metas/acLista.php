@@ -13,7 +13,7 @@ $data = json_encode(array(
 ));
 
 $comunes = new ConexionComun();
-$sql = "SELECT ('AC' || t24b.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t47.monto, in_definitivo FROM t47_ac_accion_especifica as t47 
+$sql = "SELECT ('AC' || t24b.id_ejecutor || id_ejercicio || lpad(t46.id_accion::text, 5, '0')) as id_ac, t47.monto, in_definitivo,id_ejercicio FROM t47_ac_accion_especifica as t47 
 	inner join t46_acciones_centralizadas as t46 on t47.id_accion_centralizada=t46.id
 	inner join mantenimiento.tab_ejecutores as t24b on t46.id_ejecutor=t24b.id_ejecutor
 where t47.id_accion=".$codigo." and id_accion_centralizada=".$_POST['id_accion_centralizada'];
@@ -21,6 +21,7 @@ $resultado = $comunes->ObtenerFilasBySqlSelect($sql);
 $resultadoIdProyecto = $resultado[0]['id_ac'];
 $resultadoReal = $resultado[0]['monto'];
 $resultadoDefinitivo = $resultado[0]['in_definitivo'];
+$id_ejercicio = $resultado[0]['id_ejercicio'];
 ?>
 <script type="text/javascript">
 Ext.ns("metaLista");
@@ -58,6 +59,10 @@ this.id_accion_centralizada = new Ext.form.Hidden({
 	value:this.OBJ.id_accion_centralizada
 });
 
+this.id_ejercicio = new Ext.form.Hidden({
+	name:'id_ejercicio',
+	value:'<?php echo $id_ejercicio ?>'
+});
 //Agregar un registro
 this.nuevo = new Ext.Button({
     text:'Nueva Actividad',
@@ -67,7 +72,7 @@ this.nuevo = new Ext.Button({
         this.msg = Ext.get('formulario_actividad<?php echo $codigo;?>');
         this.msg.load({
          url:"formulacion/modulos/metas/editarMetaAC.php",
-	 params: {co_proyecto_acc_espec:metaLista.main.co_proyecto_acc_espec.getValue(),id_accion_centralizada:metaLista.main.id_accion_centralizada.getValue()},
+	 params: {co_proyecto_acc_espec:metaLista.main.co_proyecto_acc_espec.getValue(),id_accion_centralizada:metaLista.main.id_accion_centralizada.getValue(),id_ejercicio:metaLista.main.id_ejercicio.getValue()},
          scripts: true,
          text: "Cargando.."
         });

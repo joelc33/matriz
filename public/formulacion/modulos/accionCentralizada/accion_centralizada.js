@@ -157,7 +157,7 @@
                     hiddenName: 'id_ejecutor',
                     emptyText: 'Seleccione Unidad Ejecutora',
                     allowBlank: false,
-                    readOnly: ac.es_local,
+                    readOnly: ac.id?true:ac.es_local,
                     style: ac.es_local ? 'background:#c9c9c9;' : '',
                     typeAhead: true,
                     forceSelection: true,

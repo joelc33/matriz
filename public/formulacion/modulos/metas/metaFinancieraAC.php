@@ -186,7 +186,9 @@ this.co_fuente_financiamiento = new Ext.form.ComboBox({
 	allowBlank:false
 });
 
-this.storeCO_FUENTE_FINANCIAMIENTO.load();
+this.storeCO_FUENTE_FINANCIAMIENTO.load({
+		params: {id_accion_centralizada:this.OBJ.id_accion_centralizada,co_ac_acc_espec:this.OBJ.co_ac_acc_espec}
+	});
 	paqueteComunJS.funcion.seleccionarComboByCo({
 	objCMB: this.co_fuente_financiamiento,
 	value:  this.OBJ.co_fuente_financiamiento,
@@ -216,6 +218,30 @@ this.guardar = new Ext.Button({
 	iconCls: 'icon-guardar',
 	handler:function(){
 	if(detalleMetaEditar.main.formPanel_.form.isValid()){
+            
+            
+            var index = metaEditar.main.store_lista.findBy(function (user, id) {
+                console.log(id);
+                console.log(user.data.co_partida);
+
+                if (user.data.co_partida === detalleMetaEditar.main.co_partida.getValue() && user.data.co_fuente_financiamiento === detalleMetaEditar.main.co_fuente_financiamiento.getValue()) return true;
+                else return false;
+            });            
+
+             if (index == -1) {
+                 
+            if(detalleMetaEditar.main.mo_presupuesto.getValue()==0){
+ 
+ 		Ext.Msg.show({
+			title:'Mensaje',
+			msg: 'El monto del presupuesto debe ser mayor a 0',
+			buttons: Ext.Msg.OK,
+			animEl: document.body,
+			icon: Ext.MessageBox.INFO
+		});     
+                
+        }else{
+                
 		var e = new metaEditar.main.Registro({
 			co_municipio:detalleMetaEditar.main.co_municipio.getValue(),
 			tx_municipio:detalleMetaEditar.main.co_municipio.getRawValue(),
@@ -225,13 +251,28 @@ this.guardar = new Ext.Button({
 			co_partida:detalleMetaEditar.main.co_partida.getValue(),
 			co_fuente_financiamiento:detalleMetaEditar.main.co_fuente_financiamiento.getValue(),
 	    		tx_fuente_financiamiento:detalleMetaEditar.main.co_fuente_financiamiento.getRawValue()
-		});
-		var cant = metaEditar.main.store_lista.getCount();
+		});                
+                
+ 		var cant = metaEditar.main.store_lista.getCount();
 			(cant==0)?0:metaEditar.main.store_lista.getCount()+1;
 
 			metaEditar.main.store_lista.insert(cant, e);
 			metaEditar.main.gridPanel_.getView().refresh();
 			detalleMetaEditar.main.winformPanel_.close();
+                        
+        }
+                       
+            }else{
+                
+ 		Ext.Msg.show({
+			title:'Mensaje',
+			msg: 'La partida y fuente de financiamiento ya se encuentra en la lista',
+			buttons: Ext.Msg.OK,
+			animEl: document.body,
+			icon: Ext.MessageBox.INFO
+		});               
+    }
+
 	}else{
 		Ext.Msg.show({
 			title:'Mensaje',
