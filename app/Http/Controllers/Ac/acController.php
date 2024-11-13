@@ -5,6 +5,7 @@ namespace matriz\Http\Controllers\Ac;
 //*******agregar esta linea******//
 use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
+use matriz\Models\Mantenimiento\tab_ejecutores;
 use View;
 use Validator;
 use Input;
@@ -171,8 +172,17 @@ class acController extends Controller
                 $tabla = new tab_ac();
                 if (Session::get('rol') > 2) { //es local
                     $tabla->id_ejecutor = Session::get('ejecutor');
+                    
+                    $data_ejecutor = tab_ejecutores::select('tx_ejecutor')
+                    ->where('id_ejecutor', '=', Session::get('ejecutor'))
+                    ->first();
+                    
                 } else {
                     $tabla->id_ejecutor = Input::get("id_ejecutor");
+                    
+                    $data_ejecutor = tab_ejecutores::select('tx_ejecutor')
+                    ->where('id_ejecutor', '=', Input::get("id_ejecutor"))
+                    ->first();                    
                 }
                 $tabla->id_ejercicio = Session::get('ejercicio');
                 $tabla->id_accion = Input::get("id_accion");
@@ -191,6 +201,7 @@ class acController extends Controller
                 $tabla->nu_em_previsto = Input::get("nu_em_previsto");
                 $tabla->tx_re_esperado = str_replace('"', '', Input::get("tx_re_esperado"));
                 $tabla->tx_pr_objetivo = str_replace('"', '', Input::get("tx_pr_objetivo"));
+                $tabla->tx_ejecutor_poa = str_replace('"', '', $data_ejecutor->tx_ejecutor);
                 $tabla->edo_reg = 'TRUE';
                 $tabla->save();
 
