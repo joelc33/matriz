@@ -2150,6 +2150,7 @@ $contar=0;
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
@@ -2309,6 +2310,7 @@ $html23.='
                 ->join('ac_seguimiento.tab_meta_financiera as t03', 't03.id_tab_meta_fisica', '=', 't02.id')
                 ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();          
@@ -2335,6 +2337,7 @@ $html23.='
                 ->join('ac_seguimiento.tab_meta_financiera as t03', 't03.id_tab_meta_fisica', '=', 't02.id')
                 ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $data->id_ejecutor)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();          
@@ -2440,6 +2443,7 @@ $id = 0;
                 ->join('ac_seguimiento.tab_meta_financiera as t03', 't03.id_tab_meta_fisica', '=', 't02.id')
                 ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('t03.co_partida', '=', $item->co_partida)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
@@ -2602,6 +2606,7 @@ $html23.='
              ->orWhere('mo_modificado_anual', '!=', 0);
              })
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t05.in_activo', '=', true)          
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
             ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
              ->groupBy('codigo')
@@ -2692,6 +2697,7 @@ foreach($actividad as $item) {
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
@@ -2711,6 +2717,7 @@ foreach($actividad as $item) {
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
              ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
             ->where('tab_meta_fisica.codigo', '=', $item->codigo)
             ->where('t22.co_partida', '=', $item->co_partida)
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
@@ -2740,6 +2747,7 @@ foreach($actividad as $item) {
              ->orWhere('mo_modificado_anual', '!=', 0);
              })
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
             ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
             ->where('codigo', '=', $item->codigo)
