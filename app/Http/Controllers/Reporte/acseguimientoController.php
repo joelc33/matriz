@@ -2731,7 +2731,7 @@ foreach($actividad as $item) {
              ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
              ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
-            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+            ->where('t05.in_activo', '=', true)
             ->where('tab_meta_fisica.codigo', '=', $item->codigo)
             ->where('t22.co_partida', '=', $item->co_partida)
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
@@ -2761,7 +2761,7 @@ foreach($actividad as $item) {
              ->orWhere('mo_modificado_anual', '!=', 0);
              })
             ->where('t05.nu_codigo', '=', $data->id_proy_ac)
-             ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+             ->where('t05.in_activo', '=', true)
             ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
             ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
             ->where('codigo', '=', $item->codigo)
