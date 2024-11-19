@@ -1994,6 +1994,7 @@ $html23.='
             })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
+            'ac_seguimiento.tab_ac.id_tab_ac_predefinida',
             'tx_ejecutor_ac',
             't18b.tx_codigo as tx_sector',
             't45.tx_descripcion as tx_area_estrategica',
@@ -2155,7 +2156,20 @@ $contar=0;
                 ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
-                ->first();  
+                ->first();
+                
+             if($data->id_tab_ac_predefinida==1){
+                 
+             if($data20->nu_po_beneficiada>=$data->nu_po_beneficiar){
+             $nu_po_beneficiada =   $data->nu_po_beneficiar;    
+             }else{
+             $nu_po_beneficiada =   $data20->nu_po_beneficiada;    
+             }    
+                 
+             }else{
+             $nu_po_beneficiada =   $data20->nu_po_beneficiada;  
+             }                
+                
                 
             if($item->nu_meta_actualizada==0){
              $obtenido = 0;
@@ -2193,7 +2207,7 @@ $html23.='
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_po_beneficiar.'</td>
-<td colspan="3" style="width: 10%;" align="center">'.$data20->nu_po_beneficiada.'</td>
+<td colspan="3" style="width: 10%;" align="center">'.$nu_po_beneficiada.'</td>
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_previsto.'</td>
 <td colspan="3" style="width: 10%;" align="center">'.$data->nu_em_generado.'</td>
 </tr>
