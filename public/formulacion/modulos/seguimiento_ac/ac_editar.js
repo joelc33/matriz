@@ -163,7 +163,7 @@
                     name: 'inst_objetivos',
                     allowBlank: false,
                     height: 100,
-                    maxLength: 3000
+                    maxLength: 6000
 	    });            
 
             this.store_situacion = new Ext.data.JsonStore({

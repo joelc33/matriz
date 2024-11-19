@@ -184,7 +184,7 @@
                     name: 'inst_objetivos',
                     allowBlank: false,
                     height: 100,
-                    maxLength: 3000
+                    maxLength: 6000
                 }]
             });
 
