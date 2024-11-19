@@ -292,7 +292,7 @@ foreach($this->datos_actividad as $key => $campo2){
 			$contar=$contar+1;
 			$html23.='
 				<td style="width: 10%;" colspan="1" rowspan="1" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
-				<td style="width: 8%;" colspan="1" rowspan="1" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
+				<td style="width: 8%;" colspan="1" rowspan="1" align="right">'.number_format($campo3['mo_presupuesto'], 2, ',','.').'</td>
 				<td style="width: 8%;" colspan="1" rowspan="1" align="center">'.$campo['tx_categoria_ac'].'</td>
 				<td style="width: 7%;" colspan="1" rowspan="1" align="center">'.$campo3['co_partida'].'</td>
 				<td style="width: 10%;" colspan="1" rowspan="1" align="center">'.$campo3['tx_fuente'].'</td>
@@ -318,7 +318,7 @@ foreach($this->datos_actividad as $key => $campo2){
 		<td style="width: 8%;" align="center">'.trim(date_format(date_create($campo2["fecha_fin"]),'d/m/Y')).'</td>
 		<td style="width: 9%;" align="center">'.$campo2['nb_responsable'].'</td>
 		<td style="width: 10%;" align="center">'.$campo3['tx_municipio'].' / '.$campo3['tx_parroquia'].'</td>
-		<td style="width: 8%;" align="right">'.$this->formatoDinero($campo3['mo_presupuesto']).'</td>
+		<td style="width: 8%;" align="right">'.number_format($campo3['mo_presupuesto'], 2, ',','.').'</td>
 		<td style="width: 8%;" align="center">'.$campo['tx_categoria_ac'].'</td>
 		<td style="width: 7%;" align="center">'.$campo3['co_partida'].'</td>
 		<td style="width: 10%;" align="center">'.$campo3['tx_fuente'].'</td>
@@ -358,7 +358,7 @@ $html3 = '
 <tbody>
 <tr nobr="true">
 <td colspan="6" align="right"><b>SUBTOTAL ACTIVIDADES</b></td>
-<td colspan="5" align="left"><b>'.$this->formatoDinero($this->actividad_monto[0]['subtotal_ac']).'</b></td>
+<td colspan="5" align="left"><b>'.number_format($this->actividad_monto[0]['subtotal_ac'], 2, ',','.').'</b></td>
 </tr>
 </tbody>
 </table>
@@ -378,7 +378,7 @@ $html4 = '
 <tbody>
 <tr nobr="true">
 <td rowspan="2" colspan="6" align="right"><b>SUBTOTAL '.$datosEnunciadoSUBTOTAL.'</b></td>
-<td rowspan="2" colspan="2" align="left"><b>'.$this->formatoDinero($campo['monto_calc']).'</b></td>
+<td rowspan="2" colspan="2" align="left"><b>'.number_format($campo['monto_calc'], 2, ',','.').'</b></td>
 <td colspan="3" align="left" style="font-size:6px">POBLACION A BENEFICIAR: '.$campo['nu_po_beneficiar'].'</td>
 </tr>
 <tr nobr="true">
@@ -395,7 +395,7 @@ $html5 = '
 <tbody>
 <tr nobr="true">
 <td colspan="6" align="right"><b>TOTAL EJECUTOR</b></td>
-<td colspan="5" align="left"><b>'.$this->formatoDinero($campo["mo_proyecto_ac"]).'</b></td>
+<td colspan="5" align="left"><b>'.number_format($campo["mo_proyecto_ac"], 2, ',','.').'</b></td>
 </tr>
 </tbody>
 </table>

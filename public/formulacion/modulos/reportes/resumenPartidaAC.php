@@ -162,7 +162,7 @@ foreach($this->datos_ae_partida as $key => $campo3){
 		<tr style="font-size:8px" nobr="true">
 		<td style="width: 10%;" >'.$campo3['co_partida'].'</td>
 		<td style="width: 70%;" >'.$campo3['tx_nombre'].'</td>
-		<td style="width: 20%;" >'.$this->formatoDinero($campo3['monto']).'</td>
+		<td style="width: 20%;" >'.number_format($campo3['monto'], 2, ',','.').'</td>
 		</tr>';
 		$acumulador_partida = $acumulador_partida + $campo3['monto'];
 }
@@ -176,15 +176,15 @@ foreach($this->datos_ae_partida as $key => $campo3){
 $html23.='
 <tr style="font-size:9px" nobr="true">
 <td colspan="2" style="text-align: rigth;"><b>Total A.E.</b></td>
-<td>'.$this->formatoDinero($acumulador_partida).'</td>
+<td>'.number_format($acumulador_partida, 2, ',','.').'</td>
 </tr>
 <tr style="font-size:9px" nobr="true">
 <td colspan="2" style="text-align: rigth;"><b>SubTotal A.C.</b></td>
-<td>'.$this->formatoDinero($campo['monto_calc']).'</td>
+<td>'.number_format($campo['monto_calc'], 2, ',','.').'</td>
 </tr>
 <tr style="font-size:9px" nobr="true">
 <td colspan="2" style="text-align: rigth;"><b>Total Ejecutor</b></td>
-<td>'.$this->formatoDinero($campo['total_ejecutor']).'</td>
+<td>'.number_format($campo['total_ejecutor'], 2, ',','.').'</td>
 </tr>
 </tbody>
 </table>';
