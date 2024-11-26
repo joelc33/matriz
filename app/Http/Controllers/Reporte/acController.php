@@ -685,6 +685,7 @@ public function ubicacionTodo()
         t009.de_inicial,
         sp_ac_ae_fondo( t47.id_accion_centralizada, t47.id_accion) as fondo,
         t24a.id_tab_ambito_ejecutor as ambito,
+        t02.de_estatus,
         tae24a.de_ambito_ejecutor
       from mantenimiento.tab_ejercicio_fiscal as t25
         join mapa_acs as ma on ma.ef = t25.id
@@ -714,6 +715,7 @@ public function ubicacionTodo()
         join mantenimiento.tab_partidas as tabp on tabp.co_partida = t54.co_partida and tabp.id_tab_ejercicio_fiscal = t25.id
         join mantenimiento.tab_tipo_ejecutor as t009 on t24a.id_tab_tipo_ejecutor = t009.id
         left join mantenimiento.tab_ambito_ejecutor as tae24a on t24a.id_tab_ambito_ejecutor = tae24a.id
+        join mantenimiento.tab_estatus as t02 on t02.id = t46.id_estatus
       where 	ma.edo_reg
         and t46.edo_reg
         and t47.edo_reg
@@ -747,8 +749,9 @@ public function ubicacionTodo()
             $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
             $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(40);
             $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(20);
             $objPHPExcel->getActiveSheet()->setTitle('ac_'.Session::get('ejercicio').'_exportacion_icp_ac');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray(
                 array(
                         'font'    => array(
                             'bold'      => true
@@ -825,7 +828,8 @@ public function ubicacionTodo()
       ->setCellValue('N1', 'Nombre del Ejecutor de la AE')
       ->setCellValue('O1', 'Tipo Ejecutor')
       ->setCellValue('P1', 'Fondo')
-      ->setCellValue('Q1', 'Ambito');
+      ->setCellValue('Q1', 'Ambito')
+        ->setCellValue('R1', 'Estatus');
 
             foreach ($consulta as $key => $value) {
                 // Set thin black border outline around column
@@ -837,7 +841,7 @@ public function ubicacionTodo()
                     ),
                   ),
                 );
-                $objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($styleThinBlackBorderOutline);
+                $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray($styleThinBlackBorderOutline);
                 // Set cell An to the "name" column from the database (assuming you have a column called name)
                 //    where n is the Excel row number (ie cell A1 in the first row)
 
@@ -860,6 +864,7 @@ public function ubicacionTodo()
                 $objPHPExcel->getActiveSheet()->SetCellValue('O'.$rowCount, $value->de_inicial, PHPExcel_Cell_DataType::TYPE_STRING);
                 $objPHPExcel->getActiveSheet()->SetCellValue('P'.$rowCount, $value->fondo, PHPExcel_Cell_DataType::TYPE_STRING);
                 $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $ambito, PHPExcel_Cell_DataType::TYPE_STRING);
+                $objPHPExcel->getActiveSheet()->SetCellValue('R'.$rowCount, $value->de_estatus, PHPExcel_Cell_DataType::TYPE_STRING);
 
                 // Increment the Excel row counter
                 $rowCount++;
@@ -871,7 +876,7 @@ public function ubicacionTodo()
             $objPHPExcel->getActiveSheet()->getStyle('Q1:Q'.$rowCount)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             // Make bold cells
-            $objPHPExcel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:R1')->getFont()->setBold(true);
 
             // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
             $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
