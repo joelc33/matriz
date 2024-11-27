@@ -4328,6 +4328,7 @@ class leyController extends Controller
                                 ->where('t05.id_tab_ejercicio_fiscal', '=', $ejercicio)
                                 ->where('t06.id_tab_ejercicio_fiscal', '=', $ejercicio)
                                 ->where('t07.id_tab_ejercicio_fiscal', '=', $ejercicio)
+                                ->where('t08.id_tab_ejercicio_fiscal', '=', $ejercicio)
                                 ->where('co_sector', '=', $value_transferencia->co_sector)
                                 ->where('nu_original', '=', $value_transferencia_dos->nu_original)
                                 ->where('t05.co_partida', '=', $value_transferencia_tres->co_partida)
@@ -4366,7 +4367,7 @@ class leyController extends Controller
                                     $pdf->MultiCell(10, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
                                     $pdf->MultiCell(10, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
                                     $pdf->MultiCell(6, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
-//                                    $pdf->MultiCell(65, $alto_partida, $value_distribucion_partida->tx_nombre, 0, 'L', 0, 0, '', '', true);
+                                    $pdf->MultiCell(65, $alto_partida, $value_distribucion_partida->tx_nombre, 0, 'L', 0, 0, '', '', true);
 
                                     if($partida_capital_uno == $partida_referencia) {
 
