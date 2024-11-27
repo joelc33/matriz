@@ -3980,7 +3980,7 @@ class leyController extends Controller
                                 $pdf->MultiCell(25, 5, '', 0, 'R', 0, 0, '', '', true);
                                 $pdf->writeHTMLCell(26, 5, '', '', '<u>'.number_format($value_transferencia_cinco->mo_partida, 0, ',', '.').'</u>', 0, 0, 0, true, 'R', true);
 
-                                $movimiento_capital =   $value_transferencia_cinco->mo_partida;
+                                $movimiento_capital =   $movimiento_capital + $value_transferencia_cinco->mo_partida;
 
                             } elseif($partida_capital_dos == $partida_referencia) {
 
@@ -4366,7 +4366,7 @@ class leyController extends Controller
                                     $pdf->MultiCell(10, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
                                     $pdf->MultiCell(10, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
                                     $pdf->MultiCell(6, $alto_partida, '', 0, 'C', 0, 0, '', '', true);
-                                    $pdf->MultiCell(65, $alto_partida, $value_distribucion_partida->tx_nombre, 0, 'L', 0, 0, '', '', true);
+//                                    $pdf->MultiCell(65, $alto_partida, $value_distribucion_partida->tx_nombre, 0, 'L', 0, 0, '', '', true);
 
                                     if($partida_capital_uno == $partida_referencia) {
 
