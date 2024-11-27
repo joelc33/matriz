@@ -115,7 +115,7 @@ class ejerciciocronogramaController extends Controller
 
         $limite = array('fe_ini' => $fechaI, 'fe_fin' => $fechaF );
 
-        $data = json_encode(array_merge($data->toArray(), $limite));
+//        $data = json_encode(array_merge($data->toArray(), $limite));
 
         return View::make('mantenimiento.ejercicio.cronograma.editar')->with('data', $data);
     }
