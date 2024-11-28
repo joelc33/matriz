@@ -586,6 +586,8 @@ class leyController extends Controller
 
                     $lista_ejecutores = '';
                     $linea = 0;
+                    $j = 0;
+                    $cant = count($categoria_cuatro);
 
                     foreach ($categoria_cuatro as $key => $value_categoria_cuatro) {
                         $pdf->SetFont('', '', 6);
@@ -599,7 +601,7 @@ class leyController extends Controller
                         } else {
                             $pdf->ln(4);
                         }
-
+                        $j++;
                         $start_y = $pdf->GetY();
 
                         if ($start_y >= 260) {
@@ -661,6 +663,8 @@ class leyController extends Controller
                             $pdf->SetFont('', '', 7);
                             $pdf->setCellHeightRatio(1);
 
+                            if($j!=$cant){
+                            
                             /*****Sector*********/
                             $pdf->SetFont('', 'B', 7);
                             $pdf->MultiCell(10, 5, $value_categoria_uno->co_sector, 0, 'C', 0, 0, '', '', true);
@@ -691,6 +695,7 @@ class leyController extends Controller
                             $pdf->MultiCell(10, 5, substr($value_categoria_tres->nu_ae, -2), 0, 'C', 0, 0, '', '', true);
                             $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
                             $pdf->ln(1);
+                            }
 
                         }
 
