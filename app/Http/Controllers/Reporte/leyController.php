@@ -890,7 +890,7 @@ class leyController extends Controller
             
                      $start_y = $pdf->GetY();
 
-                    if ($start_y >= 260) {
+                    if ($start_y >= 250) {
 
                         $pdf->AddPage();
 
