@@ -690,7 +690,7 @@ class leyController extends Controller
                             $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
                             $pdf->MultiCell(10, 5, substr($value_categoria_tres->nu_ae, -2), 0, 'C', 0, 0, '', '', true);
                             $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_tres->de_ae, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
-                            $pdf->ln(0);
+                            $pdf->ln(2);
 
                         }
 
