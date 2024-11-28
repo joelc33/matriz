@@ -605,7 +605,9 @@ class leyController extends Controller
                         $start_y = $pdf->GetY();
 
                         if ($start_y >= 260) {
-
+                            
+                        if($j!=$cant){
+                            
                             $pdf->AddPage();
 
                             // reset font stretching  reset font spacing
@@ -663,7 +665,7 @@ class leyController extends Controller
                             $pdf->SetFont('', '', 7);
                             $pdf->setCellHeightRatio(1);
 
-                            if($j!=$cant){
+                           
                             
                             /*****Sector*********/
                             $pdf->SetFont('', 'B', 7);
