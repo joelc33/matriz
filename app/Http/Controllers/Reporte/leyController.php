@@ -1516,7 +1516,7 @@ class leyController extends Controller
 
             $escala_salarial = tab_escala_salarial::where('id_tab_ejercicio_fiscal', '=', $ejercicio)
             ->where('id_tab_tipo_empleado', '=', $value_escala_salarial_grupo->id)
-            ->orderBy('id', 'ASC')
+            ->orderBy('de_grupo', 'ASC')
             ->get();
 
             $total_mo_sexo_m = 0;
@@ -2459,7 +2459,7 @@ class leyController extends Controller
 
                             $escala_salarial = tab_escala_salarial::where('id_tab_ejercicio_fiscal', '=', $ejercicio)
                             ->where('id_tab_tipo_empleado', '=', $value_escala_salarial_grupo->id)
-                            ->orderBy('id', 'ASC')
+                            ->orderBy('de_grupo', 'ASC')
                             ->get();
 
                             $total_mo_sexo_m = 0;
