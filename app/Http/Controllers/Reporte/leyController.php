@@ -813,6 +813,78 @@ class leyController extends Controller
                     }
 
                 }
+                
+                    $start_y = $pdf->GetY();
+
+                    if ($start_y >= 260) {
+
+                        $pdf->AddPage();
+
+                        // reset font stretching  reset font spacing
+                        $pdf->setFontStretching(100);
+                        $pdf->setFontSpacing(0);
+                        $pdf->SetLineWidth(0.150);
+                        $pdf->setCellHeightRatio(2);
+
+                        $pdf->SetFont('', 'B', 8);
+                        $pdf->setCellHeightRatio(1.2);
+                        $pdf->MultiCell(30, 5, 'GOBERNACIÓN '.chr(10).'DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+                        $pdf->setCellHeightRatio(2);
+                        $pdf->SetFont('', 'B', 11);
+                        $pdf->MultiCell(90, 5, 'INDICE DE CATEGORIAS DE PROYECTOS Y/O ACCIÓN CENTRALIZADA', 0, 'C', 0, 0, '', '', true);
+                        $pdf->ln(8);
+                        $pdf->SetFont('', 'B', 8);
+                        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+                        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+                        $pdf->ln(-10);
+                        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+                        $pdf->ln(19);
+                        $pdf->setCellHeightRatio(1.2);
+
+                        $pdf->ln(21);
+                        $pdf->SetFont('', 'B', 6);
+                        $pdf->StartTransform();
+                        $pdf->Rotate(90);
+                        $pdf->MultiCell(21, 10, chr(10).'SECTOR', 1, 'L', 0, 0, '', '', true);
+                        $pdf->ln(10);
+                        $pdf->MultiCell(21, 10, 'PROY. Y/O ACCIÓN CENTRALIZADA', 1, 'L', 0, 0, '', '', true);
+                        $pdf->ln(10);
+                        $pdf->MultiCell(21, 10, chr(10).'ACCIÓN  ESPECÍFICA', 1, 'L', 0, 0, '', '', true);
+                        $pdf->ln(10);
+                        $pdf->StopTransform();
+                        $pdf->ln(-51);
+                        $pdf->SetFont('', 'B', 9);
+                        $pdf->MultiCell(30, 21, '', 0, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(83, 21, chr(10).chr(10).'DENOMINACIÓN', 1, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(83, 21, chr(10).chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
+                        $pdf->ln(21);
+                        $pdf->setCellHeightRatio(1);
+                        $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(10, 219, '', 1, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+                        $pdf->MultiCell(83, 219, '', 1, 'L', 0, 0, '', '', true);
+                        $pdf->ln(221);
+                        $pdf->SetFont('', '', 7);
+                        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+                        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+                        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+                        $pdf->ln(-221);
+                        $pdf->ln(2);
+                        $pdf->SetFont('', '', 7);
+                        $pdf->setCellHeightRatio(1);
+                        
+                            /*****Sector*********/
+                            $pdf->SetFont('', 'B', 7);
+                            $pdf->MultiCell(10, 5, $value_categoria_uno->co_sector, 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_uno->tx_descripcion, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+                            $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+                            $pdf->ln(5);                       
+
+                    }                
 
             }
 
