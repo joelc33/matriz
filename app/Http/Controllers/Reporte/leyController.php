@@ -778,6 +778,30 @@ class leyController extends Controller
                         $pdf->ln(2);
                         $pdf->SetFont('', '', 7);
                         $pdf->setCellHeightRatio(1);
+                        
+                            /*****Sector*********/
+                            $pdf->SetFont('', 'B', 7);
+                            $pdf->MultiCell(10, 5, $value_categoria_uno->co_sector, 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_uno->tx_descripcion, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+                            $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+                            $pdf->ln(5);
+                            /*****Proy/Ac*******/
+                            $pdf->SetFont('', '', 7);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, substr($value_categoria_dos->nu_original, -2), 0, 'C', 0, 0, '', '', true);
+                            $pdf->MultiCell(10, 5, '', 0, 'C', 0, 0, '', '', true);
+                            //$pdf->MultiCell(83, 5, mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+                            $pdf->writeHTMLCell(83, 5, '', '', '<u>'.mb_strtoupper($value_categoria_dos->de_nombre, 'UTF-8').'</u>', 0, 0, 0, true, 'L', true);
+                            $pdf->MultiCell(83, 5, '', 0, 'L', 0, 0, '', '', true);
+
+                            $condicionPartida = strlen($value_categoria_dos->de_nombre);
+                            if ($condicionPartida >= 60) {
+                                $pdf->ln(10);
+                            } else {
+                                $pdf->ln(5);
+                            }                       
 
                     }
 
