@@ -817,11 +817,11 @@ EOT
 			$json->assert( $params );
 			$acciones = json_decode( $params['data'] );
 
-			$contenido = v::object()->attribute( 'id', v::intero()->positive()->notEmpty() );
+//			$contenido = v::object()->attribute( 'id', v::intero()->positive()->notEmpty() );
 
-			foreach ( range(1,12) as $i ) {
-				$contenido = $contenido->attribute( "$i", v::intero()->min( 0, true ), false );
-			}
+//			foreach ( range(1,12) as $i ) {
+//				$contenido = $contenido->attribute( "$i", v::intero()->min( 0, true ), false );
+//			}
 			if ( !is_array( $acciones ) ) {
 				$acciones = array( $acciones );
 			}
