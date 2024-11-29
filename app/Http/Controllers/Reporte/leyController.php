@@ -3454,6 +3454,7 @@ class leyController extends Controller
             'de_municipio'
         )
         ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+        ->where('tab_distribucion_municipio.in_activo', '=', true)
         ->orderby('de_municipio', 'ASC')
         ->get();
 
