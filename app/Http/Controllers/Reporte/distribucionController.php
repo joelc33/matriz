@@ -215,7 +215,7 @@ class distribucionController extends Controller
                     $pdf->MultiCell(71, 7, chr(10).$value_distribucion_tres->co_sector.' - '.mb_strtoupper($value_distribucion_tres->tx_descripcion, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->SetFont('', 'B', 7);
                     $pdf->MultiCell(20, 14, chr(10).'UNIDAD EJECUTORA', 1, 'C', 0, 0, '', '', true);
-                    $pdf->SetFont('', '', 7);
+                    $pdf->SetFont('', '', 6);
                     $pdf->MultiCell(76, 14, chr(10).$value_distribucion_tres->id_ejecutor.' - '.mb_strtoupper($value_distribucion_tres->tx_ejecutor, 'UTF-8'), 1, 'L', 0, 0, '', '', true);
                     $pdf->ln(7);
                     $pdf->SetFont('', 'B', 6);
