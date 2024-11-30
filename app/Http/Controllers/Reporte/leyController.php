@@ -4187,6 +4187,7 @@ class leyController extends Controller
                             $tab_distribucion_municipio = tab_distribucion_municipio::join('mantenimiento.tab_municipio as t01', 't01.id', '=', 'mantenimiento.tab_distribucion_municipio.id_tab_municipio')
                             ->select('mantenimiento.tab_distribucion_municipio.id', 'co_partida', 'mo_total', 'de_municipio')
                             ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
+                            ->where('tab_distribucion_municipio.in_activo', '=', true)
                             ->where(DB::raw('left(co_partida::bigint::text::varchar, 5)'), '=', trim($partida_desagregado_municipio))
                             ->orderBy('de_municipio', 'ASC')
                             ->get();
