@@ -1283,17 +1283,17 @@ class leyController extends Controller
         $pdf->ln(5);
         $pdf->SetFont('', 'B', 5);
         $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(15, 5, 'N° DE CARGOS', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(20, 10, chr(10).'SUELDO Y SALARIO', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(21, 5, 'N° DE CARGOS', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(14, 10, chr(10).'SUELDO Y SALARIO', 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(15, 10, chr(10).'COMPENSACION', 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(18, 10, chr(10).'PRIMAS', 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(20, 10, chr(10).'TOTAL', 1, 'C', 0, 0, '', '', true);
         $pdf->ln(5);
         $pdf->SetFont('', 'B', 4);
         $pdf->MultiCell(20, 5, '', 0, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 5, chr(10).'M', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 5, chr(10).'F', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 5, 'TOTAL', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 5, chr(10).'M', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 5, chr(10).'F', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 5, 'TOTAL', 1, 'C', 0, 0, '', '', true);
         $pdf->ln(-5);
         $pdf->SetFont('', 'B', 5);
         $pdf->MultiCell(108, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -1311,10 +1311,10 @@ class leyController extends Controller
         $pdf->ln(5);
         $pdf->setCellHeightRatio(1);
         $pdf->MultiCell(20, 215, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 215, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 215, '', 1, 'L', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 215, '', 1, 'L', 0, 0, '', '', true);
-        $pdf->MultiCell(20, 215, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 215, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 215, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 215, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(14, 215, '', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(15, 215, '', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(18, 215, '', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(20, 215, '', 1, 'L', 0, 0, '', '', true);
@@ -1378,10 +1378,10 @@ class leyController extends Controller
                         $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
                         $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
 
-                        $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(14, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->SetFont('', 'B', 6);
@@ -1400,10 +1400,10 @@ class leyController extends Controller
 
                 } else {
 
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(14, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
@@ -1470,10 +1470,10 @@ class leyController extends Controller
                         $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
                         $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
 
-                        $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(5, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(5, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-                        $pdf->MultiCell(20, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(7, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+                        $pdf->MultiCell(14, 5, number_format($value_clasificador_tipo->mo_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(15, 5, number_format($value_clasificador_tipo->mo_compensacion, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(18, 5, number_format($value_clasificador_tipo->mo_primas, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         if($value_tipo_personal->id==1 || $value_tipo_personal->id==10 || $value_tipo_personal->id==12){
@@ -1499,10 +1499,10 @@ class leyController extends Controller
 
                 } else {
 
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(5, 5, '', 0, 'R', 0, 0, '', '', true);
-                    $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(7, 5, '', 0, 'R', 0, 0, '', '', true);
+                    $pdf->MultiCell(14, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(15, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(18, 5, '', 0, 'R', 0, 0, '', '', true);
                     $pdf->MultiCell(20, 5, '', 0, 'R', 0, 0, '', '', true);
@@ -1568,11 +1568,11 @@ class leyController extends Controller
         $pdf->SetY(262);
         $pdf->MultiCell(20, 6, 'TOTALES', 1, 'R', 0, 0, '', '', true);
         $pdf->SetFont('', 'B', 5);
-        $pdf->MultiCell(5, 6, number_format($total_masculino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 6, number_format($total_femenino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
-        $pdf->MultiCell(5, 6, number_format($total_mf_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 6, number_format($total_masculino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 6, number_format($total_femenino_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(7, 6, number_format($total_mf_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
         $pdf->SetFont('', 'B', 8);
-        $pdf->MultiCell(20, 6, number_format($total_mo_sueldo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
+        $pdf->MultiCell(14, 6, number_format($total_mo_sueldo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
         $pdf->MultiCell(15, 6, number_format($total_mo_compensacion_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
         $pdf->MultiCell(18, 6, number_format($total_mo_primas_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
         $pdf->MultiCell(20, 6, number_format($total_sueldo_todo_ant, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
