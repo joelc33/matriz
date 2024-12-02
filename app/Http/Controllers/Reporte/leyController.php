@@ -580,7 +580,7 @@ class leyController extends Controller
                     ->where('nu_original', '=', $value_categoria_dos->nu_original)
                     ->where('nu_ae', '=', $value_categoria_tres->nu_ae)
                     ->where('id_tab_tipo_ejecutor', '=', 1)
-                    ->groupBy('tx_ejecutor')
+                    ->groupBy('id_ejecutor')
                     ->orderBy('id_ejecutor', 'ASC')
                     ->get();
 
