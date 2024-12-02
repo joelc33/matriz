@@ -1836,7 +1836,7 @@ class leyController extends Controller
 
             $pdf->MultiCell(10, 5, '', 0, 'L', 0, 0, '', '', true);
             $pdf->setCellHeightRatio(2);
-            $pdf->writeHTMLCell(176, 5, '', '', nl2br($value->de_objetivo_sectorial), 0, 0, 0, true, 'L', true);
+            $pdf->writeHTMLCell(176, 5, '', '', nl2br($value->de_objetivo_sectorial), 0, 0, 0, true, 'J', true);
             $pdf->setCellHeightRatio(1.2);
 
             // reset font stretching  reset font spacing
