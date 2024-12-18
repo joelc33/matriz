@@ -421,7 +421,7 @@ class formacuatroController extends Controller
                 $tabla->fecha_inicio = Input::get("fecha_inicio");
                 $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
-                $tabla->de_desvio = Input::get("desvio");
+                $tabla->de_desvio = str_replace('"', '', Input::get("desvio"));
                 $tabla->in_004 = true;
                 $tabla->save();
                 
@@ -483,7 +483,7 @@ class formacuatroController extends Controller
                 $tabla->fecha_inicio = Input::get("fecha_inicio");
                 $tabla->fecha_fin = Input::get("fecha_culminacion");
                 $tabla->nb_responsable = Input::get("responsable");
-                $tabla->de_desvio = Input::get("desvio");
+                $tabla->de_desvio = str_replace('"', '', Input::get("desvio"));
                 $tabla->id_tab_origen = 2;
                 $tabla->in_cargado = false;
                 $tabla->in_activo = true;
