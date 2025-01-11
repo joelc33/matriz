@@ -696,6 +696,7 @@ class formadosController extends Controller
                 ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data1->nu_codigo)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)        
                 ->where('t02.codigo', '=', $data1->codigo)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data1->id_tab_ac_ae_predefinida)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data1->id_tab_ejercicio_fiscal)
