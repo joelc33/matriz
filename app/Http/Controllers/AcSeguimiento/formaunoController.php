@@ -851,9 +851,160 @@ class formaunoController extends Controller
     {
         DB::beginTransaction();
         try {
+            
+                $tab_ac = tab_ac::select(
+                    'id_tab_lapso','nu_codigo'
+                )
+                ->where('id', '=', Input::get("id"))
+                ->first(); 
+                
+        $data_lapso = tab_lapso::where('id', '=', $tab_ac->id_tab_lapso)
+        ->first();                
+            
+        $data_lapso_siguiente = tab_lapso::select(
+            'id',
+            'id_tab_ejercicio_fiscal',
+            'id_tab_periodo',
+            'nu_lapso',
+            'fe_inicio',
+            'fe_fin',
+            'in_activo',
+            'de_lapso',
+            'id_tab_tipo_periodo'
+        )
+        ->where('id_tab_ejercicio_fiscal', '=', $data_lapso->id_tab_ejercicio_fiscal)
+        ->where('id_tab_periodo', '=', $data_lapso->id_tab_periodo)
+        ->where('id', '>', $data_lapso->id)
+        ->orderby('mantenimiento.tab_lapso.id', 'ASC')
+        ->first();
+        
+
+        
+        if($data_lapso_siguiente){     
+            
+            
+        $data1_ac = tab_ac::where('nu_codigo', '=', $tab_ac->nu_codigo)
+        ->where('id_tab_lapso', '=', $data_lapso_siguiente->id)
+        ->where('in_activo', '=', true)
+        ->first();  
+        
+        if($data1_ac){
+            
+ 
+            $response['success']  = 'true';
+            $response['msg']  = 'El Siguiente periodo para la Ac seleccionada ya ah sido creado, Verifique!';
+            return Response::json($response, 200);            
+            
+        }else{
+            
+            $tabla = tab_ac::find(Input::get("id"));
+            $tabla->in_abierta = true;
+            $tabla->in_002 = false;
+            $tabla->in_003 = false;
+            $tabla->save();
+            
+            $data = tab_ac_ae::select(
+                'id as id_tab_ac_ae'
+            )
+            ->where('id_tab_ac', '=', Input::get("id"))
+            ->get(); 
+            
+            foreach($data as $item) {
+
+            $data2 = tab_meta_fisica::select(
+                'id as id_tab_meta_fisica'
+            )
+            ->where('id_tab_ac_ae', '=', $item->id_tab_ac_ae)
+            ->get();                 
+                
+            foreach($data2 as $item2) {
+                
+            $tabla2 = tab_meta_fisica::find($item2->id_tab_meta_fisica);
+            $tabla2->in_cargado = false;
+            $tabla2->in_bloquear_002 = false;
+            $tabla2->id_tab_estatus = 1;
+            $tabla2->save();
+            
+            $data3 = tab_meta_financiera::select(
+                'id as id_tab_meta_financiera'
+            )
+            ->where('id_tab_meta_fisica', '=', $item2->id_tab_meta_fisica)
+            ->get();
+
+            foreach($data3 as $item3) {  
+
+            $tabla3 = tab_meta_financiera::find($item3->id_tab_meta_financiera);
+            $tabla3->in_cargado = false;
+            $tabla3->in_enviado = false;
+            $tabla3->id_tab_estatus = 1;
+            $tabla3->save();                
+                
+            }          
+                
+            }    
+            }
+            
+        }
+            
+        }else{
+            
+if($data_lapso->id_tab_tipo_periodo==22){
+    
+                $tabla = tab_ac::find(Input::get("id"));
+            $tabla->in_abierta = true;
+            $tabla->in_002 = false;
+            $tabla->in_003 = false;
+            $tabla->save();
+            
+            $data = tab_ac_ae::select(
+                'id as id_tab_ac_ae'
+            )
+            ->where('id_tab_ac', '=', Input::get("id"))
+            ->get(); 
+            
+            foreach($data as $item) {
+
+            $data2 = tab_meta_fisica::select(
+                'id as id_tab_meta_fisica'
+            )
+            ->where('id_tab_ac_ae', '=', $item->id_tab_ac_ae)
+            ->get();                 
+                
+            foreach($data2 as $item2) {
+                
+            $tabla2 = tab_meta_fisica::find($item2->id_tab_meta_fisica);
+            $tabla2->in_cargado = false;
+            $tabla2->in_bloquear_002 = false;
+            $tabla2->id_tab_estatus = 1;
+            $tabla2->save();
+            
+            $data3 = tab_meta_financiera::select(
+                'id as id_tab_meta_financiera'
+            )
+            ->where('id_tab_meta_fisica', '=', $item2->id_tab_meta_fisica)
+            ->get();
+
+            foreach($data3 as $item3) {  
+
+            $tabla3 = tab_meta_financiera::find($item3->id_tab_meta_financiera);
+            $tabla3->in_cargado = false;
+            $tabla3->in_enviado = false;
+            $tabla3->id_tab_estatus = 1;
+            $tabla3->save();                
+                
+            }          
+                
+            }    
+            }
+    
+}else{            
+            
             $tabla = tab_ac::find(Input::get("id"));
             $tabla->in_abierta = true;
             $tabla->save();
+}
+            
+        }
 
             DB::commit();
 
