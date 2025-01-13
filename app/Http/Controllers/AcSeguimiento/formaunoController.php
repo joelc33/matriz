@@ -660,6 +660,7 @@ class formaunoController extends Controller
                     'id'
                 )
                 ->where('id_tab_ac', '=', $lista->id)
+                ->where('id_tab_estatus', '=', 5)        
                 ->first();                 
               
                 $tabla_001 = tab_forma_001::find($data2->id);
