@@ -211,6 +211,9 @@
                     xtype: 'hidden',
                     name: 'id_ejercicio',
                 }, {
+                    xtype: 'hidden',
+                    name: 'id_tab_lapso',
+                }, {
                     xtype: 'textfield',
                     fieldLabel: '1.0. CÓDIGO DE LA ACCIÓN CENTRALIZADA',
                     name: 'nu_codigo',

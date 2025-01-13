@@ -17,7 +17,7 @@ if ($id_accion!=''||$id_accion!=null) {
 	$params = array();
 	$sql = <<<EOT
 SELECT t46.id, id_tab_ejercicio_fiscal as id_ejercicio, t46.id_ejecutor as id_ejecutor, t24.tx_ejecutor as ejecutor,
-nu_codigo,
+nu_codigo,t46.id_tab_lapso,
 co_new_etapa as co_sistema, t46.id_tab_ac_predefinida as id_accion, t52.de_accion as descripcion,
 id_tab_estatus, id_tab_sectores as id_subsector, id_tab_situacion_presupuestaria as co_situacion_presupuestaria,
 mo_ac as monto, t18.co_sector, fe_inicio as fecha_inicio, fe_fin as fecha_fin, t52.de_nombre, 
@@ -44,7 +44,6 @@ EOT;
 		$id_ejercicio = $res['id_ejercicio'];
 		$contenedor = "ac_{$id_accion}";
 		$accion['es_local'] = $local;
-                $accion['id_tab_lapso'] = $id_tab_lapso;
 	if ( $local ) { //planificador local sólo lectura
             if($accion['id_tab_tipo_registro']==1){
             $accion['bloqueado'] = true; 

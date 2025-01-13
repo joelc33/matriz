@@ -1343,6 +1343,7 @@ EOT;
 				'fecha_inicio' => 'fe_inicio',
 				'fecha_fin' => 'fe_fin',
 				'inst_mision',
+                                'id_tab_lapso',
 				'inst_vision',
 				'inst_objetivos',
 				'nu_po_beneficiar',
@@ -1366,6 +1367,7 @@ EOT;
 
 			$validador = v::key( 'id_tab_ejercicio_fiscal', v::intero()->notEmpty() )
 				->key( 'id_tab_estatus', v::intero()->notEmpty() )
+                                ->key( 'id_tab_lapso', v::intero()->notEmpty() )
 				->key( 'id_tab_ac_predefinida', v::intero()->notEmpty() )
 				->key( 'id_tab_sectores', v::intero()->notEmpty() )
 				->key( 'de_ac', v::stringcadena()  )
@@ -1458,7 +1460,6 @@ EOT;
                                 $params['id_tab_ejecutores'] = $res_ejecutor['id'];
                                 $params['tx_ejecutor_ac'] = $res_ejecutor['tx_ejecutor'];
                                 $params['de_ac'] = $res_desc['de_nombre'];
-                                $params['id_tab_lapso'] = $res_lapso['id'];
                                 $params['mo_calculado'] = $params['mo_ac'];
                                 $params['id_tab_origen'] = 2;
                                 $params['nu_codigo'] = 'AC'.$params['id_ejecutor'].$params['id_tab_ejercicio_fiscal'].str_pad($params['id_tab_ac_predefinida'], 5,'0', STR_PAD_LEFT );
