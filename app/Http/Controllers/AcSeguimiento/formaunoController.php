@@ -659,16 +659,17 @@ class formaunoController extends Controller
                 $data2 = tab_forma_001::select(
                     'id'
                 )
-                ->where('id_tab_ac', '=', $lista->id)
-                ->where('id_tab_estatus', '=', 5)        
-                ->first();                 
+                ->where('id_tab_ac', '=', $lista->id)       
+                ->get(); 
+
+                foreach ($data2 as $lista2){
               
-                $tabla_001 = tab_forma_001::find($data2->id);
+                $tabla_001 = tab_forma_001::find($lista2->id);
                 $tabla_001->in_001 = true;
                 $tabla_001->id_tab_estatus = 6;
                 $tabla_001->id_usuario_procesa = Auth::user()->id;
                 $tabla_001->save();              
-                    
+                }
                 }                
                 
 
