@@ -73,8 +73,9 @@ class lapsoController extends Controller
                 DB::raw("to_char(fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
                 DB::raw("to_char(fe_fin, 'dd/mm/YYYY') as fe_fin"),
                 'mantenimiento.tab_lapso.in_activo'
-            );
-
+            )
+            ->where('mantenimiento.tab_lapso.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'));
+            
             if (Input::get("BuscarBy")=="true") {
 
                 if($variable!="") {
