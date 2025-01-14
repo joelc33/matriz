@@ -1273,7 +1273,6 @@ class formatresController extends Controller
             'id_tab_municipio_detalle',
             'id_tab_parroquia_detalle',
             'in_cargado',
-            'de_desvio',
             DB::raw("EXTRACT(year FROM fecha_inicio::DATE) as id_tab_ejercicio_fiscal")
         )
         ->where('id', '=', $id)
