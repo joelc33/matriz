@@ -24,6 +24,8 @@ use Validator;
 use Input;
 use Response;
 use DB;
+use Session;
+
 //*******************************//
 use Illuminate\Http\Request;
 
