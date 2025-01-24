@@ -2161,8 +2161,6 @@ $contar=0;
                 $data_poblacion = tab_ac::select(
                         DB::raw("coalesce(sum(nu_po_beneficiada),0) as nu_po_beneficiada")
                 )
-                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
-                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
                 ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
