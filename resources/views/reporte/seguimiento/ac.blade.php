@@ -106,10 +106,15 @@ this.botones = new this.GrupoBotones({
 									handler: this.onImprimirAcumulada
 								},
                                                                 {
-									text:'REPORTE TODOS',  // Generar la impresión en pdf
+									text:'REPORTE FORMA 1,2,3 TODOS',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir1
 								},
+//                                                                {
+//									text:'REPORTE FORMA 4,5 TODOS',  // Generar la impresión en pdf
+//									iconCls:'icon-pdf',
+//									handler: this.onImprimir1
+//								},                                                                
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
                                                                         iconCls:'icon-limpiar',
@@ -161,7 +166,7 @@ if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
 },
 onImprimir1 : function() {
 	bajar.load({
-		url: '{{ URL::to('reporte/ac/seguimiento/ficha/consolidado') }}/{!! $lapso->id !!}/'
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/primero') }}/{!! $lapso->id !!}'
 	});
 },
 onExportar1 : function() {
