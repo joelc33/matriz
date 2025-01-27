@@ -1920,13 +1920,13 @@ $html23.='
                 ->join('mantenimiento.tab_lapso as t04', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't04.id')
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $value->id_proy_ac)
                 ->where('t02.codigo', '=', $item->codigo)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)        
                 ->where('t03.co_partida', '=', $item->co_partida)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $value->id_tab_ac_ae_predefinida)
                 ->where('t03.id_tab_fuente_financiamiento', '=', $item->id_tab_fuente_financiamiento)
                 ->where('id_tab_tipo_periodo', '<=', $value->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $value->id_tab_ejercicio_fiscal)
-                ->first();                
-
+                ->first();                              
                 
             $tab_meta_financiera = tab_meta_financiera::where('id_tab_meta_fisica', '=', $item->id)
             ->get();         
