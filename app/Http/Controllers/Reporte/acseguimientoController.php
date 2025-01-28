@@ -2180,7 +2180,11 @@ $contar=0;
              }    
                  
              }else{
-             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;  
+             if($data_poblacion->nu_po_beneficiada>=$data->nu_po_beneficiar){
+             $nu_po_beneficiada =   $data->nu_po_beneficiar;    
+             }else{
+             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;    
+             }   
              }                
                 
                 
@@ -3582,8 +3586,8 @@ $html23.='
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('t45.co_area_estrategica')
-            ->groupBy('t45a.co_ambito_zulia')
-            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.co_ambito_zulia', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
+            ->groupBy('t45a.nu_orden')
+            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.nu_orden', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
             
 //var_dump($data);
 //exit();
@@ -3948,7 +3952,11 @@ $contar=0;
              }    
                  
              }else{
-             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;  
+             if($data_poblacion->nu_po_beneficiada>=$data->nu_po_beneficiar){
+             $nu_po_beneficiada =   $data->nu_po_beneficiar;    
+             }else{
+             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;    
+             }   
              }                
                 
                 
@@ -4979,8 +4987,8 @@ $html23.='
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
             ->groupBy('tab_ac.id_ejecutor')
             ->groupBy('t45.co_area_estrategica')
-            ->groupBy('t45a.co_ambito_zulia')
-            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.co_ambito_zulia', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
+            ->groupBy('t45a.nu_orden')
+            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.nu_orden', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
             
 //var_dump($data);
 //exit();

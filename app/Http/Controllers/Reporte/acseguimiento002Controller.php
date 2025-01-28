@@ -726,7 +726,11 @@ $contar=0;
              }    
                  
              }else{
-             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;  
+             if($data_poblacion->nu_po_beneficiada>=$data->nu_po_beneficiar){
+             $nu_po_beneficiada =   $data->nu_po_beneficiar;    
+             }else{
+             $nu_po_beneficiada =   $data_poblacion->nu_po_beneficiada;    
+             }   
              }   
                 
             if($item->nu_meta_actualizada==0){
