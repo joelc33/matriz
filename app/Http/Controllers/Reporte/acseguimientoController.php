@@ -41,16 +41,6 @@ class PDFseguimientoAC extends TCPDF
     public function pie($pdf)
     {
         
-        if(Session::get("periodo")==''){
-        
-        $pdf->setXY(10, -10);
-        $pdf->SetFont('', '', 9);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->writeHTMLCell(265, 0, '', '', 'Palacio de los Cóndores, Plaza Bolívar, Maracaibo, Estado Zulia, Venezuela', 0, 0, 0, true, 'C', true);
-        $pdf->SetFont('', '', 9);
-//        $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
-        return $pdf;
-        }else{
         $pdf->setXY(10, -10);
         $pdf->SetFont('', '', 9);
         $pdf->SetTextColor(0, 0, 0);
@@ -58,7 +48,7 @@ class PDFseguimientoAC extends TCPDF
         $pdf->SetFont('', '', 9);
         $pdf->writeHTMLCell(15, 0, '', '', Session::get("periodo"), 0, 0, 0, true, 'C', true);
         return $pdf;            
-        }
+        
     }
 
     public function Footer()
@@ -3546,25 +3536,25 @@ $html23.='
       
                 if($data_lapso->id_tab_tipo_periodo==19){
                     
-                    $periodo = '';
+                    $periodo = '1TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '31-03-';
                 }
                 
                 if($data_lapso->id_tab_tipo_periodo==20){
                     
-                    $periodo = '';
+                    $periodo = '2TA/'.Session::get("ejercicio"); 
                     $dia_mes_fin = '30-06-';
                 }
 
                 if($data_lapso->id_tab_tipo_periodo==21){
                     
-                    $periodo = '';
+                    $periodo = '3TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '30-09-';
                 }
 
                 if($data_lapso->id_tab_tipo_periodo==22){
                     
-                    $periodo = '';
+                    $periodo = '4TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '31-12-';
                 }        
 
@@ -4931,25 +4921,25 @@ $html23.='
       
                 if($data_lapso->id_tab_tipo_periodo==19){
                     
-                    $periodo = '';
+                    $periodo = '1TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '31-03-';
                 }
                 
                 if($data_lapso->id_tab_tipo_periodo==20){
                     
-                    $periodo = '';
+                    $periodo = '2TA/'.Session::get("ejercicio"); 
                     $dia_mes_fin = '30-06-';
                 }
 
                 if($data_lapso->id_tab_tipo_periodo==21){
                     
-                    $periodo = '';
+                    $periodo = '3TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '30-09-';
                 }
 
                 if($data_lapso->id_tab_tipo_periodo==22){
                     
-                    $periodo = '';
+                    $periodo = '4TA/'.Session::get("ejercicio");
                     $dia_mes_fin = '31-12-';
                 }        
 
