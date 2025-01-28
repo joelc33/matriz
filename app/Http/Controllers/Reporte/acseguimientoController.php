@@ -3562,6 +3562,16 @@ $html23.='
 
                 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor'
             )
@@ -3571,7 +3581,9 @@ $html23.='
             ->where('t04.id_tab_tipo_ejecutor', '=', $id_tipo_ejecutor)
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
             ->groupBy('tab_ac.id_ejecutor')
-            ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
+            ->groupBy('t45.co_area_estrategica')
+            ->groupBy('t45a.co_ambito_zulia')
+            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.co_ambito_zulia', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
             
 //var_dump($data);
 //exit();
@@ -4947,6 +4959,16 @@ $html23.='
 
                 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })            
             ->select(
             'ac_seguimiento.tab_ac.id_ejecutor'
             )
@@ -4956,7 +4978,9 @@ $html23.='
             ->where('t04.id_tab_tipo_ejecutor', '=', $id_tipo_ejecutor)
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
             ->groupBy('tab_ac.id_ejecutor')
-            ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
+            ->groupBy('t45.co_area_estrategica')
+            ->groupBy('t45a.co_ambito_zulia')
+            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.co_ambito_zulia', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
             
 //var_dump($data);
 //exit();
