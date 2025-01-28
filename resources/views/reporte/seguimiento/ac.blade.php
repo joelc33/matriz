@@ -77,7 +77,7 @@ this.botones = new this.GrupoBotones({
 				bbar: [{
 						xtype: 'buttongroup',
 						title: 'Formatos',
-						columns: 6,
+						columns: 7,
 						defaults: {
 								scale: 'medium',
 								iconAlign:'top'
@@ -106,15 +106,25 @@ this.botones = new this.GrupoBotones({
 									handler: this.onImprimirAcumulada
 								},
                                                                 {
-									text:'REPORTE FORMA 1,2,3 TODOS',  // Generar la impresión en pdf
+									text:'REPORTE FORMA 1,2,3 ORGANOS',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir1
 								},
-//                                                                {
-//									text:'REPORTE FORMA 4,5 TODOS',  // Generar la impresión en pdf
-//									iconCls:'icon-pdf',
-//									handler: this.onImprimir1
-//								},                                                                
+                                                                {
+									text:'REPORTE FORMA 1,2,3 ENTES',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimir2
+								},   
+                                                                {
+									text:'REPORTE FORMA 4,5 ORGANOS',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimir3
+								},
+                                                                {
+									text:'REPORTE FORMA 4,5 ENTES',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimir4
+								},                                                                 
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
                                                                         iconCls:'icon-limpiar',
@@ -166,7 +176,22 @@ if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
 },
 onImprimir1 : function() {
 	bajar.load({
-		url: '{{ URL::to('reporte/ac/seguimiento/ficha/primero') }}/{!! $lapso->id !!}'
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/primero') }}/{!! $lapso->id !!}/1'
+	});
+},
+onImprimir2 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/primero') }}/{!! $lapso->id !!}/2'
+	});
+},
+onImprimir3 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/segundo') }}/{!! $lapso->id !!}/1'
+	});
+},
+onImprimir4 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/segundo') }}/{!! $lapso->id !!}/2'
 	});
 },
 onExportar1 : function() {
