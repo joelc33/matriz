@@ -2620,7 +2620,7 @@ $html23.='
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta',
             'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
-                    DB::raw("string_agg(distinct de_desvio, ', ') as de_desvio"),
+                    DB::raw("string_agg(distinct de_desvio, '\n') as de_desvio"),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
@@ -2760,7 +2760,7 @@ foreach($actividad as $item) {
             ->first();
             
             $data12 = tab_meta_fisica::select(
-                DB::raw("string_agg(distinct de_desvio, ', ') as de_desvio")
+                'de_desvio'
             )
              ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
              ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
@@ -2776,7 +2776,7 @@ foreach($actividad as $item) {
              ->groupBy('codigo')
              ->groupBy('nb_meta')
             ->orderBy('codigo', 'ASC')
-            ->first();            
+            ->get();            
     
             $tab_meta_financiera = tab_meta_fisica::select('codigo','nb_meta',
             'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
@@ -2832,6 +2832,11 @@ $html23.='
                  if($de_desvio==''){
                      
                  }else{
+                     
+                foreach($data12 as $item12) {
+                $desvio += $item12->de_desvio.'\n';
+                }                     
+                     
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
