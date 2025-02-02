@@ -2842,7 +2842,8 @@ $html23.='
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
 		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
-                $html23.='</tr>';                        
+                $html23.='</tr>';   
+                $desvio = '';
                  }
                     
 		$html23.='
