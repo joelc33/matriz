@@ -2853,13 +2853,15 @@ $html23.='
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data11->mo_presupuesto).'</td>
 		<td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_actualizado_anual).'</td>';
-                $html23.='</tr>';                
+                $html23.='</tr>';   
+                
+                foreach($data12 as $item12) {
+                $desvio = $desvio.' '.$item12->de_desvio.'\n';
+                }                 
                     
                 }
                     
-                foreach($data12 as $item12) {
-                $desvio = $desvio.' '.$item12->de_desvio.'\n';
-                } 
+
                 $id =$item->codigo;
                 $de_desvio=$item->de_desvio;
                 
