@@ -2836,7 +2836,7 @@ $html23.='
                  }else{
                      
                 foreach($data12 as $item12) {
-                $desvio += $item12->de_desvio.'\n';
+                $desvio = $desvio.' '.$item12->de_desvio.'\n';
                 }                     
                      
 		$html23.='
