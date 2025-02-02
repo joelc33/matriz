@@ -2859,7 +2859,7 @@ $html23.='
                 
                 foreach($data12 as $item12) {
                 if($item12->de_desvio!=''){    
-                $desvio = $desvio.' '.$k.'.- '.$item12->de_desvio;
+                $desvio = $desvio.' '.$k.'.* '.$item12->de_desvio;
                 $k++;
                 }
                 }                 
