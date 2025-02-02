@@ -2717,6 +2717,7 @@ $html23.= '
 $i = 1;
 $id = 0;
 $de_desvio = '';
+$desvio = '';
 
 foreach($actividad as $item) { 
     
