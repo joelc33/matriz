@@ -2715,6 +2715,7 @@ $html23.= '
 ';
 
 $i = 1;
+$k = 1;
 $id = 0;
 $de_desvio = '';
 $desvio = '';
@@ -2841,6 +2842,7 @@ $html23.='
 		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
                 $html23.='</tr>';   
                 $desvio = '';
+                $k = 1;
                  }
                     
 		$html23.='
@@ -2856,7 +2858,8 @@ $html23.='
                 $html23.='</tr>';   
                 
                 foreach($data12 as $item12) {
-                $desvio = $desvio.' '.$item12->de_desvio.'\n';
+                $desvio = $desvio.$k.'.- '.$item12->de_desvio;
+                $k++;
                 }                 
                     
                 }
@@ -2870,7 +2873,7 @@ $html23.='
       
         $html23.='
         <tr style="font-size:6px" nobr="true">
-        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
         $html23.='</tr>';        
 
 $html23.='
