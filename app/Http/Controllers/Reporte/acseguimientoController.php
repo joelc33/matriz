@@ -2834,10 +2834,7 @@ $html23.='
                  if($de_desvio==''){
                      
                  }else{
-                     
-                foreach($data12 as $item12) {
-                $desvio = $desvio.' '.$item12->de_desvio.'\n';
-                }                     
+                                         
                      
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
@@ -2860,7 +2857,9 @@ $html23.='
                     
                 }
                     
-
+                foreach($data12 as $item12) {
+                $desvio = $desvio.' '.$item12->de_desvio.'\n';
+                } 
                 $id =$item->codigo;
                 $de_desvio=$item->de_desvio;
                 
