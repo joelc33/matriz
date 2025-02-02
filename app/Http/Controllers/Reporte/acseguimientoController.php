@@ -2620,7 +2620,7 @@ $html23.='
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta',
             'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
-                    DB::raw("string_agg(distinct de_desvio, '\n') as de_desvio"),
+                    DB::raw("string_agg(distinct de_desvio, ',') as de_desvio"),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
@@ -5215,7 +5215,7 @@ $html23.='
 
             $actividad = tab_meta_fisica::select('codigo','nb_meta',
             'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
-                    DB::raw("string_agg(distinct de_desvio, 'CHAR(13)' ORDER BY id_tab_tipo_periodo) as de_desvio"),
+                    DB::raw("string_agg(distinct de_desvio, ',') as de_desvio"),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
