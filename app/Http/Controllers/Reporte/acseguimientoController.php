@@ -5455,7 +5455,7 @@ $html23.='
                 
                 foreach($data12 as $item12) {
                 if($item12->de_desvio!=''){    
-                $desvio = $desvio.' '.$k.'. Trimestre: '.$item12->de_desvio;
+                $desvio = $desvio.' '.$k.'. TRIMESTRE: '.$item12->de_desvio;
                 
                 }
                 $k++;
