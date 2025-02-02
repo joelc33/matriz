@@ -2776,8 +2776,7 @@ foreach($actividad as $item) {
              ->groupBy('codigo')
              ->groupBy('nb_meta')
             ->groupBy('de_desvio')
-            ->groupBy('tab_meta_fisica.id')        
-            ->distinct()        
+            ->groupBy('tab_meta_fisica.id')            
             ->orderBy('tab_meta_fisica.id', 'ASC')
             ->get();            
     
