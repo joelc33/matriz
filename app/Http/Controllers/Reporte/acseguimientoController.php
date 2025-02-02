@@ -5310,8 +5310,10 @@ $html23.= '
 ';
 
 $i = 1;
+$k = 1;
 $id = 0;
 $de_desvio = '';
+$desvio = '';
 
 foreach($actividad as $item) { 
     
@@ -5352,7 +5354,27 @@ foreach($actividad as $item) {
              ->groupBy('nb_meta')
              ->groupBy('co_partida')
             ->orderBy('codigo', 'ASC')
-            ->first();                    
+            ->first();
+            
+            $data12 = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta','de_desvio'
+            )
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t05.in_activo', '=', true)
+            ->where('tab_meta_fisica.codigo', '=', $item->codigo)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+            ->groupBy('de_desvio')
+            ->groupBy('tab_meta_fisica.id')            
+            ->orderBy('tab_meta_fisica.id', 'ASC')
+            ->get();            
     
             $tab_meta_financiera = tab_meta_fisica::select('codigo','nb_meta',
             'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
@@ -5408,10 +5430,14 @@ $html23.='
                  if($de_desvio==''){
                      
                  }else{
+                                         
+                     
 		$html23.='
 		<tr style="font-size:6px" nobr="true">
-		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
-                $html23.='</tr>';                        
+		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
+                $html23.='</tr>';   
+                $desvio = '';
+                $k = 1;
                  }
                     
 		$html23.='
@@ -5424,7 +5450,14 @@ $html23.='
 		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data11->mo_presupuesto).'</td>
 		<td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_modificado_anual).'</td>
                 <td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_actualizado_anual).'</td>';
-                $html23.='</tr>';                
+                $html23.='</tr>';   
+                
+                foreach($data12 as $item12) {
+                if($item12->de_desvio!=''){    
+                $desvio = $desvio.' '.$k.'.* '.$item12->de_desvio;
+                $k++;
+                }
+                }                 
                     
                 }
                     
@@ -5437,7 +5470,7 @@ $html23.='
       
         $html23.='
         <tr style="font-size:6px" nobr="true">
-        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$de_desvio.'</td>';
+        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
         $html23.='</tr>';        
 
 $html23.='
