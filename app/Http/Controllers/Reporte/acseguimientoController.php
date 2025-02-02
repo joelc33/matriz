@@ -2760,7 +2760,7 @@ foreach($actividad as $item) {
             ->first();
             
             $data12 = tab_meta_fisica::select('codigo','nb_meta',
-                DB::raw("distinct de_desvio as de_desvio")
+                DB::raw("distinct de_desvio")
             )
              ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
              ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
