@@ -5608,4 +5608,537 @@ $html1 = '
 
       }      
 
+      public function fichaConsolidadoCuarto($id_tab_lapso,$id_tipo_ejecutor=null)
+      {
+          ini_set('max_execution_time', 3600); 
+        $data_lapso = tab_lapso::select(
+            'id_tab_tipo_periodo'
+        )
+        ->where('id', '=', $id_tab_lapso)
+        ->first();          
+
+      
+                if($data_lapso->id_tab_tipo_periodo==19){
+                    
+                    $periodo = '1TA/'.Session::get("ejercicio");
+                    $dia_mes_fin = '31-03-';
+                }
+                
+                if($data_lapso->id_tab_tipo_periodo==20){
+                    
+                    $periodo = '2TA/'.Session::get("ejercicio"); 
+                    $dia_mes_fin = '30-06-';
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==21){
+                    
+                    $periodo = '3TA/'.Session::get("ejercicio");
+                    $dia_mes_fin = '30-09-';
+                }
+
+                if($data_lapso->id_tab_tipo_periodo==22){
+                    
+                    $periodo = '4TA/'.Session::get("ejercicio");
+                    $dia_mes_fin = '31-12-';
+                }        
+
+                Session::put('periodo',$periodo); 
+
+                
+            $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })            
+            ->select(
+            'ac_seguimiento.tab_ac.id_ejecutor'
+            )
+//            ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', '0002')
+            ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+            ->where('ac_seguimiento.tab_ac.in_abierta', '=', false)
+            ->where('t04.id_tab_tipo_ejecutor', '=', $id_tipo_ejecutor)
+            ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
+            ->groupBy('tab_ac.id_ejecutor')
+            ->groupBy('t45.co_area_estrategica')
+            ->groupBy('t45a.nu_orden')
+            ->orderby('t45.co_area_estrategica', 'ASC')->orderby('t45a.nu_orden', 'ASC')->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();   
+            
+//var_dump($data);
+//exit();
+      
+ 
+        
+          $pdf = new PDFseguimientoAC("L", PDF_UNIT, 'Letter', true, 'UTF-8', false);
+          $pdf->SetCreator('Sistema POA, Yoser Perez');
+          $pdf->SetAuthor('Yoser Perez');
+          $pdf->SetTitle('Seguimiento AC');
+          $pdf->SetSubject('Seguimiento AC');
+          $pdf->SetKeywords('Seguimiento AC, PDF, Zulia, SPE, '.Session::get("ejercicio").'');
+          $pdf->SetMargins(10,10,10);
+          $pdf->SetTopMargin(35);
+          $pdf->SetPrintHeader(true);
+          $pdf->SetPrintFooter(true);
+          // set auto page breaks
+          $pdf->SetAutoPageBreak(true, 10);
+          $pdf->SetFont('','',11);
+ 
+          $pdf->Ln(-3);
+
+
+            foreach($data as $itemData) {
+                
+                $data_ejecutor = tab_ac::select(
+                'tx_ejecutor_ac',
+                't45.tx_descripcion as tx_area_estrategica',        
+                'ac_seguimiento.tab_ac.inst_mision',
+                'ac_seguimiento.tab_ac.inst_vision',
+                'ac_seguimiento.tab_ac.inst_objetivos',
+                'id_tab_tipo_periodo'
+                )
+                ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')   
+                ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+                ->leftjoin('t45_planes_zulia as t45', function ($join) {
+                $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+                ->on('t45.nu_nivel', '=', DB::raw('0'));
+                })                        
+                ->where('id_ejecutor', '=', $itemData->id_ejecutor)
+                ->where('id_tab_lapso', '=', $id_tab_lapso)
+                ->first();                
+                
+                
+                if($data_ejecutor->id_tab_tipo_periodo==19){
+                    
+                    $mes = 'Marzo';
+                }
+                
+                if($data_ejecutor->id_tab_tipo_periodo==20){
+                    
+                    $mes = 'Junio';
+                }
+
+                if($data_ejecutor->id_tab_tipo_periodo==21){
+                    
+                    $mes = 'Septiembre';
+                }
+
+                if($data_ejecutor->id_tab_tipo_periodo==22){
+                    
+                    $mes = 'Diciembre';
+                }                
+            
+                $pdf->AddPage();
+                $pdf->SetFont('','B',12);
+            $pdf->setY(10);
+            $pdf->MultiCell(277, 5, 'REPÚBLICA BOLIVARIANA DE VENEZUELA', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(10);        
+            $pdf->MultiCell(277, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+            $pdf->Ln(5);                
+            $pdf->SetY(75);
+            $pdf->SetFont('','B',18);
+            $pdf->SetTextColor(0,0,0);
+            $pdf->Write(0, 'SISTEMA DE SEGUIMIENTO, EVALUACIÓN Y CONTROL DEL PLAN OPERATIVO ESTADAL', '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Ln(5);
+            $pdf->Write(0, 'AÑO '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
+            $pdf->Ln(10);
+            $pdf->Write(0, $data_ejecutor->tx_ejecutor_ac, '', 0, 'C', true, 0, false, false, 0);
+            $pdf->SetY(190);
+            $pdf->SetFont('','',11);            
+            $pdf->Write(0, 'Maracaibo, '.$mes.' de '.Session::get("ejercicio"), '', 0, 'C', true, 0, false, false, 0);
+
+            $data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+            ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
+            ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')        
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+            ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
+            ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
+            ->on('t45b.edo_reg', '=', DB::raw('true'))        
+            ->on('t45b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+            $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
+            ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')       
+            ->on('t45c.edo_reg', '=', DB::raw('true'))        
+            ->on('t45c.nu_nivel', '=', DB::raw('4'));
+            })            
+            ->join('mantenimiento.tab_sectores as t18a', 'ac_seguimiento.tab_ac.id_tab_sectores', '=', 't18a.id')
+            ->join('mantenimiento.tab_sectores as t18b', function ($join) {
+            $join->on('t18a.co_sector', '=', 't18b.co_sector')
+            ->on('t18b.nu_nivel', '=', DB::raw('1'));
+            })
+            ->leftjoin('t20_planes as t20', function ($join) {
+            $join->on('t49.co_objetivo_historico', '=', 't20.co_objetivo_historico')
+            ->on('t20.nu_nivel', '=', DB::raw('1'));
+            }) 
+            ->leftjoin('t20_planes as t20a', function ($join) {
+            $join->on('t49.co_objetivo_nacional', '=', 't20a.co_objetivo_nacional')
+            ->on('t49.co_objetivo_historico', '=', 't20a.co_objetivo_historico')        
+            ->on('t20a.nu_nivel', '=', DB::raw('2'));
+            })
+            ->leftjoin('t20_planes as t20b', function ($join) {
+            $join->on('t49.co_objetivo_estrategico', '=', 't20b.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20b.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20b.co_objetivo_nacional')        
+            ->on('t20b.nu_nivel', '=', DB::raw('3'));
+            })
+            ->leftjoin('t20_planes as t20c', function ($join) {
+            $join->on('t49.co_objetivo_general', '=', 't20c.co_objetivo_general')
+            ->on('t49.co_objetivo_estrategico', '=', 't20c.co_objetivo_estrategico')
+            ->on('t49.co_objetivo_historico', '=', 't20c.co_objetivo_historico')        
+            ->on('t49.co_objetivo_nacional', '=', 't20c.co_objetivo_nacional')
+            ->on('t20c.edo_reg', '=', DB::raw('true'))        
+            ->on('t20c.nu_nivel', '=', DB::raw('4'));
+            })            
+            ->select(
+            'ac_seguimiento.tab_ac.id_ejecutor',
+            'ac_seguimiento.tab_ac.id_tab_ac_predefinida',
+            'tx_ejecutor_ac',
+            't18b.tx_codigo as tx_sector',
+            't45.tx_descripcion as tx_area_estrategica',
+            't20.tx_descripcion as tx_objetivo_historico',
+            't20a.tx_descripcion as tx_objetivo_nacional',
+            't20b.tx_descripcion as tx_objetivo_estrategico',
+            't20c.tx_descripcion as tx_objetivo_general',
+            't45a.tx_descripcion as tx_ambito_estado', 
+            't45b.tx_descripcion as tx_macroproblema',
+            't45c.tx_descripcion as tx_nodos',
+            't21.objetivo_institucional as tx_objetivo_institucional',
+            DB::raw("'AC' || t04.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
+            't52.nombre',
+            DB::raw('t53.numero::text as tx_codigo_ae'),
+            't53.nombre as tx_nombre_ae',
+            't21.id_ejecutor as id_ejecutor_ae',
+            'ac_seguimiento.tab_ac.pp_anual as tx_pr_objetivo',
+            DB::raw("to_char(t02.fe_inicio, 'dd/mm/YYYY') as fe_inicio"),
+            DB::raw("to_char(t02.fe_fin, 'dd/mm/YYYY') as fe_fin"),
+            't21.id as id_tab_ac_ae',
+            'ac_seguimiento.tab_ac.tx_re_esperado',
+            'ac_seguimiento.tab_ac.nu_po_beneficiar',
+            'ac_seguimiento.tab_ac.nu_em_previsto',
+            'ac_seguimiento.tab_ac.nu_po_beneficiada',
+            'ac_seguimiento.tab_ac.nu_em_generado',
+            'ac_seguimiento.tab_ac.tx_pr_programado',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido',
+            'ac_seguimiento.tab_ac.tx_pr_obtenido_a',
+            'id_tab_tipo_periodo',
+            'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
+            'ac_seguimiento.tab_ac.de_observacion_002',
+            'ac_seguimiento.tab_ac.de_observacion_003',
+            'ac_seguimiento.tab_ac.id',
+            'ac_seguimiento.tab_ac.de_sector',
+            't21.id_tab_ac_ae_predefinida'                    
+        )
+        ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $itemData->id_ejecutor)
+        ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+        ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')->orderby('t21.id_tab_ac_ae_predefinida', 'ASC')
+        ->get(); 
+            
+
+          foreach($data2 as $data) {
+          
+             $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+            ->get();  
+             
+              $j =  $tab_lapso->count();
+
+            $actividad = tab_meta_fisica::select('codigo','nb_meta',
+            'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
+                    DB::raw("string_agg(distinct de_desvio, ',') as de_desvio"),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+             ->where(function ($query) {
+             $query->orWhere('tab_meta_fisica.nu_meta_modificada', '!=', 0)
+             ->orWhere('mo_modificado_anual', '!=', 0);
+             })
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t05.in_activo', '=', true)          
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+            ->orderBy('codigo', 'ASC')
+            ->get();
+             
+if($actividad->count()>0){             
+          
+$html1 = '';
+            
+$html1 = '
+<table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+<tbody>
+<tr style="font-size:9px">
+<td style="width: 50%;"><b>'.$data->id_ejecutor.'</b> - '.$data->tx_ejecutor_ac.'</td>
+<td style="width: 15%;"><b>SECTOR:</b> '.$data->de_sector.'</td>
+<td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$data->tx_area_estrategica.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2" style="width: 30%;" align="justify"><b>OBJETIVO HISTORICO:</b> '.$data->tx_objetivo_historico.'</td>
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$data->tx_objetivo_nacional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2" style="width: 70%;" align="justify"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$data->tx_objetivo_estrategico.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" align="justify"><b>OBJETIVO GENERAL:</b> '.$data->tx_objetivo_general.'</td>
+</tr>
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> '.$data->tx_ambito_estado.'</td>
+<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$data->tx_macroproblema.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> '.$data->id_proy_ac.' - '.$data->nombre.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> '.$data->tx_codigo_ae.' - '.$data->tx_nombre_ae.'</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> '.$data->id_ejecutor_ae.' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido_a.'</td>
+</tr>
+</tbody>
+</table>
+'; 
+      
+$html23='';
+$html23.= '
+<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+<thead>
+<tr style="font-size:6px">
+<th align="center" bgcolor="#BDBDBD" style="width: 30%;" rowspan="2">ACTIVIDAD</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 30%;" colspan="3">METAS FISICA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 40%;" colspan="4">METAS FINANCIERAS</th>
+</tr>
+<tr style="font-size:6px">
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS PROGRAMADAS POA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS MODIFICADAS</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">METAS ACTUALIZADAS</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PARTIDA PRESUPUESTARIA</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO PROGRAMADO POA (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO MODIFICADO (Bs.)</th>
+<th align="center" bgcolor="#BDBDBD" style="width: 10%;">PRESUPUESTO ACTUALIZADO (Bs.)</th>
+</tr>
+</thead>
+';
+
+$i = 1;
+$k = 1;
+$id = 0;
+$de_desvio = '';
+$desvio = '';
+
+foreach($actividad as $item) { 
+    
+    
+                    $data10 = tab_ac::select(
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
+                ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+                ->where('t02.codigo', '=', $item->codigo)
+                ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
+                ->first();    
+                    
+            $data11 = tab_meta_fisica::select(
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t05.in_activo', '=', true)
+            ->where('tab_meta_fisica.codigo', '=', $item->codigo)
+            ->where('t22.co_partida', '=', $item->co_partida)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+            ->orderBy('codigo', 'ASC')
+            ->first();
+            
+            $data12 = tab_meta_fisica::select('tab_meta_fisica.id','codigo','nb_meta','de_desvio'
+            )
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+            ->where('t05.in_activo', '=', true)
+            ->where('tab_meta_fisica.codigo', '=', $item->codigo)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+            ->groupBy('de_desvio')
+            ->groupBy('tab_meta_fisica.id')            
+            ->orderBy('tab_meta_fisica.id', 'ASC')
+            ->get();            
+    
+            $tab_meta_financiera = tab_meta_fisica::select('codigo','nb_meta',
+            'co_partida',DB::raw('sum(distinct tx_prog_anual::numeric) as tx_prog_anual'),
+                    DB::raw("string_agg(distinct de_desvio, ', ' ORDER BY de_desvio) as de_desvio"),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$j.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'))
+            ->join('ac_seguimiento.tab_meta_financiera as t22', 'tab_meta_fisica.id', '=', 't22.id_tab_meta_fisica')
+            ->join('mantenimiento.tab_fuente_financiamiento as t66', 't22.id_tab_fuente_financiamiento', '=', 't66.id')
+             ->join('ac_seguimiento.tab_ac_ae as t03', 'tab_meta_fisica.id_tab_ac_ae', '=', 't03.id')
+             ->join('mantenimiento.tab_ac_ae_predefinida as t04', 't03.id_tab_ac_ae_predefinida', '=', 't04.id')
+             ->join('ac_seguimiento.tab_ac as t05', 't03.id_tab_ac', '=', 't05.id')
+             ->join('mantenimiento.tab_ac_predefinida as t06', 't05.id_tab_ac_predefinida', '=', 't06.id')
+             ->join('mantenimiento.tab_sectores as t07', 't05.id_tab_sectores', '=', 't07.id') 
+             ->join('mantenimiento.tab_lapso as t02', 't05.id_tab_lapso', '=', 't02.id')
+             ->where(function ($query) {
+             $query->orWhere('tab_meta_fisica.nu_meta_modificada', '!=', 0)
+             ->orWhere('mo_modificado_anual', '!=', 0);
+             })
+            ->where('t05.nu_codigo', '=', $data->id_proy_ac)
+             ->where('t05.in_activo', '=', true)
+            ->where('t03.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
+            ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+            ->where('codigo', '=', $item->codigo)
+             ->groupBy('codigo')
+             ->groupBy('nb_meta')
+             ->groupBy('co_partida')
+            ->orderBy('codigo', 'ASC')
+            ->get();
+             if($tab_meta_financiera->count()>1){
+                $i = $tab_meta_financiera->count();
+             }else{
+             $i = 1;    
+             }
+       
+$html23.='
+<tbody>';
+
+
+                if($id==$item->codigo){
+
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
+		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data11->mo_presupuesto).'</td>
+		<td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_actualizado_anual).'</td>';
+                $html23.='</tr>';
+
+                
+                }else{
+                    
+                 if($de_desvio==''){
+                     
+                 }else{
+                                         
+                     
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+		<td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
+                $html23.='</tr>';   
+                $desvio = '';
+                $k = 1;
+                 }
+                    
+		$html23.='
+		<tr style="font-size:6px" nobr="true">
+                <td style="width: 30%;"  nobr="true" rowspan="'.$i.'">'.$item->codigo.' - '.$item->nb_meta.'</td>
+		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual).'</td>
+		<td style="width: 10%;"  align="center" rowspan="'.$i.'">'.$this->formatoDinero($data10->nu_meta_modificada).'</td>
+                <td style="width: 10%;" align="center" rowspan="'.$i.'">'.$this->formatoDinero($item->tx_prog_anual + $data10->nu_meta_modificada).'</td>
+                <td style="width: 10%;" align="center">'.$item->co_partida.'</td>                    
+		<td style="width: 10%;"  align="center">'.$this->formatoDinero($data11->mo_presupuesto).'</td>
+		<td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_modificado_anual).'</td>
+                <td style="width: 10%;" align="center">'.$this->formatoDinero($data11->mo_actualizado_anual).'</td>';
+                $html23.='</tr>';   
+                
+                foreach($data12 as $item12) {
+                if($item12->de_desvio!=''){    
+                $desvio = $desvio.' '.$k.'. TRIMESTRE: '.$item12->de_desvio;
+                
+                }
+                $k++;
+                }                  
+                    
+                }
+                    
+
+                $id =$item->codigo;
+                $de_desvio=$item->de_desvio;
+                
+          
+      }
+      
+        $html23.='
+        <tr style="font-size:6px" nobr="true">
+        <td style="width: 100%;"  nobr="true" rowspan="1">CAUSAS DEL DESVIO: '.$desvio.'</td>';
+        $html23.='</tr>';        
+
+$html23.='
+</tbody>
+</table>';
+
+
+          $pdf->AddPage();
+          $this->encabezado4($pdf);
+          $pdf->SetFont('','',11);
+//          $pdf->writeHTML($htmlObjetivo, true, false, false, false, '');
+          $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
+          $pdf->Ln(-3);
+          $pdf->writeHTML($html23, true, false, false, false, '');          
+}  
+
+          }
+     
+            }
+          $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
+
+      }      
+      
 }
