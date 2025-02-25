@@ -134,6 +134,16 @@ this.botones = new this.GrupoBotones({
 									text:'REPORTE FORMA 4 ENTES',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir6
+								},  
+                                                                {
+									text:'REPORTE FORMA 5 ORGANOS',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimir7
+								},
+                                                                {
+									text:'REPORTE FORMA 5 ENTES',  // Generar la impresión en pdf
+									iconCls:'icon-pdf',
+									handler: this.onImprimir8
 								},                                                                
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
@@ -212,6 +222,16 @@ onImprimir5 : function() {
 onImprimir6 : function() {
 	bajar.load({
 		url: '{{ URL::to('reporte/ac/seguimiento/ficha/cuarto') }}/{!! $lapso->id !!}/2'
+	});
+},
+onImprimir7 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/quinto') }}/{!! $lapso->id !!}/1'
+	});
+},
+onImprimir8 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/ficha/quinto') }}/{!! $lapso->id !!}/2'
 	});
 },
 onExportar1 : function() {
