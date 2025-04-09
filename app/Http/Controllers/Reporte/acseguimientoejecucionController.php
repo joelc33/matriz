@@ -764,6 +764,7 @@ $html23.='
             'tx_ejecutor_ac'
         )
         ->where('id_ejecutor', '=', $id)
+        ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))        
         ->where('id_tab_lapso', '=', $id_tab_lapso)
         ->first();        
         

@@ -3011,6 +3011,7 @@ $html1 = '
             'tx_ejecutor_ac'
         )
         ->where('id_ejecutor', '=', $id_ejecutor)
+        ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
         ->where('id_tab_lapso', '=', $id_tab_lapso)
         ->first(); 
       
@@ -3662,6 +3663,7 @@ $html23.='
                 ->on('t45.nu_nivel', '=', DB::raw('0'));
                 })                        
                 ->where('id_ejecutor', '=', $itemData->id_ejecutor)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
                 
@@ -5063,6 +5065,7 @@ $html23.='
                 ->on('t45.nu_nivel', '=', DB::raw('0'));
                 })                        
                 ->where('id_ejecutor', '=', $itemData->id_ejecutor)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
                 
@@ -5708,6 +5711,7 @@ $html1 = '
                 ->on('t45.nu_nivel', '=', DB::raw('0'));
                 })                        
                 ->where('id_ejecutor', '=', $itemData->id_ejecutor)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
                 
@@ -6241,6 +6245,7 @@ $html23.='
                 ->on('t45.nu_nivel', '=', DB::raw('0'));
                 })                        
                 ->where('id_ejecutor', '=', $itemData->id_ejecutor)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
                 
