@@ -3668,6 +3668,8 @@ $html23.='
                 ->first();                
                 
                 
+                if($data_ejecutor){
+                
                 if($data_ejecutor->id_tab_tipo_periodo==19){
                     
                     $mes = 'Marzo';
@@ -4961,6 +4963,8 @@ $html23.='
           $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');          
                        
             }
+            
+      }
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
 
       }
@@ -5068,6 +5072,8 @@ $html23.='
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
+                
+              if($data_ejecutor){
                 
                 
                 if($data_ejecutor->id_tab_tipo_periodo==19){
@@ -5607,6 +5613,8 @@ $html1 = '
       }            
                        
             }
+            
+            }
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
 
       }      
@@ -5713,7 +5721,9 @@ $html1 = '
                 ->where('id_ejecutor', '=', $itemData->id_ejecutor)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get("ejercicio"))
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
-                ->first();                
+                ->first(); 
+                
+                if($data_ejecutor){
                 
                 
                 if($data_ejecutor->id_tab_tipo_periodo==19){
@@ -6141,6 +6151,8 @@ $html23.='
           }
      
             }
+            
+            }
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
 
       }
@@ -6249,6 +6261,7 @@ $html23.='
                 ->where('id_tab_lapso', '=', $id_tab_lapso)
                 ->first();                
                 
+                if($data_ejecutor){
                 
                 if($data_ejecutor->id_tab_tipo_periodo==19){
                     
@@ -6501,6 +6514,8 @@ $html1 = '
 
       }            
                        
+            }
+            
             }
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
 
