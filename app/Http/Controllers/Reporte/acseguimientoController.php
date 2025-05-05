@@ -2614,6 +2614,7 @@ $html23.='
           foreach($data2 as $data) {
           
              $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $j =  $tab_lapso->count();
@@ -3016,6 +3017,7 @@ $html1 = '
         ->first(); 
       
             $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $i =  $tab_lapso->count();
@@ -4424,6 +4426,7 @@ $html23.='
 
 
             $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $i =  $tab_lapso->count();
@@ -5219,6 +5222,7 @@ $html23.='
           foreach($data2 as $data) {
           
              $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $j =  $tab_lapso->count();
@@ -5869,6 +5873,7 @@ $html1 = '
           foreach($data2 as $data) {
           
              $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $j =  $tab_lapso->count();

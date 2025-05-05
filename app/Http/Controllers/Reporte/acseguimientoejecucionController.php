@@ -769,6 +769,7 @@ $html23.='
         ->first();        
         
                      $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+                     ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $i =  $tab_lapso->count();

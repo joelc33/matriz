@@ -54,8 +54,9 @@ class ejecucionController extends Controller
             $lapso = Input::get('id_tab_lapso');
             
             
-            
+    
              $tab_lapso = tab_lapso::where('id', '<=', $lapso)
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $i =  $tab_lapso->count();
