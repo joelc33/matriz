@@ -292,7 +292,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         forma001Lista.main.eliminar.enable();
                         }else{
                         forma001Lista.main.eliminar.disable();
-                            }                            
+                            }       
+                            
 
                     }else{
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
