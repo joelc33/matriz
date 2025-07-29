@@ -144,6 +144,11 @@ this.botones = new this.GrupoBotones({
 									text:'REPORTE FORMA 5 ENTES',  // Generar la impresión en pdf
 									iconCls:'icon-pdf',
 									handler: this.onImprimir8
+								},  
+                                                                {
+									text:'REPORTE CONSOLIDADO',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportar1
 								},                                                                
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
@@ -235,13 +240,10 @@ onImprimir8 : function() {
 	});
 },
 onExportar1 : function() {
-if(!parametroSeguimientoAC.main.formpanel.getForm().isValid()){
-    Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
-    return false;
-}
 	bajar.load({
-		url: '{{ URL::to('reporte/poa/ac/ubicacion/exportar') }}?'+parametroSeguimientoAC.main.formpanel.getForm().getValues(true)
+		url: '{{ URL::to('reporte/ac/seguimiento/consolidado/exportar') }}/{!! $lapso->id !!}'
 	});
+
 },
 onExportar2 : function() {
 	bajar.load({
