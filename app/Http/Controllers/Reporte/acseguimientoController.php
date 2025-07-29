@@ -20,6 +20,13 @@ use File;
 use Blade;
 use Session;
 use Helper;
+use PHPExcel_IOFactory;
+use PHPExcel;
+use PHPExcel_Writer_Excel2007;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Border;
+use PHPExcel_Style_Fill;
+use PHPExcel_Cell_DataType;
 //*******************************//
 use Illuminate\Http\Request;
 
@@ -6524,6 +6531,234 @@ $html1 = '
             }
           $pdf->output('SEGUIMIENTO_AC_'.Session::get("ejercicio").'_'.date("H:i:s").'.pdf', 'D'); 
 
-      }      
+      }
+
+    public function exportar($id_tab_lapso)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            //Query
+             $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->get();  
+             
+              $i =  $tab_lapso->count();
+              
+//              var_dump($i);
+//              exit();
+
+            $tab_meta_financiera = tab_meta_financiera::select(
+                'tx_nombre',
+                't03.tx_ejecutor_ac',
+                't03.id_ejecutor',
+                'de_lapso',
+                't03.id_tab_ejercicio_fiscal',
+                't45.tx_descripcion as tx_area_estrategica',
+                't45a.tx_descripcion as tx_ambito_estado',
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' as mo_presupuesto'),
+                DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
+                DB::raw('sum(coalesce(mo_comprometido,0)) as mo_comprometido'),
+                DB::raw('sum(coalesce(mo_causado,0)) as mo_causado'),
+                DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0)) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
+                DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0))-  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),                    
+                'ac_seguimiento.tab_meta_financiera.co_partida'
+            )
+            ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
+            ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
+            ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+            ->join('mantenimiento.tab_lapso as t05', 't03.id_tab_lapso', '=', 't05.id')
+            //->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+            ->join('mantenimiento.tab_partidas as t04', function ($j) {
+                $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+                  ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
+            })
+            ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 't03.id')
+            ->leftjoin('t45_planes_zulia as t45', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+            })
+            ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+            $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')        
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+            })            
+            ->where('t03.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
+            ->where('t03.in_activo', '=', true)
+            ->groupBy('t03.id_tab_ejercicio_fiscal')
+            ->groupBy('de_lapso')
+            ->groupBy('t03.id_ejecutor')
+            ->groupBy('t03.tx_ejecutor_ac')
+            ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
+            ->groupBy('tx_nombre')
+            ->groupBy('tx_area_estrategica')
+            ->groupBy('tx_ambito_estado')
+            ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
+            ->get();
+
+            $acumulado = 0;
+
+            // Instantiate a new PHPExcel object
+            $objPHPExcel = new PHPExcel();
+            // Set properties
+            $objPHPExcel->getProperties()->setCreator("Yoser Perez");
+            $objPHPExcel->getProperties()->setLastModifiedBy("SPE");
+            $objPHPExcel->getProperties()->setTitle("Listado POA Proyectos");
+            $objPHPExcel->getProperties()->setSubject("Reporte");
+            $objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+            // Set the active Excel worksheet to sheet 0
+            $objPHPExcel->setActiveSheetIndex(0);
+            // Rename sheet
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(15);
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(55);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(15);
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray(
+                array(
+                  'font'    => array(
+                    'bold'      => true
+                  ),
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                  ),
+                  'borders' => array(
+                    'top'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  ),
+                  'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                      'rotation'   => 90,
+                    'startcolor' => array(
+                      'argb' => 'FFA0A0A0'
+                    ),
+                    'endcolor'   => array(
+                      'argb' => 'FFFFFFFF'
+                    )
+                  )
+                )
+            );
+            $objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
+                array(
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                  ),
+                  'borders' => array(
+                    'left'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  )
+                )
+            );
+
+            $objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
+                array(
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                  )
+                )
+            );
+
+            $objPHPExcel->getActiveSheet()->getStyle('L1')->applyFromArray(
+                array(
+                  'borders' => array(
+                    'right'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  )
+                )
+            );
+            // Initialise the Excel row number
+            $rowCount = 2;
+            // Iterate through each result from the SQL query in turn
+            // We fetch each database result row into $row in turn
+
+            $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Ejercicio')
+            ->setCellValue('B1', 'Periodo')
+            ->setCellValue('C1', 'Unidad Ejecutora')
+            ->setCellValue('D1', 'Area Estrategica')
+            ->setCellValue('E1', 'Ambito')
+            ->setCellValue('F1', 'Partida')
+            ->setCellValue('G1', 'Presupuesto Inicial')
+            ->setCellValue('H1', 'Presupuesto Modificado')
+            ->setCellValue('I1', 'Presupuesto Aprobado')
+            ->setCellValue('J1', 'Comprometido')
+            ->setCellValue('K1', 'Causado')
+            ->setCellValue('L1', 'Pagado');
+
+            // Make bold cells
+            $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->getFont()->setBold(true);
+
+
+            foreach ($tab_meta_financiera as $key => $value) {
+                // Set cell An to the "name" column from the database (assuming you have a column called name)
+                $acumulado = $acumulado+$value->mo_ingreso;
+
+                // Set thin black border outline around column
+                $styleThinBlackBorderOutline = array(
+                  'borders' => array(
+                    'outline' => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN,
+                      'color' => array('argb' => 'FF000000'),
+                    ),
+                  ),
+                );
+                $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
+
+                $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_tab_ejercicio_fiscal);
+                $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->de_lapso);
+                $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
+                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->tx_area_estrategica);
+                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->tx_ambito_estado);
+                $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->co_partida);
+                $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto);
+                $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->mo_modificado_anual);
+                $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->mo_actualizado_anual);
+                $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->mo_comprometido);
+                $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->mo_causado);
+                $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->mo_pagado);
+
+                $rowCount++;
+
+            }
+
+
+            // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+            $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+            // We'll be outputting an excel file
+            header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // It will be called file.xls
+            header('Content-Disposition: attachment; filename="reporte_consolidado_'.date("H:i:s").'.xlsx"');
+            $objWriter->save('php://output');
+
+            DB::commit();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            return Response::json(array(
+              'success' => false,
+              'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+            ));
+        }
+
+    }      
       
 }
