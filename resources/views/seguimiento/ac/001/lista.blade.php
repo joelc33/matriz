@@ -306,7 +306,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                         if(forma001Lista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_tipo_registro')==2){
                         forma001Lista.main.eliminar.enable();
                         }else{
-                        forma001Lista.main.eliminar.disable();
+                        forma001Lista.main.eliminar.enable();
                             }
                         }else{                        
                         forma001Lista.main.ficha.enable();
