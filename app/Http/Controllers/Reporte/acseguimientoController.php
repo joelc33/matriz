@@ -6543,7 +6543,11 @@ $html1 = '
             //Query
              $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
              ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
-            ->get();  
+            ->get();
+
+        $lapso_desc = tab_lapso::where('id', '=', $id_tab_lapso)
+        ->first();             
+           
              
               $i =  $tab_lapso->count();
               
@@ -6554,7 +6558,6 @@ $html1 = '
                 'tx_nombre',
                 't03.tx_ejecutor_ac',
                 't03.id_ejecutor',
-                'de_lapso',
                 't03.id_tab_ejercicio_fiscal',
                 't45.tx_descripcion as tx_area_estrategica',
                 't45a.tx_descripcion as tx_ambito_estado',
@@ -6591,7 +6594,6 @@ $html1 = '
             ->where('t03.id_tab_lapso', '<=', $id_tab_lapso)
             ->where('t03.in_activo', '=', true)
             ->groupBy('t03.id_tab_ejercicio_fiscal')
-            ->groupBy('de_lapso')
             ->groupBy('t03.id_ejecutor')
             ->groupBy('t03.tx_ejecutor_ac')
             ->groupBy('ac_seguimiento.tab_meta_financiera.co_partida')
@@ -6724,7 +6726,7 @@ $html1 = '
                 $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
 
                 $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_tab_ejercicio_fiscal);
-                $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $value->de_lapso);
+                $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $lapso_desc->de_lapso);
                 $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
                 $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->tx_area_estrategica);
                 $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->tx_ambito_estado);
