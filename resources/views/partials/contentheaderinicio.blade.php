@@ -1,7 +1,7 @@
 <div id="header">
   <div style="background-color:white; padding-left:0px; padding-right:0px; padding-bottom:0px;">
   <!--<img height="58" src="{{ asset('/images/logo_zulia.png') }}">-->
-  <img height="58" src="{{ asset('/images/cintillo_sistema_izquierda.jpg') }}">
+  <img height="58" src="{{ asset('/images/cintillo_sistema_izquierda.png') }}">
   <img height="58" align="right" src="{{ asset('/images/cintillo_sistema_derecha.jpg') }}">
   </div>
 </div>
