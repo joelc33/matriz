@@ -6558,6 +6558,8 @@ $html1 = '
                 'tx_nombre',
                 't03.tx_ejecutor_ac',
                 't03.id_ejecutor',
+                't06.de_tipo_ejecutor',
+                't05.id_tab_tipo_ejecutor',
                 't03.id_tab_ejercicio_fiscal',
                 't45.tx_descripcion as tx_area_estrategica',
                 't45a.tx_descripcion as tx_ambito_estado',
@@ -6574,8 +6576,8 @@ $html1 = '
             ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
             ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
             ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
-            ->join('mantenimiento.tab_lapso as t05', 't03.id_tab_lapso', '=', 't05.id')
-            //->join('mantenimiento.tab_partidas as t04', 't04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
+            ->join('mantenimiento.tab_ejecutores as t05', 't03.id_ejecutor', '=', 't05.id_ejecutor')
+            ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')
             ->join('mantenimiento.tab_partidas as t04', function ($j) {
                 $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
                   ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
@@ -6600,6 +6602,8 @@ $html1 = '
             ->groupBy('tx_nombre')
             ->groupBy('tx_area_estrategica')
             ->groupBy('tx_ambito_estado')
+            ->groupBy('t05.id_tab_tipo_ejecutor')
+            ->groupBy('t06.de_tipo_ejecutor')        
             ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
             ->get();
 
@@ -6631,8 +6635,9 @@ $html1 = '
             $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
             $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray(
                 array(
                   'font'    => array(
                     'bold'      => true
@@ -6704,10 +6709,11 @@ $html1 = '
             ->setCellValue('I1', 'Presupuesto Aprobado')
             ->setCellValue('J1', 'Comprometido')
             ->setCellValue('K1', 'Causado')
-            ->setCellValue('L1', 'Pagado');
+            ->setCellValue('L1', 'Pagado')
+            ->setCellValue('M1', 'Tipo');
 
             // Make bold cells
-            $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
 
 
             foreach ($tab_meta_financiera as $key => $value) {
@@ -6737,6 +6743,7 @@ $html1 = '
                 $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->mo_comprometido);
                 $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->mo_causado);
                 $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->mo_pagado);
+                $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->de_tipo_ejecutor);
 
                 $rowCount++;
 
