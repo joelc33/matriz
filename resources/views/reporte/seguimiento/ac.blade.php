@@ -149,6 +149,11 @@ this.botones = new this.GrupoBotones({
 									text:'REPORTE CONSOLIDADO',  // Generar la impresión en pdf
 									iconCls:'icon-excel',
 									handler: this.onExportar1
+								},          
+                                                                {
+									text:'REPORTE CONSOLIDADO X ACT.',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportar2
 								},                                                                
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
@@ -247,8 +252,9 @@ onExportar1 : function() {
 },
 onExportar2 : function() {
 	bajar.load({
-		url: '{{ URL::to('reporte/poa/ac/ubicacion/todo/exportar') }}'
+		url: '{{ URL::to('reporte/ac/seguimiento/consolidado/exportarA') }}/{!! $lapso->id !!}'
 	});
+
 },
 onLimpiar: function(){
     parametroSeguimientoAC.main.formpanel.getForm().reset();
