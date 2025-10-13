@@ -6798,7 +6798,7 @@ $html1 = '
                 't06.de_tipo_ejecutor',
                 't05.id_tab_tipo_ejecutor',
                 't03.id_tab_ejercicio_fiscal',
-                't01.nb_meta',    
+                't03.nu_codigo',    
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' + sum(coalesce(mo_modificado_anual,0)) as mo_actualizado_anual'),
@@ -6839,6 +6839,7 @@ $html1 = '
             ->groupBy('t05.id_tab_tipo_ejecutor')
             ->groupBy('t06.de_tipo_ejecutor')
             ->groupBy('t01.nb_meta')
+            ->groupBy('t03.nu_codigo')
             ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
             ->get();
 
@@ -6936,15 +6937,16 @@ $html1 = '
             ->setCellValue('A1', 'Ejercicio')
             ->setCellValue('B1', 'Periodo')
             ->setCellValue('C1', 'Unidad Ejecutora')
-            ->setCellValue('D1', 'Actividad')
-            ->setCellValue('E1', 'Partida')
-            ->setCellValue('F1', 'Presupuesto Inicial')
-            ->setCellValue('G1', 'Presupuesto Modificado')
-            ->setCellValue('H1', 'Presupuesto Aprobado')
-            ->setCellValue('I1', 'Comprometido')
-            ->setCellValue('J1', 'Causado')
-            ->setCellValue('K1', 'Pagado')
-            ->setCellValue('L1', 'Tipo');
+            ->setCellValue('D1', 'Accion Centralizada')        
+            ->setCellValue('E1', 'Actividad')
+            ->setCellValue('F1', 'Partida')
+            ->setCellValue('G1', 'Presupuesto Inicial')
+            ->setCellValue('H1', 'Presupuesto Modificado')
+            ->setCellValue('I1', 'Presupuesto Aprobado')
+            ->setCellValue('J1', 'Comprometido')
+            ->setCellValue('K1', 'Causado')
+            ->setCellValue('L1', 'Pagado')
+            ->setCellValue('M1', 'Tipo');
 
             // Make bold cells
             $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
@@ -6968,15 +6970,16 @@ $html1 = '
                 $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_tab_ejercicio_fiscal);
                 $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $lapso_desc->de_lapso);
                 $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
-                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->nb_meta);
-                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->co_partida);
-                $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->mo_presupuesto);
-                $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_modificado_anual);
-                $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->mo_actualizado_anual);
-                $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->mo_comprometido);
-                $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->mo_causado);
-                $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->mo_pagado);
-                $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->de_tipo_ejecutor);
+                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
+                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_meta);
+                $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->co_partida);
+                $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto);
+                $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->mo_modificado_anual);
+                $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->mo_actualizado_anual);
+                $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->mo_comprometido);
+                $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $value->mo_causado);
+                $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->mo_pagado);
+                $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->de_tipo_ejecutor);
 
                 $rowCount++;
 
