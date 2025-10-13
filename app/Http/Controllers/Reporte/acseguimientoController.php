@@ -6798,6 +6798,7 @@ $html1 = '
                 't06.de_tipo_ejecutor',
                 't05.id_tab_tipo_ejecutor',
                 't03.id_tab_ejercicio_fiscal',
+                't01.nb_meta',
                 't03.nu_codigo',    
                 DB::raw('sum(coalesce(mo_presupuesto,0))/'.$i.' as mo_presupuesto'),
                 DB::raw('sum(coalesce(mo_modificado_anual,0)) as mo_modificado_anual'),
