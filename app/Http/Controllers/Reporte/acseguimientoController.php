@@ -6970,7 +6970,7 @@ $html1 = '
                 $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_tab_ejercicio_fiscal);
                 $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $lapso_desc->de_lapso);
                 $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
-                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
+                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->nu_codigo);
                 $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_meta);
                 $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->co_partida);
                 $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->mo_presupuesto);
