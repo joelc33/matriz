@@ -1483,7 +1483,7 @@
                     title: 'PLAN DE LA PATRIA DE LAS 7 GRANDES TRANSFORMACIONES 2025-2031',
                     items: cbxs_n
                 }, {
-                    title: 'PLAN DE GOBIERNO REGIONAL 2025-2029: AGENDA CONCRETA DE ACCION (ACA) 2030',
+                    title: 'PLAN DE DESARROLLO REGIONAL 2025-2029: AGENDA CONCRETA DE ACCION (ACA) 2030',
                     items: [
                         cbxs_z,
                         cbxs
