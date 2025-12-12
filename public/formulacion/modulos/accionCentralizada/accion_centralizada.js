@@ -841,7 +841,7 @@
             
             this.co_co_linea_estrategica = Ext.create({
                 xtype: 'superboxselect',
-                fieldLabel: 'LINEA ESTRATEGICA',
+                fieldLabel: 'LINEA DE IMPULSO ESTRATEGICA',
                 store: self.st_co_linea_estrategica,
                 typeAhead: true,
                 allowQueryAll : false,
@@ -1384,7 +1384,7 @@
 
             this.grid_transformacion = Ext.create({
                 xtype: 'grid',
-                title: 'Lineas de Transformacion',
+                title: '7 Grandes Transformaciones 2025-2031',
                 autoHeight: true,
                 store: this.st_grid_transformacion,
                 tbar: [
