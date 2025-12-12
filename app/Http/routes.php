@@ -101,12 +101,17 @@ Route::group(['namespace' => 'Auxiliar'], function () {
         Route::post('plan/objetivo', 'documentoController@planObjetivo');
         Route::post('plan/macroproblema', 'documentoController@planMacroproblema');
         Route::post('plan/nudo', 'documentoController@planNudo');
+        Route::post('plan/lineaEstrategica', 'documentoController@planLineaEstrategica');
         Route::get('ef', 'documentoController@ejercicioFiscal');
         Route::get('fondo/tipo', 'documentoController@fondoTipo');
         Route::get('recurso/tipo', 'documentoController@recursoTipo');
         Route::get('accion/tipo', 'documentoController@accionTipo');
         Route::get('ejecutor/activo', 'documentoController@ejecutorActivo');
         Route::get('poa/sector', 'documentoController@poaSector');
+        Route::get('poa/transformacion', 'documentoController@transformacion');
+        Route::get('poa/alineacion', 'documentoController@alineacion');
+        Route::get('poa/impulso', 'documentoController@impulso');
+        Route::get('poa/foco', 'documentoController@foco');
         Route::post('poa/subsector', 'documentoController@poaSubsector');
         Route::get('poa/situacion', 'documentoController@poaSituacion');
         Route::get('personal/tipo', 'documentoController@personalTipo');

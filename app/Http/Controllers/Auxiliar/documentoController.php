@@ -29,6 +29,10 @@ use matriz\Models\Mantenimiento\tab_lapso;
 use matriz\Models\Mantenimiento\tab_unidad_medida;
 use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
 use matriz\Models\Mantenimiento\tab_estado;
+use matriz\Models\Ac\t80_transformaciones;
+use matriz\Models\Ac\t81_eje_alineacion;
+use matriz\Models\Ac\t82_linea_impulso;
+use matriz\Models\Ac\t83_foco_accion;
 use Input;
 use Response;
 use DB;
@@ -257,6 +261,18 @@ class documentoController extends Controller
         ->orderby('co_objetivo_zulia', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }
+    
+    
+    public function planLineaEstrategica()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_planes_zulia::select('co_objetivo_zulia as co_linea_estrategica', 'tx_descripcion')
+        ->where('co_ambito_zulia', '=', Input::get('co_ambito_zulia'))
+        ->where('nu_nivel', '=', 2)
+        ->where('in_activo', '=', true)
+        ->orderby('co_objetivo_zulia', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }    
 
     /**
      * Show the form for creating a new resource.
@@ -592,5 +608,41 @@ class documentoController extends Controller
         ->get()->toArray();
         return Response::json($response, 200);
     }
-
+    
+    public function transformacion()
+    {
+        $response['success']  = 'true';
+        $response['data']  = t80_transformaciones::select('id','nu_transformacion', 'tx_transformacion')
+        ->orderby('id', 'ASC')
+        ->get()->toArray();
+        return Response::json($response, 200);
+    }  
+    
+    public function alineacion()
+    {
+        $response['success']  = 'true';
+        $response['data']  = t81_eje_alineacion::select('id', 'nu_eje_alineacion', 'tx_eje_alineacion')
+        ->where('id_transformacion', '=', Input::get('co_transformaciones'))
+        ->orderby('nu_eje_alineacion', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }    
+    
+    public function impulso()
+    {
+        $response['success']  = 'true';
+        $response['data']  = t82_linea_impulso::select('id', 'nu_linea_impulso', 'tx_linea_impulso')
+        ->where('id_eje_alineacion', '=', Input::get('co_alineacion'))
+        ->orderby('nu_linea_impulso', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }
+    
+    public function foco()
+    {
+        $response['success']  = 'true';
+        $response['data']  = t83_foco_accion::select('id', 'nu_foco_accion', 'tx_foco_accion')
+        ->where('id_linea_impulso', '=', Input::get('co_impulso'))
+        ->orderby('nu_foco_accion', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }    
+    
 }

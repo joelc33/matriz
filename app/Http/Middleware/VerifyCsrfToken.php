@@ -19,6 +19,7 @@ class VerifyCsrfToken extends BaseVerifier
         'auxiliar/plan/objetivo',
         'auxiliar/plan/macroproblema',
         'auxiliar/plan/nudo',
+        'auxiliar/plan/lineaEstrategica',
         'ac/ae/partida/storeLista',
         'ac/ae/partida/masivo',
         'proyecto/ae/partida/masivo',
