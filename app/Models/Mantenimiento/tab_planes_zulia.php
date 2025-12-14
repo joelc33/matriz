@@ -39,20 +39,20 @@ class tab_planes_zulia extends Model
 
 
     public static $validarCrear = array(
-        "ambito" => "numeric|min:0|max:15",
-        "objetivo" => "numeric|min:0|max:10",
-        "macroproblema" => "numeric|min:0|max:10",
-        "nodo" => "numeric|min:0|max:10",
-        "nivel" => "required|numeric|min:0|max:10",
+        "ambito" => "numeric|min:0",
+        "objetivo" => "numeric|min:0",
+        "macroproblema" => "numeric|min:0",
+        "nodo" => "numeric|min:0",
+        "nivel" => "required|numeric|min:0",
         "descripcion" => "required|min:1|max:1200"
     );
 
     public static $validarEditar = array(
-        "ambito" => "numeric|min:0|max:15",
-        "objetivo" => "numeric|min:0|max:10",
-        "macroproblema" => "numeric|min:0|max:10",
-        "nodo" => "numeric|min:0|max:10",
-        "nivel" => "required|numeric|min:0|max:10",
+        "ambito" => "numeric|min:0",
+        "objetivo" => "numeric|min:0",
+        "macroproblema" => "numeric|min:0",
+        "nodo" => "numeric|min:0",
+        "nivel" => "required|numeric|min:0",
         "descripcion" => "required|min:1|max:1200"
     );
 }
