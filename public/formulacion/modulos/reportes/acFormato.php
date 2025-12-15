@@ -64,7 +64,7 @@ class MYPDF extends TCPDF {
 		inner join mantenimiento.tab_sectores as t18b on t18a.co_sector = t18b.co_sector and t18b.nu_nivel = 1
 		left join t49_ac_planes as t49 on t46.id=t49.id_accion_centralizada
 		left join mantenimiento.tab_planes as t20 on t49.co_objetivo_historico=t20.co_objetivo_historico and t20.nu_nivel = 1 and ".$_SESSION['ejercicio_fiscal']." = any (id_tab_ejercicio_fiscal)
-		left join mantenimiento.tab_planes as t20a on t49.co_objetivo_nacional=t20a.co_objetivo_nacional and t49.co_objetivo_historico=t20a.co_objetivo_historico and t20a.nu_nivel = 2 and ".$_SESSION['ejercicio_fiscal']." = any (id_tab_ejercicio_fiscal)
+		left join mantenimiento.tab_planes as t20a on t49.co_objetivo_nacional=t20a.co_objetivo_nacional and t49.co_objetivo_historico=t20a.co_objetivo_historico and t20a.nu_nivel = 2 and ".$_SESSION['ejercicio_fiscal']." = any (t20a.id_tab_ejercicio_fiscal)
 		left join mantenimiento.tab_planes as t20b on t49.co_objetivo_estrategico=t20b.co_objetivo_estrategico and t49.co_objetivo_historico=t20b.co_objetivo_historico and t49.co_objetivo_nacional=t20b.co_objetivo_nacional and t20b.nu_nivel = 3
 		left join mantenimiento.tab_planes as t20c on t49.co_objetivo_general=t20c.co_objetivo_general and t49.co_objetivo_estrategico=t20c.co_objetivo_estrategico and t49.co_objetivo_historico=t20c.co_objetivo_historico and t49.co_objetivo_nacional=t20c.co_objetivo_nacional and t20c.nu_nivel = 4 and t20c.in_activo is true
 		left join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
