@@ -272,8 +272,8 @@ $html1.= '
     
 }
 $html1.= ' </table></td></tr>';
-//echo $html1;
-//exit();
+echo $html1;
+exit();
 $html1.= '<tr style="font-size:9px">
 <td rowspan="2"><b>AMBITO:</b> '.$campo['tx_ambito_estado'].'</td>
 <td colspan="2"><b>LINEA ESTRATEGICA:</b> '.$campo['tx_linea_estrategica'].'</td>
