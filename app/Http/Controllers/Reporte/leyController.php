@@ -62,7 +62,7 @@ class leyController extends Controller
         $pdf->SetPrintHeader(false);
         $pdf->SetPrintFooter(false);
         // set auto page breaks
-        $pdf->SetAutoPageBreak(true, 10);
+        $pdf->SetAutoPageBreak(true, 6);
         //$pdf->AddPage();
 
         $pdf->AddPage();
@@ -3404,7 +3404,7 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(2);
         $pdf->ln(8);
         $pdf->SetFont('', 'B', 7);
-        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(65, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(90, 5, '(EN BOLÍVARES)', 0, 'C', 0, 0, '', '', true);
         $pdf->ln(-10);
         $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
