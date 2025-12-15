@@ -2760,7 +2760,7 @@ class leyController extends Controller
                         $pdf->MultiCell(8, 5, chr(10).'M', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, chr(10).'F', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, 'TOTAL', 1, 'C', 0, 0, '', '', true);
-                        $pdf->ln(10);
+                        $pdf->ln(5);
                         $pdf->setCellHeightRatio(1);
                         $pdf->MultiCell(20, 200, '', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 200, '', 1, 'C', 0, 0, '', '', true);
@@ -2783,7 +2783,7 @@ class leyController extends Controller
                         $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                         $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
-                        $pdf->ln(-203);
+                        $pdf->ln(-200);
                         $pdf->ln(2);
                         $pdf->SetFont('', '', 7);
                         $pdf->setCellHeightRatio(1);
