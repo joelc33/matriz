@@ -216,7 +216,7 @@ function encabezado($pdf,$h,$tipo){
       $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
       $pdf->setXY(35,7);
       $pdf->SetFont('','B',11);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
       $pdf->setXY(35,14);
       $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
       $pdf->setY(23);
@@ -236,7 +236,7 @@ function encabezado($pdf,$h,$tipo){
       $pdf->Image('../../images/zulia_escudo_negro.png', 15, 3, 20, 16, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
       $pdf->setXY(35,7);
       $pdf->SetFont('','B',11);
-      $pdf->MultiCell(190, 5, 'GOBERNACIÓN DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
+      $pdf->MultiCell(190, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true);
       $pdf->setXY(35,14);
       $pdf->MultiCell(190, 5, 'PLAN OPERATIVO ANUAL '.$_SESSION['ejercicio_fiscal'], 0, 'L', 0, 0, '', '', true);
       $pdf->setY(23);
