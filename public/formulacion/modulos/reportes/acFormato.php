@@ -206,7 +206,7 @@ $html1 = '
                 WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_transformacion ORDER BY tx_transformacion asc";
 
 $this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
-$html1.= '<tr style="font-size:9px">
+$html1.= '<tr style="font-size:7px">
 <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
 foreach($this->datos_lineat as $key => $campot){
 $html1.= '
@@ -241,7 +241,7 @@ $html1.= ' </table></td></tr>';
                 WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_linea_impulso ORDER BY tx_linea_impulso asc";
 
 $this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
-$html1.= '<tr style="font-size:9px">
+$html1.= '<tr style="font-size:7px">
 <td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
 foreach($this->datos_lineat as $key => $campot){
 $html1.= '
@@ -259,7 +259,7 @@ $html1.= ' </table></td></tr>';
                 WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_foco_accion ORDER BY tx_foco_accion asc";
 
 $this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
-$html1.= '<tr style="font-size:9px">
+$html1.= '<tr style="font-size:7px">
 <td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
 foreach($this->datos_lineat as $key => $campot){
 $html1.= ' '.$campot['tx_foco_accion'].'.';    
