@@ -2760,7 +2760,7 @@ class leyController extends Controller
                         $pdf->MultiCell(8, 5, chr(10).'M', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, chr(10).'F', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, 'TOTAL', 1, 'C', 0, 0, '', '', true);
-                        $pdf->ln(5);
+                        $pdf->ln(10);
                         $pdf->setCellHeightRatio(1);
                         $pdf->MultiCell(20, 200, '', 1, 'C', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 200, '', 1, 'C', 0, 0, '', '', true);
