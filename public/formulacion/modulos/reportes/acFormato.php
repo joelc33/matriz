@@ -260,18 +260,14 @@ $html1.= ' </table></td></tr>';
 
 $this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
 $html1.= '<tr style="font-size:9px">
-<td colspan="3"><b>FOCO DE ACCIÓN:</b><br> <table>';
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
 foreach($this->datos_lineat as $key => $campot){
-$html1.= '
-           <tr align="left" style="border: 0px">
-                <td>'.$campot['tx_foco_accion'].'</td>
-            </tr>
-       ';    
+$html1.= ' '.$campot['tx_foco_accion'].'.';    
 
 
     
 }
-$html1.= ' </table></td></tr>';
+$html1.= '</td></tr>';
 //echo $html1;
 //exit();
 $html1.= '<tr style="font-size:9px">
