@@ -2253,7 +2253,7 @@ class leyController extends Controller
                         $pdf->MultiCell(15, 200, '', 1, 'L', 0, 0, '', '', true);
                         $pdf->MultiCell(17, 200, '', 1, 'L', 0, 0, '', '', true);
 
-                        $pdf->ln(203);
+                        $pdf->SetY(267);
                         $pdf->SetFont('', '', 7);
                         $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                         $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -2617,7 +2617,7 @@ class leyController extends Controller
                             $pdf->MultiCell(22, 200, '', 1, 'L', 0, 0, '', '', true);
                             $pdf->MultiCell(24, 200, '', 1, 'L', 0, 0, '', '', true);
                             $pdf->MultiCell(20, 200, '', 1, 'L', 0, 0, '', '', true);
-                            $pdf->ln(203);
+                            $pdf->SetY(267);
                             $pdf->SetFont('', '', 7);
                             $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                             $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
@@ -2778,7 +2778,7 @@ class leyController extends Controller
                         $pdf->MultiCell(15, 200, '', 1, 'L', 0, 0, '', '', true);
                         $pdf->MultiCell(17, 200, '', 1, 'L', 0, 0, '', '', true);
 
-                        $pdf->ln(203);
+                        $pdf->SetY(267);
                         $pdf->SetFont('', '', 7);
                         $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
                         $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
