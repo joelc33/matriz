@@ -125,6 +125,9 @@ class acController extends Controller
                 $tabla->nu_em_previsto = Input::get("nu_em_previsto");
                 $tabla->tx_re_esperado = str_replace('"', '', Input::get("tx_re_esperado"));
                 $tabla->tx_pr_objetivo = str_replace('"', '', Input::get("tx_pr_objetivo"));
+                $tabla->objeto_creacion = str_replace('"', '', Input::get("objeto_creacion"));
+                $tabla->decreto_creacion = str_replace('"', '', Input::get("decreto_creacion"));
+                $tabla->ac_observaciones = str_replace('"', '', Input::get("ac_observaciones"));
                 $tabla->edo_reg = 'TRUE';
                 $tabla->save();
 
@@ -201,6 +204,9 @@ class acController extends Controller
                 $tabla->nu_em_previsto = Input::get("nu_em_previsto");
                 $tabla->tx_re_esperado = str_replace('"', '', Input::get("tx_re_esperado"));
                 $tabla->tx_pr_objetivo = str_replace('"', '', Input::get("tx_pr_objetivo"));
+                $tabla->objeto_creacion = str_replace('"', '', Input::get("objeto_creacion"));
+                $tabla->decreto_creacion = str_replace('"', '', Input::get("decreto_creacion"));
+                $tabla->ac_observaciones = str_replace('"', '', Input::get("ac_observaciones"));                
                 $tabla->tx_ejecutor_poa = str_replace('"', '', $data_ejecutor->tx_ejecutor);
                 $tabla->edo_reg = 'TRUE';
                 $tabla->save();

@@ -185,6 +185,26 @@
                     allowBlank: false,
                     height: 100,
                     maxLength: 6000
+                },{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.4. OBJETO DE CREACIÓN',
+                    name: 'objeto_creacion',
+                    allowBlank: false,
+                    height: 50,
+                    maxLength: 6000
+                },{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.5. DECRETO DE CREACIÓN',
+                    name: 'decreto_creacion',
+                    allowBlank: false,
+                    height: 50,
+                    maxLength: 6000
+                },{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.6. OBSERVACIONES',
+                    name: 'ac_observaciones',
+                    height: 50,
+                    maxLength: 6000
                 }]
             });
 

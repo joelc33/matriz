@@ -23,7 +23,7 @@ SELECT t46.id, id_ejercicio, t46.id_ejecutor, t24.tx_ejecutor as ejecutor,
 codigo_new_etapa as co_sistema, t46.id_accion, descripcion,
 id_estatus, id_subsector, sit_presupuesto as co_situacion_presupuestaria,
 monto, t18.co_sector, fecha_inicio, fecha_fin, t52.nombre,
-inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, tx_pr_objetivo,
+inst_mision, inst_vision, inst_objetivos, nu_po_beneficiar, nu_em_previsto, tx_re_esperado, tx_pr_objetivo,objeto_creacion,decreto_creacion,ac_observaciones,
 (t46.id_estatus = 3) as bloqueado
 FROM t46_acciones_centralizadas as t46
 JOIN mantenimiento.tab_sectores as t18 on t46.id_subsector = t18.id

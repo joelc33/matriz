@@ -1073,6 +1073,9 @@ EOT;
 				'nu_em_previsto',
 				'tx_re_esperado',
 				'tx_pr_objetivo',
+                                'objeto_creacion',
+                                'decreto_creacion',
+                                'ac_observaciones',
 				'co_situacion_presupuestaria' => 'sit_presupuesto',
 				'monto'
 			));
@@ -1099,6 +1102,9 @@ EOT;
 				->key( 'nu_em_previsto', v::numeric() )
 				->key( 'tx_re_esperado', v::stringcadena() )
 				->key( 'tx_pr_objetivo', v::stringcadena() )
+                                ->key( 'objeto_creacion', v::stringcadena() )
+                                ->key( 'decreto_creacion', v::stringcadena() )
+                                ->key( 'ac_observaciones', v::stringcadena() )
 				->key( 'monto', v::numeric()->notEmpty() );
 
 			if ( $usuario->co_rol > 2 ) { //es local
