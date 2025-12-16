@@ -184,7 +184,7 @@
                     name: 'inst_objetivos',
                     allowBlank: false,
                     height: 100,
-                    maxLength: 6000
+                    maxLength: 12000
                 },{
                     xtype: 'textarea',
                     fieldLabel: '1.4.4. OBJETO DE CREACIÓN',
