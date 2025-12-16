@@ -1337,6 +1337,7 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(1);
 
         $tipo_personal = tab_tipo_personal::select('id', 'nu_codigo', 'de_tipo_personal', 'id_padre')
+        ->where('in_detalle_jubilado_pensionado', '=', false)
         ->orderBy('nu_codigo', 'ASC')
         ->get();
 
