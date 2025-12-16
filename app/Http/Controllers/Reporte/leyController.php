@@ -1685,7 +1685,7 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(1);
 
         $tipo_personal = tab_tipo_personal::select('id', 'nu_codigo', 'de_tipo_personal', 'id_padre')
-        ->whereIn('id', [12, 13, 14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
+        ->whereIn('id', [13, 14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
         ->orderBy('nu_codigo', 'ASC')
         ->get();
 
