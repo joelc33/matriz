@@ -1936,8 +1936,90 @@ class leyController extends Controller
         $pdf->MultiCell(15, 6, number_format($total_mo_primas, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
         $pdf->MultiCell(17, 6, number_format($total_sueldo_todo, 0, ',', '.'), 1, 'R', 0, 0, '', '', true);
 
-        $pdf->setFontSpacing('0');       
+        $pdf->setFontSpacing('0');
         
+        
+        
+/******Inicio ENTES DESCENTRALIZADOS ADSCRITOS A LA ENTIDAD FEDERALS******/ 
+        
+        
+         $pdf->AddPage();
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
+        $pdf->SetFont('', 'B', 7);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(40, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(95, 5, 'RELACIÓN DE ENTES DESCENTRALIZADOS ADSCRITOS A LA ENTIDAD FEDERAL', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(2);
+        $pdf->ln(8);
+        $pdf->SetFont('', 'B', 7);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(-10);
+        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(19);
+        $pdf->setCellHeightRatio(1.2);
+
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(70, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBSERVACIONES', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(21);
+        $pdf->setCellHeightRatio(1);
+        $pdf->MultiCell(70, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(219);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-219);
+        $pdf->ln(2);
+        $pdf->SetFont('', '', 7);
+        $pdf->setCellHeightRatio(1);        
+        
+        
+            $ac_entes = tab_ac::select('public.t46_acciones_centralizadas.id_ejecutor', 'tx_ejecutor_poa', 'objeto_creacion', 'ac_observaciones',DB::raw('sum(public.t46_acciones_centralizadas.monto_calc) as mo_ente'))
+            ->join('mantenimiento.tab_ejecutores as t03', 't03.id_ejecutor', '=', 'public.t46_acciones_centralizadas.id_ejecutor')
+            ->where('id_ejercicio', '=', $ejercicio)
+            ->where('id_tab_tipo_ejecutor', '=', 1)
+            ->groupBy('public.t46_acciones_centralizadas.id_ejecutor')
+            ->groupBy('tx_ejecutor_poa')
+            ->groupBy('objeto_creacion')
+            ->groupBy('ac_observaciones')
+            ->orderBy('public.t46_acciones_centralizadas.id_ejecutor', 'ASC')
+            ->get(); 
+            
+
+        
+        foreach ($ac_entes as $key => $value_ac_entes) {
+
+            $pdf->SetFont('', '', 8);
+            $pdf->MultiCell(70, 5, trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(42, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(42, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'L', 0, 0, '', '', true);
+            $pdf->ln(10);
+
+
+        }
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);        
 
         /******Inicio ENTIDAD FEDERAL POR ESCALA DE SUELDOS******/
 
