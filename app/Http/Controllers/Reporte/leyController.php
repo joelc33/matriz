@@ -2091,7 +2091,7 @@ class leyController extends Controller
         $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
         $pdf->ln(-219);
         $pdf->ln(2);
-        $pdf->SetFont('', '', 7);
+        $pdf->SetFont('', '', 6);
         $pdf->setCellHeightRatio(1);  
 
                 }            
