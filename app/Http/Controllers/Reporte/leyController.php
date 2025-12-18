@@ -2018,6 +2018,60 @@ class leyController extends Controller
             $pdf->MultiCell(42, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'L', 0, 0, '', '', true);
             $pdf->Ln();
+            
+                $start_y = $pdf->GetY();
+
+                $culminado = false;
+
+                if ($start_y >= 245) {
+
+         $pdf->AddPage();
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
+        $pdf->SetFont('', 'B', 7);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(40, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(95, 5, 'RELACIÓN DE ENTES DESCENTRALIZADOS ADSCRITOS A LA ENTIDAD FEDERAL', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(2);
+        $pdf->ln(8);
+        $pdf->SetFont('', 'B', 7);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(-10);
+        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(19);
+        $pdf->setCellHeightRatio(1.2);
+
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(70, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBSERVACIONES', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(21);
+        $pdf->setCellHeightRatio(1);
+        $pdf->MultiCell(70, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(219);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-219);
+        $pdf->ln(2);
+        $pdf->SetFont('', '', 7);
+        $pdf->setCellHeightRatio(1); 
+
+                }            
 
 
         }
