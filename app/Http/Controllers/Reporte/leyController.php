@@ -1969,15 +1969,15 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(1.2);
 
         $pdf->SetFont('', 'B', 9);
-        $pdf->MultiCell(70, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(45, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(72, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(37, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(42, 21, chr(10).chr(10).'OBSERVACIONES', 1, 'C', 0, 0, '', '', true);
         $pdf->ln(21);
         $pdf->setCellHeightRatio(1);
-        $pdf->MultiCell(70, 214, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 214, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(45, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(72, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(37, 214, '', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
         $pdf->ln(219);
         $pdf->SetFont('', '', 7);
@@ -2013,11 +2013,25 @@ class leyController extends Controller
 //            $pdf->SetFont('', '', 8);
 //            $y = $pdf->GetY();
 //            $pdf->SetY($y);
-            $pdf->MultiCell(70, 5, trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa), 0, 'L', 0, 0, '', '', true);
-            $pdf->MultiCell(42, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'J', 0, 0, '', '', true);
-            $pdf->MultiCell(42, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
+            $pdf->MultiCell(45, 5, trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(72, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'J', 0, 0, '', '', true);
+            $pdf->MultiCell(37, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'L', 0, 0, '', '', true);
-            $pdf->Ln();
+            $ln = strlen($value_ac_entes->objeto_creacion);
+            
+            if($ln>400){
+            $pdf->Ln(40);    
+            }else{
+            if($ln>200){
+            $pdf->Ln(25);    
+            }else{
+            if($ln>100){
+            $pdf->Ln(15);    
+            }else{
+            $pdf->Ln(10);    
+            }                
+            }                
+            }
             
                 $start_y = $pdf->GetY();
 
@@ -2051,15 +2065,15 @@ class leyController extends Controller
         $pdf->setCellHeightRatio(1.2);
 
         $pdf->SetFont('', 'B', 9);
-        $pdf->MultiCell(70, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(45, 21, chr(10).chr(10).'NOMBRE DEL ENTE', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(72, 21, chr(10).chr(10).'OBJETO DE CREACIÓN', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(37, 21, chr(10).chr(10).'ASIGNACIÓN PRESUPUESTARIA ANUAL (Bs.)', 1, 'C', 0, 0, '', '', true);
         $pdf->MultiCell(42, 21, chr(10).chr(10).'OBSERVACIONES', 1, 'C', 0, 0, '', '', true);
         $pdf->ln(21);
         $pdf->setCellHeightRatio(1);
-        $pdf->MultiCell(70, 214, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 214, '', 1, 'C', 0, 0, '', '', true);
-        $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(45, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(72, 214, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(37, 214, '', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(42, 214, '', 1, 'L', 0, 0, '', '', true);
         $pdf->ln(219);
         $pdf->SetFont('', '', 7);
@@ -2069,7 +2083,7 @@ class leyController extends Controller
         $pdf->ln(-219);
         $pdf->ln(2);
         $pdf->SetFont('', '', 7);
-        $pdf->setCellHeightRatio(1); 
+        $pdf->setCellHeightRatio(1);  
 
                 }            
 
