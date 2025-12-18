@@ -2046,7 +2046,7 @@ class leyController extends Controller
 
                 $culminado = false;
 
-                if ($start_y >= 245) {
+                if ($start_y >= 235) {
 
          $pdf->AddPage();
 
