@@ -2017,8 +2017,18 @@ class leyController extends Controller
             $pdf->MultiCell(72, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'J', 0, 0, '', '', true);
             $pdf->MultiCell(37, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
             $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'L', 0, 0, '', '', true);
-            $ln = strlen($value_ac_entes->objeto_creacion);
+            $ln_c = strlen($value_ac_entes->objeto_creacion);
+            $ln_o = strlen($value_ac_entes->ac_observaciones);
             
+            if($ln_o>$ln_c){
+            $ln = $ln_o;    
+            }else{
+            $ln = $ln_c;    
+            }
+            
+            if($ln>600){
+            $pdf->Ln(60);    
+            }else{
             if($ln>400){
             $pdf->Ln(40);    
             }else{
@@ -2026,9 +2036,10 @@ class leyController extends Controller
             $pdf->Ln(25);    
             }else{
             if($ln>100){
-            $pdf->Ln(15);    
+            $pdf->Ln(20);    
             }else{
-            $pdf->Ln(10);    
+            $pdf->Ln(15);   
+            }
             }                
             }                
             }
