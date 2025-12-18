@@ -2010,9 +2010,7 @@ class leyController extends Controller
 //         $pdf->SetFont('', '', 8); 
 //         $pdf->Row(array(utf8_decode(trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa)),utf8_decode(trim($value_ac_entes->objeto_creacion)),number_format($value_ac_entes->mo_ente, 0, ',', '.'),trim($value_ac_entes->ac_observaciones)),0,0);            
 //
-//            $pdf->SetFont('', '', 8);
-//            $y = $pdf->GetY();
-//            $pdf->SetY($y);
+            $pdf->SetFont('', '', 7);
             $pdf->MultiCell(45, 5, trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa), 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(72, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'J', 0, 0, '', '', true);
             $pdf->MultiCell(37, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
