@@ -53,7 +53,7 @@ class MYPDF extends TCPDF {
 	coalesce(t46.monto_calc, 0) as monto_calc, '2' as co_tipo, t46.id_ejecutor, t18b.tx_codigo as tx_sector, t46.id_ejercicio::integer as nu_anio, t45.tx_descripcion as tx_area_estrategica,
         t20.tx_descripcion as tx_objetivo_historico, t20a.tx_descripcion as tx_objetivo_nacional, t20b.tx_descripcion as tx_objetivo_estrategico, t20c.tx_descripcion as tx_objetivo_general,
         t53.numero::text as tx_codigo_ae, t53.nombre as tx_nombre_ae, t47.id_accion as co_ae, t46.id as id_accion_centralizada, t46.monto as subtotal_actividades, mo_total_ejecutor( t46.id_ejecutor, t46.id_ejercicio::int) as mo_proyecto_ac,
-        objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t45b.tx_descripcion as tx_macroproblema,t45c.tx_descripcion as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
+        objetivo_institucional as tx_objetivo_institucional, t45a.tx_descripcion as tx_ambito_estado, t49.co_linea_estrategica as tx_linea_estrategica,t49.co_nodos as tx_nodos, t47.id_ejecutor as id_ejecutor_ae,
         tx_categoria_ac (t47.id_accion_centralizada::integer, t53.numero, t46.id_ejercicio::integer) as tx_categoria_ac,
 				inst_mision, inst_vision, inst_objetivos, tx_pr_objetivo, tx_re_esperado, nu_po_beneficiar, nu_em_previsto, EXTRACT(month FROM t46.fecha_actualizacion::DATE) as nu_mes_poa, EXTRACT(year FROM t46.fecha_actualizacion::DATE) as nu_anio_poa
 		from t46_acciones_centralizadas as t46
@@ -69,12 +69,15 @@ class MYPDF extends TCPDF {
 		left join t47_ac_accion_especifica as t47 on t46.id = t47.id_accion_centralizada
 		left join t53_ac_ae_predefinidas as t53 on t53.id = t47.id_accion
 		left join vista_cn_actividad_ac as v1 on v1.id_accion_centralizada=t47.id_accion_centralizada and v1.co_ac_acc_espec=t47.id_accion
-		left join t45_planes_zulia as t45 on t49.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
-		left join t45_planes_zulia as t45a on t49.co_area_estrategica=t45a.co_area_estrategica and t49.co_ambito_estado=t45a.co_ambito_zulia and t45a.nu_nivel = 1
-		left join t45_planes_zulia as t45b on t49.co_ambito_estado=t45b.co_ambito_zulia and t49.co_macroproblema=t45b.co_macroproblema and t45b.nu_nivel = 3 and t45b.edo_reg = true
-                left join t45_planes_zulia as t45c on t49.co_ambito_estado=t45c.co_ambito_zulia and t49.co_nodos::integer=t45c.co_nodo and t45c.nu_nivel = 4 and t45c.edo_reg = true
+		left join mantenimiento.tab_planes_zulia as t45 on t49.co_area_estrategica=t45.co_area_estrategica and t45.nu_nivel = 0
+		left join mantenimiento.tab_planes_zulia as t45a on t49.co_area_estrategica=t45a.co_area_estrategica and t49.co_ambito_estado=t45a.co_ambito_zulia and t45a.nu_nivel = 1
+		--left join t45_planes_zulia as t45b on t49.co_ambito_estado=t45b.co_ambito_zulia and t49.co_objetivo_estado=t45b.co_objetivo_zulia and t45b.nu_nivel = 2 and t45b.edo_reg = true
+                --left join t45_planes_zulia as t45c on t49.co_ambito_estado=t45c.co_ambito_zulia and t49.co_nodos::integer=t45c.co_nodo and t45c.nu_nivel = 4 and t45c.edo_reg = true
 	where t46.edo_reg is true and ".$condicionAC." t47.edo_reg is true AND t46.id_ejercicio = ".$_SESSION['ejercicio_fiscal']." order by 9, 8, 1, 17 ASC";
 
+//echo $sql;
+//exit();                
+                
 		$this->datos = $comunes->ObtenerFilasBySqlSelect($sql);
 		$this->cantidadTotal = $comunes->getFilas($sql);
 	}
@@ -212,7 +215,7 @@ $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
 <tr align="center" bgcolor="#BDBDBD">
-<td colspan="3"><b>PLAN OPERATIVO INSTITUCIONAL - PRESUPUESTO EJERCICIO FISCAL '.$campo['nu_anio'].'</b></td>
+<td colspan="3"><b>PLAN OPERATIVO INSTITUCIONAL - PRESUPUESTO AÑO '.$campo['nu_anio'].'</b></td>
 </tr>
 <tr style="font-size:9px">
 <td style="width: 50%;"><b>'.$campo['id_ejecutor'].'</b> - '.$campo['tx_ejecutor'].'</td>
@@ -220,21 +223,84 @@ $html1 = '
 <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> '.$campo['tx_area_estrategica'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td rowspan="2" style="width: 30%;"><b>OBJETIVO HISTORICO:</b> '.$campo['tx_objetivo_historico'].'</td>
-<td colspan="2" style="width: 70%;"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$campo['tx_objetivo_nacional'].'</td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="2" style="width: 70%;"><b>OBJETIVO(S) ESTRATEGICO(S):</b> '.$campo['tx_objetivo_estrategico'].'</td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="3"><b>OBJETIVO GENERAL:</b> '.$campo['tx_objetivo_general'].'</td>
-</tr>
-<tr style="font-size:9px">
+<td align="justify"><b>OBJETIVO HISTORICO:</b> '.$campo['tx_objetivo_historico'].'</td>
+<td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> '.$campo['tx_objetivo_nacional'].'</td>
+</tr>';
+
+		$sqlLineaT = "SELECT tx_transformacion FROM t84_ac_linea_transformacion
+                WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_transformacion ORDER BY tx_transformacion asc";
+
+$this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
+$html1.= '<tr style="font-size:7px">
+<td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+foreach($this->datos_lineat as $key => $campot){
+$html1.= '
+           <tr align="left" style="border: 0px">
+                <td>'.$campot['tx_transformacion'].'</td>
+            </tr>
+       ';    
+
+
+    
+}
+$html1.= ' </table></td>';
+
+		$sqlLineaT = "SELECT tx_eje_alineacion FROM t84_ac_linea_transformacion
+                WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_eje_alineacion ORDER BY tx_eje_alineacion asc";
+
+$this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
+$html1.= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+foreach($this->datos_lineat as $key => $campot){
+$html1.= '
+           <tr align="left" style="border: 0px">
+                <td>'.$campot['tx_eje_alineacion'].'</td>
+            </tr>
+       ';    
+
+
+    
+}
+$html1.= ' </table></td></tr>';
+
+		$sqlLineaT = "SELECT tx_linea_impulso FROM t84_ac_linea_transformacion
+                WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_linea_impulso ORDER BY tx_linea_impulso asc";
+
+$this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
+$html1.= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+foreach($this->datos_lineat as $key => $campot){
+$html1.= '
+           <tr align="left" style="border: 0px">
+                <td>'.$campot['tx_linea_impulso'].'</td>
+            </tr>
+       ';    
+
+
+    
+}
+$html1.= ' </table></td></tr>';
+
+		$sqlLineaT = "SELECT tx_foco_accion FROM t84_ac_linea_transformacion
+                WHERE id_accion_centralizada='".$campo['id_accion_centralizada']."' group by tx_foco_accion ORDER BY tx_foco_accion asc";
+
+$this->datos_lineat = $comunes->ObtenerFilasBySqlSelect($sqlLineaT);
+$html1.= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+foreach($this->datos_lineat as $key => $campot){
+$html1.= ' '.$campot['tx_foco_accion'].'.';    
+
+
+    
+}
+$html1.= '</td></tr>';
+//echo $html1;
+//exit();
+$html1.= '<tr style="font-size:9px">
 <td rowspan="2"><b>AMBITO:</b> '.$campo['tx_ambito_estado'].'</td>
-<td colspan="2"><b>PDEZ/NOMBRE DEL PROBLEMA:</b> '.$campo['tx_macroproblema'].'</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> '.$campo['tx_linea_estrategica'].'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$campo['tx_nodos'].'</td>
+<td colspan="2"><b>LINEA DE ACCIÓN:</b> '.$campo['tx_nodos'].'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$campo['tx_objetivo_institucional'].'</td>
