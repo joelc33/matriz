@@ -2680,7 +2680,23 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
             $pdf->setFontSpacing(0);
             $pdf->SetLineWidth(0.150);
             $pdf->setCellHeightRatio(2);
+
+//            var_dump(strlen($value->de_objetivo_sectorial));
+            if(strlen($value->de_objetivo_sectorial)>5000){
             $pdf->AddPage();
+            $pdf->MultiCell(196, 255, '', 1, 'C', 0, 0, '', '', true);
+            $pdf->SetY(265);
+            $pdf->SetFont('', '', 7);
+            $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+            $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+            $pdf->ln(-220);
+            $pdf->ln(2);
+            $pdf->SetFont('', '', 7);
+            $pdf->setCellHeightRatio(1);            
+            
+            
+            }
             /*Listado de Proyectos*/
             // reset font stretching  reset font spacing
             $pdf->setFontStretching(100);
