@@ -332,7 +332,7 @@ class leyController extends Controller
         $pdf->MultiCell(196, 228, '', 1, 'L', 0, 0, '', '', true);
         $pdf->ln(4);
         $pdf->SetFont('', 'B', 6);
-        $pdf->MultiCell(49, 6, 'Politica de Financiamiento: ', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'POLITICA DE FINANCIAMIENTO: ', 0, 'L', 0, 0, '', '', true);
         $pdf->SetFont('', '', 6);
         $pdf->MultiCell(147, 6, 'La Política de Financiamiento se fundamenta en la Constitución de la República Bolivariana de Venezuela, bajo los principios de responsabilidad fiscal, equilibrio presupuestario y sostenibilidad financiera, como pilares de la administración pública. Asimismo, se orienta en el Plan de la Patria de las 7 Grandes Transformaciones 2025 2031, hacia la construcción de un modelo económico productivo, sustentable y socialista, donde la comuna constituye el espacio territorial de transición al Socialismo.
 En tal sentido, la Gobernación Bolivariana del Estado Zulia, en el marco del nuevo mapa político territorial, debe garantizar la correcta estimación de los recursos financieros provenientes de aportes constitucionales y legales, ingresos propios y otras fuentes de financiamiento, asegurando su administración con ética, transparencia y prudencia, y promoviendo la integración de todos los sectores productivos.
@@ -345,7 +345,7 @@ La política de financiamiento se orienta hacia:
 
         $pdf->ln(40);
         $pdf->SetFont('', 'B', 6);
-        $pdf->MultiCell(49, 6, 'Politica de Gastos:', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'POLITICA DE GASTOS:', 0, 'L', 0, 0, '', '', true);
         $pdf->SetFont('', '', 6);
         $pdf->MultiCell(147, 6, 'En el marco del nuevo mapa político-territorial del Estado Zulia, la Política de Gastos constituye el conjunto de orientaciones, lineamientos y criterios en materia de gasto público, con el propósito de optimizar los recursos presupuestarios y garantizar la eficiencia en la gestión pública. Su finalidad es propiciar y apoyar las estrategias de crecimiento y desarrollo local, necesarias para impulsar cambios favorables en las condiciones de bienestar de los zulianos y zulianas, así como en el fortalecimiento de los factores productivos regionales.
 La presente política erige la Ética Moral, la Transparencia y la Prudencia en el Gasto Público como ejes transversales de toda la acción gubernamental, comprometiéndose a restaurar la confianza ciudadana mediante una gestión impecable de los recursos, sometiendo cada decisión a la participación popular y comunal, y asegurando que la asignación de fondos se realice con rigor y eficiencia para satisfacer las necesidades colectivas, combatiendo la opacidad y consolidando la probidad como valor esencial de todo funcionario y funcionaria pública.
@@ -362,7 +362,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
 
         $pdf->ln(60);
         $pdf->SetFont('', 'B', 6);
-        $pdf->MultiCell(49, 6, 'Politica de Gastos:', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'POLITICA DE COBERTURA DE LOS SERVICIOS A PRESTAR POR LA ENTIDAD FEDERAL:', 0, 'L', 0, 0, '', '', true);
         $pdf->SetFont('', '', 6);
         $pdf->MultiCell(147, 6, 'La política de cobertura de actividades y servicios a prestar por el estado Zulia se fundamenta en el ejercicio del gobierno desde las comunidades, mediante Gabinetes Comunales de Servicios que garanticen atención efectiva a las necesidades del Territorio Comunal. Se asume el liderazgo y la acción directa donde sea requerida para la resolución de problemas, promoviendo la unidad en la acción como principio esencial de la estructura de gobierno. Se impulsa un modelo de gestión moderno y eficiente, basado en el respeto mutuo, la colaboración entre servidores públicos y ciudadanía, la ética orientada al bien común y la equidad en toda gestión. Asimismo, se establece la reorganización del territorio y el acompañamiento de iniciativas sociales que propicien la integración, la paz y la unión de los pueblos en las áreas de la nueva frontera de paz, consolidando un sistema de atención integral y participativa. En consecuencia se estableceran las sigioentes acciones:
 -APOYO A LA PRODUCCIÓN PETROLERA PETROQUÍMICA, AGRÍCOLA Y AGROINDUSTRIAL
