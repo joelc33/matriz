@@ -2307,7 +2307,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
             $ac_entes = tab_ac::select('public.t46_acciones_centralizadas.id_ejecutor', 'tx_ejecutor_poa', 'objeto_creacion', 'ac_observaciones',DB::raw('sum(public.t46_acciones_centralizadas.monto_calc) as mo_ente'))
             ->join('mantenimiento.tab_ejecutores as t03', 't03.id_ejecutor', '=', 'public.t46_acciones_centralizadas.id_ejecutor')
             ->where('id_ejercicio', '=', $ejercicio)
-            ->where('id_tab_tipo_ejecutor', '=', 1)
+            ->where('id_tab_tipo_ejecutor', '=', 2)
             ->groupBy('public.t46_acciones_centralizadas.id_ejecutor')
             ->groupBy('tx_ejecutor_poa')
             ->groupBy('objeto_creacion')
