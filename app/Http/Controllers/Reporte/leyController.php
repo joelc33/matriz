@@ -192,7 +192,7 @@ class leyController extends Controller
         $pdf->MultiCell(49, 6, '04146629031', 1, 'L', 0, 0, '', '', true);
         $pdf->ln(6);
         $pdf->MultiCell(49, 6, 'Administracion y/o Finanzas', 1, 'L', 0, 0, '', '', true);
-        $pdf->MultiCell(49, 6, 'ALICIA ALEJANDRA  VILLALOBOS', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'ALICIA CHIQUINQUIRA VILLALOBOS HERNÁNDEZ', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(49, 6, 'aliciavillaloboszulia@gmail.com', 1, 'L', 0, 0, '', '', true);
         $pdf->MultiCell(49, 6, '04261221703', 1, 'L', 0, 0, '', '', true);
         $pdf->ln(6);
