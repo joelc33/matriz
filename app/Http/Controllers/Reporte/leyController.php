@@ -1913,7 +1913,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
         $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
         $pdf->setCellHeightRatio(1.2);
         $pdf->SetFont('', 'B', 9);
-        $pdf->MultiCell(95, 5, 'PEROSNAL JUBILADO Y PENSIONADO POR GENERO', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(95, 5, 'PERSONAL JUBILADO Y PENSIONADO POR GENERO', 0, 'C', 0, 0, '', '', true);
         $pdf->setCellHeightRatio(2);
         $pdf->ln(8);
         $pdf->SetFont('', 'B', 7);
@@ -2141,7 +2141,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $pdf->MultiCell(17, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);    
                         }
                         
-                        if($value_tipo_personal->id==1 || $value_tipo_personal->id==10 || $value_tipo_personal->id==12){
+                        
                         $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
                         $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
                         $total_mf_ant = $total_mf_ant + $total_sexo;
@@ -2150,7 +2150,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $total_mo_primas_ant = $total_mo_primas_ant + $value_clasificador_tipo->mo_primas;
                         
                         $total_sueldo_todo_ant = $total_sueldo_todo_ant + $total_sueldo;
-                        }
+                        
 
                     }
 
@@ -2191,7 +2191,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $pdf->SetFont('', '', 6);
                         $pdf->MultiCell(17, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);    
                         }
-                        if($value_tipo_personal->id==1 || $value_tipo_personal->id==10 || $value_tipo_personal->id==12){
+                        
                         $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
                         $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
                         $total_mf = $total_mf + $total_sexo;
@@ -2200,7 +2200,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $total_mo_primas = $total_mo_primas + $value_clasificador_tipo->mo_primas;
                         
                         $total_sueldo_todo = $total_sueldo_todo + $total_sueldo;
-                        }
+                        
 
                     }
 
