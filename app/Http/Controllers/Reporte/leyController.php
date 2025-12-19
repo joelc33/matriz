@@ -2578,7 +2578,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
               'tx_descripcion'
           )
           ->where('id_tab_ejercicio_fiscal', '=', $ejercicio)
-          ->where('in_activo', '=', true)
+          ->where('mantenimiento.tab_objetivo_sectorial.in_activo', '=', true)
           ->orderBy('tx_codigo', 'ASC')
           ->get();
 
