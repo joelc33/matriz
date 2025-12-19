@@ -108,6 +108,313 @@ class leyController extends Controller
         $pdf->setFontSpacing(0);
         $pdf->SetLineWidth(0.150);
         $pdf->setCellHeightRatio(2);
+        
+        
+        
+/******Inicio INFORMACION GENERAL DE LA ENTIDAD******/ 
+        
+        
+         $pdf->AddPage();
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
+        $pdf->SetFont('', 'B', 7);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(40, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(95, 5, 'INFORMACIÓN GENERAL DE LA ENTIDAD FEDERAL', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(2);
+        $pdf->ln(8);
+        $pdf->SetFont('', 'B', 7);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(-10);
+        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(19);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(196, 6, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->SetY(29);
+        $pdf->MultiCell(25, 5, 'BASE LEGAL:', 0, '', 0, 0, '', '', true);
+        $pdf->SetFont('', '', 8);
+        $pdf->SetX(36);
+        $pdf->MultiCell(171, 5,'EL ESTADO ZULIA FUE CREADO OFICIALMENTE EL 22 DE ABRIL DE 1864, GACETA OFICIAL N° 324 CAPITAL MARACAIBO', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(4);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(196, 6, 'IDENTIFICACIÓN DE LOS ÓRGANOS DEL PODER PÚBLICO ESTADAL:', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(196, 6, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->SetY(41);
+        $pdf->MultiCell(35, 5, 'GOBERNACIÓN:', 0, '', 0, 0, '', '', true);
+        $pdf->SetFont('', '', 8);
+        $pdf->SetX(43);
+        $pdf->MultiCell(171, 5,'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'L', 0, 0, '', '', true); 
+        $pdf->ln(4);
+        $pdf->MultiCell(196, 6, 'DOMICILIO LEGAL:  CALLE 95 ENTRE AV. 4 Y 5 EDIFICIO PALACIO DE GOBIERNO PISO 1 CASCO CENTRAL FRENTE A LA PLAZA BOLIVAR, MARACAIBO ESTADO ZULIA.', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(7);
+        $pdf->MultiCell(49, 6, 'TELÉFONO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'PAGINA WEB', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'FAX (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'CODIGO POSTAL', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '4001', 1, 'R', 0, 0, '', '', true);      
+        $pdf->ln(6);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(196, 6, 'NOMBRES Y APELLIDOS DEL GOBERNADOR (A)', 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetY(64);
+        $pdf->MultiCell(196, 12, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->SetY(71);
+        $pdf->MultiCell(196, 5, 'LUIS GERARDO CALDERA MORALES', 0, '', 0, 0, '', '', true);
+        $pdf->ln(5);    
+        $pdf->MultiCell(196, 6, 'PERSONAL DIRECTIVO DE LA GOBERNACIÓN Y ÓRGANOS AUXILIARES:', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'DIRECCIÓN ADMINISTRATIVA', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'NOMBRES Y APELLIDOS', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'CORREO ELECTRÓNICO', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'TELÉFONO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'Planificación y/o Presupuesto', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'HELÍMENAS JOSE ESPINA MORALES', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'espihgob7@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04146629031', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'Administracion y/o Finanzas', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'ALICIA ALEJANDRA  VILLALOBOS', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'aliciavillaloboszulia@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04261221703', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'Recursos Humanos y/o Personal', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'MARIA ALEJANDRA VILLALOBOS ', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'drrhh2025@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04126859350', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'Sindico (a) Procurador (a)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'ANGEL FRANCISCO PAZ CASTILLO', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'procurazulia2025@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04122655883', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'Cronista del Municipio:', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'REYBER PARRA CONTRERAS', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'cronistamaracaibo@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(49, 6, 'CONTRALORÍA ESTADAL', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'NOMBRES Y APELLIDOS DEL CONTRALOR (A)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'MANUEL RAMÓN NUÑEZ GONZÁLEZ ', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'MANUELNUNEZ60@GMAIL.COM', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04146187769', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(49, 6, 'DOMICILIO LEGAL:', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(196, 6, 'AV. 1B ENTRE 97 Y 98 (CIEGA) MARACAIBO ESTADO ZULIA', 1, 'L', 0, 0, '', '', true);   
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, 'TELÉFONO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'PAGINA WEB', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(98, 6, 'CORREO (S) ELECTRÓNICO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(98, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(196, 6, 'CONSEJO LEGISLATIVO:', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'NOMBRES Y APELLIDOS DEL PRESIDENTE (A):', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'MAGDELY VALBUENA MUÑOZ', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'clezpresidencia@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04127727720', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'NOMBRES Y APELLIDOS DEL SECRETARIO (A):', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'OVANNY AVILA', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '04246855296', 1, 'L', 0, 0, '', '', true); 
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(98, 6, 'DOMICILIO LEGAL:  PALACIO LEGISLATIVO, CALLE 95 CON AV. 5 (CALLE OBISPALAZO), FRENTE A LA PLAZA BOLIVAR, MARACAIBO ESTADO ZULIA.', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(98, 6, 'CORREO ELECTRONICO: clezpresidencia@gmail.com', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'TELÉFONO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, 'PAGINA WEB', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(98, 6, 'CORREO (S) ELECTRÓNICO (S)', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);    
+        $pdf->ln(6);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(196, 6, 'CONSEJO LOCAL DE PLANIFICACIÓN PÚBLICA:', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(49, 6, 'NOMBRES Y APELLIDOS DE LOS CONSEJEROS (AS): ', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(49, 6, '', 1, 'L', 0, 0, '', '', true);         
+        
+        
+
+        $pdf->SetY(262);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-219);
+        $pdf->ln(2);
+        $pdf->SetFont('', '', 7);
+        $pdf->setCellHeightRatio(1);
+
+
+        
+/******Inicio POLÍTICA PRESUPUESTARIA Y FINANCIERA DE LA ENTIDAD FEDERAL******/ 
+        
+        
+         $pdf->AddPage();
+
+        // reset font stretching  reset font spacing
+        $pdf->setFontStretching(100);
+        $pdf->setFontSpacing(0);
+        $pdf->SetLineWidth(0.150);
+        $pdf->setCellHeightRatio(2);
+
+        $pdf->SetFont('', 'B', 7);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->MultiCell(40, 5, 'GOBERNACIÓN BOLIVARIANA DEL ESTADO ZULIA', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(25, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(95, 5, 'POLÍTICA PRESUPUESTARIA Y FINANCIERA DE LA ENTIDAD FEDERAL', 0, 'C', 0, 0, '', '', true);
+        $pdf->setCellHeightRatio(2);
+        $pdf->ln(8);
+        $pdf->SetFont('', 'B', 7);
+        $pdf->MultiCell(55, 5, 'PRESUPUESTO '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(90, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->ln(-10);
+        $pdf->MultiCell(196, 18, '', 1, 'C', 0, 0, '', '', true);
+        $pdf->ln(19);
+        $pdf->setCellHeightRatio(1.2);
+        $pdf->SetFont('', 'B', 9);
+        $pdf->MultiCell(196, 6, 'DESCRIPCIÓN:', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(6);
+        $pdf->MultiCell(196, 228, '', 1, 'L', 0, 0, '', '', true);
+        $pdf->ln(4);
+        $pdf->SetFont('', '', 6);
+        $pdf->MultiCell(49, 6, 'Politica de Financiamiento: ', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(147, 6, 'La Política de Financiamiento se fundamenta en la Constitución de la República Bolivariana de Venezuela, bajo los principios de responsabilidad fiscal, equilibrio presupuestario y sostenibilidad financiera, como pilares de la administración pública. Asimismo, se orienta en el Plan de la Patria de las 7 Grandes Transformaciones 2025 2031, hacia la construcción de un modelo económico productivo, sustentable y socialista, donde la comuna constituye el espacio territorial de transición al Socialismo.
+En tal sentido, la Gobernación Bolivariana del Estado Zulia, en el marco del nuevo mapa político territorial, debe garantizar la correcta estimación de los recursos financieros provenientes de aportes constitucionales y legales, ingresos propios y otras fuentes de financiamiento, asegurando su administración con ética, transparencia y prudencia, y promoviendo la integración de todos los sectores productivos.
+La política de financiamiento se orienta hacia:
+1.	Optimización de los recursos presupuestarios, asegurando su uso eficiente y responsable.
+2.	Diversificación de las fuentes de ingreso, reduciendo la dependencia de aportes externos y fortaleciendo la autonomía financiera del Estado.
+3.	Responsabilidad fiscal y prudencia financiera, garantizando que todo financiamiento se ajuste a la capacidad de pago y a los principios de sostenibilidad.
+4.	Impulso al bienestar colectivo y al fortalecimiento de los factores productivos regionales, como condición indispensable para el desarrollo económico y social del Zulia.
+', 0, 'J', 0, 0, '', '', true);
+
+        $pdf->ln(40);
+        $pdf->SetFont('', '', 6);
+        $pdf->MultiCell(49, 6, 'Politica de Gastos:', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(147, 6, 'En el marco del nuevo mapa político-territorial del Estado Zulia, la Política de Gastos constituye el conjunto de orientaciones, lineamientos y criterios en materia de gasto público, con el propósito de optimizar los recursos presupuestarios y garantizar la eficiencia en la gestión pública. Su finalidad es propiciar y apoyar las estrategias de crecimiento y desarrollo local, necesarias para impulsar cambios favorables en las condiciones de bienestar de los zulianos y zulianas, así como en el fortalecimiento de los factores productivos regionales.
+La presente política erige la Ética Moral, la Transparencia y la Prudencia en el Gasto Público como ejes transversales de toda la acción gubernamental, comprometiéndose a restaurar la confianza ciudadana mediante una gestión impecable de los recursos, sometiendo cada decisión a la participación popular y comunal, y asegurando que la asignación de fondos se realice con rigor y eficiencia para satisfacer las necesidades colectivas, combatiendo la opacidad y consolidando la probidad como valor esencial de todo funcionario y funcionaria pública.
+En este contexto, la formulación de la política de gastos se fundamenta en un proceso participativo y democrático que comprendió la realización de 300 asambleas populares, la consulta de proyectos a las 576 comunas y circuitos comunales, así como encuentros con empresas de propiedad social directa e indirecta, emprendedores y empresas de propiedad familiar, además de reuniones con cámaras empresariales, acuicultores y pescadores, asegurando la integración de todos los sectores productivos.
+En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobernación Bolivariana del Estado Zulia son:
+1.	Priorizar los servicios públicos esenciales: salud, educación, saneamiento ambiental, agua potable, energía y transporte.
+2.	Reimpulsar la producción agrícola, acuícola y ganadera, como pilares de la seguridad y soberanía alimentaria.
+3.	Fortalecer la comuna como espacio territorial del socialismo, donde se gestan nuevas formas de gestión financiera y productiva.
+4.	Apoyar a las empresas de propiedad social y familiar, promoviendo la transición hacia un modelo económico comunal y corresponsable.
+5.	Transferir progresivamente competencias al Poder Popular, consolidando la participación directa en la planificación, ejecución y control del gasto público.
+6.	Promover el desarrollo sustentable, asegurando que cada inversión contribuya a la preservación ambiental y al bienestar colectivo.
+7.	Ejercer austeridad y responsabilidad fiscal, garantizando la correcta administración de ingresos y egresos del Estado.
+', 0, 'J', 0, 0, '', '', true); 
+
+        $pdf->ln(60);
+        $pdf->SetFont('', '', 6);
+        $pdf->MultiCell(49, 6, 'Politica de Gastos:', 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(147, 6, 'La política de cobertura de actividades y servicios a prestar por el estado Zulia se fundamenta en el ejercicio del gobierno desde las comunidades, mediante Gabinetes Comunales de Servicios que garanticen atención efectiva a las necesidades del Territorio Comunal. Se asume el liderazgo y la acción directa donde sea requerida para la resolución de problemas, promoviendo la unidad en la acción como principio esencial de la estructura de gobierno. Se impulsa un modelo de gestión moderno y eficiente, basado en el respeto mutuo, la colaboración entre servidores públicos y ciudadanía, la ética orientada al bien común y la equidad en toda gestión. Asimismo, se establece la reorganización del territorio y el acompañamiento de iniciativas sociales que propicien la integración, la paz y la unión de los pueblos en las áreas de la nueva frontera de paz, consolidando un sistema de atención integral y participativa. En consecuencia se estableceran las sigioentes acciones:
+-APOYO A LA PRODUCCIÓN PETROLERA PETROQUÍMICA, AGRÍCOLA Y AGROINDUSTRIAL
+- DESARROLLO ECONÓMICO INCLUSIVO
+- ECONOMIA DE ESCALA
+- FORTALECIMIENTO DE LAS CAPACIDADES PRODUCTIVAS DEL ESTADO ZULIA
+- DIVERSIFICACIÓN PRODUCTIVA Y EL FOMENTO DE UN NUEVO MODELO EXPORTADOR
+- MECANISMOS DE BLINDAJE PARA LA GENERACIÓN, CAPTACIÓN, INVERSIÓN Y ADMINISTRACIÓN DE DIVISAS.
+- PLAN ESTADAL DE PLAN DE ATENCIÓN INTEGRAL A LOS SISTEMAS DE AGUAS SERVIDAS.
+-LA RUTA DEL AGUA.
+- PLAN ESTADAL DE VIALIDAD.
+- PLAN ZULIA EN EL OESTE 
+- PLAN ESTADAL DE VIVIENDA Y HABITAT-PLAN DE ELECTRICIDAD:
+-SUSTITUCION DE TRANSFORMADORES
+-ALUMBRADO PÚBLICO
+-PROYECTOS DE LAS CONSULTAS POPULARES.
+-ATENCIÓN DE AVERIAS
+-REDUCIR EL NÚMERO DE FAMILIAS QUE SE VEN OBLIGADAS A COMPRAR GAS LICUADO DE PETRÓLEO (GLP).
+-PLAN ZULIA EN PAZ Y SEGURA.
+-PLAN CAYAPA DE LA SALUD
+-PLAN CORAZÓN ZULIANO
+- PLAN CAYAPA DE LA EDUCACION: ESCUELAS ABIERTAS. 
+-PROGRAMA REGIONAL DE SEMILLEROS CIENTÍFICOS
+-DESCOLONIZACIÓN DE LA CIENCIA Y TECNOLOGÍA APLICADA A UN SISTEMA PRODUCTIVO SOBERANO.
+-DESARROLLAR EL MODELO DE EDUCACIÓN TÉCNICA, UNIVERSITARIA Y EN OFICIOS TERRITORIALIZADO Y SINCRONIZADO CON LA CONSTRUCCIÓN DE LA ECONOMÍA ZULIANA
+-TEAM TAWALA
+-LA RUTA CULTURAL PATRIMONIAL
+-FORTALECIMIENTO DE LA CULTURA, USOS Y COSTUMBRES Y TRADICIONES DE LOS PUEBLOS INDÍGENAS
+-BANCO REGIONAL DE INNOVACIÓN PRODUCTIVA
+- DESARROLLO DE LAS TECNOLOGÍAS DE INFORMACIÓN Y COMUNICACIÓN
+-LA RUTA CULTURAL PATRIMONIAL
+-FORTALECIMIENTO DE LA CULTURA, USOS Y COSTUMBRES Y TRADICIONES DE LOS PUEBLOS INDÍGENAS. 
+-ATENCIÓN DIRECTA AL PUEBLO (1X10) SISTEMA DE MISIONES Y GRANDES  MISIONES, ATENCIÓN A LOS NIÑOS, NIÑAS Y ADOLESCENTES (NNA )Y ADULTOS MAYORES).
+-TURISMO PRODUCTIVO SUSTENTABLE
+-DESARROLLO COMUNAL SOSTENIBLE
+-IMPULSAR PROGRAMAS DE RECICLAJE Y RECOLECCIÓN DE DESECHOS SÓLIDOS.
+-IMPULSAR PLANES DE ARBORIZACIÓN, EMBELLICIMIENTO DEL ESTADO Y PROMOVER LA CONFORMACIÓN DE BRIGADAS AMBIENTALES CON EL PODER POPULAR.
+-PROMOVER PLANES DE EDUCACIÓN AMBIENTAL
+-AMPLIAR LAS CAPACIDADES PRODUCTIVAS ESTADALES DE LOS MINERALES.
+- IMPULSAR ESTRETEGIAS PARA LA SOSTENIBILIDAD AMBIENTAL.
+', 0, 'J', 0, 0, '', '', true);         
+        
+        
+
+        $pdf->SetY(262);
+        $pdf->SetFont('', '', 7);
+        $pdf->MultiCell(29, 5, 'Pag. '.$pdf->getAliasNumPage().' de '.$pdf->getAliasNbPages(), 0, 'L', 0, 0, '', '', true);
+        $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
+        $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
+        $pdf->ln(-219);
+        $pdf->ln(2);
+        $pdf->SetFont('', '', 7);
+        $pdf->setCellHeightRatio(1);        
+        
+        
 
         $pdf->AddPage();
 
@@ -2103,7 +2410,12 @@ class leyController extends Controller
         $pdf->setFontStretching(100);
         $pdf->setFontSpacing(0);
         $pdf->SetLineWidth(0.150);
-        $pdf->setCellHeightRatio(2);        
+        $pdf->setCellHeightRatio(2);     
+        
+        
+        
+
+     
 
         /******Inicio ENTIDAD FEDERAL POR ESCALA DE SUELDOS******/
 
