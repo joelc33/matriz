@@ -2115,9 +2115,14 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                 }
 
             } else {
-
+                
+                if($value_tipo_personal->id==13 || $value_tipo_personal->id==14 ){
+                $pdf->SetFont('', 'B', 6);    
                 $pdf->MultiCell(20, 5, trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal), 0, 'L', 0, 0, '', '', true);
-
+                }else{
+                 $pdf->SetFont('', '', 6);   
+                 $pdf->MultiCell(20, 5, trim($value_tipo_personal->nu_codigo).' '.trim($value_tipo_personal->de_tipo_personal), 0, 'L', 0, 0, '', '', true);
+                }
                 $clasificador_tipo = tab_clasificador_tipo::where('id_tab_ejercicio_fiscal', '=', $ejercicio_anterior)
                   ->where('id_tab_tipo_personal', '=', $value_tipo_personal->id)
                   ->orderBy('id', 'ASC')
@@ -2129,7 +2134,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
 
                         $total_sexo = $value_clasificador_tipo->nu_masculino + $value_clasificador_tipo->nu_femenino;
                         $total_sueldo = $value_clasificador_tipo->mo_sueldo + $value_clasificador_tipo->mo_compensacion + $value_clasificador_tipo->mo_primas;
-
+                        $pdf->SetFont('', '', 6);
                         $pdf->MultiCell(8, 5, number_format($value_clasificador_tipo->nu_masculino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, number_format($value_clasificador_tipo->nu_femenino, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
                         $pdf->MultiCell(8, 5, number_format($total_sexo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
