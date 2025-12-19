@@ -2141,7 +2141,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $pdf->MultiCell(17, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);    
                         }
                         
-                        if($value_tipo_personal->id!=13 || $value_tipo_personal->id!=14 ){
+                        if($value_tipo_personal->id<>13 || $value_tipo_personal->id<>14 ){
                         $total_masculino_ant = $total_masculino_ant + $value_clasificador_tipo->nu_masculino;
                         $total_femenino_ant = $total_femenino_ant + $value_clasificador_tipo->nu_femenino;
                         $total_mf_ant = $total_mf_ant + $total_sexo;
@@ -2191,7 +2191,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                         $pdf->SetFont('', '', 6);
                         $pdf->MultiCell(17, 5, number_format($total_sueldo, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);    
                         }
-                        if($value_tipo_personal->id!=13 || $value_tipo_personal->id!=14 ){
+                        if($value_tipo_personal->id<>13 || $value_tipo_personal->id<>14 ){
                         $total_masculino = $total_masculino + $value_clasificador_tipo->nu_masculino;
                         $total_femenino = $total_femenino + $value_clasificador_tipo->nu_femenino;
                         $total_mf = $total_mf + $total_sexo;
