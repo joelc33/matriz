@@ -3455,7 +3455,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
                             $pdf->MultiCell(151, 5, '', 0, 'C', 0, 0, '', '', true);
                             $pdf->MultiCell(16, 5, 'GEZ: '.$ejercicio, 0, 'L', 0, 0, '', '', true);
                             $pdf->ln(-203);
-                            $pdf->ln(2);
+                            $pdf->ln(4);
                             $pdf->SetFont('', '', 7);
                             $pdf->setCellHeightRatio(1);
 
