@@ -2687,7 +2687,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
             $pdf->setCellHeightRatio(2);
 
 //            var_dump(strlen($value->de_objetivo_sectorial));
-            if(strlen($value->de_objetivo_sectorial)>5000){
+            if(strlen($value->de_objetivo_sectorial)>4000){
             $pdf->AddPage();
             $pdf->MultiCell(196, 255, '', 1, 'C', 0, 0, '', '', true);
             $pdf->SetY(265);
