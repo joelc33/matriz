@@ -2321,7 +2321,7 @@ En consecuencia, los lineamientos centrales de la Política de Gastos de la Gobe
             $pdf->MultiCell(45, 5, trim($value_ac_entes->id_ejecutor).' - '.trim($value_ac_entes->tx_ejecutor_poa), 0, 'L', 0, 0, '', '', true);
             $pdf->MultiCell(72, 5, mb_strtoupper($value_ac_entes->objeto_creacion, 'UTF-8'), 0, 'J', 0, 0, '', '', true);
             $pdf->MultiCell(37, 5, number_format($value_ac_entes->mo_ente, 0, ',', '.'), 0, 'R', 0, 0, '', '', true);
-            $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'L', 0, 0, '', '', true);
+            $pdf->MultiCell(42, 5, trim($value_ac_entes->ac_observaciones), 0, 'J', 0, 0, '', '', true);
             $ln_c = strlen($value_ac_entes->objeto_creacion);
             $ln_o = strlen($value_ac_entes->ac_observaciones);
             
