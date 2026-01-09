@@ -1076,7 +1076,7 @@ EOT;
 							AND edo_reg
 						EOT;
 
-			echo $sql; exit();
+		//	echo $sql; exit();
 
 			if ($usuario->co_rol > 2) { //es local
 				$params[] = $usuario->id_ejecutor;
