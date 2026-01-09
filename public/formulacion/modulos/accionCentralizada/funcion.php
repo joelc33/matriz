@@ -1056,6 +1056,53 @@ EOT;
 			}
 			break;
 
+		case 97: //reabrir
+			$pk = re\Helpers::obtener_pertinentes(
+				$_POST,
+				array('id_accion_centralizada' => 'id')
+			);
+
+			$existe = v::key('id', v::intero()->notEmpty());
+			$existe->assert($pk);
+
+			$params = array(
+				$pk['id']
+			);
+
+			$sql = <<<EOT
+						UPDATE t46_acciones_centralizadas
+						SET id_estatus = 1
+						WHERE id = ?
+							AND edo_reg
+						EOT;
+
+			echo $sql; exit();
+
+			if ($usuario->co_rol > 2) { //es local
+				$params[] = $usuario->id_ejecutor;
+				$sql .= ' and id_ejecutor = ?';
+			}
+
+			$paraTransaccion->StartTrans();
+			$paraTransaccion->Execute($sql, $params);
+			$res = $paraTransaccion->CompleteTrans();
+			if ($res) {
+				if ($paraTransaccion->Affected_Rows() === 1) {
+					$respuesta = re\Helpers::responder(true);
+				} else {
+					$respuesta = re\Helpers::responder(
+						false,
+						'No se encontró la AC referida'
+					);
+				}
+			} else {
+				$respuesta = re\Helpers::responder(
+					false,
+					'Error realizando el cambio'
+				);
+			}
+			break;
+
 		case 99: // crear / actualizar accion centralizada
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array( 'id' ) );
 			$params = re\Helpers::obtener_pertinentes( $_POST, array(
