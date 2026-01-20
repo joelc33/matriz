@@ -565,6 +565,7 @@ $pdf->MultiCell(277, 5, 'NO SE ENCONTRARÓN REGISTROS', 0, 'C', 0, 0, '', '', tr
           
           
              $tab_lapso = tab_lapso::where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
+            ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
             ->get();  
              
               $j =  $tab_lapso->count();
