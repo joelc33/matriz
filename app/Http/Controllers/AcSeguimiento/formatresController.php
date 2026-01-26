@@ -1192,7 +1192,7 @@ class formatresController extends Controller
                  
                 return Response::json(array(
                   'success' => false,
-                  'msg' => 'hay Actividades con fuentes de financiamiento que no esta incluida en la accion especifica, verifique!'
+                  'msg' => 'Existen actividades con fuentes de financiamiento que no están incluidas en la acción específica, verifique!'
                 ));                    
                     
                 }
