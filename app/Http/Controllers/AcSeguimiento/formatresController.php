@@ -1177,7 +1177,7 @@ class formatresController extends Controller
                 ->groupBy('de_fuente_financiamiento')
                 ->first();  
                 
-     
+                if($data3){     
 
                 if($item->mo_fondo!=$data3->mo_fondo){
                 
@@ -1186,7 +1186,16 @@ class formatresController extends Controller
                   'msg' => 'La suma del monto por la fuente '.$data3->de_fuente_financiamiento.' es distinto al cargado en la accion especifica, verifique!'
                 ));
                 
-                }                 
+                }
+                
+                }else{
+                 
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => 'hay Actividades con fuentes de financiamiento que no esta incluida en la accion especifica, verifique!'
+                ));                    
+                    
+                }
                  
                 }
               
