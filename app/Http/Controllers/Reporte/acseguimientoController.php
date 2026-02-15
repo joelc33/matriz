@@ -7036,6 +7036,7 @@ $html1 = '
                 't05.id_tab_tipo_ejecutor',
                 'tab_ac.id_tab_ejercicio_fiscal',
                 't02.nb_meta',
+                't02.codigo',
                 'tab_ac.nu_codigo',   
                 'de_unidad_medida',
                 'de_municipio',
@@ -7062,12 +7063,14 @@ $html1 = '
                 ->groupBy('t05.id_tab_tipo_ejecutor')
                 ->groupBy('t06.de_tipo_ejecutor')
                 ->groupBy('t02.nb_meta')
+                ->groupBy('t02.codigo')
                 ->groupBy('de_unidad_medida')
                 ->groupBy('de_municipio')
                 ->groupBy('de_parroquia')
                 ->groupBy('tx_prog_anual')
                 ->groupBy('ac_seguimiento.tab_ac.nu_codigo')
-                ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')                        
+                ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')
+                ->orderBy('t02.codigo', 'ASC')                        
                 ->get();
 
             $acumulado = 0;
@@ -7202,7 +7205,7 @@ $html1 = '
                 $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $lapso_desc->de_lapso);
                 $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
                 $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->nu_codigo);
-                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_meta);
+                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->codigo.'-'.$value->nb_meta);
                 $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_unidad_medida);
                 $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->tx_prog_anual);
                 $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->nu_meta_modificada);
