@@ -7005,6 +7005,236 @@ $html1 = '
             ));
         }
 
+    }   
+    
+    
+    public function exportarAF($id_tab_lapso)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            //Query
+             $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+             ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+            ->get();
+
+        $lapso_desc = tab_lapso::where('id', '=', $id_tab_lapso)
+        ->first();             
+           
+             
+              $i =  $tab_lapso->count();
+              
+//              var_dump($i);
+//              exit();
+
+                $data2 = tab_ac::select(
+                'tab_ac.tx_ejecutor_ac',
+                'tab_ac.id_ejecutor',
+                't06.de_tipo_ejecutor',
+                't05.id_tab_tipo_ejecutor',
+                'tab_ac.id_tab_ejercicio_fiscal',
+                't02.nb_meta',
+                'tab_ac.nu_codigo',   
+                'de_unidad_medida',
+                'de_municipio',
+                'de_parroquia',
+                DB::raw("coalesce(tx_prog_anual::numeric,0) as tx_prog_anual"),
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
+                        DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada"),
+                        DB::raw("coalesce(sum(nu_po_beneficiada),0) as nu_po_beneficiada")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
+                ->join('mantenimiento.tab_ejecutores as t05', 'ac_seguimiento.tab_ac.id_ejecutor', '=', 't05.id_ejecutor')
+                ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')    
+                ->join('mantenimiento.tab_unidad_medida as t21', 't02.id_tab_unidad_medida', '=', 't21.id')
+                ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 't02.id_tab_municipio_detalle', '=', 't64.id')
+                ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 't02.id_tab_parroquia_detalle', '=', 't65.id')                          
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+                ->where('ac_seguimiento.tab_ac.id_tab_lapso', '<=', $id_tab_lapso)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+                ->groupBy('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal')
+                ->groupBy('ac_seguimiento.tab_ac.id_ejecutor')
+                ->groupBy('ac_seguimiento.tab_ac.tx_ejecutor_ac')
+                ->groupBy('t05.id_tab_tipo_ejecutor')
+                ->groupBy('t06.de_tipo_ejecutor')
+                ->groupBy('t02.nb_meta')
+                ->groupBy('de_unidad_medida')
+                ->groupBy('de_municipio')
+                ->groupBy('de_parroquia')
+                ->groupBy('tx_prog_anual')
+                ->groupBy('ac_seguimiento.tab_ac.nu_codigo')
+                ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')                        
+                ->get();
+
+            $acumulado = 0;
+
+            // Instantiate a new PHPExcel object
+            $objPHPExcel = new PHPExcel();
+            // Set properties
+            $objPHPExcel->getProperties()->setCreator("Yoser Perez");
+            $objPHPExcel->getProperties()->setLastModifiedBy("SPE");
+            $objPHPExcel->getProperties()->setTitle("Listado POA Proyectos");
+            $objPHPExcel->getProperties()->setSubject("Reporte");
+            $objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+            // Set the active Excel worksheet to sheet 0
+            $objPHPExcel->setActiveSheetIndex(0);
+            // Rename sheet
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(15);
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(55);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(15);
+            //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray(
+                array(
+                  'font'    => array(
+                    'bold'      => true
+                  ),
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                  ),
+                  'borders' => array(
+                    'top'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  ),
+                  'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+                      'rotation'   => 90,
+                    'startcolor' => array(
+                      'argb' => 'FFA0A0A0'
+                    ),
+                    'endcolor'   => array(
+                      'argb' => 'FFFFFFFF'
+                    )
+                  )
+                )
+            );
+            $objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
+                array(
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                  ),
+                  'borders' => array(
+                    'left'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  )
+                )
+            );
+
+            $objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
+                array(
+                  'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                  )
+                )
+            );
+
+            $objPHPExcel->getActiveSheet()->getStyle('L1')->applyFromArray(
+                array(
+                  'borders' => array(
+                    'right'     => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                  )
+                )
+            );
+            // Initialise the Excel row number
+            $rowCount = 2;
+            // Iterate through each result from the SQL query in turn
+            // We fetch each database result row into $row in turn
+
+            $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Ejercicio')
+            ->setCellValue('B1', 'Periodo')
+            ->setCellValue('C1', 'Unidad Ejecutora')
+            ->setCellValue('D1', 'Accion Centralizada')        
+            ->setCellValue('E1', 'Actividad')
+            ->setCellValue('F1', 'Unidad de Medida')
+            ->setCellValue('G1', 'Meta Programada Poa')
+            ->setCellValue('H1', 'Meta Modificada')
+            ->setCellValue('I1', 'Meta Actualizada')
+            ->setCellValue('J1', 'Obtenido al Corte')
+            ->setCellValue('K1', '% EJec. Obtenida al Corte vs Ejec. Prog. Anual')
+            ->setCellValue('L1', 'Localizacion')
+            ->setCellValue('M1', 'Tipo');
+
+            // Make bold cells
+            $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
+
+
+            foreach ($data2 as $key => $value) {
+                // Set cell An to the "name" column from the database (assuming you have a column called name)
+            if(($value->tx_prog_anual + $value->nu_meta_modificada)==0){
+             $obtenido = 0;
+            }else{
+
+              $obtenido = round(($value->nu_obtenido/($value->tx_prog_anual + $value->nu_meta_modificada))*100,2);   
+            }
+                // Set thin black border outline around column
+                $styleThinBlackBorderOutline = array(
+                  'borders' => array(
+                    'outline' => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN,
+                      'color' => array('argb' => 'FF000000'),
+                    ),
+                  ),
+                );
+                $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
+
+                $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value->id_tab_ejercicio_fiscal);
+                $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $lapso_desc->de_lapso);
+                $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value->id_ejecutor.'-'.$value->tx_ejecutor_ac);
+                $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value->nu_codigo);
+                $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $value->nb_meta);
+                $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $value->de_unidad_medida);
+                $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $value->tx_prog_anual);
+                $objPHPExcel->getActiveSheet()->SetCellValue('H'.$rowCount, $value->nu_meta_modificada);
+                $objPHPExcel->getActiveSheet()->SetCellValue('I'.$rowCount, $value->tx_prog_anual + $value->nu_meta_modificada);
+                $objPHPExcel->getActiveSheet()->SetCellValue('J'.$rowCount, $value->nu_obtenido);
+                $objPHPExcel->getActiveSheet()->SetCellValue('K'.$rowCount, $obtenido."%");
+                $objPHPExcel->getActiveSheet()->SetCellValue('L'.$rowCount, $value->de_municipio.' / '.$value->de_parroquia);
+                $objPHPExcel->getActiveSheet()->SetCellValue('M'.$rowCount, $value->de_tipo_ejecutor);
+
+                $rowCount++;
+
+            }
+
+
+            // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+            $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+            // We'll be outputting an excel file
+            header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // It will be called file.xls
+            header('Content-Disposition: attachment; filename="reporte_consolidado_a_'.date("H:i:s").'.xlsx"');
+            $objWriter->save('php://output');
+
+            DB::commit();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            return Response::json(array(
+              'success' => false,
+              'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+            ));
+        }
+
     }    
       
 }
