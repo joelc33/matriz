@@ -1473,6 +1473,7 @@ EOT;
                                 'id_tab_lapso',
 				'inst_vision',
 				'inst_objetivos',
+                                'objeto_creacion',
 				'nu_po_beneficiar',
 				'nu_em_previsto',
                                 'tx_pr_objetivo' => 'pp_anual',
