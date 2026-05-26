@@ -1479,7 +1479,10 @@ EOT;
 				'tx_re_esperado',
                                 'id_ejecutores' => 'id_ejecutor',                            
 				'co_situacion_presupuestaria' => 'id_tab_situacion_presupuestaria',
-				'monto' => 'mo_ac'
+				'monto' => 'mo_ac',
+                                'objeto_creacion',
+                                'decreto_creacion',
+                                'ac_observaciones'
 			));
 //$respuesta = re\Helpers::responder( false, $mensaje, array( 'data' => $params));
 //echo $respuesta;
@@ -1508,7 +1511,10 @@ EOT;
 				->key( 'nu_em_previsto', v::numeric() )
 				->key( 'tx_re_esperado', v::stringcadena()  )
                                 ->key( 'pp_anual', v::stringcadena() )
-                                ->key( 'mo_ac', v::numeric() );
+                                ->key( 'objeto_creacion', v::stringcadena() )
+                                ->key( 'decreto_creacion', v::stringcadena() )
+                                ->key( 'pp_anual', v::stringcadena() )
+                                ->key( 'ac_observaciones', v::numeric() );
                         
                       
 
