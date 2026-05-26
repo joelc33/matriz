@@ -1511,9 +1511,6 @@ EOT;
 				->key( 'nu_em_previsto', v::numeric() )
 				->key( 'tx_re_esperado', v::stringcadena()  )
                                 ->key( 'pp_anual', v::stringcadena() )
-                                ->key( 'objeto_creacion', v::stringcadena() )
-                                ->key( 'decreto_creacion', v::stringcadena() )
-                                ->key( 'pp_anual', v::stringcadena() )
                                 ->key( 'ac_observaciones', v::numeric() );
                         
                       
