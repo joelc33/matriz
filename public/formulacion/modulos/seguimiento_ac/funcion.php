@@ -1502,6 +1502,7 @@ EOT;
 				->key( 'inst_mision', v::stringcadena()  )
 				->key( 'inst_vision', v::stringcadena()  )
 				->key( 'inst_objetivos', v::stringcadena()  )
+                                ->key( 'objeto_creacion', v::stringcadena()  )
 				->key( 'fe_inicio',  $fechas )
 				->key( 'fe_fin', $fechas )
 				->key( 'id_tab_situacion_presupuestaria', v::intero()->notEmpty() )
