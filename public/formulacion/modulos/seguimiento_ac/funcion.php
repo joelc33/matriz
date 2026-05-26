@@ -1506,7 +1506,6 @@ EOT;
 				->key( 'inst_objetivos', v::stringcadena()  )
                                 ->key( 'objeto_creacion', v::stringcadena()  )
                                 ->key( 'decreto_creacion', v::stringcadena()  )
-                                ->key( 'ac_observaciones', v::stringcadena()  )
 				->key( 'fe_inicio',  $fechas )
 				->key( 'fe_fin', $fechas )
 				->key( 'id_tab_situacion_presupuestaria', v::intero()->notEmpty() )
