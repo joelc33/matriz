@@ -29,6 +29,8 @@ use matriz\Models\Mantenimiento\tab_lapso;
 use matriz\Models\Mantenimiento\tab_unidad_medida;
 use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
 use matriz\Models\Mantenimiento\tab_estado;
+use matriz\Models\Mantenimiento\tab_tipo_indicador;
+use matriz\Models\Mantenimiento\tab_sub_tipo_indicador;
 use matriz\Models\Ac\t80_transformaciones;
 use matriz\Models\Ac\t81_eje_alineacion;
 use matriz\Models\Ac\t82_linea_impulso;
@@ -642,6 +644,22 @@ class documentoController extends Controller
         $response['data']  = t83_foco_accion::select('id', 'nu_foco_accion', 'tx_foco_accion')
         ->where('id_linea_impulso', '=', Input::get('co_impulso'))
         ->orderby('nu_foco_accion', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }   
+    
+    public function tipoIndicador()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_tipo_indicador::select('id', 'de_tipo_indicador')->orderby('id', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }
+
+    public function subTipoIndicador()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_sub_tipo_indicador::select('id', 'de_sub_tipo_indicador')
+        ->where('id_tab_tipo_indicador', '=', Input::get('id_tab_tipo_indicador'))
+        ->orderby('id', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }    
     

@@ -127,6 +127,8 @@ Route::group(['namespace' => 'Auxiliar'], function () {
         Route::get('unidadmedida', 'documentoController@unidadmedida');
         Route::get('fuentefinanciamiento', 'documentoController@fuentefinanciamiento');
         Route::get('estado', 'documentoController@estado');
+        Route::get('tipoindicador', 'documentoController@tipoIndicador');
+        Route::post('subtipoindicador', 'documentoController@subTipoIndicador');
     });
 });
 //*Modulos de Reportes*/
@@ -614,10 +616,12 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
     //*Modulo de Accion Centralizada Forma 005*/
     Route::group(['prefix' => 'ac/seguimiento/005'], function () {
         Route::get('lista/{id}', 'formacincoController@lista');
+        Route::get('datos/{id}', 'formacincoController@datosAe');
         Route::post('storeLista', 'formacincoController@storeLista');
         Route::post('datos/storeListaDatos', 'formacincoController@storeListaDatos');
         Route::post('detalle', 'formacincoController@detalle');
         Route::get('nuevo/{id}', 'formacincoController@datosNuevo');
+        Route::get('nuevoActividad/{id}', 'formacincoController@actividadNuevo');
         Route::get('editar/{id}', 'formacincoController@datos');
         Route::get('datos/lista/{id}', 'formacincoController@datosLista');
         Route::post('eliminar', 'formacincoController@eliminar');
@@ -625,6 +629,8 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('guardar/{id}', 'formacincoController@guardar');
         Route::post('enviar', 'formacincoController@enviar');
         Route::post('enviar/{id}', 'formacincoController@enviar');
+        Route::get('actividad/lista/{id}', 'formacincoController@editarAE');
+        Route::get('actividad/editar/{id}', 'formacincoController@editarActividad');
     });
     //*Modulo de Accion Centralizada Forma 005*/
     Route::group(['prefix' => 'seguimiento/ac/005/cambio'], function () {

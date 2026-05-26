@@ -252,7 +252,7 @@ trim(co_objetivo_estrategico) as co_objetivo_estrategico,
 trim(co_objetivo_general) as co_objetivo_general,
 co_area_estrategica,
 co_macroproblema, co_nodos as co_nodo, co_ambito_estado as co_ambito_zulia,
-co_objetivo_estado as co_objetivo_zulia,true as actualizar
+co_objetivo_estado as co_objetivo_zulia,true as actualizar,co_linea_estrategica
 FROM ac_seguimiento.tab_ac_vinculo
 WHERE id_tab_ac = ?
 LIMIT 1;
@@ -471,6 +471,7 @@ EOT;
 				'co_objetivo_zulia' => 'co_objetivo_estado',
 				'co_macroproblema',
 				'co_nodo' => 'co_nodos',
+                                'co_linea_estrategica' => 'co_linea_estrategica',
 			) );
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
 				'id_accion_centralizada' => 'id'
@@ -494,7 +495,8 @@ EOT;
 
 			$clave->assert( $pk );
 //			$reglas->assert( $params );
-//			$params['co_nodos'] = implode (',', $params['co_nodos'] );
+			$params['co_nodos'] = implode (',', $params['co_nodos'] );
+                        $params['co_linea_estrategica'] = implode (',', $params['co_linea_estrategica'] );
 			$params['updated_at'] = date( \DateTime::ISO8601 );
 			$tabla = 'ac_seguimiento.tab_ac_vinculo';
 			if ( $actualizar ) {
@@ -1332,6 +1334,131 @@ EOT;
 				$respuesta = re\Helpers::responder( false, 'Error almacenando los datos' );
 			}
 		break;
+
+		case 35: //crear linea transformacion
+			
+			$params = re\Helpers::obtener_pertinentes( $_POST, array(
+                                'co_transformaciones' => 'tx_transformacion',
+                                'co_alineacion' => 'tx_eje_alineacion',
+                                'co_impulso' => 'tx_linea_impulso',
+                                'co_foco' => 'tx_foco_accion',
+			) );
+			$pk = re\Helpers::obtener_pertinentes( $_POST, array(
+				'id_accion_centralizada' => 'id'
+			) );
+
+			$clave = v::key( 'id', v::intero()->positive()->notEmpty() );
+
+			$clave->assert( $pk );
+                        
+                        
+				$sql_transformaciones = <<<EOT
+SELECT *
+FROM t80_transformaciones
+WHERE id = ?;
+EOT;
+				$res_transformaciones = $comunes->ObtenerFilasBySqlSelect($sql_transformaciones, $params['tx_transformacion']); 
+                                $res_t = $res_transformaciones[0];
+                                $params['tx_transformacion'] = $res_t['nu_transformacion'].' - '.$res_t['tx_transformacion'];  
+                                
+				$sql_alineacion = <<<EOT
+SELECT *
+FROM t81_eje_alineacion
+WHERE id = ?;
+EOT;
+				$res_alineacion = $comunes->ObtenerFilasBySqlSelect($sql_alineacion, $params['tx_eje_alineacion']); 
+                                $res_a = $res_alineacion[0];
+                                $params['tx_eje_alineacion'] = $res_a['nu_eje_alineacion'].' - '.$res_a['tx_eje_alineacion']; 
+                                
+				$sql_impulso = <<<EOT
+SELECT *
+FROM t82_linea_impulso
+WHERE id = ?;
+EOT;
+				$res_impulso = $comunes->ObtenerFilasBySqlSelect($sql_impulso, $params['tx_linea_impulso']); 
+                                $res_i = $res_impulso[0];
+                                $params['tx_linea_impulso'] = $res_i['nu_linea_impulso'].' - '.$res_i['tx_linea_impulso'];
+
+				$sql_accion = <<<EOT
+SELECT *
+FROM t83_foco_accion
+WHERE id = ?;
+EOT;
+				$res_accion = $comunes->ObtenerFilasBySqlSelect($sql_accion, $params['tx_foco_accion']); 
+                                $res_ac = $res_accion[0];
+                                $params['tx_foco_accion'] = $res_ac['nu_foco_accion'].' - '.$res_ac['tx_foco_accion'];                                
+                        
+
+			$tabla = 'ac_seguimiento.tab_ac_linea_transformacion';
+
+				$params['id_accion_centralizada'] = $pk['id'];
+				$resultado = $comunes->InsertUpdate(
+					$tabla,
+					$params,
+					'INSERT'
+				);
+			
+
+			if ( $resultado === 'Ok' ) {
+				$respuesta = re\Helpers::responder( true );
+			} else {
+				$respuesta = re\Helpers::responder( false,
+					'Error almacenando los datos'
+				);
+			}
+			break;   
+                        
+		case 36: //consultar linea transformacion
+			
+			$id_accion = intval( $_REQUEST['id'] );
+			if ( $id_accion > 0 ) {
+				$sql = <<<EOT
+SELECT *
+FROM ac_seguimiento.tab_ac_linea_transformacion
+WHERE id_tab_ac = ?
+ORDER BY tx_transformacion asc,tx_eje_alineacion asc, tx_linea_impulso asc, tx_foco_accion asc
+EOT;
+				$res = $comunes->ObtenerFilasBySqlSelect( $sql, array( $id_accion ) );
+				if ( $res ) {
+					$respuesta = re\Helpers::responder( true, null, array( 'data' => $res ) );
+				} else {
+					$respuesta = re\Helpers::responder( true, null, array( 'data' => null ) );
+				}
+			} else {
+				$respuesta = re\Helpers::responder( false, 'id?' );
+			}
+			break;
+
+		case 37: //eliminar linea transformacion
+			
+			$pk = re\Helpers::obtener_pertinentes( $_POST,
+				array( 'id' => 'id' ) );
+
+			$existe = v::key( 'id', v::intero()->notEmpty() );
+			$existe->assert( $pk );
+
+			$params = array(
+				$pk['id']
+			);
+
+			$sql = <<<EOT
+DELETE
+FROM ac_seguimiento.tab_ac_linea_transformacion
+WHERE id = ?
+EOT;
+
+			$res = $comunes->EjecutarQuery( $sql, $params);
+
+			if ( $res ) {
+				$respuesta = re\Helpers::responder( true );
+			} else {
+				$respuesta = re\Helpers::responder( false,
+					'Error almacenando los datos'
+				);
+			}
+			break;                        
+                        
+                
 	case 99:
 
 			$pk = re\Helpers::obtener_pertinentes( $_POST, array( 'id' ) );

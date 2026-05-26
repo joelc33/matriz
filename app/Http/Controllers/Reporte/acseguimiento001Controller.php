@@ -109,7 +109,7 @@ class acseguimiento001Controller extends Controller
             'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             'tx_ejecutor_ac',
             't45.tx_descripcion as tx_area_estrategica',        
-            'id_tab_ac_predefinida',
+            'ac_seguimiento.tab_ac.id_tab_ac_predefinida',
             'id_tab_sectores',
             'id_tab_estatus',
             'id_tab_situacion_presupuestaria',

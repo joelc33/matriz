@@ -19,6 +19,7 @@ use matriz\Models\AcSegto\tab_ac_localizacion;
 use matriz\Models\AcSegto\tab_ac_vinculo;
 use matriz\Models\AcSegto\tab_ac_responsable;
 use matriz\Models\AcSegto\tab_forma_005;
+use matriz\Models\AcSegto\tab_ac_linea_transformacion;
 use View;
 use Validator;
 use Input;
@@ -254,6 +255,7 @@ class lapsoController extends Controller
                 $tabla->id_tab_lapso = $lapso->id;
                 $tabla->id_tab_origen = 1;
                 $tabla->in_activo = 'TRUE';
+                $tabla->in_abierta = 'TRUE';
                 $tabla->in_001 = false;
                 $tabla->in_005 = false;
                 $tabla->in_bloquear_001 = false;
@@ -270,6 +272,9 @@ class lapsoController extends Controller
                 $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
                 $tabla->de_sector = $arreglo_ac->de_sector; 
                 $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor_ac;
+                $tabla->objeto_creacion = $arreglo_ac->objeto_creacion;
+                $tabla->decreto_creacion = $arreglo_ac->decreto_creacion;
+                $tabla->ac_observaciones = $arreglo_ac->ac_observaciones;
                 
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->save();  
@@ -464,7 +469,24 @@ class lapsoController extends Controller
                     $tab_forma_005->in_activo = 'TRUE';
                     $tab_forma_005->save(); 
                     
-                        }                    
+                        }
+                        
+                        
+                    $tab_ac_linea_transformacion = tab_ac_linea_transformacion::where('id_tab_ac', '=', $arreglo_ac->id)
+                    ->first(); 
+               
+                    if($tab_ac_linea_transformacion){
+                    
+                    $tab_linea_transformacion = new tab_ac_linea_transformacion();
+                    $tab_linea_transformacion->id_tab_ac = $tabla->id;
+                    $tab_linea_transformacion->tx_transformacion = $tab_ac_linea_transformacion->tx_transformacion;
+                    $tab_linea_transformacion->tx_eje_alineacion = $tab_ac_linea_transformacion->tx_eje_alineacion;
+                    $tab_linea_transformacion->tx_linea_impulso = $tab_ac_linea_transformacion->tx_linea_impulso;
+                    $tab_linea_transformacion->tx_foco_accion = $tab_ac_linea_transformacion->tx_foco_accion;
+                    $tab_linea_transformacion->save(); 
+                    
+                    }                        
+                        
                     
 
         }            
@@ -498,6 +520,9 @@ class lapsoController extends Controller
                 'nu_em_previsto',
                 'tx_re_esperado',
                 'tx_pr_objetivo',
+                'objeto_creacion',
+                'decreto_creacion',
+                'ac_observaciones',
                 DB::raw("'AC' || public.t46_acciones_centralizadas.id_ejecutor || id_ejercicio || lpad(id_accion::text, 5, '0') as codigo")
             )
         ->where('edo_reg', '=', true)
@@ -535,12 +560,16 @@ class lapsoController extends Controller
                 $tabla->id_tab_lapso = $lapso->id;
                 $tabla->id_tab_origen = 1;
                 $tabla->in_activo = 'TRUE';
+                $tabla->in_abierta = 'TRUE';
                 $tabla->in_001 = false;
                 $tabla->in_005 = false;
                 $tabla->in_bloquear_001 = false;
                 $tabla->in_bloquear_005 = false;
                 $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor;
+                $tabla->objeto_creacion = $arreglo_ac->objeto_creacion;
+                $tabla->decreto_creacion = $arreglo_ac->decreto_creacion;
+                $tabla->ac_observaciones = $arreglo_ac->ac_observaciones;                
                 $tabla->save();  
                 
             $tab_ac_ae = ac_ae::select(

@@ -250,7 +250,27 @@
                     this.id_ejecutor,
                     this.inst_mision,
                     this.inst_vision,
-                    this.inst_objetivos
+                    this.inst_objetivos,{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.4. OBJETO DE CREACIÓN',
+                    name: 'objeto_creacion',
+                    allowBlank: false,
+                    height: 50,
+                    maxLength: 6000
+                },{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.5. DECRETO DE CREACIÓN',
+                    name: 'decreto_creacion',
+                    allowBlank: false,
+                    height: 50,
+                    maxLength: 6000
+                },{
+                    xtype: 'textarea',
+                    fieldLabel: '1.4.6. OBSERVACIONES',
+                    name: 'ac_observaciones',
+                    height: 50,
+                    maxLength: 6000
+                }
                    /* {
                     xtype: 'combo',
                     fieldLabel: '1.4. UNIDAD EJECUTORA RESPONSABLE',
@@ -444,7 +464,7 @@
 			maxLength: 1600
                     },{
 			xtype: 'textarea',
-			fieldLabel: '1.9.4. RESULTADOS ESPERADOS',
+			fieldLabel: '1.9.4. RESULTADOS PROGRAMADOS',
 			name: 'tx_re_esperado',
 			allowBlank: false,
 			height: 60,
@@ -839,26 +859,61 @@
                     }
                 ]
             });
+            
+            this.st_co_linea_estrategica = Ext.create({
+                xtype: 'jsonstore',
+                url: 'auxiliar/plan/lineaEstrategica',
+                root: 'data',
+                fields: [
+                    'co_linea_estrategica', 'tx_descripcion',
+                    {
+                        name: 'de_linea_estrategica',
+                        convert: function(v, r) {
+                            return r.co_linea_estrategica + ' - ' + r.tx_descripcion;
+                        }
+                    }
+                ]
+            });            
 
             this.co_co_nodo = Ext.create({
                 xtype: 'superboxselect',
-                fieldLabel: 'NUDOS CRÍTICOS',
+                fieldLabel: 'LINEA DE ACCION',
                 store: self.st_co_nodo,
                 typeAhead: true,
                 allowQueryAll : false,
-                valueField: 'co_nodo',
+                valueField: 'de_nodo',
                 displayField: 'de_nodo',
                 hiddenName: 'co_nodo[]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
-                emptyText: 'Seleccione Nodo',
+                emptyText: 'Seleccione Linea De Accion',
                 selectOnFocus: true,
                 mode: 'local',
                 hideOnSelect: false,
 //                readOnly: true,
                 style: 'background-color:#c9c9c9;'
             });
+            
+            this.co_co_linea_estrategica = Ext.create({
+                xtype: 'superboxselect',
+                fieldLabel: 'LINEA DE IMPULSO ESTRATEGICA',
+                store: self.st_co_linea_estrategica,
+                typeAhead: true,
+                allowQueryAll : false,
+                valueField: 'de_linea_estrategica',
+                displayField: 'de_linea_estrategica',
+                hiddenName: 'co_linea_estrategica[]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione Linea Estrategica',
+                selectOnFocus: true,
+                mode: 'local',
+                hideOnSelect: false,
+//                readOnly: true,
+                style: 'background-color:#c9c9c9;'
+            });            
 
             var combos_n = [{
                 nombre: 'Objetivo Histórico',
@@ -870,7 +925,7 @@
                 url: 'auxiliar/objetivo/nacional',
                 valor: 'co_objetivo_nacional',
                 mostrar:'tx_descripcion'
-            },{
+            }/*,{
                 nombre: 'Objetivo Estratégico',
                 url: 'auxiliar/objetivo/estrategico',
                 valor: 'co_objetivo_estrategico',
@@ -880,7 +935,7 @@
                 url: 'auxiliar/objetivo/general',
                 valor: 'co_objetivo_general',
                 mostrar: 'tx_descripcion'
-            }];
+            }*/];
 
             var combos = [{
                 nombre: 'Objetivo',
@@ -904,12 +959,12 @@
                 url: 'auxiliar/plan/ambito',
                 valor: 'co_ambito_zulia',
                 mostrar: 'tx_descripcion',
-            }, {
+            }/*, {
                 nombre: 'LÍNEA MATRIZ',
                 url: 'auxiliar/plan/nudo',
                 valor: 'co_nodo',
                 mostrar: 'tx_descripcion',
-            }];
+            }*/];
 
             var cbxs = [];
             var cbxs_z = [];
@@ -976,11 +1031,11 @@
             };
 
             //crea los combos y stores
-            combos.forEach(crearCreaCombos(cbxs));
+//            combos.forEach(crearCreaCombos(cbxs));
             combos_z.forEach(crearCreaCombosNac(cbxs_z));
             combos_n.forEach(crearCreaCombosNac(cbxs_n));
-
-//            cbxs.push(this.co_co_nodo);
+            cbxs.push(this.co_co_linea_estrategica);
+            cbxs.push(this.co_co_nodo);
 
             var ajusta = function(cbx, dep) {
                 self['st_' + dep].on('beforeload', function(st, op) {
@@ -1003,45 +1058,47 @@
 
             //cascada
             ajusta('co_objetivo_historico', 'co_objetivo_nacional');
-            ajusta(['co_objetivo_historico', 'co_objetivo_nacional'], 'co_objetivo_estrategico');
-            ajusta(['co_objetivo_historico', 'co_objetivo_nacional', 'co_objetivo_estrategico'], 'co_objetivo_general');
+//            ajusta(['co_objetivo_historico', 'co_objetivo_nacional'], 'co_objetivo_estrategico');
+//            ajusta(['co_objetivo_historico', 'co_objetivo_nacional', 'co_objetivo_estrategico'], 'co_objetivo_general');
 
             self.co_co_objetivo_historico.on('change', function(){
                 [
-                    'co_objetivo_nacional', 'co_objetivo_estrategico', 'co_objetivo_general'
+                    'co_objetivo_nacional'/*, 'co_objetivo_estrategico', 'co_objetivo_general'*/
                 ].forEach(borrar);
                 self.st_co_objetivo_nacional.load();
             });
-            self.co_co_objetivo_nacional.on('change', function(){
-                [
-                    'co_objetivo_estrategico', 'co_objetivo_general'
-                ].forEach(borrar);
-                self.st_co_objetivo_estrategico.load();
-            });
-            self.co_co_objetivo_estrategico.on('change', function(){
-                [
-                    'co_objetivo_general'
-                ].forEach(borrar);
-                self.st_co_objetivo_general.load();
-            });
+//            self.co_co_objetivo_nacional.on('change', function(){
+//                [
+//                    'co_objetivo_estrategico', 'co_objetivo_general'
+//                ].forEach(borrar);
+//                self.st_co_objetivo_estrategico.load();
+//            });
+//            self.co_co_objetivo_estrategico.on('change', function(){
+//                [
+//                    'co_objetivo_general'
+//                ].forEach(borrar);
+//                self.st_co_objetivo_general.load();
+//            });
 
             ajusta('co_area_estrategica', 'co_ambito_zulia');
-            ajusta('co_ambito_zulia', 'co_objetivo_zulia');
-            ajusta('co_ambito_zulia', 'co_macroproblema');
+//            ajusta('co_ambito_zulia', 'co_objetivo_zulia');
+//            ajusta('co_ambito_zulia', 'co_macroproblema');
+            ajusta('co_ambito_zulia', 'co_linea_estrategica');
             ajusta('co_ambito_zulia', 'co_nodo');
 
             self.co_co_area_estrategica.on('change', function(){
                 [
-                    'co_ambito_zulia', 'co_objetivo_zulia', 'co_macroproblema', 'co_nodo'
+                    'co_ambito_zulia', /*'co_objetivo_zulia', 'co_macroproblema',*/ 'co_linea_estrategica','co_nodo'
                 ].forEach(borrar);
                 self.st_co_ambito_zulia.load();
             });
             self.co_co_ambito_zulia.on('change', function(){
                 [
-                    'co_objetivo_zulia', 'co_macroproblema', 'co_nodo'
+                    /*'co_objetivo_zulia', 'co_macroproblema',*/ 'co_linea_estrategica','co_nodo'
                 ].forEach(borrar);
-                self.st_co_objetivo_zulia.load();
-                self.st_co_macroproblema.load();
+//                self.st_co_objetivo_zulia.load();
+//                self.st_co_macroproblema.load();
+                self.st_co_linea_estrategica.load();
                 self.st_co_nodo.load();
             });
 //            self.co_co_macroproblema.on('change', function(){
@@ -1050,6 +1107,377 @@
 //                ].forEach(borrar);
 ////                self.st_co_nodo.load();
 //            });
+
+
+    Ext.define('AccionCentralizada.AccionEspecificaForm', {
+        extend: 'Ext.Window',
+        xtype: 'linea_transfromacion',
+        constructor: function(config) {
+            var self = this;
+            
+            this.store_transformaciones = new Ext.data.JsonStore({
+                proxy: new Ext.data.HttpProxy({
+                    url: 'auxiliar/poa/transformacion',
+                    method: 'GET'
+                }),
+                root: 'data',
+                fields: ['id',{
+                        name: 'tx_transformacion',
+                        convert: function(v, r) {
+                            return r.nu_transformacion + ' - ' + r.tx_transformacion;
+                        }
+                    }]
+            });
+            this.store_transformaciones.load();
+            
+            
+            this.store_alineacion = new Ext.data.JsonStore({
+                proxy: new Ext.data.HttpProxy({
+                    url: 'auxiliar/poa/alineacion',
+                    method: 'GET'
+                }),
+                root: 'data',
+                fields: ['id',{
+                        name: 'tx_eje_alineacion',
+                        convert: function(v, r) {
+                            return r.nu_eje_alineacion + ' - ' + r.tx_eje_alineacion;
+                        }
+                    }]
+            });  
+            
+            this.store_impulso = new Ext.data.JsonStore({
+                proxy: new Ext.data.HttpProxy({
+                    url: 'auxiliar/poa/impulso',
+                    method: 'GET'
+                }),
+                root: 'data',
+                fields: ['id',{
+                        name: 'tx_linea_impulso',
+                        convert: function(v, r) {
+                            return r.nu_linea_impulso + ' - ' + r.tx_linea_impulso;
+                        }
+                    }]
+            });  
+            
+            this.store_foco = new Ext.data.JsonStore({
+                proxy: new Ext.data.HttpProxy({
+                    url: 'auxiliar/poa/foco',
+                    method: 'GET'
+                }),
+                root: 'data',
+                fields: ['id',{
+                        name: 'tx_foco_accion',
+                        convert: function(v, r) {
+                            return r.nu_foco_accion + ' - ' + r.tx_foco_accion;
+                        }
+                    }]
+            });            
+            
+            
+            this.co_transformaciones = new Ext.form.ComboBox({
+                fieldLabel: 'Linea de Transformacion',
+                store: this.store_transformaciones,
+                typeAhead: true,
+                valueField: 'id',
+                displayField: 'tx_transformacion',
+                hiddenName: 'co_transformaciones',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione linea transformacion',
+                mode: 'local',
+                allowBlank: false,
+                listeners: {
+                    change: function() {
+                        self.store_alineacion.load({
+                            params: {
+                                co_transformaciones: this.getValue()
+                            }
+                        });
+                    },
+                    beforeselect: function() {
+                        self.co_alineacion.clearValue();
+                        self.co_impulso.clearValue();
+                        self.co_foco.clearValue();
+                    }
+                }
+            });
+            
+            this.co_alineacion = new Ext.form.ComboBox({
+                fieldLabel: 'Eje de Alineación',
+                store: this.store_alineacion,
+                typeAhead: true,
+                valueField: 'id',
+                displayField: 'tx_eje_alineacion',
+                hiddenName: 'co_alineacion',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione eje de alineacion',
+                mode: 'local',
+                allowBlank: false,
+                listeners: {
+                    change: function() {
+                        self.store_impulso.load({
+                            params: {
+                                co_alineacion: this.getValue()
+                            }
+                        });
+                    },
+                    beforeselect: function() {
+                        self.co_impulso.clearValue();
+                        self.co_foco.clearValue();
+                    }
+                }                
+            });            
+
+            this.co_impulso = new Ext.form.ComboBox({
+                fieldLabel: 'Linea de Impulso',
+                store: this.store_impulso,
+                typeAhead: true,
+                valueField: 'id',
+                displayField: 'tx_linea_impulso',
+                hiddenName: 'co_impulso',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione linea de impulso',
+                mode: 'local',
+                allowBlank: false,
+                listeners: {
+                    change: function() {
+                        self.store_foco.load({
+                            params: {
+                                co_impulso: this.getValue()
+                            }
+                        });
+                    },
+                    beforeselect: function() {
+                        self.co_foco.clearValue();
+                    }
+                }                  
+            });  
+
+
+            this.co_foco = new Ext.form.ComboBox({
+                fieldLabel: 'Foco de Acción',
+                store: this.store_foco,
+                typeAhead: true,
+                valueField: 'id',
+                displayField: 'tx_foco_accion',
+                hiddenName: 'co_foco',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione foco de acción',
+                mode: 'local',
+                allowBlank: false
+            });
+
+            this.forma = Ext.create({
+                xtype: 'form',
+                labelWidth: 150,
+                labelAlign: 'right',
+                labelStyle: 'font-weight:bold;',
+                labelSeparator: '',
+                padding: '10px 4px',
+                defaults: {
+                    width: 400
+                },
+                items: [{
+                    xtype: 'hidden',
+                    name: 'id_accion_centralizada',
+                    value: config.ac.id
+                },
+                this.co_transformaciones,
+                this.co_alineacion,
+                this.co_impulso,
+                this.co_foco
+                ]
+            });
+
+
+            config = Ext.apply({
+                acid: null,
+                ae: null,
+                title: 'Añadir Linea Transformación',
+                modal: true,
+                width: 600,
+                height: 185,
+                layout: 'vbox',
+                layoutConfig: {
+                    align: 'stretch'
+                },
+                items: [
+                    this.forma
+                ],
+                bbar: [ '->', {
+                    text: 'Guardar',
+                    iconCls: 'icon-guardar',
+                    handler: function(btn) {
+                        var forma = self.forma.getForm();
+
+                        if (!forma.isValid()) {
+                            Ext.Msg.alert('Alerta', 'Existen campos inválidos');
+                            return false;
+                        }
+
+                        forma.submit({
+                            method: 'POST',
+                            url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+                            params: {
+                                op: 35,
+                                up: self.actualizar
+                            },
+                            waitMsg: 'Enviando datos, por favor espere...',
+                            waitTitle: 'Enviando',
+                            failure: function(form, action) {
+                                Ext.MessageBox.alert('Error en transacción',
+                                    action.result.msg);
+                            },
+                            success: function(form, action) {
+                                if (action.result.success) {
+
+                                    Ext.MessageBox.show({
+                                        title: 'Mensaje',
+                                        msg: action.result.msg,
+                                        closable: false,
+                                        icon: Ext.MessageBox.INFO,
+                                        resizable: false,
+                                        animEl: document.body,
+                                        buttons: Ext.MessageBox.OK,
+                                        fn: function() {
+                                            self.close();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }]
+            }, config);
+
+            this.callParent(arguments);
+
+
+
+
+
+        }
+    });
+
+
+            this.st_grid_transformacion = Ext.create({
+                xtype: 'jsonstore',
+                autoDestroy: true,
+                url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+                baseParams: {
+                    op: 36,
+                    id: config.ac.id
+                },
+                autoLoad: true,
+                root: 'data',
+                fields: [
+                    'id', 'tx_transformacion', 'tx_eje_alineacion',
+                    'tx_linea_impulso','tx_foco_accion'
+                ]
+            });
+            
+            
+            this.cargarLinea = new Ext.Button({
+                text: 'Agregar',
+                iconCls: 'icon-agregar',
+                handler: function() {
+                    var v = Ext.create({
+                    xtype: 'linea_transfromacion',
+                    ac: config.ac
+                    });
+                    v.show();
+                    v.on('close', function() {
+                        self.st_grid_transformacion.reload();
+                    });
+                }
+            });      
+            
+            
+            this.eliminarLinea = new Ext.Button({
+                text: 'Eliminar',
+                iconCls: 'icon-eliminar',
+                disabled: true,
+                handler: function() {
+                    var r = self.grid_transformacion.getSelectionModel().getSelected();
+
+                    Ext.MessageBox.confirm('Confirmación',
+                        '¿Realmente desea eliminar la linea de transformacion!?',
+                        function(boton) {
+                            if (boton === 'yes') {
+                                Ext.Ajax.request({
+                                    method: 'POST',
+                                    url: 'formulacion/modulos/seguimiento_ac/funcion.php',
+                                    params: {
+                                        op: 37,
+                                        id: r.get('id')
+                                    },
+                                    success: function(result) {
+                                        var obj = Ext.util.JSON.decode(result.responseText);
+                                        if (obj.success) {
+                                            self.st_grid_transformacion.removeAll();
+                                            self.st_grid_transformacion.reload();
+                                        }
+                                        Ext.Msg.alert("Notificación", obj.msg);
+                                    },
+                                    failure: function() {
+                                        Ext.Msg.alert("Ocurrió un error contactando al servidor");
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+            });            
+
+            this.rowSelModel = new Ext.grid.RowSelectionModel();
+
+            this.grid_transformacion = Ext.create({
+                xtype: 'grid',
+                title: '7 Grandes Transformaciones 2025-2031',
+                autoHeight: true,
+                store: this.st_grid_transformacion,
+                tbar: [
+                    this.cargarLinea,this.eliminarLinea
+                ],
+                columns: [{
+                        header: 'id',
+                        hidden:true, 
+                        dataIndex: 'id'
+                    },
+                    {
+                        header: 'Linea Transformacion',
+                        dataIndex: 'tx_transformacion',
+                        renderer: Reingsys.util.textoLargo,
+                        width: 320
+                    },
+                    {
+                        header: 'Eje de Alineacion',
+                        dataIndex: 'tx_eje_alineacion',
+                        renderer: Reingsys.util.textoLargo,
+                        width: 320
+                    },
+                    {
+                        header: 'Linea de Impulso',
+                        dataIndex: 'tx_linea_impulso',
+                        renderer: Reingsys.util.textoLargo,
+                        width: 320
+                    },
+                    {
+                        header: 'Foco de Accion',
+                        dataIndex: 'tx_foco_accion',
+                        renderer: Reingsys.util.textoLargo,
+                        width: 320
+                    }
+                ],
+                selModel: this.rowSelModel
+            });
 
             this.forma = Ext.create({
                 xtype: 'form',
@@ -1108,15 +1536,15 @@
                     labelStyle: 'font-weight:bold;',
                 },
                 items: [{
-                    title: 'OBJETIVOS DEL PLAN DE LA PATRIA',
+                    title: 'PLAN DE LA PATRIA DE LAS 7 GRANDES TRANSFORMACIONES 2025-2031',
                     items: cbxs_n
                 }, {
-                    title: 'OBJETIVOS DEL PLAN DE DESARROLLO DEL ZULIA (LÍNEA MATRIZ 2022-2025)',
+                    title: 'PLAN DE DESARROLLO REGIONAL 2025-2029: AGENDA CONCRETA DE ACCION (ACA) 2030',
                     items: [
                         cbxs_z,
                         cbxs
                     ] 
-                }]
+                },this.grid_transformacion]
             });
 
             config = Ext.apply({
@@ -1132,6 +1560,18 @@
                 Reingsys.util.deshabilitarForma(self.forma);
             }
 
+                var verificarLineaT = function(sm) {
+                    if (sm.hasSelection()) {
+                        self.eliminarLinea.enable();
+                    } else {
+                        self.eliminarLinea.disable();
+                    }
+                };
+                self.st_grid_transformacion.on('datachanged', function(st) {
+                self.eliminarLinea.disable();
+                });
+                self.rowSelModel.on('selectionchange', verificarLineaT); 
+                
             //restaura valores
             var intermedio = function(nombre) {
                 return function(cb) {
@@ -1163,13 +1603,14 @@
                         async.auto({
                             oh: intermedio('co_objetivo_historico'),
                             on: [ 'oh', intermedio('co_objetivo_nacional') ],
-                            oe: [ 'on', intermedio('co_objetivo_estrategico') ],
-                            og: [ 'oe', intermedio('co_objetivo_general') ],
+//                            oe: [ 'on', intermedio('co_objetivo_estrategico') ],
+//                            og: [ 'oe', intermedio('co_objetivo_general') ],
                             ae: intermedio('co_area_estrategica'),
                             az: [ 'ae', intermedio('co_ambito_zulia') ],
-                            o: [ 'az', intermedio('co_objetivo_zulia') ],
-                            m: [ 'az', intermedio('co_macroproblema') ],
-                            n: [ 'm', intermedio('co_nodo') ]
+//                            o: [ 'az', intermedio('co_objetivo_zulia') ],
+//                            m: [ 'az', intermedio('co_macroproblema') ],
+                            le: [ 'az', intermedio('co_linea_estrategica') ],
+                            n: [ 'az', intermedio('co_nodo') ]
                         }, function( err ) {
                             if (err) {
                                 console.log(err);
