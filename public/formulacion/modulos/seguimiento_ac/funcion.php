@@ -1474,6 +1474,8 @@ EOT;
 				'inst_vision',
 				'inst_objetivos',
                                 'objeto_creacion',
+                                'decreto_creacion',
+                                'ac_observaciones',
 				'nu_po_beneficiar',
 				'nu_em_previsto',
                                 'tx_pr_objetivo' => 'pp_anual',
@@ -1503,6 +1505,8 @@ EOT;
 				->key( 'inst_vision', v::stringcadena()  )
 				->key( 'inst_objetivos', v::stringcadena()  )
                                 ->key( 'objeto_creacion', v::stringcadena()  )
+                                ->key( 'decreto_creacion', v::stringcadena()  )
+                                ->key( 'ac_observaciones', v::stringcadena()  )
 				->key( 'fe_inicio',  $fechas )
 				->key( 'fe_fin', $fechas )
 				->key( 'id_tab_situacion_presupuestaria', v::intero()->notEmpty() )
