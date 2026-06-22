@@ -9,6 +9,7 @@ use matriz\Models\AcSegto\tab_ac_ae_partida;
 use matriz\Models\AcSegto\tab_meta_fisica;
 use matriz\Models\AcSegto\tab_meta_financiera;
 use matriz\Models\AcSegto\tab_forma_005;
+use matriz\Models\AcSegto\tab_indicadores;
 use matriz\Models\Mantenimiento\tab_lapso;
 use View;
 use Validator;
@@ -28,11 +29,12 @@ class formacincoController extends Controller
     protected $tab_ac;
     protected $tab_forma_005;
 
-    public function __construct(tab_ac $tab_ac, tab_forma_005 $tab_forma_005)
+    public function __construct(tab_ac $tab_ac, tab_forma_005 $tab_forma_005, tab_indicadores $tab_indicadores)
     {
         $this->middleware('auth');
         $this->tab_ac = $tab_ac;
         $this->tab_forma_005 = $tab_forma_005;
+        $this->tab_indicadores = $tab_indicadores;
     }
 
     /**
@@ -218,6 +220,76 @@ class formacincoController extends Controller
         
 
         return View::make('seguimiento.ac.005.datos.editar')->with('data', $data);
+    }
+
+    public function datosAe($id)
+    {
+        $data = tab_ac::select(
+            'id',
+            'nu_codigo',
+            'id_tab_ejecutores',
+            'id_tab_ejercicio_fiscal',
+            'id_tab_ac_predefinida',
+            'id_tab_sectores',
+            'id_tab_estatus',
+            'id_tab_situacion_presupuestaria',
+            'id_tab_tipo_registro',
+            'co_new_etapa',
+            'de_ac',
+            'mo_ac',
+            'mo_calculado',
+            'fe_inicio',
+            'fe_fin',
+            'inst_mision',
+            'inst_vision',
+            'inst_objetivos',
+            'nu_po_beneficiar',
+            'nu_em_previsto',
+            'tx_re_esperado',
+            'in_activo',
+            'id_tab_lapso'
+        )
+        ->where('id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.005.datos.listaae')->with('data', $data);
+    }    
+    
+    public function editarAe($id)
+    {
+        $data = tab_ac_ae::select(
+            'id',
+            'id_tab_ac',
+            'id_tab_ac_ae_predefinida',
+            'id_tab_ejecutores',
+            'bien_servicio',
+            'id_tab_unidad_medida',
+            'meta',
+            'ponderacion',
+            'id_tab_tipo_fondo',
+            'mo_ae',
+            'mo_ae_calculado',
+            'fecha_inicio',
+            'fecha_fin',
+            'in_activo'
+        )
+        ->where('id', '=', $id)
+        ->first();
+        return View::make('seguimiento.ac.005.actividad.lista')->with('data', $data);
+    } 
+    
+    public function editarActividad($id)
+    {
+
+        return View::make('seguimiento.ac.005.actividad.editar')->with('id_tab_meta_fisica', $id);
+    }
+
+    public function actividadNuevo($id)
+    {
+        $data = tab_meta_fisica::where('id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.005.actividad.nuevo')->with('data', $data);
     }    
     
     /**
@@ -414,6 +486,44 @@ class formacincoController extends Controller
             }
         }
     }
+    
+    
+    public function enviarIndicador($id = null)
+    {
+        DB::beginTransaction();
+
+
+            try {
+//                $validator = Validator::make(Input::all(), tab_ac::$validarEditar005);
+//                if ($validator->fails()) {
+//                    return Response::json(array(
+//                      'success' => false,
+//                      'msg' => $validator->getMessageBag()->toArray()
+//                    ));
+//                }
+
+                $tab_indicador = new tab_indicadores();
+                $tab_indicador->id_tab_meta_fisica = Input::get("id_tab_meta_fisica");
+                $tab_indicador->id_tab_tipo_indicador = Input::get("tipo_inidcador");
+                $tab_indicador->id_tab_sub_tipo_indicador = Input::get("sub_tipo_inidcador");
+                $tab_indicador->nu_cantidad = Input::get("cantidad");
+                $tab_indicador->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro enviados con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+        
+    }    
 
     /**
     * Display a listing of the resource.
@@ -540,6 +650,48 @@ class formacincoController extends Controller
                 $response['total'] = $tab_forma_005->count();
                 $tab_forma_005->skip($start)->take($limit);
                 $response['data']  = $tab_forma_005->orderby('ac_seguimiento.tab_forma_005.id', 'ASC')->get()->toArray();
+            }
+
+            return Response::json($response, 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array('success' => false, 'message' => utf8_encode($e->getMessage())), 500);
+        }
+    }   
+    
+    public function storeListaIndicadores()
+    {
+        try {
+            $start  = Input::get('start', 0);
+            $limit  = Input::get('limit', 20);
+            $variable = Input::get('variable');
+
+            $tab_indicadores = $this->tab_indicadores
+            ->join('mantenimiento.tab_tipo_indicador as t01', 'ac_seguimiento.tab_indicadores.id_tab_tipo_indicador', '=', 't01.id')
+            ->join('mantenimiento.tab_sub_tipo_indicador as t02', 'ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador', '=', 't02.id')
+            ->select(
+                'ac_seguimiento.tab_indicadores.id',
+                't01.de_tipo_indicador',
+                't02.de_sub_tipo_indicador',
+                'ac_seguimiento.tab_indicadores.nu_cantidad'
+            )
+            ->where('ac_seguimiento.tab_indicadores.id_tab_meta_fisica', '=', Input::get('id_tab_meta_fisica'));
+
+
+            if (Input::get("BuscarBy")=="true") {
+
+                if($variable!="") {
+                    $tab_indicadores->where('t01.de_tipo_indicador', 'ILIKE', "%$variable%");
+                }
+
+                $response['success']  = 'true';
+                $response['total'] = $tab_indicadores->count();
+                $tab_indicadores->skip($start)->take($limit);
+                $response['data']  = $tab_indicadores->orderby('ac_seguimiento.tab_indicadores.id', 'ASC')->get()->toArray();
+            } else {
+                $response['success']  = 'true';
+                $response['total'] = $tab_indicadores->count();
+                $tab_indicadores->skip($start)->take($limit);
+                $response['data']  = $tab_indicadores->orderby('ac_seguimiento.tab_indicadores.id', 'ASC')->get()->toArray();
             }
 
             return Response::json($response, 200);
@@ -806,5 +958,28 @@ class formacincoController extends Controller
             return Response::json($response, 200);
         }
     }
+    
+        public function eliminarIndicador()
+    {
+        DB::beginTransaction();
+        try {
+            $tabla = tab_indicadores::find(Input::get("id"));
+            $tabla->delete();
+
+
+            DB::commit();
+
+            $response['success']  = 'true';
+            $response['msg']  = 'Registro borrado con Exito!';
+            return Response::json($response, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+
+            $response['success']  = 'false';
+            $response['msg']  = array('ERROR ('.$e->getCode().'):'=> $e->getMessage());
+            return Response::json($response, 200);
+        }
+    }    
 
 }

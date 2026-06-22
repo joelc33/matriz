@@ -631,6 +631,9 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('enviar/{id}', 'formacincoController@enviar');
         Route::get('actividad/lista/{id}', 'formacincoController@editarAE');
         Route::get('actividad/editar/{id}', 'formacincoController@editarActividad');
+        Route::post('enviarIndicador', 'formacincoController@enviarIndicador');
+        Route::post('datos/storeListaIndicadores', 'formacincoController@storeListaIndicadores');
+        Route::post('eliminarIndicador', 'formacincoController@eliminarIndicador');
     });
     //*Modulo de Accion Centralizada Forma 005*/
     Route::group(['prefix' => 'seguimiento/ac/005/cambio'], function () {

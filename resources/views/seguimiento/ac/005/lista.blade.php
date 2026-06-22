@@ -88,6 +88,17 @@ this.cargar_admin = new Ext.Button({
                     }
 });
 
+this.cargar_ae = new Ext.Button({
+	text:'Ver AE',
+	iconCls: 'icon-editar',
+	handler:function(){
+            this.codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+            this.nu_codigo  = forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('nu_codigo');
+            addTab('foma005'+this.nu_codigo,'F005 - A.C: '+this.nu_codigo,'{{ URL::to('ac/seguimiento/005/datos') }}/'+this.codigo,'load','icon-editar','');
+	}
+});
+this.cargar_ae.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -154,9 +165,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     tbar:[
         
                         @if (in_array(Session::get('rol'), $rol_planificador))
-                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar,'-',
+                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar,'-',this.cargar_ae,'-',
                         @else
-                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar_admin,'-',
+                        this.ficha,'-',this.ficha_acumulada,'-',this.cargar_admin,'-',this.cargar_ae,'-',
 			@endif
                         this.buscador
     ],
@@ -176,16 +187,19 @@ this.gridPanel_ = new Ext.grid.GridPanel({
             if(forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('in_abierta')==true){
 			forma005Lista.main.ficha.enable();
                         forma005Lista.main.ficha_acumulada.enable();
-                        forma005Lista.main.cargar.enable();                
+                        forma005Lista.main.cargar.enable();   
+                        forma005Lista.main.cargar_ae.enable();
             }else{
                         if(forma005Lista.main.gridPanel_.getSelectionModel().getSelected().get('activo')==true){
 			forma005Lista.main.ficha.enable();
                         forma005Lista.main.ficha_acumulada.enable();
                         forma005Lista.main.cargar.enable();
+                        forma005Lista.main.cargar_ae.enable();
                     }else{
                         forma005Lista.main.ficha.enable();
                         forma005Lista.main.ficha_acumulada.enable();
                         forma005Lista.main.cargar.disable();
+                        forma005Lista.main.cargar_ae.enable();
                     }
                 }
 		}},
