@@ -130,6 +130,7 @@ Route::group(['namespace' => 'Auxiliar'], function () {
         Route::get('tipoindicador', 'documentoController@tipoIndicador');
         Route::post('subtipoindicador', 'documentoController@subTipoIndicador');
         Route::post('ac/foco', 'documentoController@focoAc');
+        Route::post('comuna/todo', 'documentoController@comunaTodo');
     });
 });
 //*Modulos de Reportes*/
