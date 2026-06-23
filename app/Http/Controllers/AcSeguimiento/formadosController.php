@@ -893,7 +893,6 @@ class formadosController extends Controller
     public function guardarFoco($id = null)
     {
         DB::beginTransaction();
-        if($id!=''||$id!=null) {
 
             try {
 
@@ -916,7 +915,7 @@ class formadosController extends Controller
                 ));
             }
 
-        } 
+        
     }
     
     public function cargar()
