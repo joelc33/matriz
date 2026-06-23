@@ -129,6 +129,7 @@ Route::group(['namespace' => 'Auxiliar'], function () {
         Route::get('estado', 'documentoController@estado');
         Route::get('tipoindicador', 'documentoController@tipoIndicador');
         Route::post('subtipoindicador', 'documentoController@subTipoIndicador');
+        Route::post('ac/foco', 'documentoController@focoAc');
     });
 });
 //*Modulos de Reportes*/
@@ -547,6 +548,8 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::get('actividad/financiera/nuevo/{id}', 'formadosController@nuevoFinanciera');
         Route::post('actividad/financiera/partida', 'formadosController@partida');
         Route::post('actividad/financiera/fuentefinanciamiento', 'formadosController@fondoTipo');
+        Route::get('actividad/focoAccion/{id}', 'formadosController@focoAccion');
+        Route::post('actividad/guardarFoco/{id}', 'formadosController@guardarFoco');
     });    
     //*Modulo de Accion Centralizada Forma 002*/
     Route::group(['prefix' => 'seguimiento/ac/002/cambio'], function () {

@@ -35,6 +35,7 @@ use matriz\Models\Ac\t80_transformaciones;
 use matriz\Models\Ac\t81_eje_alineacion;
 use matriz\Models\Ac\t82_linea_impulso;
 use matriz\Models\Ac\t83_foco_accion;
+use matriz\Models\AcSegto\tab_ac_linea_transformacion;
 use Input;
 use Response;
 use DB;
@@ -662,5 +663,14 @@ class documentoController extends Controller
         ->orderby('id', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }    
+    
+    public function focoAc()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_ac_linea_transformacion::select('tx_foco_accion')
+        ->where('id_tab_ac', '=', Input::get('id_tab_ac'))
+        ->orderby('tx_foco_accion', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }      
     
 }

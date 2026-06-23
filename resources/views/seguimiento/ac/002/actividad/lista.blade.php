@@ -80,6 +80,23 @@ this.eliminar= new Ext.Button({
 
 this.eliminar.disable();
 
+this.foco= new Ext.Button({
+    text:'Foco de Acción',
+    iconCls: 'icon-editar',
+    handler:function(){
+	this.codigo  = forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
+	forma002ActividadLista.main.mascara.show();
+        this.msg = Ext.get('forma002Actividad');
+        this.msg.load({
+         url:"{{ URL::to('ac/seguimiento/002/actividad/focoAccion') }}/"+this.codigo,
+         scripts: true,
+         text: "Cargando.."
+        });
+    }
+});
+
+this.foco.disable();
+
 this.buscador = new Ext.form.TwinTriggerField({
 	initComponent : function(){
 		Ext.ux.form.SearchField.superclass.initComponent.call(this);
@@ -148,7 +165,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 				this.nuevo,'-',this.eliminar,'-',
 			@endif
                         @if( in_array( array( 'de_privilegio' => 'acseguimiento.nuevo', 'in_habilitado' => true), Session::get('credencial') ))
-				this.editar,'-',
+				this.editar,'-',this.foco,'-',
 			@endif
 				this.buscador
     ],
@@ -167,6 +184,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 			forma002ActividadLista.main.editar.enable();
+                        forma002ActividadLista.main.foco.enable();
                         if(forma002ActividadLista.main.gridPanel_.getSelectionModel().getSelected().get('id_tab_origen')==2){
                         forma002ActividadLista.main.eliminar.enable();    
                         }else{

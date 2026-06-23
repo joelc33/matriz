@@ -444,6 +444,50 @@ class formadosController extends Controller
 
         return View::make('seguimiento.ac.002.actividad.editar')->with('data', $data);
     }
+    
+    
+    public function focoAccion($id)
+    {
+        $data = tab_meta_fisica::select(
+            'ac_seguimiento.tab_meta_fisica.id',
+            'id_tab_ac_ae',
+            'codigo as cod',
+            'nb_meta',
+            'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida',
+            'tx_prog_anual',
+            'ac_seguimiento.tab_meta_fisica.nb_responsable',
+            'ac_seguimiento.tab_meta_fisica.in_activo',
+            'de_unidad_medida',
+            DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_inicio, 'dd-mm-YYYY') as fecha_inicio"),
+            DB::raw("to_char(ac_seguimiento.tab_meta_fisica.fecha_fin, 'dd-mm-YYYY') as fecha_fin"),
+            'ac_seguimiento.tab_meta_fisica.nu_meta_modificada',
+            'ac_seguimiento.tab_meta_fisica.nu_meta_actualizada',
+            'ac_seguimiento.tab_meta_fisica.nu_obtenido',
+            'ac_seguimiento.tab_meta_fisica.nu_corte',
+            'ac_seguimiento.tab_meta_fisica.resultado',
+            'nu_po_beneficiar',
+            'nu_em_previsto',
+            'ac_seguimiento.tab_meta_fisica.observacion',                
+            'ac_seguimiento.tab_meta_fisica.id_tab_municipio_detalle',
+            'ac_seguimiento.tab_meta_fisica.id_tab_parroquia_detalle',
+            'in_bloquear_002',
+            'ac_seguimiento.tab_meta_fisica.id_tab_origen',
+            't04.id as codigo',
+            DB::raw('coalesce(tx_prog_anual::numeric) + coalesce(tab_meta_fisica.nu_meta_modificada_periodo,0) as tx_prog_nuevo'),    
+            't05.id_tab_tipo_periodo',
+            't03.id as id_tab_ac',
+            'ac_seguimiento.tab_meta_fisica.tx_foco_accion'
+        )
+        ->join('mantenimiento.tab_unidad_medida as t01', 'ac_seguimiento.tab_meta_fisica.id_tab_unidad_medida', '=', 't01.id')
+        ->join('ac_seguimiento.tab_ac_ae as t02', 'ac_seguimiento.tab_meta_fisica.id_tab_ac_ae', '=', 't02.id')
+        ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
+        ->join('mantenimiento.tab_lapso as t05', 't03.id_tab_lapso', '=', 't05.id')
+        ->leftjoin('ac_seguimiento.tab_forma_002 as t04', 't04.id_tab_meta_fisica', '=', 'ac_seguimiento.tab_meta_fisica.id')
+        ->where('ac_seguimiento.tab_meta_fisica.id', '=', $id)
+        ->first();
+
+        return View::make('seguimiento.ac.002.actividad.foco')->with('data', $data);
+    }    
 
     /**
      * Update the specified resource in storage.
@@ -844,6 +888,35 @@ class formadosController extends Controller
                 ));
             }
         }
+    }
+
+    public function guardarFoco($id = null)
+    {
+        DB::beginTransaction();
+        if($id!=''||$id!=null) {
+
+            try {
+
+
+                $tabla = tab_meta_fisica::find(Input::get("id_tab_meta_fisica"));
+                $tabla->tx_foco_accion = Input::get("foco_accion");
+                $tabla->save();
+
+                DB::commit();
+                return Response::json(array(
+                  'success' => true,
+                  'msg' => 'Registro Editado con Exito!'
+                ));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return Response::json(array(
+                  'success' => false,
+                  'msg' => array('ERROR ('.$e->getCode().'):'=> $e->getMessage())
+                ));
+            }
+
+        } 
     }
     
     public function cargar()
