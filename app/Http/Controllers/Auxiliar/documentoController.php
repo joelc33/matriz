@@ -31,6 +31,7 @@ use matriz\Models\Mantenimiento\tab_fuente_financiamiento;
 use matriz\Models\Mantenimiento\tab_estado;
 use matriz\Models\Mantenimiento\tab_tipo_indicador;
 use matriz\Models\Mantenimiento\tab_sub_tipo_indicador;
+use matriz\Models\Mantenimiento\tab_comuna;
 use matriz\Models\Ac\t80_transformaciones;
 use matriz\Models\Ac\t81_eje_alineacion;
 use matriz\Models\Ac\t82_linea_impulso;
@@ -651,7 +652,7 @@ class documentoController extends Controller
     public function tipoIndicador()
     {
         $response['success']  = 'true';
-        $response['data']  = tab_tipo_indicador::select('id', 'de_tipo_indicador')->orderby('id', 'ASC')->get()->toArray();
+        $response['data']  = tab_tipo_indicador::select('id', 'de_tipo_indicador','in_territorial')->orderby('id', 'ASC')->get()->toArray();
         return Response::json($response, 200);
     }
 
@@ -671,6 +672,16 @@ class documentoController extends Controller
         ->where('id_tab_ac', '=', Input::get('id_tab_ac'))
         ->orderby('tx_foco_accion', 'ASC')->get()->toArray();
         return Response::json($response, 200);
-    }      
+    }  
+
+    public function comunaTodo()
+    {
+        $response['success']  = 'true';
+        $response['data']  = tab_comuna::select('id', 'de_comuna')
+        //->where('in_activo', '=', true)
+        ->where('id_tab_parroquia_detalle', '=', Input::get('id_tab_parroquia_detalle'))
+        ->orderby('id', 'ASC')->get()->toArray();
+        return Response::json($response, 200);
+    }    
     
 }

@@ -159,7 +159,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
     {header: 'TIPO DE INDICADOR', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_tipo_indicador'},
     {header: 'SUB TIPO DE INDICADOR', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_sub_tipo_indicador'},
-    {header: 'CANTIDAD', width:220,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_cantidad'},
+    {header: 'CANTIDAD', width:50,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_cantidad'},
+    {header: 'MUNICIPIO', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_municipio'},
+    {header: 'PARROQUIA', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_parroquia'},
+    {header: 'COMUNA', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_comuna'},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -213,6 +216,9 @@ getLista: function(){
     {name: 'id'},
     {name: 'de_tipo_indicador'},
     {name: 'de_sub_tipo_indicador'},
+    {name: 'de_municipio'},
+    {name: 'de_parroquia'},
+    {name: 'de_comuna'},
     {name: 'nu_cantidad'}
            ]
     });

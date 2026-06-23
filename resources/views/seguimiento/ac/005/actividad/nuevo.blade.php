@@ -9,6 +9,12 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'{!! $data !!}'});
 this.storeCO_TIPO_INDICADOR = this.getStoreCO_TIPO_INDICADOR();
 //<Stores de fk>
 this.storeCO_SUB_TIPO_INDICADOR = this.getStoreCO_SUB_TIPO_INDICADOR();
+//<Stores de fk>
+this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
+//<Stores de fk>
+this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
+
+this.storeCO_COMUNA= this.getStoreCO_COMUNA();
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -19,6 +25,11 @@ this.id_tab_meta_fisica = new Ext.form.Hidden({
 	name:'id_tab_meta_fisica',
 	value:'{{ $data->id }}'
 });
+
+this.in_territorial = new Ext.form.Hidden({
+	name:'id_territorial'
+});
+
 //</token>
 
 this.id_tab_tipo_indicador = new Ext.form.ComboBox({
@@ -56,7 +67,21 @@ paqueteComunJS.funcion.seleccionarComboByCo({
 });
 
 this.id_tab_tipo_indicador.on('beforeselect',function(cmb,record,index){
+
         	this.id_tab_sub_tipo_indicador.clearValue();
+                this.id_tab_municipio_detalle.clearValue();
+                this.id_tab_parroquia_detalle.clearValue();
+                this.id_tab_comuna.clearValue();
+                forma005Nuevo.main.in_territorial.setValue(record.data.in_territorial);
+                if(record.data.in_territorial==true){
+                forma005Nuevo.main.id_tab_municipio_detalle.show();
+                forma005Nuevo.main.id_tab_parroquia_detalle.show();
+                forma005Nuevo.main.id_tab_comuna.show();
+                }else{
+                forma005Nuevo.main.id_tab_municipio_detalle.hide();
+                forma005Nuevo.main.id_tab_parroquia_detalle.hide();
+                forma005Nuevo.main.id_tab_comuna.hide();
+                }
 },this);
 
 
@@ -86,16 +111,122 @@ this.cantidad = new Ext.form.NumberField({
 	allowBlank:false
 });
 
+this.id_tab_municipio_detalle = new Ext.form.ComboBox({
+	fieldLabel:'MUNICIPIO',
+	store: this.storeCO_MUNICIPIO,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_municipio',
+	hiddenName:'municipio',
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione ...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	itemSelector: 'div.search-item', 
+	tpl: new Ext.XTemplate('<tpl for="."><div class="search-item"><div class="desc">{de_municipio}</div></div></tpl>'),
+	resizable:true,
+	listeners:{
+        change: function(){
+        forma005Nuevo.main.storeCO_PARROQUIA.load({
+                        params: {id_tab_municipio:this.getValue(), _token:'{{ csrf_token() }}'}
+        });
+        
+        }
+	}
+});
+
+this.storeCO_MUNICIPIO.load();
+this.id_tab_municipio_detalle.hide();
+this.id_tab_municipio_detalle.on('beforeselect',function(cmb,record,index){
+        	this.id_tab_parroquia_detalle.clearValue();
+},this);
+
+this.id_tab_parroquia_detalle = new Ext.form.ComboBox({
+	fieldLabel:'PARROQUIA',
+	store: this.storeCO_PARROQUIA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_parroquia',
+	hiddenName:'parroquia',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Parroquia',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	resizable:true,
+	listeners:{
+        change: function(){
+        forma005Nuevo.main.storeCO_COMUNA.load({
+                        params: {id_tab_parroquia_detalle:this.getValue(), _token:'{{ csrf_token() }}'}
+        });
+        
+        }
+	}        
+});
+this.id_tab_parroquia_detalle.hide();
+
+this.id_tab_parroquia_detalle.on('beforeselect',function(cmb,record,index){
+                this.id_tab_comuna.clearValue();
+},this);
+
+this.id_tab_comuna = new Ext.form.ComboBox({
+	fieldLabel:'COMUNA',
+	store: this.storeCO_COMUNA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_comuna',
+	hiddenName:'comuna',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione ...',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	resizable:true
+});
+this.id_tab_comuna.hide();
 
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
 
+        if(forma005Nuevo.main.in_territorial.getValue()==true){
+        
+        if(forma005Nuevo.main.id_tab_municipio_detalle.getValue()==''){
+            
+            Ext.Msg.alert("Alerta","Debe ingresar el municipio");
+            return false;
+            
+        }
+ 
+        if(forma005Nuevo.main.id_tab_parroquia_detalle.getValue()==''){
+            
+            Ext.Msg.alert("Alerta","Debe ingresar la parroquia");
+            return false;
+            
+        } 
+        
+        if(forma005Nuevo.main.id_tab_comuna.getValue()==''){
+            
+            Ext.Msg.alert("Alerta","Debe ingresar la comuna");
+            return false;
+            
+        }         
+        
+        }
+
         if(!forma005Nuevo.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+        
         
         Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar los datos?', function(boton){
 				if(boton=="yes"){
@@ -156,6 +287,9 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.id_tab_meta_fisica,
 		this.id_tab_tipo_indicador,
                 this.id_tab_sub_tipo_indicador,
+                this.id_tab_municipio_detalle,
+                this.id_tab_parroquia_detalle,
+                this.id_tab_comuna,
                 this.cantidad
 	]
 });
@@ -187,7 +321,7 @@ getStoreCO_TIPO_INDICADOR:function(){
         url:'{{ URL::to('auxiliar/tipoindicador') }}',
         root:'data',
         fields:[
-            {name: 'id'},{name: 'de_tipo_indicador'}
+            {name: 'id'},{name: 'de_tipo_indicador'},{name: 'in_territorial'}
             ],
             listeners : {
                 exception : function(proxy, response, operation) {
@@ -211,7 +345,52 @@ getStoreCO_SUB_TIPO_INDICADOR:function(){
             }
     });
     return this.store;
-}        
+},
+getStoreCO_MUNICIPIO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/municipio/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_municipio'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
+},
+getStoreCO_PARROQUIA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/parroquia/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_parroquia'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
+},
+getStoreCO_COMUNA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/comuna/todo') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_comuna'}
+            ],
+            listeners : {
+                exception : function(proxy, response, operation) {
+                    Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
+                }
+            }
+    });
+    return this.store;
+}
 };
 Ext.onReady(forma005Nuevo.main.init, forma005Nuevo.main);
 </script>
