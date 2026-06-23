@@ -550,6 +550,7 @@ Route::group(['namespace' => 'AcSeguimiento'], function () {
         Route::post('actividad/financiera/fuentefinanciamiento', 'formadosController@fondoTipo');
         Route::get('actividad/focoAccion/{id}', 'formadosController@focoAccion');
         Route::post('actividad/guardarFoco/{id}', 'formadosController@guardarFoco');
+        Route::post('actividad/guardarFoco', 'formadosController@guardarFoco');
     });    
     //*Modulo de Accion Centralizada Forma 002*/
     Route::group(['prefix' => 'seguimiento/ac/002/cambio'], function () {
