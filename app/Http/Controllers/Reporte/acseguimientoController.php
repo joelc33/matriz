@@ -650,31 +650,30 @@ class acseguimientoController extends Controller
 ';*/
 
         $html23 = '';
-        $html23 .= '
-<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
-<thead>
-<tr align="center" bgcolor="#BDBDBD">
-<th colspan="11" style="width: 100%;"><b>METAS FISICAS</b></th>
-</tr>
-<tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 16%;" rowspan="2">ACTIVIDAD</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (T.ANT.)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (TRI)</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 12%;" colspan="2">FECHA PROGRAMADA</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">OBTENIDO AL CORTE</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 10%;" rowspan="2">LOCALIZACIÓN</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">RESPONSABLE</th>
-</tr>
-<tr style="font-size:6px">
-<th align="center" bgcolor="#BDBDBD" style="width: 6%;">INICIO</th>
-<th align="center" bgcolor="#BDBDBD" style="width: 6%;">FINAL</th>
-</tr>
-</thead>
-';
+        $html23 .= '<table border="0.1" style="width:100%" style="font-size:9px" cellpadding="3">
+                    <thead>
+                    <tr align="center" bgcolor="#BDBDBD">
+                    <th colspan="11" style="width: 100%;"><b>METAS FISICAS</b></th>
+                    </tr>
+                    <tr style="font-size:6px">
+                    <th align="center" bgcolor="#BDBDBD" style="width: 16%;" rowspan="2">ACTIVIDAD</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">UNIDAD DE MEDIDA</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META PROGRAMADA POA</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (T.ANT.)</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">META MODIFICADA (TRI)</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 8%;" rowspan="2">META ACTUALIZADA</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 12%;" colspan="2">FECHA PROGRAMADA</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 7%;" rowspan="2">OBTENIDO AL CORTE</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">% EJEC. OBTENIDA AL CORTE Vs. EJEC. PROG. ANUAL</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 10%;" rowspan="2">LOCALIZACIÓN</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 9%;" rowspan="2">RESPONSABLE</th>
+                    </tr>
+                    <tr style="font-size:6px">
+                    <th align="center" bgcolor="#BDBDBD" style="width: 6%;">INICIO</th>
+                    <th align="center" bgcolor="#BDBDBD" style="width: 6%;">FINAL</th>
+                    </tr>
+                    </thead>
+                    ';
 
         $html23 .= '
 <tbody>';
@@ -697,41 +696,41 @@ class acseguimientoController extends Controller
 
           $contar = $contar + 1;
           $html23 .= '
-		<tr style="font-size:6px" nobr="true">
-		<td style="width: 16%;"  nobr="true">' . $item->codigo . ' - ' . $item->nb_meta . '</td>
-		<td style="width: 7%;"  align="center">' . $item->tx_unidades_medida . '</td>
-		<td style="width: 8%;"  align="center">' . $item->tx_prog_anual . '</td>
-                <td style="width: 7%;" align="center">' . $item->nu_meta_modificada_periodo . '</td>
-                <td style="width: 7%;" align="center">' . $item->nu_meta_modificada . '</td>
-                <td style="width: 8%;" align="center">' . ($item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo) . '</td>                    
-		<td style="width: 6%;"  align="center">' . trim(date_format(date_create($item->fecha_inicio), 'd/m/Y')) . '</td>
-		<td style="width: 6%;" align="center">' . trim(date_format(date_create($item->fecha_fin), 'd/m/Y')) . '</td>
-                <td style="width: 7%;" align="center">' . $this->formatoDinero($item->nu_obtenido) . '</td>
-                <td style="width: 9%;" align="center">' . $this->formatoPorcentaje($obtenido) . '</td>
-                <td style="width: 10%;"  align="center">' . $item->de_municipio . ' / ' . $item->de_parroquia . '</td>
-		<td style="width: 9%;" align="center">' . $item->nb_responsable . '</td>';
-          $html23 .= '</tr>';
-        }
-        $html23 .= '      
-<tr style="font-size:9px">
-<td colspan="3" style="width: 60%;" align="justify" rowspan="2"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b>' . $data->tx_re_esperado . '</td>
-<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN A BENEFICIAR:</b></td>
-<td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN BENEFICIADA:</b></td>
-<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS A GENERAR:</b></td>
-<td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="3" style="width: 10%;" align="center">' . $data->nu_po_beneficiar . '</td>
-<td colspan="3" style="width: 10%;" align="center">' . $data->nu_po_beneficiada . '</td>
-<td colspan="3" style="width: 10%;" align="center">' . $data->nu_em_previsto . '</td>
-<td colspan="3" style="width: 10%;" align="center">' . $data->nu_em_generado . '</td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> ' . $data->tx_pr_programado . '</td>
-</tr>
-<tr style="font-size:9px">
-<td colspan="16" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  ' . $data->de_observacion_002 . '</td>
-</tr>';
+                      <tr style="font-size:6px" nobr="true">
+                      <td style="width: 16%;"  nobr="true">' . $item->codigo . ' - ' . $item->nb_meta . '</td>
+                      <td style="width: 7%;"  align="center">' . $item->tx_unidades_medida . '</td>
+                      <td style="width: 8%;"  align="center">' . $item->tx_prog_anual . '</td>
+                                  <td style="width: 7%;" align="center">' . $item->nu_meta_modificada_periodo . '</td>
+                                  <td style="width: 7%;" align="center">' . $item->nu_meta_modificada . '</td>
+                                  <td style="width: 8%;" align="center">' . ($item->tx_prog_anual + $item->nu_meta_modificada + $item->nu_meta_modificada_periodo) . '</td>                    
+                      <td style="width: 6%;"  align="center">' . trim(date_format(date_create($item->fecha_inicio), 'd/m/Y')) . '</td>
+                      <td style="width: 6%;" align="center">' . trim(date_format(date_create($item->fecha_fin), 'd/m/Y')) . '</td>
+                                  <td style="width: 7%;" align="center">' . $this->formatoDinero($item->nu_obtenido) . '</td>
+                                  <td style="width: 9%;" align="center">' . $this->formatoPorcentaje($obtenido) . '</td>
+                                  <td style="width: 10%;"  align="center">' . $item->de_municipio . ' / ' . $item->de_parroquia . '</td>
+                      <td style="width: 9%;" align="center">' . $item->nb_responsable . '</td>';
+                            $html23 .= '</tr>';
+                          }
+                          $html23 .= '      
+                  <tr style="font-size:9px">
+                  <td colspan="3" style="width: 60%;" align="justify" rowspan="2"><b>RESULTADOS ESPERADOS DEL OBJETIVO INSTITUCIONAL:</b>' . $data->tx_re_esperado . '</td>
+                  <td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN A BENEFICIAR:</b></td>
+                  <td colspan="3" style="width: 10%;" align="center"><b>POBLACIÓN BENEFICIADA:</b></td>
+                  <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS A GENERAR:</b></td>
+                  <td colspan="3" style="width: 10%;" align="center"><b>EMPLEOS GENERADOS:</b></td>
+                  </tr>
+                  <tr style="font-size:9px">
+                  <td colspan="3" style="width: 10%;" align="center">' . $data->nu_po_beneficiar . '</td>
+                  <td colspan="3" style="width: 10%;" align="center">' . $data->nu_po_beneficiada . '</td>
+                  <td colspan="3" style="width: 10%;" align="center">' . $data->nu_em_previsto . '</td>
+                  <td colspan="3" style="width: 10%;" align="center">' . $data->nu_em_generado . '</td>
+                  </tr>
+                  <tr style="font-size:9px">
+                  <td colspan="16" style="height: 30px;" align="justify"><b>RESULTADOS OBTENIDOS:</b> ' . $data->tx_pr_programado . '</td>
+                  </tr>
+                  <tr style="font-size:9px">
+                  <td colspan="16" style="height: 30px;" align="justify"><b>OBSERVACIONES:</b>  ' . $data->de_observacion_002 . '</td>
+                  </tr>';
 
         $html23 .= '
 </tbody>
@@ -879,6 +878,114 @@ class acseguimientoController extends Controller
           $mo_causado_ejecutor = $mo_causado_ejecutor + $item2->mo_causado;
           $mo_pagado_ejecutor = $mo_pagado_ejecutor + $item2->mo_pagado;
         }
+
+        $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+        $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_transformacion')
+          ->orderBy('tx_transformacion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+        foreach ($sqlLineaT as $campot) {
+          $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+        }
+
+        $html1 .= ' </table></td>';
+
+
+        $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_eje_alineacion')
+          ->orderBy('tx_eje_alineacion', 'ASC')
+          ->get();
+
+        $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+        foreach ($sqlLineaE as $campoE) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_linea_impulso')
+          ->orderBy('tx_linea_impulso', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+        foreach ($sqlLineaI as $campoI) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_foco_accion')
+          ->orderBy('tx_foco_accion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+        foreach ($sqlLineaF as $campoF) {
+          $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+        }
+        $html1 .= '</td></tr>';
+
+        $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+</tbody>
+</table>
+';
+
+
+        /******************FIN CAMBIOS JOEL **************************************/
+
 
      /*   $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
@@ -1109,6 +1216,114 @@ class acseguimientoController extends Controller
           ->get();
 
         if ($actividad->count() > 0) {
+
+        $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+        $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_transformacion')
+          ->orderBy('tx_transformacion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+        foreach ($sqlLineaT as $campot) {
+          $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+        }
+
+        $html1 .= ' </table></td>';
+
+
+        $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_eje_alineacion')
+          ->orderBy('tx_eje_alineacion', 'ASC')
+          ->get();
+
+        $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+        foreach ($sqlLineaE as $campoE) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_linea_impulso')
+          ->orderBy('tx_linea_impulso', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+        foreach ($sqlLineaI as $campoI) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_foco_accion')
+          ->orderBy('tx_foco_accion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+        foreach ($sqlLineaF as $campoF) {
+          $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+        }
+        $html1 .= '</td></tr>';
+
+        $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+</tbody>
+</table>
+';
+
+
+        /******************FIN CAMBIOS JOEL **************************************/
+
 
         /*  $html1 = '';
 
@@ -2755,6 +2970,114 @@ $html1 = '
           $mo_pagado_ejecutor = $data3->mo_pagado;
         }
 
+        $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+        $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_transformacion')
+          ->orderBy('tx_transformacion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+        foreach ($sqlLineaT as $campot) {
+          $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+        }
+
+        $html1 .= ' </table></td>';
+
+
+        $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_eje_alineacion')
+          ->orderBy('tx_eje_alineacion', 'ASC')
+          ->get();
+
+        $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+        foreach ($sqlLineaE as $campoE) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_linea_impulso')
+          ->orderBy('tx_linea_impulso', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+        foreach ($sqlLineaI as $campoI) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_foco_accion')
+          ->orderBy('tx_foco_accion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+        foreach ($sqlLineaF as $campoF) {
+          $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+        }
+        $html1 .= '</td></tr>';
+
+        $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+</tbody>
+</table>
+';
+
+
+        /******************FIN CAMBIOS JOEL **************************************/
+
+
        /* $html1 = '
 <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
 <tbody>
@@ -3029,6 +3352,114 @@ $html1 = '
           ->get();
 
         if ($actividad->count() > 0) {
+
+        $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+        $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_transformacion')
+          ->orderBy('tx_transformacion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+        foreach ($sqlLineaT as $campot) {
+          $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+        }
+
+        $html1 .= ' </table></td>';
+
+
+        $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_eje_alineacion')
+          ->orderBy('tx_eje_alineacion', 'ASC')
+          ->get();
+
+        $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+        foreach ($sqlLineaE as $campoE) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_linea_impulso')
+          ->orderBy('tx_linea_impulso', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+        foreach ($sqlLineaI as $campoI) {
+          $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+        }
+        $html1 .= ' </table></td></tr>';
+
+        $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+          ->where('id_tab_ac', '=', $data->id)
+          ->groupBy('tx_foco_accion')
+          ->orderBy('tx_foco_accion', 'ASC')
+          ->get();
+
+        $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+        foreach ($sqlLineaF as $campoF) {
+          $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+        }
+        $html1 .= '</td></tr>';
+
+        $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+</tbody>
+</table>
+';
+
+
+        /******************FIN CAMBIOS JOEL **************************************/
+
 
         /*  $html1 = '';
 
