@@ -1391,7 +1391,8 @@ EOT;
 
 			$tabla = 'ac_seguimiento.tab_ac_linea_transformacion';
 
-				$params['id_accion_centralizada'] = $pk['id'];
+				$params['id_tab_ac'] = $pk['id'];
+                                $params['id_tab_origen'] = 2;
 				$resultado = $comunes->InsertUpdate(
 					$tabla,
 					$params,
