@@ -251,7 +251,7 @@ class formadosController extends Controller
     {
         $data = tab_ac_ae::select(
             'id',
-            'id_tab_ac',
+            'id_tab_ac', 
             'id_tab_ac_ae_predefinida',
             'id_tab_ejecutores',
             'bien_servicio',
@@ -922,16 +922,25 @@ class formadosController extends Controller
     {
         DB::beginTransaction();
         try {
-            
-            
+                $cant_foco = tab_meta_fisica::where('id_tab_ac_ae', '=', Input::get("id"))
+                ->whereNull('tx_foco_accion')
+                ->count();    
+
+                if($cant_foco > 0){
+                    $response['success']  = 'true';
+                    $response['msg']  = 'Tiene ('.$cant_foco.') Actividades con Foco de Acción pendientes por cargar, verifique!';
+                    return Response::json($response, 200);                   
+                }
+
+
                 $cant = tab_meta_fisica::where('id_tab_ac_ae', '=', Input::get("id"))
                 ->where('id_tab_estatus','=', 1)
                 ->count();
                 
                 if($cant>0){
-             $response['success']  = 'true';
-            $response['msg']  = 'Tiene Actividades Pendientes por cargar, verifique!';
-            return Response::json($response, 200);                   
+                    $response['success']  = 'true';
+                    $response['msg']  = 'Tiene Actividades Pendientes por cargar, verifique!';
+                    return Response::json($response, 200);                   
                 }else{
                     
                  $cant1 = tab_meta_fisica::where('id_tab_ac_ae', '=', Input::get("id"))
