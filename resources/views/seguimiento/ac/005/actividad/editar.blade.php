@@ -160,6 +160,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'TIPO DE INDICADOR', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_tipo_indicador'},
     {header: 'SUB TIPO DE INDICADOR', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_sub_tipo_indicador'},
     {header: 'CANTIDAD', width:50,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_cantidad'},
+    {header: 'UNIDAD DE MEDIDA', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_unidad_medida'},
     {header: 'MUNICIPIO', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_municipio'},
     {header: 'PARROQUIA', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_parroquia'},
     {header: 'COMUNA', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_comuna'},
@@ -184,7 +185,7 @@ this.winformPanel_ = new Ext.Window({
     title:'Actividades: INDICADORES DE GESTIÓN',
     modal:true,
     constrain:true,
-    width:914,
+    width:1000,
     frame:true,
     closabled:true,
     autoHeight:true,
@@ -219,6 +220,7 @@ getLista: function(){
     {name: 'de_municipio'},
     {name: 'de_parroquia'},
     {name: 'de_comuna'},
+    {name: 'de_unidad_medida'},
     {name: 'nu_cantidad'}
            ]
     });

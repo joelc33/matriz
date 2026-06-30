@@ -1379,7 +1379,7 @@
                 root: 'data',
                 fields: [
                     'id', 'tx_transformacion', 'tx_eje_alineacion',
-                    'tx_linea_impulso','tx_foco_accion'
+                    'tx_linea_impulso','tx_foco_accion','id_tab_origen'
                 ]
             });
             
@@ -1562,7 +1562,12 @@
 
                 var verificarLineaT = function(sm) {
                     if (sm.hasSelection()) {
+                        var rec = sm.getSelected();
+                        if (rec.get('id_tab_origen') > 1) {
                         self.eliminarLinea.enable();
+                    }else{
+                    self.eliminarLinea.disable();    
+                    }
                     } else {
                         self.eliminarLinea.disable();
                     }

@@ -659,7 +659,7 @@ class documentoController extends Controller
     public function subTipoIndicador()
     {
         $response['success']  = 'true';
-        $response['data']  = tab_sub_tipo_indicador::select('id', 'de_sub_tipo_indicador')
+        $response['data']  = tab_sub_tipo_indicador::select('id', 'de_sub_tipo_indicador','in_territorial')
         ->where('id_tab_tipo_indicador', '=', Input::get('id_tab_tipo_indicador'))
         ->orderby('id', 'ASC')->get()->toArray();
         return Response::json($response, 200);

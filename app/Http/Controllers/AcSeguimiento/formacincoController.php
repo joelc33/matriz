@@ -509,6 +509,7 @@ class formacincoController extends Controller
                 $tab_indicador->id_tab_municipio_detalle = Input::get("municipio")?Input::get("municipio"):null;
                 $tab_indicador->id_tab_parroquia_detalle = Input::get("parroquia")?Input::get("parroquia"):null;
                 $tab_indicador->id_tab_comuna = Input::get("comuna")?Input::get("comuna"):null;
+                $tab_indicador->id_tab_unidad_medida = Input::get("unidad_medida");
                 $tab_indicador->nu_cantidad = Input::get("cantidad");
                 $tab_indicador->save();
 
@@ -674,6 +675,7 @@ class formacincoController extends Controller
             ->leftjoin('mantenimiento.tab_municipio_detalle as t03', 'ac_seguimiento.tab_indicadores.id_tab_municipio_detalle', '=', 't03.id')
             ->leftjoin('mantenimiento.tab_parroquia_detalle as t04', 'ac_seguimiento.tab_indicadores.id_tab_parroquia_detalle', '=', 't04.id')
             ->leftjoin('mantenimiento.tab_comuna as t05', 'ac_seguimiento.tab_indicadores.id_tab_comuna', '=', 't05.id')
+            ->leftjoin('mantenimiento.tab_unidad_medida as t06', 'ac_seguimiento.tab_indicadores.id_tab_unidad_medida', '=', 't06.id')
             ->select(
                 'ac_seguimiento.tab_indicadores.id',
                 't01.de_tipo_indicador',
@@ -681,6 +683,7 @@ class formacincoController extends Controller
                 't03.de_municipio',
                 't04.de_parroquia',
                 't05.de_comuna',
+                't06.de_unidad_medida',
                 'ac_seguimiento.tab_indicadores.nu_cantidad'
             )
             ->where('ac_seguimiento.tab_indicadores.id_tab_meta_fisica', '=', Input::get('id_tab_meta_fisica'));

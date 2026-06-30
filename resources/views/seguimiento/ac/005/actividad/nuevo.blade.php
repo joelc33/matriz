@@ -15,6 +15,8 @@ this.storeCO_MUNICIPIO = this.getStoreCO_MUNICIPIO();
 this.storeCO_PARROQUIA= this.getStoreCO_PARROQUIA();
 
 this.storeCO_COMUNA= this.getStoreCO_COMUNA();
+
+this.storeCO_UNIDADES_MEDIDA = this.getStoreCO_UNIDADES_MEDIDA();
 //<token>
 this._token = new Ext.form.Hidden({
 	name:'_token',
@@ -69,19 +71,6 @@ paqueteComunJS.funcion.seleccionarComboByCo({
 this.id_tab_tipo_indicador.on('beforeselect',function(cmb,record,index){
 
         	this.id_tab_sub_tipo_indicador.clearValue();
-                this.id_tab_municipio_detalle.clearValue();
-                this.id_tab_parroquia_detalle.clearValue();
-                this.id_tab_comuna.clearValue();
-                forma005Nuevo.main.in_territorial.setValue(record.data.in_territorial);
-                if(record.data.in_territorial==true){
-                forma005Nuevo.main.id_tab_municipio_detalle.show();
-                forma005Nuevo.main.id_tab_parroquia_detalle.show();
-                forma005Nuevo.main.id_tab_comuna.show();
-                }else{
-                forma005Nuevo.main.id_tab_municipio_detalle.hide();
-                forma005Nuevo.main.id_tab_parroquia_detalle.hide();
-                forma005Nuevo.main.id_tab_comuna.hide();
-                }
 },this);
 
 
@@ -102,6 +91,24 @@ this.id_tab_sub_tipo_indicador= new Ext.form.ComboBox({
 	resizable:true,     
 	allowBlank:false
 });
+
+
+this.id_tab_sub_tipo_indicador.on('beforeselect',function(cmb,record,index){
+
+                this.id_tab_municipio_detalle.clearValue();
+                this.id_tab_parroquia_detalle.clearValue();
+                this.id_tab_comuna.clearValue();
+                forma005Nuevo.main.in_territorial.setValue(record.data.in_territorial);
+                if(record.data.in_territorial==true){
+                forma005Nuevo.main.id_tab_municipio_detalle.show();
+                forma005Nuevo.main.id_tab_parroquia_detalle.show();
+                forma005Nuevo.main.id_tab_comuna.show();
+                }else{
+                forma005Nuevo.main.id_tab_municipio_detalle.hide();
+                forma005Nuevo.main.id_tab_parroquia_detalle.hide();
+                forma005Nuevo.main.id_tab_comuna.hide();
+                }
+},this);
 
 
 this.cantidad = new Ext.form.NumberField({
@@ -190,6 +197,25 @@ this.id_tab_comuna = new Ext.form.ComboBox({
 	resizable:true
 });
 this.id_tab_comuna.hide();
+
+this.id_tab_unidad_medida = new Ext.form.ComboBox({
+	fieldLabel:'UNIDAD DE MEDIDA',
+	store: this.storeCO_UNIDADES_MEDIDA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_unidad_medida',
+	hiddenName:'unidad_medida',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione Unidad',
+	selectOnFocus: true,
+	mode: 'local',
+	width:400,
+	resizable:true,
+	allowBlank:false
+});
+this.storeCO_UNIDADES_MEDIDA.load();
 
 this.guardar = new Ext.Button({
     text:'Guardar',
@@ -290,6 +316,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.id_tab_municipio_detalle,
                 this.id_tab_parroquia_detalle,
                 this.id_tab_comuna,
+                this.id_tab_unidad_medida,
                 this.cantidad
 	]
 });
@@ -321,7 +348,7 @@ getStoreCO_TIPO_INDICADOR:function(){
         url:'{{ URL::to('auxiliar/tipoindicador') }}',
         root:'data',
         fields:[
-            {name: 'id'},{name: 'de_tipo_indicador'},{name: 'in_territorial'}
+            {name: 'id'},{name: 'de_tipo_indicador'}
             ],
             listeners : {
                 exception : function(proxy, response, operation) {
@@ -336,7 +363,7 @@ getStoreCO_SUB_TIPO_INDICADOR:function(){
         url:'{{ URL::to('auxiliar/subtipoindicador') }}',
         root:'data',
         fields:[
-            {name: 'id'},{name: 'de_sub_tipo_indicador'}
+            {name: 'id'},{name: 'de_sub_tipo_indicador'},{name: 'in_territorial'}
             ],
             listeners : {
                 exception : function(proxy, response, operation) {
@@ -388,6 +415,16 @@ getStoreCO_COMUNA:function(){
                     Ext.Msg.alert("Aviso", 'Error al obtener respuesta del servidor intente de nuevo!');
                 }
             }
+    });
+    return this.store;
+},
+getStoreCO_UNIDADES_MEDIDA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'{{ URL::to('auxiliar/unidadmedida') }}',
+        root:'data',
+        fields:[
+            {name: 'id'},{name: 'de_unidad_medida'}
+            ]
     });
     return this.store;
 }
