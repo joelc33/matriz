@@ -2279,7 +2279,8 @@ class acseguimientoController extends Controller
     </table>';
       $pdf->writeHTML(Helper::htmlComprimir($htmlObjetivo), true, false, false, false, '');
 
-      /*   $data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+         //echo "llego"; exit();
+         /*$data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
             ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
             ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')        
@@ -2378,7 +2379,7 @@ class acseguimientoController extends Controller
         ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
         ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')->orderby('t21.id_tab_ac_ae_predefinida', 'ASC')
         ->get(); 
-            
+   /*         
           foreach($data2 as $data) {
               
            $pdf->AddPage();
@@ -2451,7 +2452,7 @@ $html1 = '
 </table>
 ';*/
 
-      $data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
+     $data2 = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_ae as t21', 't21.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
         ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')
@@ -2512,13 +2513,15 @@ $html1 = '
           'id_tab_tipo_periodo',
           'ac_seguimiento.tab_ac.de_observacion_002',
           'ac_seguimiento.tab_ac.de_sector',
-          'ac_seguimiento.tab_ac.id'
+          'ac_seguimiento.tab_ac.id',
+          't21.id_tab_ac_ae_predefinida'   ,
+          'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal' 
         )
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
         ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
         ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->orderby('ac_seguimiento.tab_ac.id_tab_ac_predefinida', 'ASC')->orderby('t21.id_tab_ac_ae_predefinida', 'ASC')
-        ->get();
+        ->get(); /**/
 
       foreach ($data2 as $data) {
 
@@ -2722,6 +2725,8 @@ $html1 = '
             ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
             ->first();
 
+           // echo  $data->id_tab_ejercicio_fiscal; exit();
+
           $data_poblacion = tab_ac::select(
             DB::raw("coalesce(sum(nu_po_beneficiada),0) as nu_po_beneficiada")
           )
@@ -2759,20 +2764,22 @@ $html1 = '
               $obtenido = 0;
           }
 
+        //  echo $data20->nu_obtenido; exit();
+
           $contar = $contar + 1;
           $html23 .= '
-		<tr style="font-size:6px" nobr="true">
-		<td style="width: 18%;"  nobr="true">' . $item->codigo . ' - ' . $item->nb_meta . '</td>
-		<td style="width: 7%;"  align="center">' . $item->tx_unidades_medida . '</td>
-		<td style="width: 8%;"  align="center">' . $item->tx_prog_anual . '</td>
+                <tr style="font-size:6px" nobr="true">
+                <td style="width: 18%;"  nobr="true">' . $item->codigo . ' - ' . $item->nb_meta . '</td>
+                <td style="width: 7%;"  align="center">' . $item->tx_unidades_medida . '</td>
+                <td style="width: 8%;"  align="center">' . $item->tx_prog_anual . '</td>
                 <td style="width: 7%;" align="center">' . $data20->nu_meta_modificada . '</td>
                 <td style="width: 8%;" align="center">' . ($item->tx_prog_anual + $data20->nu_meta_modificada) . '</td>                    
-		<td style="width: 8%;"  align="center">' . trim(date_format(date_create($item->fecha_inicio), 'd/m/Y')) . '</td>
-		<td style="width: 8%;" align="center">' . trim(date_format(date_create($item->fecha_fin), 'd/m/Y')) . '</td>
+                <td style="width: 8%;"  align="center">' . trim(date_format(date_create($item->fecha_inicio), 'd/m/Y')) . '</td>
+                <td style="width: 8%;" align="center">' . trim(date_format(date_create($item->fecha_fin), 'd/m/Y')) . '</td>
                 <td style="width: 8%;" align="center">' . $this->formatoDinero($data20->nu_obtenido) . '</td>
                 <td style="width: 9%;" align="center">' . $this->formatoPorcentaje($obtenido) . '</td>
                 <td style="width: 10%;"  align="center">' . $item->de_municipio . ' / ' . $item->de_parroquia . '</td>
-		<td style="width: 9%;" align="center">' . $item->nb_responsable . '</td>';
+		            <td style="width: 9%;" align="center">' . $item->nb_responsable . '</td>';
           $html23 .= '</tr>';
         }
         $html23 .= '      
