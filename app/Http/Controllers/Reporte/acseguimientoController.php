@@ -303,7 +303,9 @@ class acseguimientoController extends Controller
     $pdf->Ln(-3);
 
 
-    foreach ($data as $item) {
+     $item = $data;
+    //foreach ($data as $item) 
+      {
 
 
       if ($item->id_tab_tipo_periodo == 19) {
