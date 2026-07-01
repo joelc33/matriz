@@ -132,6 +132,7 @@ class acseguimiento001Controller extends Controller
             'de_observacion_001'
         )
         ->where('ac_seguimiento.tab_ac.id', '=', $id)
+        ->where('t45.nu_nivel', '=', 0)
         ->first();
             
                 if($data->id_tab_tipo_periodo==19){
