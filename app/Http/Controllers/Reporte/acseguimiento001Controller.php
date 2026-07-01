@@ -101,7 +101,7 @@ class acseguimiento001Controller extends Controller
 
             $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')              
             ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-            ->leftjoin('t45_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
+            ->leftjoin('mantenimiento.tab_planes_zulia as t45', 't45.co_area_estrategica', '=', 't49.co_area_estrategica')
             ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')        
             ->select(
             'nu_codigo',
