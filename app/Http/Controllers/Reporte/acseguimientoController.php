@@ -253,7 +253,7 @@ class acseguimientoController extends Controller
         ->groupBy('tab_ac.inst_vision')
         ->groupBy('tab_ac.inst_objetivos')
         ->groupBy('id_tab_tipo_periodo')
-        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();
+        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->first();
     } else {
 
       $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
@@ -282,7 +282,7 @@ class acseguimientoController extends Controller
         ->groupBy('tab_ac.inst_vision')
         ->groupBy('tab_ac.inst_objetivos')
         ->groupBy('id_tab_tipo_periodo')
-        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->get();
+        ->orderby('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')->first();
     }
 
 
