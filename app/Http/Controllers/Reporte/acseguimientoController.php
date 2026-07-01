@@ -444,7 +444,8 @@ class acseguimientoController extends Controller
           'id_tab_tipo_periodo',
           'ac_seguimiento.tab_ac.de_observacion_002',
           'ac_seguimiento.tab_ac.de_sector',
-          'ac_seguimiento.tab_ac.id'
+          'ac_seguimiento.tab_ac.id',
+          'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal'
         )
         ->where('ac_seguimiento.tab_ac.id_ejecutor', '=', $item->id_ejecutor)
         ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
@@ -813,6 +814,8 @@ class acseguimientoController extends Controller
           ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
           ->orderBy('codigo', 'ASC')
           ->get();
+
+     
 
         $actividad_ejecutor = tab_meta_fisica::select(
           'codigo',
