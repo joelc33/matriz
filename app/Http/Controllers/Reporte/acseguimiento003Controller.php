@@ -194,7 +194,8 @@ class acseguimiento003Controller extends Controller
                 'ac_seguimiento.tab_ac.tx_pr_obtenido',
                 'id_tab_tipo_periodo',
                 'ac_seguimiento.tab_ac.de_observacion_003',
-                'ac_seguimiento.tab_ac.de_sector'
+                'ac_seguimiento.tab_ac.de_sector',
+                'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
             )
             ->where('t21.id_tab_ac', '=', $id)
             ->get();
@@ -397,8 +398,7 @@ class acseguimiento003Controller extends Controller
                 ->where('t05.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->orderBy('codigo', 'ASC')
                 ->get();
-
-
+           
             $mo_presupuesto_anual_ejecutor = 0;
             $mo_modificado_anual_ejecutor = 0;
             $mo_modificado_anual_ejecutor_acu = 0;
@@ -819,6 +819,7 @@ class acseguimiento003Controller extends Controller
                 'ac_seguimiento.tab_ac.tx_pr_obtenido',
                 'id_tab_tipo_periodo',
                 'ac_seguimiento.tab_ac.de_observacion_002',
+                'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
                 'ac_seguimiento.tab_ac.de_sector'
             )
             ->where('t21.id_tab_ac', '=', $id)
