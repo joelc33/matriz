@@ -262,7 +262,7 @@ class acseguimiento005Controller extends Controller
             'ac_seguimiento.tab_ac.de_observacion_002',
             'ac_seguimiento.tab_ac.de_sector'                    
         )
-        ->where('t21.id_tab_ac', '=', $id)
+        ->where('ac_seguimiento.tab_ac.id', '=', $id)
         ->first();  
                     
                 if($data->id_tab_tipo_periodo==19){
