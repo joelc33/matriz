@@ -303,7 +303,7 @@ class acseguimiento005Controller extends Controller
                 'ac_seguimiento.tab_forma_005.id_tab_estatus',
                 'ac_seguimiento.tab_forma_005.in_005'
             )
-            ->where('t01.id', '=', $id)
+            ->where('id_tab_ac', '=', $id)
             ->orderby('ac_seguimiento.tab_forma_005.id', 'ASC')
             ->get();
 
@@ -334,8 +334,6 @@ class acseguimiento005Controller extends Controller
             foreach ($actividad as $item) {
 
                 $pdf->AddPage();
-
-echo "llego2"; exit();
                 /******************CAMBIOS JOEL ******************************************/
 
                 $html1 = '
