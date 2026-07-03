@@ -786,6 +786,26 @@ class acseguimiento005Controller extends Controller
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
 </tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD):</b> '.$item->tp_indicador.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 70%;  height: 30px;" align="justify" rowspan="2"><b>NOMBRE DEL INDICADOR:</b> '.$item->nb_indicador_gestion.'</td>
+<td style="width: 10%;" align="center"><b>VALOR OBJETIVO:</b></td>
+<td style="width: 10%;" align="center"><b>VALOR OBTENIDO:</b></td>
+<td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
+</tr>
+<tr style="font-size:9px height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>
+</tr>
+<tr style="font-size:9px  height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>FORMULA:</b> '.$item->de_formula.'</td>
+</tr>
 </tbody>
 </table>
 ';
