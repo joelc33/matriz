@@ -368,7 +368,7 @@ $html1.='
 <td colspan="2"><b>LINEA ESTRATEGICA:</b> '.$data->tx_linea_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+<td colspan="2"><b>LINEA DE ACCIÓN:</b> '.$data->tx_nodos.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
@@ -1056,7 +1056,7 @@ $html1.='
 <td colspan="2"><b>LINEA ESTRATEGICA:</b> '.$data->tx_linea_estrategica.'</td>
 </tr>
 <tr style="font-size:9px">
-<td colspan="2"><b>PDEZ/LÍNEA MATRIZ:</b> '.$data->tx_nodos.'</td>
+<td colspan="2"><b>LINEA DE ACCIÓN:</b> '.$data->tx_nodos.'</td>
 </tr>
 <tr style="font-size:9px">
 <td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> '.$data->tx_objetivo_institucional.'</td>
