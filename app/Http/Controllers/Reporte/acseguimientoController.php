@@ -230,7 +230,7 @@ class acseguimientoController extends Controller
       $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -259,7 +259,7 @@ class acseguimientoController extends Controller
       $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -2131,7 +2131,7 @@ class acseguimientoController extends Controller
       $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -2160,7 +2160,7 @@ class acseguimientoController extends Controller
       $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -4414,11 +4414,11 @@ $html1 = '
 
     $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
       ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-      ->leftjoin('t45_planes_zulia as t45', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
           ->on('t45.nu_nivel', '=', DB::raw('0'));
       })
-      ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
           ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
           ->on('t45a.nu_nivel', '=', DB::raw('1'));
@@ -4470,7 +4470,7 @@ $html1 = '
       )
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -4567,22 +4567,22 @@ $html1 = '
           ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')
           ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
           ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
-          ->leftjoin('t45_planes_zulia as t45', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
               ->on('t45.nu_nivel', '=', DB::raw('0'));
           })
-          ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
               ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
               ->on('t45a.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
               ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
               ->on('t45b.edo_reg', '=', DB::raw('true'))
               ->on('t45b.nu_nivel', '=', DB::raw('3'));
           })
-          ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45c', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
               ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')
               ->on('t45c.edo_reg', '=', DB::raw('true'))
@@ -5845,11 +5845,11 @@ $html1 = '
 
     $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
       ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-      ->leftjoin('t45_planes_zulia as t45', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
           ->on('t45.nu_nivel', '=', DB::raw('0'));
       })
-      ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
           ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
           ->on('t45a.nu_nivel', '=', DB::raw('1'));
@@ -5901,7 +5901,7 @@ $html1 = '
       )
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -5958,22 +5958,22 @@ $html1 = '
           ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')
           ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
           ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
-          ->leftjoin('t45_planes_zulia as t45', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
               ->on('t45.nu_nivel', '=', DB::raw('0'));
           })
-          ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
               ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
               ->on('t45a.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
               ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
               ->on('t45b.edo_reg', '=', DB::raw('true'))
               ->on('t45b.nu_nivel', '=', DB::raw('3'));
           })
-          ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45c', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
               ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')
               ->on('t45c.edo_reg', '=', DB::raw('true'))
@@ -6497,11 +6497,11 @@ $html1 = '
 
     $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
       ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-      ->leftjoin('t45_planes_zulia as t45', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
           ->on('t45.nu_nivel', '=', DB::raw('0'));
       })
-      ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
           ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
           ->on('t45a.nu_nivel', '=', DB::raw('1'));
@@ -6553,7 +6553,7 @@ $html1 = '
       )
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -6610,22 +6610,22 @@ $html1 = '
           ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')
           ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
           ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
-          ->leftjoin('t45_planes_zulia as t45', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
               ->on('t45.nu_nivel', '=', DB::raw('0'));
           })
-          ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
               ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
               ->on('t45a.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
               ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
               ->on('t45b.edo_reg', '=', DB::raw('true'))
               ->on('t45b.nu_nivel', '=', DB::raw('3'));
           })
-          ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45c', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
               ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')
               ->on('t45c.edo_reg', '=', DB::raw('true'))
@@ -7039,11 +7039,11 @@ $html1 = '
 
     $data = tab_ac::join('mantenimiento.tab_ejecutores as t04', 't04.id_ejecutor', '=', 'ac_seguimiento.tab_ac.id_ejecutor')
       ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-      ->leftjoin('t45_planes_zulia as t45', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
           ->on('t45.nu_nivel', '=', DB::raw('0'));
       })
-      ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+      ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
         $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
           ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
           ->on('t45a.nu_nivel', '=', DB::raw('1'));
@@ -7095,7 +7095,7 @@ $html1 = '
       )
         ->join('mantenimiento.tab_lapso as t02', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't02.id')
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
@@ -7151,22 +7151,22 @@ $html1 = '
           ->leftjoin('t52_ac_predefinidas as t52', 't52.id', '=', 'ac_seguimiento.tab_ac.id_tab_ac_predefinida')
           ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
           ->leftjoin('t53_ac_ae_predefinidas as t53', 't53.id', '=', 't21.id_tab_ac_ae_predefinida')
-          ->leftjoin('t45_planes_zulia as t45', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
               ->on('t45.nu_nivel', '=', DB::raw('0'));
           })
-          ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
             $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
               ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
               ->on('t45a.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('t45_planes_zulia as t45b', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45b', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
               ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
               ->on('t45b.edo_reg', '=', DB::raw('true'))
               ->on('t45b.nu_nivel', '=', DB::raw('3'));
           })
-          ->leftjoin('t45_planes_zulia as t45c', function ($join) {
+          ->leftjoin('mantenimiento.tab_planes_zulia as t45c', function ($join) {
             $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
               ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')
               ->on('t45c.edo_reg', '=', DB::raw('true'))
@@ -7409,11 +7409,11 @@ $html1 = '
             ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
         })
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 't03.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
-        ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
             ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
             ->on('t45a.nu_nivel', '=', DB::raw('1'));
@@ -7643,11 +7643,11 @@ $html1 = '
             ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
         })
         ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 't03.id')
-        ->leftjoin('t45_planes_zulia as t45', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
             ->on('t45.nu_nivel', '=', DB::raw('0'));
         })
-        ->leftjoin('t45_planes_zulia as t45a', function ($join) {
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
           $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
             ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
             ->on('t45a.nu_nivel', '=', DB::raw('1'));
