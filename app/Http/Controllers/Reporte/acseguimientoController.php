@@ -1572,6 +1572,130 @@ class acseguimientoController extends Controller
 </tbody>
 </table>
 ';*/
+                $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+                $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_transformacion')
+                    ->orderBy('tx_transformacion', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+                foreach ($sqlLineaT as $campot) {
+                    $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+                }
+
+                $html1 .= ' </table></td>';
+
+
+                $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_eje_alineacion')
+                    ->orderBy('tx_eje_alineacion', 'ASC')
+                    ->get();
+
+                $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+                foreach ($sqlLineaE as $campoE) {
+                    $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+                }
+                $html1 .= ' </table></td></tr>';
+
+                $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_linea_impulso')
+                    ->orderBy('tx_linea_impulso', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+                foreach ($sqlLineaI as $campoI) {
+                    $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+                }
+                $html1 .= ' </table></td></tr>';
+
+                $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_foco_accion')
+                    ->orderBy('tx_foco_accion', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+                foreach ($sqlLineaF as $campoF) {
+                    $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+                }
+                $html1 .= '</td></tr>';
+
+                $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>LINEA DE ACCIÓN:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD):</b> '.$item->tp_indicador.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 70%;  height: 30px;" align="justify" rowspan="2"><b>NOMBRE DEL INDICADOR:</b> '.$item->nb_indicador_gestion.'</td>
+<td style="width: 10%;" align="center"><b>VALOR OBJETIVO:</b></td>
+<td style="width: 10%;" align="center"><b>VALOR OBTENIDO:</b></td>
+<td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
+</tr>
+<tr style="font-size:9px height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>
+</tr>
+<tr style="font-size:9px  height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>FORMULA:</b> '.$item->de_formula.'</td>
+</tr>
+</tbody>
+</table>
+';              
+              
               $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
             }
           }
@@ -3826,6 +3950,131 @@ $html1 = '
 </tbody>
 </table>
 ';*/
+                $html1 = '
+        <table border="0.1" style="width:100%" style="font-size:10px" cellpadding="3">
+        <tbody>
+        <tr style="font-size:9px">
+        <td style="width: 50%;"><b>' . $data->id_ejecutor . '</b> - ' . $data->tx_ejecutor_ac . '</td>
+        <td style="width: 15%;"><b>SECTOR:</b> ' . $data->de_sector . '</td>
+        <td style="width: 35%;"><b>AREA ESTRATEGICA:</b> ' . $data->tx_area_estrategica . '</td>
+        </tr>
+        <tr style="font-size:9px">
+        <td align="justify"><b>OBJETIVO HISTORICO:</b> ' . $data->tx_objetivo_historico . '</td>
+        <td colspan="2" align="justify"><b>OBJETIVO(s) NACIONAL(ES):</b> ' . $data->tx_objetivo_nacional . '</td>
+        </tr>';
+
+                $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_transformacion')
+                    ->orderBy('tx_transformacion', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+        <td rowspan="2"><b>TRANSFORMACIONES:</b><br> <table>';
+                foreach ($sqlLineaT as $campot) {
+                    $html1 .= '
+                <tr align="left" style="border: 0px">
+                        <td>' . $campot->tx_transformacion . '</td>
+                    </tr>
+            ';
+                }
+
+                $html1 .= ' </table></td>';
+
+
+                $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_eje_alineacion')
+                    ->orderBy('tx_eje_alineacion', 'ASC')
+                    ->get();
+
+                $html1 .= '<td colspan="2"><b>EJE DE ALINEACIÓN HISTORICA:</b><br> <table>';
+                foreach ($sqlLineaE as $campoE) {
+                    $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoE->tx_eje_alineacion . '</td>
+            </tr>
+       ';
+                }
+                $html1 .= ' </table></td></tr>';
+
+                $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_linea_impulso')
+                    ->orderBy('tx_linea_impulso', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+<td colspan="2"><b>LINEA DE IMPULSO ESTRATEGICO:</b><br> <table>';
+                foreach ($sqlLineaI as $campoI) {
+                    $html1 .= '
+           <tr align="left" style="border: 0px">
+                <td>' . $campoI->tx_linea_impulso . '</td>
+            </tr>
+       ';
+                }
+                $html1 .= ' </table></td></tr>';
+
+                $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')
+                    ->where('id_tab_ac', '=', $id)
+                    ->groupBy('tx_foco_accion')
+                    ->orderBy('tx_foco_accion', 'ASC')
+                    ->get();
+
+                $html1 .= '<tr style="font-size:7px">
+<td colspan="3"><b>FOCO DE ACCIÓN:</b><br>';
+                foreach ($sqlLineaF as $campoF) {
+                    $html1 .= ' ' . $campoF->tx_foco_accion . '.';
+                }
+                $html1 .= '</td></tr>';
+
+                $html1 .= '
+<tr style="font-size:9px">
+<td rowspan="2"><b>AMBITO:</b> ' . $data->tx_ambito_estado . '</td>
+<td colspan="2"><b>LINEA ESTRATEGICA:</b> ' . $data->tx_linea_estrategica . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="2"><b>LINEA DE ACCIÓN:</b> ' . $data->tx_nodos . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>OBJETIVO INSTITUCIONAL POA:</b> ' . $data->tx_objetivo_institucional . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3"><b>ACCION C.:</b> ' . $data->id_proy_ac . ' - ' . $data->nombre . '</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 80%;"><b>ACCION E.:</b> ' . $data->tx_codigo_ae . ' - ' . $data->tx_nombre_ae . '</td>
+<td style="width: 20%;"><b>COD. EJECUTOR:</b> ' . $data->id_ejecutor_ae . ' </td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+</tr>
+<tr style="font-size:9px">
+<td colspan="3" style="width: 100%;" align="justify"><b>INDICADORES DE GESTIÓN (EFICIENCIA, EFICACIA, EFECTIVIDAD):</b> '.$item->tp_indicador.'</td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 70%;  height: 30px;" align="justify" rowspan="2"><b>NOMBRE DEL INDICADOR:</b> '.$item->nb_indicador_gestion.'</td>
+<td style="width: 10%;" align="center"><b>VALOR OBJETIVO:</b></td>
+<td style="width: 10%;" align="center"><b>VALOR OBTENIDO:</b></td>
+<td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
+</tr>
+<tr style="font-size:9px">
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
+</tr>
+<tr style="font-size:9px height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>
+</tr>
+<tr style="font-size:9px  height: 100px;">
+<td colspan="4" style="height: 30px;" align="justify"><b>FORMULA:</b> '.$item->de_formula.'</td>
+</tr>
+</tbody>
+</table>
+';              
+              
+              
               $pdf->writeHTML(Helper::htmlComprimir($html1), true, false, false, false, '');
             }
           }
