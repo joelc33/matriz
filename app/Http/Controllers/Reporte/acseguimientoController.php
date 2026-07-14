@@ -444,7 +444,7 @@ class acseguimientoController extends Controller
           'ac_seguimiento.tab_ac.tx_pr_programado',
           'ac_seguimiento.tab_ac.tx_pr_obtenido',
           'id_tab_tipo_periodo',
-          'ac_seguimiento.tab_ac.de_observacion_002',
+          'ac_seguimiento.tab_ac.de_observacion_003',
           'ac_seguimiento.tab_ac.de_observacion_002',
           'ac_seguimiento.tab_ac.de_sector',
           'ac_seguimiento.tab_ac.id',
