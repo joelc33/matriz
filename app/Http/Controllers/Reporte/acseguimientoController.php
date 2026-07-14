@@ -8123,6 +8123,8 @@ $html1 = '
         'de_unidad_medida',
         'de_municipio',
         'de_parroquia',
+        't02.tx_foco_accion',
+        't07.tx_transformacion',
         DB::raw("coalesce(tx_prog_anual::numeric,0) as tx_prog_anual"),
         DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
         DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada"),
@@ -8133,6 +8135,7 @@ $html1 = '
         ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
         ->join('mantenimiento.tab_ejecutores as t05', 'ac_seguimiento.tab_ac.id_ejecutor', '=', 't05.id_ejecutor')
         ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')
+        ->leftjoin('ac_seguimiento.tab_ac_linea_transformacion as t07', 't07.tx_foco_accion', '=', 't02.tx_foco_accion')
         ->join('mantenimiento.tab_unidad_medida as t21', 't02.id_tab_unidad_medida', '=', 't21.id')
         ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 't02.id_tab_municipio_detalle', '=', 't64.id')
         ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 't02.id_tab_parroquia_detalle', '=', 't65.id')
@@ -8151,6 +8154,8 @@ $html1 = '
         ->groupBy('de_parroquia')
         ->groupBy('tx_prog_anual')
         ->groupBy('ac_seguimiento.tab_ac.nu_codigo')
+        ->groupBy('t02.tx_foco_accion')
+        ->groupBy('t07.tx_transformacion')              
         ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')
         ->orderBy('t02.codigo', 'ASC')
         ->get();
@@ -8184,8 +8189,10 @@ $html1 = '
       $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -8258,10 +8265,12 @@ $html1 = '
         ->setCellValue('J1', 'Obtenido al Corte')
         ->setCellValue('K1', '% EJec. Obtenida al Corte vs Ejec. Prog. Anual')
         ->setCellValue('L1', 'Localizacion')
-        ->setCellValue('M1', 'Tipo');
+        ->setCellValue('M1', 'Tipo')
+        ->setCellValue('N1', 'Foco de Accion')
+        ->setCellValue('O1', 'Linea de Transformacion');
 
       // Make bold cells
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
+      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
 
 
       foreach ($data2 as $key => $value) {
@@ -8296,6 +8305,8 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $obtenido . "%");
         $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->de_municipio . ' / ' . $value->de_parroquia);
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->tx_foco_accion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->tx_transformacion);
 
         $rowCount++;
       }
