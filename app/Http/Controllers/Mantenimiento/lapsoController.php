@@ -344,6 +344,7 @@ class lapsoController extends Controller
                     $tabla_meta_fisica->observacion = $arreglo_meta_fisica->observacion;
                     $tabla_meta_fisica->in_cargado = 'FALSE';
                     $tabla_meta_fisica->in_activo = 'TRUE';
+                    $tabla_meta_fisica->tx_foco_accion = $arreglo_meta_fisica->tx_foco_accion;
                     $tabla_meta_fisica->save(); 
                     
                     
