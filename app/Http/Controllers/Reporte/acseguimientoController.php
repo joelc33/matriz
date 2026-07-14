@@ -7882,13 +7882,16 @@ $html1 = '
         DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0)) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0))-  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),
-        'ac_seguimiento.tab_meta_financiera.co_partida'
+        'ac_seguimiento.tab_meta_financiera.co_partida',
+        't01.tx_foco_accion',
+        't07.tx_transformacion'
       )
         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
         ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
         ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
         ->join('mantenimiento.tab_ejecutores as t05', 't03.id_ejecutor', '=', 't05.id_ejecutor')
         ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')
+        ->leftjoin('ac_seguimiento.tab_ac_linea_transformacion as t07', 't07.tx_foco_accion', '=', 't01.tx_foco_accion')
         ->join('mantenimiento.tab_partidas as t04', function ($j) {
           $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
             ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
@@ -7915,6 +7918,8 @@ $html1 = '
         ->groupBy('t06.de_tipo_ejecutor')
         ->groupBy('t01.nb_meta')
         ->groupBy('t03.nu_codigo')
+        ->groupBy('t01.tx_foco_accion')
+        ->groupBy('t07.tx_transformacion')
         ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
         ->get();
 
@@ -7947,8 +7952,10 @@ $html1 = '
       $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -8021,10 +8028,12 @@ $html1 = '
         ->setCellValue('J1', 'Comprometido')
         ->setCellValue('K1', 'Causado')
         ->setCellValue('L1', 'Pagado')
-        ->setCellValue('M1', 'Tipo');
+        ->setCellValue('M1', 'Tipo')
+        ->setCellValue('N1', 'Foco de accion')
+        ->setCellValue('O1', 'Linea de Transformacion');
 
       // Make bold cells
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
+      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
 
 
       foreach ($tab_meta_financiera as $key => $value) {
@@ -8040,7 +8049,7 @@ $html1 = '
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray($styleThinBlackBorderOutline);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
         $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
@@ -8055,6 +8064,8 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->mo_causado);
         $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->mo_pagado);
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->tx_foco_accion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->tx_transformacion);
 
         $rowCount++;
       }
