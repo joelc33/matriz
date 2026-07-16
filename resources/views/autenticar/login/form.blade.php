@@ -151,8 +151,7 @@ Ext.onReady(function(){
 				items:[
 					this._token,
 					this.usuario,
-					this.password,
-					this.compositefieldCódigo
+					this.password
 				],
 				keys: [
 					{

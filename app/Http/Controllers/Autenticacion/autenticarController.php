@@ -65,9 +65,9 @@ class autenticarController extends Controller
      */
     public function validar(loginRequest $request)
     {
-        $regla =  array('captcha' => ['required', 'captcha']);
-        $validator = Validator::make(['captcha' => $request->codigoseg], $regla);
-        if ($validator->passes()) {
+     //   $regla =  array('captcha' => ['required', 'captcha']);
+       // $validator = Validator::make(['captcha' => $request->codigoseg], $regla);
+        if (1==1) {
             if ($this->auth->attempt(['da_login' => $request->usuario,
               'password' => $request->contraseña,
               'in_estatus' => 1])) {
