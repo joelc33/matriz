@@ -706,7 +706,8 @@ public function ubicacionTodo()
         t24a.id_tab_ambito_ejecutor as ambito,
         t02.de_estatus,
         tae24a.de_ambito_ejecutor,
-        t46.id
+        t46.id,
+        t45.tx_descripcion as tx_area_estrategica
       from mantenimiento.tab_ejercicio_fiscal as t25
         join mapa_acs as ma on ma.ef = t25.id
         join t46_acciones_centralizadas as t46
@@ -735,6 +736,8 @@ public function ubicacionTodo()
         join mantenimiento.tab_partidas as tabp on tabp.co_partida = t54.co_partida and tabp.id_tab_ejercicio_fiscal = t25.id
         join mantenimiento.tab_tipo_ejecutor as t009 on t24a.id_tab_tipo_ejecutor = t009.id
         left join mantenimiento.tab_ambito_ejecutor as tae24a on t24a.id_tab_ambito_ejecutor = tae24a.id
+        left join t49_ac_planes as t49 on t46.id=t49.id_accion_centralizada
+        left join mantenimiento.tab_planes_zulia as t45 on (t49.co_area_estrategica = t45.co_area_estrategica and t45.nu_nivel = 0)
         join mantenimiento.tab_estatus as t02 on t02.id = t46.id_estatus
       where 	ma.edo_reg
         and t46.edo_reg
@@ -772,7 +775,7 @@ public function ubicacionTodo()
             $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(20);
             $objPHPExcel->getActiveSheet()->setTitle('ac_'.Session::get('ejercicio').'_exportacion_icp_ac');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:U1')->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('A1:V1')->applyFromArray(
                 array(
                         'font'    => array(
                             'bold'      => true
@@ -855,7 +858,8 @@ public function ubicacionTodo()
         ->setCellValue('R1', 'Estatus')
         ->setCellValue('S1', 'ID AC')
         ->setCellValue('T1', 'LINEAS DE TRANSFORMACION')
-        ->setCellValue('U1', 'FOCOS DE ACCION');
+        ->setCellValue('U1', 'FOCOS DE ACCION')
+        ->setCellValue('V1', 'Area Estrategica');
             }else{
             $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'Ejercicio')
@@ -953,6 +957,8 @@ public function ubicacionTodo()
                 $objPHPExcel->getActiveSheet()->SetCellValue('T'.$rowCount, $linea, PHPExcel_Cell_DataType::TYPE_STRING);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("U")->setAutoSize(true);
                 $objPHPExcel->getActiveSheet()->SetCellValue('U'.$rowCount, $foco, PHPExcel_Cell_DataType::TYPE_STRING); 
+                $objPHPExcel->getActiveSheet()->getColumnDimension("V")->setAutoSize(true);
+                $objPHPExcel->getActiveSheet()->SetCellValue('V'.$rowCount, $value->tx_area_estrategica, PHPExcel_Cell_DataType::TYPE_STRING);                 
             }    
                 // Increment the Excel row counter
                 $rowCount++;
