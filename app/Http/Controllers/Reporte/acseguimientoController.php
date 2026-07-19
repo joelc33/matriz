@@ -8090,7 +8090,7 @@ $html1 = '
   }
 
 
-  public function exportarAF($id_tab_lapso)
+public function exportarAF($id_tab_lapso)
   {
 
     DB::beginTransaction();
@@ -8125,6 +8125,9 @@ $html1 = '
         'de_parroquia',
         't02.tx_foco_accion',
         't07.tx_transformacion',
+        'id_tab_tipo_periodo', 
+        'id_tab_ac_ae_predefinida',
+        DB::raw("'AC' || ac_seguimiento.tab_ac.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
         DB::raw("coalesce(tx_prog_anual::numeric,0) as tx_prog_anual"),
         DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
         DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada"),
@@ -8155,10 +8158,15 @@ $html1 = '
         ->groupBy('tx_prog_anual')
         ->groupBy('ac_seguimiento.tab_ac.nu_codigo')
         ->groupBy('t02.tx_foco_accion')
-        ->groupBy('t07.tx_transformacion')              
+        ->groupBy('t07.tx_transformacion')  
+        ->groupBy('id_tab_tipo_periodo')
+        ->groupBy('id_tab_ac_predefinida')
+        ->groupBy('id_tab_ac_ae_predefinida')
         ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')
         ->orderBy('t02.codigo', 'ASC')
         ->get();
+      
+ 
 
       $acumulado = 0;
 
@@ -8274,12 +8282,31 @@ $html1 = '
 
 
       foreach ($data2 as $key => $value) {
+          
+          
+                      $data3 = tab_ac::select(
+                 DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
+                        DB::raw("coalesce(sum(nu_meta_modificada),0) as nu_meta_modificada"),
+                        DB::raw("coalesce(sum(nu_po_beneficiada),0) as nu_po_beneficiada")
+                )
+                ->join('ac_seguimiento.tab_ac_ae as t01', 'ac_seguimiento.tab_ac.id', '=', 't01.id_tab_ac')
+                ->join('ac_seguimiento.tab_meta_fisica as t02', 't01.id', '=', 't02.id_tab_ac_ae')
+                ->join('mantenimiento.tab_lapso as t03', 'ac_seguimiento.tab_ac.id_tab_lapso', '=', 't03.id')
+                ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $value->id_proy_ac)
+                ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+                ->where('t01.id_tab_ac_ae_predefinida', '=', $value->id_tab_ac_ae_predefinida)
+                ->where('t02.codigo', '=', $value->codigo)
+                ->where('id_tab_tipo_periodo', '<=', $value->id_tab_tipo_periodo)
+                ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $value->id_tab_ejercicio_fiscal)
+                ->first();          
+          
+          
         // Set cell An to the "name" column from the database (assuming you have a column called name)
-        if (($value->tx_prog_anual + $value->nu_meta_modificada) == 0) {
+        if (($value->tx_prog_anual + $data3->nu_meta_modificada) == 0) {
           $obtenido = 0;
         } else {
 
-          $obtenido = round(($value->nu_obtenido / ($value->tx_prog_anual + $value->nu_meta_modificada)) * 100, 2);
+          $obtenido = round(($data3->nu_obtenido / ($value->tx_prog_anual + $data3->nu_meta_modificada)) * 100, 2);
         }
         // Set thin black border outline around column
         $styleThinBlackBorderOutline = array(
@@ -8299,9 +8326,9 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $value->codigo . '-' . $value->nb_meta);
         $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $value->de_unidad_medida);
         $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $value->tx_prog_anual);
-        $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $value->nu_meta_modificada);
-        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $value->tx_prog_anual + $value->nu_meta_modificada);
-        $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $value->nu_obtenido);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $data3->nu_meta_modificada);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $value->tx_prog_anual + $data3->nu_meta_modificada);
+        $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $data3->nu_obtenido);
         $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $obtenido . "%");
         $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->de_municipio . ' / ' . $value->de_parroquia);
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
