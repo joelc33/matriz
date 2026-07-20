@@ -258,7 +258,7 @@ class acseguimiento002Controller extends Controller
             ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 'tab_meta_fisica.id_tab_municipio_detalle', '=', 't64.id')
             ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 'tab_meta_fisica.id_tab_parroquia_detalle', '=', 't65.id')            
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
-            ->orderBy('codigos', 'ASC')
+            ->orderBy('codigo', 'ASC')
             ->get();
             
             $obtenido = '';
