@@ -7648,7 +7648,8 @@ $html1 = '
         DB::raw('sum(coalesce(mo_pagado,0)) as mo_pagado'),
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0)) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0))-  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),
-        'ac_seguimiento.tab_meta_financiera.co_partida'
+        'ac_seguimiento.tab_meta_financiera.co_partida',
+        't03.de_sector'
       )
         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
         ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
@@ -7681,6 +7682,7 @@ $html1 = '
         ->groupBy('tx_ambito_estado')
         ->groupBy('t05.id_tab_tipo_ejecutor')
         ->groupBy('t06.de_tipo_ejecutor')
+        ->groupBy('t03.de_sector')
         ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
         ->get();
 
@@ -7713,8 +7715,9 @@ $html1 = '
       $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:N1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -7787,10 +7790,11 @@ $html1 = '
         ->setCellValue('J1', 'Comprometido')
         ->setCellValue('K1', 'Causado')
         ->setCellValue('L1', 'Pagado')
-        ->setCellValue('M1', 'Tipo');
+        ->setCellValue('M1', 'Tipo')
+        ->setCellValue('N1', 'Sector');
 
       // Make bold cells
-      $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
+      $objPHPExcel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
 
 
       foreach ($tab_meta_financiera as $key => $value) {
@@ -7806,7 +7810,7 @@ $html1 = '
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:N1')->applyFromArray($styleThinBlackBorderOutline);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
         $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
@@ -7821,6 +7825,7 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->mo_causado);
         $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->mo_pagado);
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->de_sector);
 
         $rowCount++;
       }
@@ -7884,7 +7889,8 @@ $html1 = '
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0))-  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),
         'ac_seguimiento.tab_meta_financiera.co_partida',
         't01.tx_foco_accion',
-        't07.tx_transformacion'
+        't07.tx_transformacion',
+        't03.de_sector'
       )
         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
         ->join('ac_seguimiento.tab_ac_ae as t02', 't01.id_tab_ac_ae', '=', 't02.id')
@@ -7920,6 +7926,7 @@ $html1 = '
         ->groupBy('t03.nu_codigo')
         ->groupBy('t01.tx_foco_accion')
         ->groupBy('t07.tx_transformacion')
+        ->groupBy('t03.de_sector')
         ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
         ->get();
 
@@ -7954,8 +7961,9 @@ $html1 = '
       $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -8030,7 +8038,8 @@ $html1 = '
         ->setCellValue('L1', 'Pagado')
         ->setCellValue('M1', 'Tipo')
         ->setCellValue('N1', 'Foco de accion')
-        ->setCellValue('O1', 'Linea de Transformacion');
+        ->setCellValue('O1', 'Linea de Transformacion')
+        ->setCellValue('P1', 'Sector');
 
       // Make bold cells
       $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
@@ -8049,7 +8058,7 @@ $html1 = '
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray($styleThinBlackBorderOutline);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
         $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
@@ -8066,6 +8075,7 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
         $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->tx_foco_accion);
         $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->tx_transformacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('P' . $rowCount, $value->de_sector);
 
         $rowCount++;
       }
@@ -8127,6 +8137,7 @@ public function exportarAF($id_tab_lapso)
         't07.tx_transformacion',
         'id_tab_tipo_periodo', 
         'id_tab_ac_ae_predefinida',
+        'tab_ac.de_sector',
         DB::raw("'AC' || ac_seguimiento.tab_ac.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
         DB::raw("coalesce(tx_prog_anual::numeric,0) as tx_prog_anual"),
         DB::raw("coalesce(sum(nu_obtenido),0) as nu_obtenido"),
@@ -8162,6 +8173,7 @@ public function exportarAF($id_tab_lapso)
         ->groupBy('id_tab_tipo_periodo')
         ->groupBy('id_tab_ac_predefinida')
         ->groupBy('id_tab_ac_ae_predefinida')
+        ->groupBy('ac_seguimiento.tab_ac.de_sector')
         ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')
         ->orderBy('t02.codigo', 'ASC')
         ->get();
@@ -8199,8 +8211,9 @@ public function exportarAF($id_tab_lapso)
       $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
       $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -8275,7 +8288,8 @@ public function exportarAF($id_tab_lapso)
         ->setCellValue('L1', 'Localizacion')
         ->setCellValue('M1', 'Tipo')
         ->setCellValue('N1', 'Foco de Accion')
-        ->setCellValue('O1', 'Linea de Transformacion');
+        ->setCellValue('O1', 'Linea de Transformacion')
+        ->setCellValue('P1', 'Sector');
 
       // Make bold cells
       $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
@@ -8317,7 +8331,7 @@ public function exportarAF($id_tab_lapso)
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:L1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray($styleThinBlackBorderOutline);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
         $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
@@ -8334,6 +8348,7 @@ public function exportarAF($id_tab_lapso)
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
         $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->tx_foco_accion);
         $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->tx_transformacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('P' . $rowCount, $value->de_sector);
 
         $rowCount++;
       }
