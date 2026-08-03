@@ -8055,6 +8055,13 @@ $html1 = '
             ),
           ),
         );
+        
+                $data3 = tab_meta_fisica::select('t07.tx_foco_accion','t07.tx_transformacion'
+                )
+                ->leftjoin('ac_seguimiento.tab_ac_linea_transformacion as t07', 't07.tx_foco_accion', '=', 'ac_seguimiento.tab_meta_fisica.tx_foco_accion')
+                ->where('ac_seguimiento.tab_meta_fisica.id', '=', $value->id)
+                ->first();         
+        
         $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray($styleThinBlackBorderOutline);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
@@ -8070,8 +8077,8 @@ $html1 = '
         $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->mo_causado);
         $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->mo_pagado);
         $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->de_tipo_ejecutor);
-        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->tx_foco_accion);
-        $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->tx_transformacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $data3->tx_foco_accion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $data3->tx_transformacion);
         $objPHPExcel->getActiveSheet()->SetCellValue('P' . $rowCount, $value->de_sector);
 
         $rowCount++;
