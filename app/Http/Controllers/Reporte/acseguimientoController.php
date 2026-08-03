@@ -7888,8 +7888,7 @@ $html1 = '
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0)) -  sum(coalesce(mo_pagado,0)) as mo_financiera'),
         DB::raw('sum(coalesce(mo_presupuesto,0))/' . $i . ' + sum(coalesce(mo_modificado_anual,0))-  sum(coalesce(mo_comprometido,0)) as mo_presupuestaria'),
         'ac_seguimiento.tab_meta_financiera.co_partida',
-        't01.tx_foco_accion',
-        't07.tx_transformacion',
+        't01.id',
         't03.de_sector'
       )
         ->join('ac_seguimiento.tab_meta_fisica as t01', 'ac_seguimiento.tab_meta_financiera.id_tab_meta_fisica', '=', 't01.id')
@@ -7924,9 +7923,8 @@ $html1 = '
         ->groupBy('t06.de_tipo_ejecutor')
         ->groupBy('t01.nb_meta')
         ->groupBy('t03.nu_codigo')
-        ->groupBy('t01.tx_foco_accion')
-        ->groupBy('t07.tx_transformacion')
         ->groupBy('t03.de_sector')
+        ->groupBy('t01.id')        
         ->orderBy('ac_seguimiento.tab_meta_financiera.co_partida', 'ASC')
         ->get();
 
