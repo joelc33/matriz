@@ -7896,7 +7896,6 @@ $html1 = '
         ->join('ac_seguimiento.tab_ac as t03', 't02.id_tab_ac', '=', 't03.id')
         ->join('mantenimiento.tab_ejecutores as t05', 't03.id_ejecutor', '=', 't05.id_ejecutor')
         ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')
-        ->leftjoin('ac_seguimiento.tab_ac_linea_transformacion as t07', 't07.tx_foco_accion', '=', 't01.tx_foco_accion')
         ->join('mantenimiento.tab_partidas as t04', function ($j) {
           $j->on('t04.co_partida', '=', 'ac_seguimiento.tab_meta_financiera.co_partida')
             ->on('t04.id_tab_ejercicio_fiscal', '=', 't03.id_tab_ejercicio_fiscal');
