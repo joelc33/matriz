@@ -35,7 +35,7 @@ this.in_territorial = new Ext.form.Hidden({
 //</token>
 
 this.id_tab_tipo_indicador = new Ext.form.ComboBox({
-	fieldLabel:'TIPO DE INDICADOR',
+	fieldLabel:'LINEA DE ACCION',
 	store: this.storeCO_TIPO_INDICADOR,
 	typeAhead: true,
 	valueField: 'id',
@@ -75,7 +75,7 @@ this.id_tab_tipo_indicador.on('beforeselect',function(cmb,record,index){
 
 
 this.id_tab_sub_tipo_indicador= new Ext.form.ComboBox({
-	fieldLabel:'SUB TIPO INDICADOR',
+	fieldLabel:'TIPO INDICADOR',
 	store: this.storeCO_SUB_TIPO_INDICADOR,
 	typeAhead: true,
 	valueField: 'id',

@@ -157,8 +157,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-    {header: 'TIPO DE INDICADOR', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_tipo_indicador'},
-    {header: 'SUB TIPO DE INDICADOR', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_sub_tipo_indicador'},
+    {header: 'LINEA DE ACCION', width:180, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_tipo_indicador'},
+    {header: 'TIPO DE INDICADOR', width:160, renderer: textoLargo, menuDisabled:true, sortable: true, dataIndex: 'de_sub_tipo_indicador'},
     {header: 'CANTIDAD', width:50,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'nu_cantidad'},
     {header: 'UNIDAD DE MEDIDA', width:120,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_unidad_medida'},
     {header: 'MUNICIPIO', width:150,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'de_municipio'},
