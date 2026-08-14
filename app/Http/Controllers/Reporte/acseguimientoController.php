@@ -8376,4 +8376,257 @@ public function exportarAF($id_tab_lapso)
       ));
     }
   }
+  
+public function exportarAC($id_tab_lapso)
+  {
+
+    DB::beginTransaction();
+
+    try {
+
+      //Query
+      $tab_lapso = tab_lapso::where('id', '<=', $id_tab_lapso)
+        ->where('id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->get();
+
+      $lapso_desc = tab_lapso::where('id', '=', $id_tab_lapso)
+        ->first();
+
+
+      $i =  $tab_lapso->count();
+
+      //              var_dump($i);
+      //              exit();
+
+      $data2 = tab_ac::select(
+        'tab_ac.tx_ejecutor_ac',
+        'tab_ac.id_ejecutor',
+        'tab_ac.id_tab_ejercicio_fiscal',
+        'tab_ac.nu_codigo',
+        'tab_ac.de_sector',
+        't45.tx_descripcion as tx_area_estrategica',
+        't45a.tx_descripcion as tx_ambito_estado',
+        't06.de_tipo_ejecutor',
+        DB::raw("'AC' || ac_seguimiento.tab_ac.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
+        DB::raw("case when tab_ac.in_001 then 'CARGADO' else 'PENDIENTE' end  as in_001"),
+        DB::raw("case when tab_ac.in_002 then 'CARGADO' else 'PENDIENTE' end  as in_002"),
+        DB::raw("case when tab_ac.in_003 then 'CARGADO' else 'PENDIENTE' end  as in_003"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
+        where (t.nu_meta_modificada != 0 or t02.mo_modificado_anual != 0) and de_desvio is null
+        and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_desvio"),
+        DB::raw("case when tab_ac.in_005 then 'CARGADO' else 'PENDIENTE' end  as in_005")   
+      )
+        ->join('mantenimiento.tab_ejecutores as t05', 'ac_seguimiento.tab_ac.id_ejecutor', '=', 't05.id_ejecutor')
+        ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')              
+        ->leftjoin('ac_seguimiento.tab_ac_vinculo as t49', 't49.id_tab_ac', '=', 'ac_seguimiento.tab_ac.id')
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45', function ($join) {
+          $join->on('t49.co_area_estrategica', '=', 't45.co_area_estrategica')
+            ->on('t45.nu_nivel', '=', DB::raw('0'));
+        }) 
+        ->leftjoin('mantenimiento.tab_planes_zulia as t45a', function ($join) {
+          $join->on('t49.co_area_estrategica', '=', 't45a.co_area_estrategica')
+            ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
+            ->on('t45a.nu_nivel', '=', DB::raw('1'));
+        })     
+        ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', Session::get('ejercicio'))
+        ->where('ac_seguimiento.tab_ac.id_tab_lapso', '=', $id_tab_lapso)
+        ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
+        ->orderBy('ac_seguimiento.tab_ac.id_ejecutor', 'ASC')
+        ->get();
+      
+ 
+
+      $acumulado = 0;
+
+      // Instantiate a new PHPExcel object
+      $objPHPExcel = new PHPExcel();
+      // Set properties
+      $objPHPExcel->getProperties()->setCreator("Yoser Perez");
+      $objPHPExcel->getProperties()->setLastModifiedBy("SPE");
+      $objPHPExcel->getProperties()->setTitle("Listado POA Proyectos");
+      $objPHPExcel->getProperties()->setSubject("Reporte");
+      $objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
+      // Set the active Excel worksheet to sheet 0
+      $objPHPExcel->setActiveSheetIndex(0);
+      // Rename sheet
+      //$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(15);
+      //$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(55);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(15);
+      //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
+      $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray(
+        array(
+          'font'    => array(
+            'bold'      => true
+          ),
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+          ),
+          'borders' => array(
+            'top'     => array(
+              'style' => PHPExcel_Style_Border::BORDER_THIN
+            )
+          ),
+          'fill' => array(
+            'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+            'rotation'   => 90,
+            'startcolor' => array(
+              'argb' => 'FFA0A0A0'
+            ),
+            'endcolor'   => array(
+              'argb' => 'FFFFFFFF'
+            )
+          )
+        )
+      );
+      $objPHPExcel->getActiveSheet()->getStyle('F1')->applyFromArray(
+        array(
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+          ),
+          'borders' => array(
+            'left'     => array(
+              'style' => PHPExcel_Style_Border::BORDER_THIN
+            )
+          )
+        )
+      );
+
+      $objPHPExcel->getActiveSheet()->getStyle('G1')->applyFromArray(
+        array(
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+          )
+        )
+      );
+
+      $objPHPExcel->getActiveSheet()->getStyle('L1')->applyFromArray(
+        array(
+          'borders' => array(
+            'right'     => array(
+              'style' => PHPExcel_Style_Border::BORDER_THIN
+            )
+          )
+        )
+      );
+      // Initialise the Excel row number
+      $rowCount = 2;
+      // Iterate through each result from the SQL query in turn
+      // We fetch each database result row into $row in turn
+
+      $objPHPExcel->setActiveSheetIndex(0)
+        ->setCellValue('A1', 'Ejercicio')
+        ->setCellValue('B1', 'Periodo')
+        ->setCellValue('C1', 'Unidad Ejecutora')
+        ->setCellValue('D1', 'Accion Centralizada')
+        ->setCellValue('E1', 'Area Estrategica')
+        ->setCellValue('F1', 'Ambito')
+        ->setCellValue('G1', 'Tipo')
+        ->setCellValue('H1', 'Sector')
+        ->setCellValue('I1', 'Forma 1')
+        ->setCellValue('J1', 'Forma 2')
+        ->setCellValue('K1', 'Forma 3')
+        ->setCellValue('L1', 'Forma 4')
+        ->setCellValue('M1', 'Forma 5')
+        ->setCellValue('N1', 'Estatus de Carga');
+
+      // Make bold cells
+      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
+
+
+      foreach ($data2 as $key => $value) {
+          
+      if($value->pend_desvio==0){
+      $desvio = 'CARGADO';    
+      }else{
+      $desvio = 'PENDIENTE';    
+      }   
+      
+      
+      if($value->in_001=='PENDIENTE'){
+      $estatus = 'PENDIENTE';    
+      }else{
+      if($value->in_002=='PENDIENTE'){          
+      $estatus = 'PENDIENTE';
+      }else{
+      if($value->in_003=='PENDIENTE'){          
+      $estatus = 'PENDIENTE';
+      }else{
+      if($value->pend_desvio==1){          
+      $estatus = 'PENDIENTE';
+      }else{
+      if($value->in_005=='PENDIENTE'){          
+      $estatus = 'PENDIENTE';
+      }else{
+      $estatus = 'CARGADO';    
+      }
+      }
+      }
+      }
+      }
+        // Set thin black border outline around column
+        $styleThinBlackBorderOutline = array(
+          'borders' => array(
+            'outline' => array(
+              'style' => PHPExcel_Style_Border::BORDER_THIN,
+              'color' => array('argb' => 'FF000000'),
+            ),
+          ),
+        );
+        $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray($styleThinBlackBorderOutline);
+
+        $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
+        $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
+        $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $value->id_ejecutor . '-' . $value->tx_ejecutor_ac);
+        $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $value->nu_codigo);
+        $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $value->tx_area_estrategica);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $value->tx_ambito_estado);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $value->de_tipo_ejecutor);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $value->de_sector);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $value->in_001);
+        $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $value->in_002);
+        $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->in_003);
+        $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $desvio);
+        $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->in_005);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $estatus);        
+
+        $rowCount++;
+      }
+
+
+      // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+      $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+      // We'll be outputting an excel file
+      header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      // It will be called file.xls
+      header('Content-Disposition: attachment; filename="reporte_consolidado_a_' . date("H:i:s") . '.xlsx"');
+      $objWriter->save('php://output');
+
+      DB::commit();
+    } catch (\Illuminate\Database\QueryException $e) {
+      DB::rollback();
+      return Response::json(array(
+        'success' => false,
+        'msg' => array('ERROR (' . $e->getCode() . '):' => $e->getMessage())
+      ));
+    }
+  }  
+  
 }

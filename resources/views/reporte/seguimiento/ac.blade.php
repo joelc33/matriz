@@ -159,6 +159,11 @@ this.botones = new this.GrupoBotones({
 									text:'REPORTE CONSOLIDADO X ACT.(MF)',  // Generar la impresión en pdf
 									iconCls:'icon-excel',
 									handler: this.onExportar3
+								},
+                                                                {
+									text:'REPORTE ESTATUS AC',  // Generar la impresión en pdf
+									iconCls:'icon-excel',
+									handler: this.onExportar4
 								},                                                                 
                                                                 {
                                                                         text:'Limpiar',  // Limpiar campos del formulario
@@ -264,6 +269,12 @@ onExportar2 : function() {
 onExportar3 : function() {
 	bajar.load({
 		url: '{{ URL::to('reporte/ac/seguimiento/consolidado/exportarAF') }}/{!! $lapso->id !!}'
+	});
+
+},
+onExportar4 : function() {
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/seguimiento/consolidado/exportarAC') }}/{!! $lapso->id !!}'
 	});
 
 },
