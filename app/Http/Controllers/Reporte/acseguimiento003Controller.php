@@ -821,6 +821,7 @@ class acseguimiento003Controller extends Controller
                 'id_tab_tipo_periodo',
                 'ac_seguimiento.tab_ac.de_observacion_003',
                 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
+                't21.id_tab_ac_ae_predefinida',
                 'ac_seguimiento.tab_ac.de_sector'
             )
             ->where('t21.id_tab_ac', '=', $id)
