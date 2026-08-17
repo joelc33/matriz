@@ -1160,8 +1160,8 @@ $contar=0;
              $obtenido = 0;
             }else{
 
-            //  $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;  
-            $obtenido = ($item->nu_obtenido/($item->tx_prog_anual + $item->nu_meta_modificada))*100;  
+              $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;  
+//            $obtenido = ($item->nu_obtenido/($item->tx_prog_anual + $item->nu_meta_modificada))*100;  
               
             }       
             
