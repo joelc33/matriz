@@ -817,6 +817,7 @@ class acseguimiento003Controller extends Controller
                 'ac_seguimiento.tab_ac.nu_em_generado',
                 'ac_seguimiento.tab_ac.tx_pr_programado',
                 'ac_seguimiento.tab_ac.tx_pr_obtenido',
+                'ac_seguimiento.tab_ac.tx_pr_obtenido_a',
                 'id_tab_tipo_periodo',
                 'ac_seguimiento.tab_ac.de_observacion_003',
                 'ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal',
@@ -1154,7 +1155,7 @@ class acseguimiento003Controller extends Controller
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_objetivo . '</td>
-<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido . '</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> ' . $data->tx_pr_obtenido_a . '</td>
 </tr>
 </tbody>
 </table>
