@@ -1121,7 +1121,7 @@ $contar=0;
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
-                ->where('t02.id', '=', $item->id)
+                ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();  
@@ -1161,7 +1161,6 @@ $contar=0;
             }else{
 
               $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;  
-//            $obtenido = ($item->nu_obtenido/($item->tx_prog_anual + $item->nu_meta_modificada))*100;  
               
             }       
             
