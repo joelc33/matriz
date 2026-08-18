@@ -8416,7 +8416,28 @@ public function exportarAC($id_tab_lapso)
         inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
         where (t.nu_meta_modificada != 0 or t02.mo_modificado_anual != 0) and de_desvio is null
         and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as pend_desvio"),
-        DB::raw("case when tab_ac.in_005 then 'CARGADO' else 'PENDIENTE' end  as in_005")   
+        DB::raw("case when tab_ac.in_005 then 'CARGADO' else 'PENDIENTE' end  as in_005"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        where t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        where t.id_tab_estatus = 2 and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total_cargada"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        where t.id_tab_estatus = 1 and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total_pendiente"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
+        where t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total_financiera"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
+        where t02.in_cargado = true and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total_financiera_cargada"),
+        DB::raw("(select count(*) from ac_seguimiento.tab_meta_fisica t
+        inner join ac_seguimiento.tab_ac_ae t01 on  (t01.id = t.id_tab_ac_ae)
+        inner join ac_seguimiento.tab_meta_financiera t02 on  (t02.id_tab_meta_fisica = t.id)
+        where t02.in_cargado = false and t01.id_tab_ac =ac_seguimiento.tab_ac.id) as total_financiera_pendiente")              
       )
         ->join('mantenimiento.tab_ejecutores as t05', 'ac_seguimiento.tab_ac.id_ejecutor', '=', 't05.id_ejecutor')
         ->join('mantenimiento.tab_tipo_ejecutor as t06', 't05.id_tab_tipo_ejecutor', '=', 't06.id')              
@@ -8460,18 +8481,25 @@ public function exportarAC($id_tab_lapso)
       $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(30);
       $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(15);
       //$objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
-      $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
+      $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("T")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("U")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("V")->setWidth(30);
+      $objPHPExcel->getActiveSheet()->getColumnDimension("W")->setWidth(30);      
       $objPHPExcel->getActiveSheet()->setTitle('REPORTE_CONSOLIDADO_ACTIVIDAD');
-      $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray(
+      $objPHPExcel->getActiveSheet()->getStyle('A1:W1')->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -8540,15 +8568,24 @@ public function exportarAC($id_tab_lapso)
         ->setCellValue('F1', 'Ambito')
         ->setCellValue('G1', 'Tipo')
         ->setCellValue('H1', 'Sector')
-        ->setCellValue('I1', 'Forma 1')
-        ->setCellValue('J1', 'Forma 2')
-        ->setCellValue('K1', 'Forma 3')
-        ->setCellValue('L1', 'Forma 4')
-        ->setCellValue('M1', 'Forma 5')
-        ->setCellValue('N1', 'Estatus de Carga');
+        ->setCellValue('I1', 'Validación de Forma 1')
+        ->setCellValue('J1', 'Validación de Forma 2')
+        ->setCellValue('K1', 'Total Actividades Forma 2')
+        ->setCellValue('L1', 'Actividades Cargadas de Forma 2')
+        ->setCellValue('M1', 'Actividades x Cargar de Forma 2')
+        ->setCellValue('N1', 'Porcentaje de Carga de Forma 2')
+        ->setCellValue('O1', 'Validación de Forma 3')
+        ->setCellValue('P1', 'Total Actividades Forma 3')
+        ->setCellValue('Q1', 'Actividades Cargadas de Forma 3')
+        ->setCellValue('R1', 'Actividades x Cargar de Forma 3')
+        ->setCellValue('S1', 'Porcentaje de Carga de Forma 3')              
+        ->setCellValue('T1', 'Validación de Forma 4')
+        ->setCellValue('U1', 'Validación de Forma 5')
+        ->setCellValue('V1', 'Estatus de Carga(Formas 2 y 3)')
+        ->setCellValue('W1', 'Porcentaje de Carga Matriz(Formas 2 y 3)');
 
       // Make bold cells
-      $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
+      $objPHPExcel->getActiveSheet()->getStyle('A1:W1')->getFont()->setBold(true);
 
 
       foreach ($data2 as $key => $value) {
@@ -8559,8 +8596,17 @@ public function exportarAC($id_tab_lapso)
       $desvio = 'PENDIENTE';    
       }   
       
+      $estatus = 'CARGADO'; 
       
-      if($value->in_001=='PENDIENTE'){
+      if($value->total_pendiente>0){
+      $estatus = 'PENDIENTE';    
+      }
+      
+      if($value->total_financiera_pendiente>0){
+      $estatus = 'PENDIENTE';    
+      }      
+      
+      /*if($value->in_001=='PENDIENTE'){
       $estatus = 'PENDIENTE';    
       }else{
       if($value->in_002=='PENDIENTE'){          
@@ -8580,7 +8626,9 @@ public function exportarAC($id_tab_lapso)
       }
       }
       }
-      }
+      } 
+       * 
+       */     
         // Set thin black border outline around column
         $styleThinBlackBorderOutline = array(
           'borders' => array(
@@ -8590,7 +8638,8 @@ public function exportarAC($id_tab_lapso)
             ),
           ),
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->applyFromArray($styleThinBlackBorderOutline);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:W1')->applyFromArray($styleThinBlackBorderOutline);
+
 
         $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->id_tab_ejercicio_fiscal);
         $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $lapso_desc->de_lapso);
@@ -8602,10 +8651,19 @@ public function exportarAC($id_tab_lapso)
         $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $value->de_sector);
         $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $value->in_001);
         $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $value->in_002);
-        $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->in_003);
-        $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $desvio);
-        $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->in_005);
-        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $estatus);        
+        $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->total);
+        $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->total_cargada);
+        $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->total_pendiente);
+        $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, ($value->total_cargada /$value->total)*100);
+        $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->in_003);
+        $objPHPExcel->getActiveSheet()->SetCellValue('P' . $rowCount, $value->total_financiera);
+        $objPHPExcel->getActiveSheet()->SetCellValue('Q' . $rowCount, $value->total_financiera_cargada);
+        $objPHPExcel->getActiveSheet()->SetCellValue('R' . $rowCount, $value->total_financiera_pendiente);
+        $objPHPExcel->getActiveSheet()->SetCellValue('S' . $rowCount, ($value->total_financiera_cargada /$value->total_financiera)*100);
+        $objPHPExcel->getActiveSheet()->SetCellValue('T' . $rowCount, $desvio);
+        $objPHPExcel->getActiveSheet()->SetCellValue('U' . $rowCount, $value->in_005);
+        $objPHPExcel->getActiveSheet()->SetCellValue('V' . $rowCount, $estatus);
+        $objPHPExcel->getActiveSheet()->SetCellValue('W' . $rowCount, (($value->total_financiera_cargada+$value->total_cargada) /($value->total_financiera+$value->total))*100);  
 
         $rowCount++;
       }
