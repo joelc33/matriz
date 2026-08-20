@@ -4064,7 +4064,7 @@ $html1 = '
 </tr>
 <tr style="font-size:9px">
 <td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
-<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo_acu.' </td>
 <td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
 </tr>
 <tr style="font-size:9px height: 100px;">
