@@ -799,7 +799,7 @@ class acseguimiento005Controller extends Controller
 <td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo_acu.' </td>
 <td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
 <td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
 </tr>
