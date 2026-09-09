@@ -511,6 +511,7 @@ class formacincoController extends Controller
                 $tab_indicador->id_tab_comuna = Input::get("comuna")?Input::get("comuna"):null;
                 $tab_indicador->id_tab_unidad_medida = Input::get("unidad_medida");
                 $tab_indicador->nu_cantidad = Input::get("cantidad");
+                $tab_indicador->de_indicador = Input::get("descripcion_indicador");
                 $tab_indicador->save();
 
                 DB::commit();

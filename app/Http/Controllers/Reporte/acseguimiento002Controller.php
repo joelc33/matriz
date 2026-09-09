@@ -258,7 +258,7 @@ class acseguimiento002Controller extends Controller
             ->leftjoin('mantenimiento.tab_municipio_detalle as t64', 'tab_meta_fisica.id_tab_municipio_detalle', '=', 't64.id')
             ->leftjoin('mantenimiento.tab_parroquia_detalle as t65', 'tab_meta_fisica.id_tab_parroquia_detalle', '=', 't65.id')            
             ->where('id_tab_ac_ae', '=', $data->id_tab_ac_ae)
-            ->orderBy('codigos', 'ASC')
+            ->orderBy('codigo', 'ASC')
             ->get();
             
             $obtenido = '';
@@ -1070,7 +1070,7 @@ $html1.='
 </tr>
 <tr style="font-size:9px">
 <td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO PROGRAMADO ANUAL DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_objetivo.'</td>
-<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido.'</td>
+<td colspan="3" style="width: 50%;" align="justify"><b>PRODUCTO OBTENIDO DEL OBJETIVO INSTITUCIONAL:</b> '.$data->tx_pr_obtenido_a.'</td>
 </tr>
 </tbody>
 </table>
@@ -1121,7 +1121,7 @@ $contar=0;
                 ->where('ac_seguimiento.tab_ac.nu_codigo', '=', $data->id_proy_ac)
                 ->where('ac_seguimiento.tab_ac.in_activo', '=', true)
                 ->where('t01.id_tab_ac_ae_predefinida', '=', $data->id_tab_ac_ae_predefinida)
-                ->where('t02.id', '=', $item->id)
+                ->where('t02.codigo', '=', $item->codigo)
                 ->where('id_tab_tipo_periodo', '<=', $data->id_tab_tipo_periodo)
                 ->where('ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal', '=', $data->id_tab_ejercicio_fiscal)
                 ->first();  
@@ -1160,8 +1160,7 @@ $contar=0;
              $obtenido = 0;
             }else{
 
-            //  $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;  
-            $obtenido = ($item->nu_obtenido/($item->tx_prog_anual + $item->nu_meta_modificada))*100;  
+              $obtenido = ($data2->nu_obtenido/($item->tx_prog_anual + $data2->nu_meta_modificada))*100;  
               
             }       
             

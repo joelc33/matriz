@@ -473,19 +473,22 @@ class lapsoController extends Controller
                         
                         
                     $tab_ac_linea_transformacion = tab_ac_linea_transformacion::where('id_tab_ac', '=', $arreglo_ac->id)
-                    ->first(); 
-               
-                    if($tab_ac_linea_transformacion){
+                    ->get(); 
+
+                        
+                    foreach ($tab_ac_linea_transformacion as $arreglo_tab_ac_linea_transformacion) {    
                     
                     $tab_linea_transformacion = new tab_ac_linea_transformacion();
                     $tab_linea_transformacion->id_tab_ac = $tabla->id;
-                    $tab_linea_transformacion->tx_transformacion = $tab_ac_linea_transformacion->tx_transformacion;
-                    $tab_linea_transformacion->tx_eje_alineacion = $tab_ac_linea_transformacion->tx_eje_alineacion;
-                    $tab_linea_transformacion->tx_linea_impulso = $tab_ac_linea_transformacion->tx_linea_impulso;
-                    $tab_linea_transformacion->tx_foco_accion = $tab_ac_linea_transformacion->tx_foco_accion;
+                    $tab_linea_transformacion->tx_transformacion = $arreglo_tab_ac_linea_transformacion->tx_transformacion;
+                    $tab_linea_transformacion->tx_eje_alineacion = $arreglo_tab_ac_linea_transformacion->tx_eje_alineacion;
+                    $tab_linea_transformacion->tx_linea_impulso = $arreglo_tab_ac_linea_transformacion->tx_linea_impulso;
+                    $tab_linea_transformacion->tx_foco_accion = $arreglo_tab_ac_linea_transformacion->tx_foco_accion;
                     $tab_linea_transformacion->save(); 
                     
-                    }                        
+                    }
+                    
+                                           
                         
                     
 

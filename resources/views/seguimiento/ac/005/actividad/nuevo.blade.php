@@ -35,7 +35,7 @@ this.in_territorial = new Ext.form.Hidden({
 //</token>
 
 this.id_tab_tipo_indicador = new Ext.form.ComboBox({
-	fieldLabel:'TIPO DE INDICADOR',
+	fieldLabel:'LINEA DE ACCION',
 	store: this.storeCO_TIPO_INDICADOR,
 	typeAhead: true,
 	valueField: 'id',
@@ -75,7 +75,7 @@ this.id_tab_tipo_indicador.on('beforeselect',function(cmb,record,index){
 
 
 this.id_tab_sub_tipo_indicador= new Ext.form.ComboBox({
-	fieldLabel:'SUB TIPO INDICADOR',
+	fieldLabel:'TIPO INDICADOR',
 	store: this.storeCO_SUB_TIPO_INDICADOR,
 	typeAhead: true,
 	valueField: 'id',
@@ -217,6 +217,15 @@ this.id_tab_unidad_medida = new Ext.form.ComboBox({
 });
 this.storeCO_UNIDADES_MEDIDA.load();
 
+
+this.descripcion_indicador = new Ext.form.TextArea({
+	fieldLabel:'DESCRIPCIÓN DEL INDICADOR',
+	name:'descripcion_indicador',
+	width:400,
+	maxLength: 600,
+	allowBlank:false
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -317,7 +326,8 @@ this.formPanel_ = new Ext.form.FormPanel({
                 this.id_tab_parroquia_detalle,
                 this.id_tab_comuna,
                 this.id_tab_unidad_medida,
-                this.cantidad
+                this.cantidad,
+                this.descripcion_indicador
 	]
 });
 
