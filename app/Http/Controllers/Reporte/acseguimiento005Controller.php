@@ -682,6 +682,7 @@ class acseguimiento005Controller extends Controller
                 }
 
                 
+                echo $nu_cumplimiento; exit();
 
 
                 $pdf->AddPage();
