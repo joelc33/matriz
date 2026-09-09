@@ -680,6 +680,8 @@ class acseguimiento005Controller extends Controller
                     $nu_cumplimiento = round(($item->de_valor_obtenido_acu / $item->de_valor_objetivo_acu) * 100, 2);
                 }
 
+                
+
 
                 $pdf->AddPage();
 
@@ -796,8 +798,8 @@ class acseguimiento005Controller extends Controller
 <td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
-<td style="width: 10%;" align="center">'.$item->de_valor_obtenido.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
 <td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
 </tr>
 <tr style="font-size:9px height: 100px;">
