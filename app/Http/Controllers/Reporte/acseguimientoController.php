@@ -4063,9 +4063,9 @@ $html1 = '
 <td style="width: 10%;" align="center"><b>CUMPLIMIENTO:</b></td>
 </tr>
 <tr style="font-size:9px">
-<td style="width: 10%;" align="center">'.$item->de_valor_objetivo.' </td>
+<td style="width: 10%;" align="center">'.$item->de_valor_objetivo_acu.' </td>
 <td style="width: 10%;" align="center">'.$item->de_valor_obtenido_acu.' </td>
-<td style="width: 10%;" align="center">'.$item->nu_cumplimiento.' % </td>
+<td style="width: 10%;" align="center">'.$nu_cumplimiento.' % </td>
 </tr>
 <tr style="font-size:9px height: 100px;">
 <td colspan="4" style="height: 30px;" align="justify"><b>DESCRIPCIÓN DEL INDICADOR:</b> '.$item->de_indicador_descripcion.'</td>
