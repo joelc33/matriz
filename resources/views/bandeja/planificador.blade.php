@@ -376,7 +376,7 @@ this.gridCentralizadas_ = new Ext.grid.GridPanel({
 	stateful: true,
 	listeners: {
 		cellclick: function(grid, rowIndex, columnIndex, e ) {
-			verCentralizadas.enable();
+			
 			var sel = grid.getSelectionModel().getSelected();
 			sel.get('');
 			if ( sel.get('eliminar') ) {
@@ -388,6 +388,12 @@ this.gridCentralizadas_ = new Ext.grid.GridPanel({
 				reabrirCentralizadas.enable();
 			} else {
 				reabrirCentralizadas.disable();
+			}
+
+			if(sel.get('tx_estatus') == 'Cerrado'){
+				verCentralizadas.disable();
+			}else{
+				verCentralizadas.enable();
 			}
 		}
 	},
