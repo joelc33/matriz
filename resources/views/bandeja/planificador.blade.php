@@ -390,11 +390,7 @@ this.gridCentralizadas_ = new Ext.grid.GridPanel({
 				reabrirCentralizadas.disable();
 			}
 
-			if(sel.get('tx_estatus') == 'Cerrado'){
-				verCentralizadas.disable();
-			}else{
-				verCentralizadas.enable();
-			}
+			
 		}
 	},
 	bbar: new Ext.PagingToolbar({
