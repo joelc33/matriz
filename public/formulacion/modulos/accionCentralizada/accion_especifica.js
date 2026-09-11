@@ -851,9 +851,19 @@
                     name: 'monto'
                 }],
                 idProperty: 'co_partida',
-                autoLoad: true
+                autoLoad: true,
+                listeners: {
+                    load: function(store, records, options) {
+                            var seleccion = opcionPlanificador.main.gridCentralizadas_.getSelectionModel().getSelected();
+                  
+                            if (seleccion.get('tx_estatus') == 'Cerrado') {
+                                $('#btnSubirPartidas').addClass('x-item-disabled').attr('disabled', 'disabled');
+                            } 
+                    }
+                }
             });
 
+          
             this.grid = Ext.create({
                 xtype: 'grid',
                 store: self.store,
@@ -898,6 +908,7 @@
                     }
                 },'-',{
                     xtype: 'button',
+                    id: 'btnSubirPartidas',
                     text: 'Subir Partidas',
                     iconCls: 'icon-generar',
                     handler: function() {
@@ -930,6 +941,8 @@
                     }
                 }]
             });
+
+            
 
             config = Ext.apply({
                 title: 'Partidas de la Acción Específica: ' +
