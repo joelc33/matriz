@@ -4828,16 +4828,6 @@ $html1 = '
               ->on('t49.co_ambito_estado', '=', 't45a.co_ambito_zulia')
               ->on('t45a.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('mantenimiento.tab_planes_zulia as t45b', function ($join) {
-            $join->on('t49.co_ambito_estado', '=', 't45b.co_ambito_zulia')
-              ->on('t49.co_macroproblema', '=', 't45b.co_macroproblema')
-              ->on('t45b.nu_nivel', '=', DB::raw('3'));
-          })
-          ->leftjoin('mantenimiento.tab_planes_zulia as t45c', function ($join) {
-            $join->on('t49.co_ambito_estado', '=', 't45c.co_ambito_zulia')
-              ->on(DB::raw('t49.co_nodos::integer'), '=', 't45c.co_nodo')
-              ->on('t45c.nu_nivel', '=', DB::raw('4'));
-          })
           ->join('mantenimiento.tab_sectores as t18a', 'ac_seguimiento.tab_ac.id_tab_sectores', '=', 't18a.id')
           ->join('mantenimiento.tab_sectores as t18b', function ($join) {
             $join->on('t18a.co_sector', '=', 't18b.co_sector')
