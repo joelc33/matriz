@@ -409,7 +409,8 @@ class lapsoController extends Controller
                     $tab_vinculo->co_objetivo_historico = $tab_ac_vinculo->co_objetivo_historico;
                     $tab_vinculo->co_objetivo_nacional = $tab_ac_vinculo->co_objetivo_nacional;
                     $tab_vinculo->co_objetivo_estrategico = $tab_ac_vinculo->co_objetivo_estrategico;
-                    $tab_vinculo->co_objetivo_general = $tab_ac_vinculo->co_objetivo_general;                  
+                    $tab_vinculo->co_objetivo_general = $tab_ac_vinculo->co_objetivo_general;
+                    $tab_vinculo->co_linea_estrategica = $tab_ac_vinculo->co_linea_estrategica;
                     $tab_vinculo->in_activo = 'TRUE';
                     $tab_vinculo->save();   
                     

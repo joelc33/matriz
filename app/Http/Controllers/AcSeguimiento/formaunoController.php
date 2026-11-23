@@ -1117,6 +1117,9 @@ if($data_lapso->id_tab_tipo_periodo==22){
                 $tabla->tx_pr_obtenido_a = $arreglo_ac->tx_pr_obtenido_a;
                 $tabla->de_sector = $arreglo_ac->de_sector; 
                 $tabla->tx_ejecutor_ac = $arreglo_ac->tx_ejecutor_ac;
+                $tabla->objeto_creacion = $arreglo_ac->objeto_creacion;
+                $tabla->decreto_creacion = $arreglo_ac->decreto_creacion;
+                $tabla->ac_observaciones = $arreglo_ac->ac_observaciones;                
                 
 //                $tabla->id_accion_centralizada = $arreglo_ac->id;
                 $tabla->save();  
@@ -1256,7 +1259,8 @@ if($data_lapso->id_tab_tipo_periodo==22){
                     $tab_vinculo->co_objetivo_historico = $tab_ac_vinculo->co_objetivo_historico;
                     $tab_vinculo->co_objetivo_nacional = $tab_ac_vinculo->co_objetivo_nacional;
                     $tab_vinculo->co_objetivo_estrategico = $tab_ac_vinculo->co_objetivo_estrategico;
-                    $tab_vinculo->co_objetivo_general = $tab_ac_vinculo->co_objetivo_general;                  
+                    $tab_vinculo->co_objetivo_general = $tab_ac_vinculo->co_objetivo_general;
+                    $tab_vinculo->co_linea_estrategica = $tab_ac_vinculo->co_linea_estrategica;
                     $tab_vinculo->in_activo = 'TRUE';
                     $tab_vinculo->save();   
                     
