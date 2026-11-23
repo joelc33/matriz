@@ -4843,29 +4843,17 @@ $html1 = '
             $join->on('t18a.co_sector', '=', 't18b.co_sector')
               ->on('t18b.nu_nivel', '=', DB::raw('1'));
           })
-          ->leftjoin('t20_planes as t20', function ($join) {
+            ->leftjoin('mantenimiento.tab_planes as t20', function ($join) {
             $join->on('t49.co_objetivo_historico', '=', 't20.co_objetivo_historico')
-              ->on('t20.nu_nivel', '=', DB::raw('1'));
-          })
-          ->leftjoin('t20_planes as t20a', function ($join) {
+            ->on(DB::raw(''.Session::get("ejercicio").''), '=', DB::raw('any (t20.id_tab_ejercicio_fiscal)'))                    
+            ->on('t20.nu_nivel', '=', DB::raw('1'));
+            }) 
+            ->leftjoin('mantenimiento.tab_planes as t20a', function ($join) {
             $join->on('t49.co_objetivo_nacional', '=', 't20a.co_objetivo_nacional')
-              ->on('t49.co_objetivo_historico', '=', 't20a.co_objetivo_historico')
-              ->on('t20a.nu_nivel', '=', DB::raw('2'));
-          })
-          ->leftjoin('t20_planes as t20b', function ($join) {
-            $join->on('t49.co_objetivo_estrategico', '=', 't20b.co_objetivo_estrategico')
-              ->on('t49.co_objetivo_historico', '=', 't20b.co_objetivo_historico')
-              ->on('t49.co_objetivo_nacional', '=', 't20b.co_objetivo_nacional')
-              ->on('t20b.nu_nivel', '=', DB::raw('3'));
-          })
-          ->leftjoin('t20_planes as t20c', function ($join) {
-            $join->on('t49.co_objetivo_general', '=', 't20c.co_objetivo_general')
-              ->on('t49.co_objetivo_estrategico', '=', 't20c.co_objetivo_estrategico')
-              ->on('t49.co_objetivo_historico', '=', 't20c.co_objetivo_historico')
-              ->on('t49.co_objetivo_nacional', '=', 't20c.co_objetivo_nacional')
-              ->on('t20c.edo_reg', '=', DB::raw('true'))
-              ->on('t20c.nu_nivel', '=', DB::raw('4'));
-          })
+            ->on('t49.co_objetivo_historico', '=', 't20a.co_objetivo_historico') 
+            ->on(DB::raw(''.Session::get("ejercicio").''), '=', DB::raw('any (t20a.id_tab_ejercicio_fiscal)'))
+            ->on('t20a.nu_nivel', '=', DB::raw('2'));
+            }) 
           ->select(
             'ac_seguimiento.tab_ac.id_ejecutor',
             'ac_seguimiento.tab_ac.id_tab_ac_predefinida',
@@ -4874,11 +4862,9 @@ $html1 = '
             't45.tx_descripcion as tx_area_estrategica',
             't20.tx_descripcion as tx_objetivo_historico',
             't20a.tx_descripcion as tx_objetivo_nacional',
-            't20b.tx_descripcion as tx_objetivo_estrategico',
-            't20c.tx_descripcion as tx_objetivo_general',
-            't45a.tx_descripcion as tx_ambito_estado',
-            't45b.tx_descripcion as tx_macroproblema',
-            't45c.tx_descripcion as tx_nodos',
+            't45a.tx_descripcion as tx_ambito_estado', 
+            't49.co_linea_estrategica as tx_linea_estrategica',
+            't49.co_nodos as tx_nodos',
             't21.objetivo_institucional as tx_objetivo_institucional',
             DB::raw("'AC' || t04.id_ejecutor || ac_seguimiento.tab_ac.id_tab_ejercicio_fiscal || lpad(ac_seguimiento.tab_ac.id_tab_ac_predefinida::text, 5, '0') as id_proy_ac"),
             't52.nombre',
