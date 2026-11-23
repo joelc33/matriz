@@ -6376,7 +6376,7 @@ $html1 = '
 </tr>';
 
             $sqlLineaT = tab_ac_linea_transformacion::select('tx_transformacion')          
-            ->where('id_tab_ac', '=', $id)
+            ->where('id_tab_ac', '=', $data->id)
             ->groupBy('tx_transformacion')
             ->orderBy('tx_transformacion', 'ASC')
             ->get();
@@ -6397,7 +6397,7 @@ $html1.= ' </table></td>';
 
 
             $sqlLineaE = tab_ac_linea_transformacion::select('tx_eje_alineacion')          
-            ->where('id_tab_ac', '=', $id)
+            ->where('id_tab_ac', '=', $data->id)
             ->groupBy('tx_eje_alineacion')
             ->orderBy('tx_eje_alineacion', 'ASC')
             ->get();
@@ -6416,7 +6416,7 @@ $html1.= '
 $html1.= ' </table></td></tr>';
 
             $sqlLineaI = tab_ac_linea_transformacion::select('tx_linea_impulso')          
-            ->where('id_tab_ac', '=', $id)
+            ->where('id_tab_ac', '=', $data->id)
             ->groupBy('tx_linea_impulso')
             ->orderBy('tx_linea_impulso', 'ASC')
             ->get();
@@ -6436,7 +6436,7 @@ $html1.= '
 $html1.= ' </table></td></tr>';
 
             $sqlLineaF = tab_ac_linea_transformacion::select('tx_foco_accion')          
-            ->where('id_tab_ac', '=', $id)
+            ->where('id_tab_ac', '=', $data->id)
             ->groupBy('tx_foco_accion')
             ->orderBy('tx_foco_accion', 'ASC')
             ->get();
