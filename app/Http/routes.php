@@ -193,6 +193,10 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/consolidado/exportarAF/{id_lapso}', 'acseguimientoController@exportarAF');
         Route::get('ac/seguimiento/consolidado/exportarAC/{id_lapso}', 'acseguimientoController@exportarAC');
         Route::get('ac/seguimiento/{id}', 'acseguimientoController@reporte');
+        Route::get('ac/indicadores/exportar/linea', 'acindicadorController@exportarLineaAccion');
+        Route::get('ac/indicadores/exportar/ejecutor', 'acindicadorController@exportarEjecutor');
+        Route::post('ac/indicadores/storeLista', 'acindicadorController@storeLista');
+        Route::get('ac/indicadores/{id_lapso?}', 'acindicadorController@index');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');
         Route::get('poa/proyecto/todo', 'proyectoController@poaTodo');
         Route::get('poa/ac/todo', 'acController@poaTodo');
