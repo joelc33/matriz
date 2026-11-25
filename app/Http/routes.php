@@ -195,6 +195,7 @@ Route::group(['namespace' => 'Reporte'], function () {
         Route::get('ac/seguimiento/{id}', 'acseguimientoController@reporte');
         Route::get('ac/indicadores/exportar/linea', 'acindicadorController@exportarLineaAccion');
         Route::get('ac/indicadores/exportar/ejecutor', 'acindicadorController@exportarEjecutor');
+        Route::get('ac/indicadores/pdf/linea', 'acindicadorController@exportarPdfLineaAccion');
         Route::post('ac/indicadores/storeLista', 'acindicadorController@storeLista');
         Route::get('ac/indicadores/{id_lapso?}', 'acindicadorController@index');
         Route::get('proyecto/seguimiento', 'proyectoseguimientoController@reporte');

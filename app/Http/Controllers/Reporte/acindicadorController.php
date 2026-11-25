@@ -22,6 +22,7 @@ use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Style_Fill;
 use PHPExcel_Cell_DataType;
+use TCPDF;
 use matriz\Http\Controllers\Controller;
 
 class acindicadorController extends Controller
@@ -113,6 +114,36 @@ class acindicadorController extends Controller
     }
 
     /**
+     * Exporta PDF infográfico: REPORTE DE GESTIÓN POR LÍNEA DE ACCIÓN.
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     */
+    public function exportarPdfLineaAccion()
+    {
+        try {
+            $filtros = $this->extraerFiltros();
+            $query   = $this->construirConsulta($filtros);
+            $this->aplicarOrden($query, 'linea');
+            $registros = $query->get();
+
+            $pdfBinary = $this->construirPdfLineaAccion($registros, $filtros);
+            $filename  = 'reporte_linea_accion_' . date('Ymd_His') . '.pdf';
+
+            return Response::make($pdfBinary, 200, array(
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Cache-Control'       => 'max-age=0',
+                'Pragma'              => 'public'
+            ));
+        } catch (\Illuminate\Database\QueryException $e) {
+            return Response::json(array(
+                'success' => false,
+                'msg'     => array('ERROR (' . $e->getCode() . '):' => $e->getMessage())
+            ), 500);
+        }
+    }
+
+    /**
      * Extrae y sanitiza los filtros enviados desde el formulario.
      * Los roles planificadores locales (3, 8) siempre se restringen a su ejecutor.
      *
@@ -161,6 +192,9 @@ class acindicadorController extends Controller
     {
         $query = tab_indicadores::select(
             'ac_seguimiento.tab_indicadores.id',
+            'ac_seguimiento.tab_indicadores.id_tab_tipo_indicador',
+            'ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador',
+            'ac.id_tab_lapso',
             DB::raw("trim(coalesce(ti.de_tipo_indicador, '')) as linea_accion"),
             DB::raw("trim(coalesce(sti.de_sub_tipo_indicador, '')) as tipo_indicador"),
             DB::raw("trim(l.de_lapso) || ' ' || ac.id_tab_ejercicio_fiscal::text as periodo"),
@@ -625,5 +659,506 @@ class acindicadorController extends Controller
                 'msg'     => array('ERROR (' . $e->getCode() . '):' => $e->getMessage())
             ), 500);
         }
+    }
+
+    /**
+     * Genera el binario PDF infográfico agrupado por Línea de Acción, Tipo Indicador y Periodo.
+     *
+     * @param \Illuminate\Support\Collection|array $registros
+     * @param array $filtros
+     * @return string
+     */
+    public function construirPdfLineaAccion($registros, array $filtros)
+    {
+        $prevReporting = error_reporting(error_reporting() & ~E_DEPRECATED & ~E_STRICT);
+        try {
+            $pdf = new TCPDF('L', 'mm', 'LETTER', true, 'UTF-8', false);
+            $pdf->SetCreator('Secretaría de Planificación y Estadística');
+            $pdf->SetAuthor('Gobernación Bolivariana del Zulia');
+            $pdf->SetTitle('Reporte de Gestión por Línea de Acción');
+            $pdf->SetSubject('Indicadores de Gestión por Línea de Acción');
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            $pdf->SetMargins(0, 0, 0);
+            $pdf->SetAutoPageBreak(false, 0);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+            // Agrupar registros por (Línea de Acción, Tipo Indicador, Periodo)
+            $grupos = array();
+            foreach ($registros as $item) {
+                $clave = (isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '')
+                    . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : '')
+                    . '|' . (isset($item->id_tab_lapso) ? $item->id_tab_lapso : '');
+
+                if (!isset($grupos[$clave])) {
+                    $grupos[$clave] = array(
+                        'linea_accion'   => $this->limpiarTexto(isset($item->linea_accion) ? $item->linea_accion : ''),
+                        'tipo_indicador' => $this->limpiarTexto(isset($item->tipo_indicador) ? $item->tipo_indicador : ''),
+                        'periodo'        => $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
+                        'total_cantidad' => 0.0,
+                        'ejecutores'     => array(),
+                        'items'          => array()
+                    );
+                }
+
+                $cantidad = (isset($item->cantidad) && $item->cantidad !== null && $item->cantidad !== '')
+                    ? (float) $item->cantidad
+                    : 0.0;
+                $grupos[$clave]['total_cantidad'] += $cantidad;
+
+                $ejNombre = mb_strtoupper($this->limpiarTexto(isset($item->ejecutor) ? $item->ejecutor : ''), 'UTF-8');
+                if ($ejNombre !== '' && !in_array($ejNombre, $grupos[$clave]['ejecutores'], true)) {
+                    $grupos[$clave]['ejecutores'][] = $ejNombre;
+                }
+
+                $grupos[$clave]['items'][] = array(
+                    'unidad_medida' => $this->limpiarTexto(isset($item->unidad_medida) ? $item->unidad_medida : ''),
+                    'cantidad'      => $cantidad,
+                    'descripcion'   => $this->limpiarTexto(isset($item->descripcion) ? $item->descripcion : ''),
+                    'municipio'     => $this->limpiarTexto(isset($item->municipio) ? $item->municipio : ''),
+                    'parroquia'     => $this->limpiarTexto(isset($item->parroquia) ? $item->parroquia : ''),
+                    'comuna'        => $this->limpiarTexto(isset($item->comuna) ? $item->comuna : '')
+                );
+            }
+
+            if (empty($grupos)) {
+                $pdf->AddPage('L', 'LETTER');
+                $this->dibujarEncabezadoPdf(
+                    $pdf,
+                    'SIN REGISTROS',
+                    'No se encontraron indicadores para los filtros seleccionados',
+                    'Ejercicio ' . (isset($filtros['ejercicio']) ? $filtros['ejercicio'] : '')
+                );
+                $pdf->SetFont('helvetica', '', 12);
+                $pdf->SetTextColor(90, 90, 90);
+                $pdf->SetXY(15, 95);
+                $pdf->Cell(249, 12, 'No existen indicadores de gestión registrados con los parámetros de consulta actuales.', 0, 1, 'C');
+                return $pdf->Output('', 'S');
+            }
+
+            foreach ($grupos as $grupo) {
+                $paginasGrupo = array_chunk($grupo['items'], 3);
+                $totalPaginasGrupo = count($paginasGrupo);
+
+                foreach ($paginasGrupo as $indicePagina => $tarjetas) {
+                    $pdf->AddPage('L', 'LETTER');
+
+                    // 1) Encabezado superior + Logo Zulia + Sub-encabezado (Tipo Indicador + Periodo)
+                    $this->dibujarEncabezadoPdf(
+                        $pdf,
+                        $grupo['linea_accion'],
+                        $grupo['tipo_indicador'],
+                        $grupo['periodo']
+                    );
+
+                    // 2) Línea divisoria vertical azul entre tarjetas (izq) y resumen (der)
+                    $pdf->SetDrawColor(74, 140, 199);
+                    $pdf->SetLineWidth(0.55);
+                    $pdf->Line(201, 52, 201, 207);
+
+                    // 3) Tarjetas de indicadores (hasta 3 por página)
+                    $posY = array(47, 101, 155);
+                    foreach ($tarjetas as $idx => $tarjeta) {
+                        $this->dibujarTarjetaIndicador($pdf, $tarjeta, $posY[$idx]);
+                    }
+
+                    // 4) Panel derecho: TOTAL REALIZADO + ORGANOS Y ENTES
+                    $this->dibujarPanelDerechoPdf(
+                        $pdf,
+                        $grupo['total_cantidad'],
+                        $grupo['ejecutores']
+                    );
+
+                    // 5) Pie sutil cuando un grupo tiene más de 3 indicadores
+                    if ($totalPaginasGrupo > 1) {
+                        $inicio = ($indicePagina * 3) + 1;
+                        $fin    = min($inicio + count($tarjetas) - 1, count($grupo['items']));
+                        $pdf->SetFont('helvetica', 'I', 7.5);
+                        $pdf->SetTextColor(115, 115, 115);
+                        $pdf->SetXY(8, 208.5);
+                        $pdf->Cell(
+                            190,
+                            5,
+                            'Mostrando indicadores ' . $inicio . '–' . $fin . ' de ' . count($grupo['items'])
+                                . '   |   Lámina ' . ($indicePagina + 1) . ' de ' . $totalPaginasGrupo,
+                            0,
+                            0,
+                            'L'
+                        );
+                    }
+                }
+            }
+
+            return $pdf->Output('', 'S');
+        } finally {
+            error_reporting($prevReporting);
+        }
+    }
+
+    /**
+     * Dibuja el cintillo azul de Línea de Acción, Logo Zulia, Tipo Indicador y Periodo.
+     */
+    protected function dibujarEncabezadoPdf($pdf, $lineaAccion, $tipoIndicador, $periodo)
+    {
+        // Cintillo superior azul claro con esquina derecha redondeada (desde borde izquierdo)
+        $pdf->SetFillColor(165, 209, 248);
+        $pdf->RoundedRect(-6, 6, 232, 16.5, 5, '0110', 'F');
+
+        // Ícono de barras + flecha de tendencia
+        $this->dibujarIconoGrafico($pdf, 12, 8.2);
+
+        // Título: LÍNEA DE ACCIÓN
+        $tituloLinea = 'LÍNEA DE ACCIÓN: ' . $lineaAccion;
+        $lenLinea = mb_strlen($tituloLinea, 'UTF-8');
+        $fontLinea = ($lenLinea > 78) ? 11.5 : (($lenLinea > 58) ? 13.5 : 16);
+        $pdf->SetFont('helvetica', 'B', $fontLinea);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->MultiCell(193, 14.5, $tituloLinea, 0, 'L', false, 1, 29, 7.2, true, 0, false, true, 14.5, 'M', true);
+
+        // Logo Gobernación Bolivariana del Zulia (esquina superior derecha)
+        $logoZulia = public_path('images/cintillo_sistema_derecha.png');
+        if (file_exists($logoZulia)) {
+            // La imagen tiene margen blanco incorporado, la ubicamos con compensación para que destaque limpia
+            $pdf->Image($logoZulia, 224, -4, 58, 58, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+        }
+
+        // Píldora gris izquierda: Tipo de Indicador (Sub-tipo)
+        $pdf->SetFillColor(236, 236, 236);
+        $pdf->RoundedRect(-5, 26.5, 171, 14.5, 5, '0110', 'F');
+
+        $lenSub = mb_strlen($tipoIndicador, 'UTF-8');
+        $fontSub = ($lenSub > 130) ? 7.5 : (($lenSub > 80) ? 9 : 11);
+        $pdf->SetFont('helvetica', 'B', $fontSub);
+        $pdf->SetTextColor(20, 20, 20);
+        $pdf->MultiCell(158, 13.5, $tipoIndicador, 0, 'C', false, 1, 5, 27, true, 0, false, true, 13.5, 'M', true);
+
+        // Píldora gris derecha: Periodo
+        $pdf->SetFillColor(236, 236, 236);
+        $pdf->RoundedRect(170, 26.5, 56, 14.5, 5, '1111', 'F');
+
+        $txtPeriodo = 'Periodo: ' . $periodo;
+        $fontPer = (mb_strlen($txtPeriodo, 'UTF-8') > 28) ? 8.5 : 9.5;
+        $pdf->SetFont('helvetica', 'B', $fontPer);
+        $pdf->SetTextColor(20, 20, 20);
+        $pdf->MultiCell(52, 13.5, $txtPeriodo, 0, 'C', false, 1, 172, 27, true, 0, false, true, 13.5, 'M', true);
+    }
+
+    /**
+     * Dibuja una tarjeta de indicador (3 columnas con íconos + franja inferior de descripción).
+     */
+    protected function dibujarTarjetaIndicador($pdf, array $tarjeta, $y)
+    {
+        $xLeft = 8;
+        $wTotal = 186;
+
+        // Coordenadas de las 3 columnas
+        $c1X = $xLeft;       $c1W = 60;
+        $c2X = $c1X + 63;    $c2W = 57;
+        $c3X = $c2X + 60;    $c3W = 63;
+
+        // 1) Íconos vectoriales encima de cada píldora
+        $this->dibujarIconoVelocimetro($pdf, $c1X + ($c1W / 2), $y + 11.2);
+        $this->dibujarIconoCheck($pdf, $c2X + ($c2W / 2), $y + 6.2);
+        $this->dibujarIconoPin($pdf, $c3X + ($c3W / 2), $y + 5.2);
+
+        // 2) Píldoras de encabezados de columna
+        $pillY = $y + 12.2;
+        $pillH = 7.6;
+
+        // Verde: UNIDAD MEDIDA
+        $pdf->SetFillColor(7, 208, 2);
+        $pdf->RoundedRect($c1X, $pillY, $c1W, $pillH, 3.8, '1111', 'F');
+        $pdf->SetFont('helvetica', 'B', 8.5);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->SetXY($c1X, $pillY);
+        $pdf->Cell($c1W, $pillH, 'UNIDAD MEDIDA', 0, 0, 'C');
+
+        // Amarillo: CANTIDAD
+        $pdf->SetFillColor(252, 203, 58);
+        $pdf->RoundedRect($c2X, $pillY, $c2W, $pillH, 3.8, '1111', 'F');
+        $pdf->SetXY($c2X, $pillY);
+        $pdf->Cell($c2W, $pillH, 'CANTIDAD', 0, 0, 'C');
+
+        // Azul claro: TERRITORIALIDAD Y COBERTURA
+        $pdf->SetFillColor(165, 209, 248);
+        $pdf->RoundedRect($c3X, $pillY, $c3W, $pillH, 3.8, '1111', 'F');
+        $pdf->SetFont('helvetica', 'B', 7.5);
+        $pdf->SetXY($c3X, $pillY);
+        $pdf->Cell($c3W, $pillH, 'TERRITORIALIDAD Y COBERTURA', 0, 0, 'C');
+
+        // 3) Valores de cada columna
+        $valY = $pillY + $pillH + 1.2;
+        $valH = 16.5;
+
+        // Valor: Unidad de Medida
+        $um = $tarjeta['unidad_medida'];
+        $lenUm = mb_strlen($um, 'UTF-8');
+        $fontUm = ($lenUm > 42) ? 8 : (($lenUm > 22) ? 9.5 : 11.5);
+        $pdf->SetFont('helvetica', 'B', $fontUm);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->MultiCell($c1W - 2, $valH, $um, 0, 'C', false, 1, $c1X + 1, $valY, true, 0, false, true, $valH, 'M', true);
+
+        // Valor: Cantidad
+        $cantTxt = $this->formatearCantidad($tarjeta['cantidad']);
+        $lenCant = strlen($cantTxt);
+        $fontCant = ($lenCant > 10) ? 11 : (($lenCant > 7) ? 13 : 15);
+        $pdf->SetFont('helvetica', 'B', $fontCant);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->MultiCell($c2W - 2, $valH, $cantTxt, 0, 'C', false, 1, $c2X + 1, $valY, true, 0, false, true, $valH, 'M', true);
+
+        // Valor: Territorialidad y Cobertura (Municipios / Parroquias / Comunas)
+        $mun = $this->recortarTexto($tarjeta['municipio'], 38);
+        $par = $this->recortarTexto($tarjeta['parroquia'], 38);
+        $com = $this->recortarTexto($tarjeta['comuna'], 38);
+        $pdf->SetFont('helvetica', '', 7);
+        $pdf->SetTextColor(17, 17, 17);
+        $htmlTerr = '<div style="font-size:7pt; line-height:1.35; color:#111111;">'
+            . '<b>Municipios:</b> ' . htmlspecialchars($mun, ENT_QUOTES, 'UTF-8') . '<br/>'
+            . '<b>Parroquias:</b> ' . htmlspecialchars($par, ENT_QUOTES, 'UTF-8') . '<br/>'
+            . '<b>Comunas:</b> ' . htmlspecialchars($com, ENT_QUOTES, 'UTF-8')
+            . '</div>';
+        $pdf->writeHTMLCell($c3W - 2, $valH, $c3X + 1.5, $valY + 0.5, $htmlTerr, 0, 1, false, true, 'L', true);
+
+        // 4) Franja inferior celeste muy claro: Descripción / Detalle
+        $descY = $valY + $valH + 0.8;
+        $descH = 11.2;
+        $pdf->SetFillColor(234, 245, 253);
+        $pdf->RoundedRect($xLeft, $descY, $wTotal, $descH, 3.8, '1111', 'F');
+
+        $desc = $this->recortarTexto($tarjeta['descripcion'], 230);
+        $lenDesc = mb_strlen($desc, 'UTF-8');
+        $fontDesc = ($lenDesc > 140) ? 7.2 : (($lenDesc > 85) ? 8.2 : 9.5);
+        $pdf->SetFont('helvetica', 'B', $fontDesc);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->MultiCell($wTotal - 8, $descH - 0.6, $desc, 0, 'C', false, 1, $xLeft + 4, $descY + 0.3, true, 0, false, true, $descH - 0.6, 'M', true);
+    }
+
+    /**
+     * Dibuja el panel lateral derecho: TOTAL REALIZADO (círculo concéntrico) y ORGANOS Y ENTES.
+     */
+    protected function dibujarPanelDerechoPdf($pdf, $totalCantidad, array $ejecutores)
+    {
+        $cx = 240.5;
+
+        // Título TOTAL REALIZADO
+        $pdf->SetFont('helvetica', 'B', 13.5);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->SetXY(205, 54);
+        $pdf->Cell(71, 8, 'TOTAL REALIZADO', 0, 1, 'C');
+
+        // Círculos concéntricos amarillo / dorado / turquesa
+        $cy = 91;
+        // Anillo exterior amarillo suave
+        $pdf->SetFillColor(253, 224, 114);
+        $pdf->Circle($cx, $cy, 22, 0, 360, 'F');
+        // Anillo intermedio dorado cálido (ligeramente desplazado como en la referencia)
+        $pdf->SetFillColor(248, 200, 62);
+        $pdf->Circle($cx - 1.5, $cy + 1.8, 18.2, 0, 360, 'F');
+        // Círculo central turquesa
+        $pdf->SetFillColor(89, 195, 201);
+        $pdf->Circle($cx - 2.0, $cy + 2.0, 14.2, 0, 360, 'F');
+
+        // Número total dentro del círculo (centrado en cx-2, cy+2)
+        $totalTxt = $this->formatearCantidad($totalCantidad);
+        $lenTotal = strlen($totalTxt);
+        $fontTotal = ($lenTotal <= 3) ? 24 : (($lenTotal <= 6) ? 17 : (($lenTotal <= 9) ? 12.5 : 10));
+        $pdf->SetFont('helvetica', 'B', $fontTotal);
+        $pdf->SetTextColor(10, 10, 10);
+        $pdf->MultiCell(26, 14, $totalTxt, 0, 'C', false, 1, $cx - 15.0, $cy - 5.0, true, 0, false, true, 14, 'M', true);
+
+        // Cintillo turquesa claro: ORGANOS Y ENTES (extendido al borde derecho)
+        $bannerY = 126;
+        $bannerH = 13.5;
+        $pdf->SetFillColor(157, 219, 214);
+        $pdf->RoundedRect(206.5, $bannerY, 78, $bannerH, 5.5, '1001', 'F');
+
+        // Ícono organizacional a la izquierda de la etiqueta
+        $this->dibujarIconoOrganos($pdf, 217, $bannerY + 6.8);
+
+        $pdf->SetFont('helvetica', 'B', 10.5);
+        $pdf->SetTextColor(15, 15, 15);
+        $pdf->SetXY(225, $bannerY);
+        $pdf->Cell(52, $bannerH, 'ORGANOS Y ENTES', 0, 1, 'L');
+
+        // Lista de ejecutores con viñeta circular negra
+        $listY = 144.5;
+        $maxY  = 206;
+        $nEj   = count($ejecutores);
+        $fontEj = ($nEj > 6) ? 6.8 : (($nEj > 4) ? 7.5 : 8.5);
+        $lineH  = ($nEj > 6) ? 3.2 : (($nEj > 4) ? 3.7 : 4.2);
+
+        $pdf->SetFont('helvetica', 'B', $fontEj);
+        $pdf->SetTextColor(15, 15, 15);
+
+        foreach ($ejecutores as $ej) {
+            if ($listY > $maxY - 6) {
+                $pdf->SetFont('helvetica', 'I', 7.5);
+                $pdf->SetTextColor(90, 90, 90);
+                $pdf->SetXY(217, $listY);
+                $pdf->Cell(58, 4, '... y otros entes participantes', 0, 1, 'L');
+                break;
+            }
+
+            // Viñeta circular negra
+            $pdf->SetFillColor(10, 10, 10);
+            $pdf->Circle(213.5, $listY + 2.2, 2.3, 0, 360, 'F');
+
+            $ejMostrar = $this->recortarTexto($ej, 95);
+            $numLines  = $pdf->getNumLines($ejMostrar, 57);
+            $blockH    = max(5.5, $numLines * $lineH + 1.0);
+
+            $pdf->MultiCell(57, $blockH, $ejMostrar, 0, 'L', false, 1, 218.5, $listY, true, 0, false, true, $blockH, 'T', true);
+            $listY += $blockH + 2.2;
+        }
+    }
+
+    /**
+     * Ícono vectorial de gráfico de barras con flecha ascendente para el cintillo principal.
+     */
+    protected function dibujarIconoGrafico($pdf, $x, $y)
+    {
+        $pdf->SetDrawColor(25, 45, 65);
+        $pdf->SetLineWidth(0.4);
+
+        // 4 barras crecientes en tonos teal
+        $barras = array(
+            array(0,   7.5, 2.4, 4.3, array(120, 195, 200)),
+            array(3.2, 5.8, 2.4, 6.0, array(92,  178, 185)),
+            array(6.4, 4.0, 2.4, 7.8, array(72,  160, 168)),
+            array(9.6, 2.2, 2.4, 9.6, array(52,  140, 150))
+        );
+        foreach ($barras as $b) {
+            $pdf->SetFillColor($b[4][0], $b[4][1], $b[4][2]);
+            $pdf->Rect($x + $b[0], $y + $b[1], $b[2], $b[3], 'DF');
+        }
+
+        // Línea de tendencia ascendente con nodos
+        $pdf->SetDrawColor(20, 35, 50);
+        $pdf->SetLineWidth(0.5);
+        $pdf->Line($x + 0.5, $y + 5.8, $x + 4.4, $y + 3.8);
+        $pdf->Line($x + 4.4, $y + 3.8, $x + 7.6, $y + 2.2);
+        $pdf->Line($x + 7.6, $y + 2.2, $x + 11.4, $y + 0.2);
+
+        // Punta de flecha
+        $pdf->Line($x + 9.4, $y + 0.2, $x + 11.4, $y + 0.2);
+        $pdf->Line($x + 11.4, $y + 0.2, $x + 11.2, $y + 2.2);
+
+        // Puntos en los vértices
+        $pdf->SetFillColor(255, 255, 255);
+        $pdf->Circle($x + 0.5, $y + 5.8, 0.65, 0, 360, 'DF');
+        $pdf->Circle($x + 4.4, $y + 3.8, 0.65, 0, 360, 'DF');
+        $pdf->Circle($x + 7.6, $y + 2.2, 0.65, 0, 360, 'DF');
+    }
+
+    /**
+     * Ícono vectorial de velocímetro semicircular superior para UNIDAD MEDIDA.
+     */
+    protected function dibujarIconoVelocimetro($pdf, $cx, $cy)
+    {
+        // Semicírculo superior exterior azul claro (de 0° derecha antihorario a 180° izquierda)
+        $pdf->SetFillColor(186, 214, 245);
+        $pdf->PieSector($cx, $cy, 10.2, 0, 180, 'F', false, 0);
+        // Semicírculo superior interior blanco (formando arco limpio)
+        $pdf->SetFillColor(255, 255, 255);
+        $pdf->PieSector($cx, $cy + 0.1, 6.0, 0, 180, 'F', false, 0);
+        // Aguja azul apuntando hacia arriba-derecha
+        $pdf->SetDrawColor(46, 102, 204);
+        $pdf->SetLineWidth(1.0);
+        $pdf->Line($cx, $cy - 0.6, $cx + 3.6, $cy - 7.4);
+        $pdf->SetFillColor(46, 102, 204);
+        $pdf->Circle($cx, $cy - 0.6, 1.35, 0, 360, 'F');
+    }
+
+    /**
+     * Ícono vectorial de círculo verde con marca de verificación blanca para CANTIDAD.
+     */
+    protected function dibujarIconoCheck($pdf, $cx, $cy)
+    {
+        $pdf->SetFillColor(7, 200, 2);
+        $pdf->Circle($cx, $cy, 5.2, 0, 360, 'F');
+
+        $pdf->SetDrawColor(255, 255, 255);
+        $pdf->SetLineWidth(1.2);
+        $pdf->Line($cx - 2.3, $cy + 0.1, $cx - 0.5, $cy + 2.0);
+        $pdf->Line($cx - 0.5, $cy + 2.0, $cx + 2.6, $cy - 1.9);
+    }
+
+    /**
+     * Ícono vectorial de marcador de ubicación rojo para TERRITORIALIDAD Y COBERTURA.
+     */
+    protected function dibujarIconoPin($pdf, $cx, $cy)
+    {
+        // Punta inferior del pin (triángulo)
+        $pdf->SetFillColor(235, 42, 30);
+        $pdf->Polygon(array(
+            $cx - 3.6, $cy + 1.2,
+            $cx + 3.6, $cy + 1.2,
+            $cx,       $cy + 6.4
+        ), 'F');
+        // Cabeza circular roja
+        $pdf->Circle($cx, $cy, 4.0, 0, 360, 'F');
+        // Punto central blanco
+        $pdf->SetFillColor(255, 255, 255);
+        $pdf->Circle($cx, $cy, 1.5, 0, 360, 'F');
+    }
+
+    /**
+     * Ícono vectorial institucional (engranaje + nodos de articulación) para ORGANOS Y ENTES.
+     */
+    protected function dibujarIconoOrganos($pdf, $cx, $cy)
+    {
+        // Engranaje superior estilizado
+        $pdf->SetDrawColor(20, 35, 35);
+        $pdf->SetFillColor(20, 35, 35);
+        $pdf->SetLineWidth(0.45);
+        $pdf->Circle($cx, $cy - 2.0, 2.2, 0, 360, 'D');
+        $pdf->Circle($cx, $cy - 2.0, 0.8, 0, 360, 'F');
+        for ($ang = 0; $ang < 360; $ang += 45) {
+            $rad = deg2rad($ang);
+            $x1 = $cx + cos($rad) * 2.1;
+            $y1 = ($cy - 2.0) + sin($rad) * 2.1;
+            $x2 = $cx + cos($rad) * 3.0;
+            $y2 = ($cy - 2.0) + sin($rad) * 3.0;
+            $pdf->Line($x1, $y1, $x2, $y2);
+        }
+        // Arco inferior representando colaboración entre órganos y entes
+        $pdf->SetLineWidth(0.6);
+        $pdf->Line($cx - 3.4, $cy + 1.6, $cx - 1.2, $cy + 3.4);
+        $pdf->Line($cx - 1.2, $cy + 3.4, $cx + 1.2, $cy + 3.4);
+        $pdf->Line($cx + 1.2, $cy + 3.4, $cx + 3.4, $cy + 1.6);
+        $pdf->Line($cx - 1.8, $cy + 2.2, $cx + 1.8, $cy + 2.2);
+    }
+
+    /**
+     * Normaliza espacios y saltos de línea en textos provenientes de BD.
+     */
+    protected function limpiarTexto($texto)
+    {
+        $texto = str_replace(array("\r\n", "\r", "\n", "\t"), ' ', (string) $texto);
+        $texto = preg_replace('/\s+/', ' ', $texto);
+        return trim($texto);
+    }
+
+    /**
+     * Recorta texto largo preservando UTF-8 sin romper caracteres.
+     */
+    protected function recortarTexto($texto, $maxLen)
+    {
+        if (mb_strlen($texto, 'UTF-8') <= $maxLen) {
+            return $texto;
+        }
+        return rtrim(mb_substr($texto, 0, $maxLen - 3, 'UTF-8')) . '...';
+    }
+
+    /**
+     * Formatea cantidades numéricas (sin decimales si es entero, hasta 2 si tiene fracción).
+     */
+    protected function formatearCantidad($numero)
+    {
+        $valor = (float) $numero;
+        if (abs($valor - round($valor)) < 0.0001) {
+            return number_format($valor, 0, ',', '.');
+        }
+        return number_format($valor, 2, ',', '.');
     }
 }
