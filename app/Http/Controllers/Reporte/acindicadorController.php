@@ -1104,9 +1104,9 @@ class acindicadorController extends Controller
         $pdf->SetFillColor(234, 245, 253);
         $pdf->RoundedRect($xLeft, $descY, $wTotal, $descH, 3.8, '1111', 'F');
 
-        $desc = $this->recortarTexto($tarjeta['descripcion'], 230);
+        $desc = mb_strtoupper($this->recortarTexto($tarjeta['descripcion'], 230), 'UTF-8');
         $lenDesc = mb_strlen($desc, 'UTF-8');
-        $fontDesc = ($lenDesc > 140) ? 7.2 : (($lenDesc > 85) ? 8.2 : 9.5);
+        $fontDesc = ($lenDesc > 130) ? 7.0 : (($lenDesc > 78) ? 8.0 : 9.2);
         $pdf->SetFont('helvetica', 'B', $fontDesc);
         $pdf->SetTextColor(15, 15, 15);
         $pdf->MultiCell($wTotal - 8, $descH - 0.6, $desc, 0, 'C', false, 1, $xLeft + 4, $descY + 0.3, true, 0, false, true, $descH - 0.6, 'M', true);
