@@ -127,7 +127,8 @@ class acindicadorController extends Controller
             $registros = $query->get();
 
             $pdfBinary = $this->construirPdfLineaAccion($registros, $filtros);
-            $filename  = 'reporte_linea_accion_' . date('Ymd_His') . '.pdf';
+            $sufijo    = empty($filtros['id_tab_lapso']) ? 'acumulado_' : '';
+            $filename  = 'reporte_' . $sufijo . 'linea_accion_' . date('Ymd_His') . '.pdf';
 
             return Response::make($pdfBinary, 200, array(
                 'Content-Type'        => 'application/pdf',
@@ -157,7 +158,8 @@ class acindicadorController extends Controller
             $registros = $query->get();
 
             $pdfBinary = $this->construirPdfEjecutor($registros, $filtros);
-            $filename  = 'reporte_por_ejecutor_' . date('Ymd_His') . '.pdf';
+            $sufijo    = empty($filtros['id_tab_lapso']) ? 'acumulado_' : '';
+            $filename  = 'reporte_' . $sufijo . 'por_ejecutor_' . date('Ymd_His') . '.pdf';
 
             return Response::make($pdfBinary, 200, array(
                 'Content-Type'        => 'application/pdf',
@@ -319,6 +321,45 @@ class acindicadorController extends Controller
     }
 
     /**
+     * Obtiene la descripción del periodo acumulado según los lapsos activos cargados en el ejercicio.
+     *
+     * @param int|string $ejercicio
+     * @param bool $multilinea
+     * @return string
+     */
+    protected function obtenerEtiquetaPeriodoAcumulado($ejercicio, $multilinea = false)
+    {
+        $query = tab_lapso::select('de_lapso')
+            ->where('in_activo', '=', true)
+            ->orderBy('id', 'ASC');
+
+        if (!empty($ejercicio)) {
+            $query->where('id_tab_ejercicio_fiscal', '=', $ejercicio);
+        }
+
+        $lapsos = $query->get();
+        $nombres = array();
+        foreach ($lapsos as $l) {
+            $txt = $this->limpiarTexto($l->de_lapso);
+            if ($txt !== '') {
+                $nombres[] = $txt;
+            }
+        }
+
+        $base = 'Acumulado' . (!empty($ejercicio) ? ' ' . $ejercicio : '');
+        if (count($nombres) === 0) {
+            return $base;
+        }
+        if (count($nombres) === 1) {
+            $rango = '(' . $nombres[0] . ')';
+        } else {
+            $rango = '(' . $nombres[0] . ' a ' . $nombres[count($nombres) - 1] . ')';
+        }
+
+        return $multilinea ? ($base . "\n" . $rango) : ($base . ' ' . $rango);
+    }
+
+    /**
      * Construye el resumen legible de los filtros aplicados para la cabecera del Excel.
      *
      * @param array $filtros
@@ -337,7 +378,7 @@ class acindicadorController extends Controller
                 $partes[] = 'Periodo: ' . trim($lapso->de_lapso);
             }
         } else {
-            $partes[] = 'Periodo: Todos';
+            $partes[] = 'Periodo: ' . $this->obtenerEtiquetaPeriodoAcumulado($filtros['ejercicio'], false);
         }
         if (!empty($filtros['id_tab_ejecutores'])) {
             $ej = tab_ejecutores::find((int) $filtros['id_tab_ejecutores']);
@@ -395,14 +436,16 @@ class acindicadorController extends Controller
      * @param string $tipo  'linea' | 'ejecutor'
      * @param \Illuminate\Support\Collection|array $registros
      * @param string $resumenFiltros
+     * @param bool $esAcumulado
      * @return \PHPExcel
      */
-    public function construirExcel($tipo, $registros, $resumenFiltros)
+    public function construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado = false)
     {
         $esEjecutor = ($tipo === 'ejecutor');
+        $etiquetaAcum = $esAcumulado ? 'ACUMULADO ' : '';
         $titulo     = $esEjecutor
-            ? 'REPORTE DE GESTIÓN POR EJECUTOR'
-            : 'REPORTE DE GESTIÓN POR LÍNEA DE ACCIÓN';
+            ? 'REPORTE DE GESTIÓN ' . $etiquetaAcum . 'POR EJECUTOR'
+            : 'REPORTE DE GESTIÓN ' . $etiquetaAcum . 'POR LÍNEA DE ACCIÓN';
         $nombreHoja = $esEjecutor ? 'POR_EJECUTOR' : 'POR_LINEA_ACCION';
 
         if ($esEjecutor) {
@@ -657,10 +700,14 @@ class acindicadorController extends Controller
             $this->aplicarOrden($query, $tipo);
 
             $registros      = $query->get();
+            $esAcumulado    = empty($filtros['id_tab_lapso']);
             $resumenFiltros = $this->describirFiltros($filtros);
-            $objPHPExcel    = $this->construirExcel($tipo, $registros, $resumenFiltros);
+            $objPHPExcel    = $this->construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado);
 
-            $prefijo  = ($tipo === 'ejecutor') ? 'reporte_gestion_por_ejecutor_' : 'reporte_gestion_por_linea_accion_';
+            $etiquetaAcum = $esAcumulado ? 'acumulado_' : '';
+            $prefijo  = ($tipo === 'ejecutor')
+                ? 'reporte_gestion_' . $etiquetaAcum . 'por_ejecutor_'
+                : 'reporte_gestion_' . $etiquetaAcum . 'por_linea_accion_';
             $filename = $prefijo . date('Ymd_His') . '.xlsx';
 
             if (!class_exists('ZipArchive')) {
@@ -714,18 +761,28 @@ class acindicadorController extends Controller
             $pdf->SetAutoPageBreak(false, 0);
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-            // Agrupar registros por (Línea de Acción, Tipo Indicador, Periodo)
+            // Si no se selecciona periodo/lapso, se acumulan todos los periodos cargados del ejercicio
+            $esAcumulado      = empty($filtros['id_tab_lapso']);
+            $periodoAcumulado = $esAcumulado
+                ? $this->obtenerEtiquetaPeriodoAcumulado(isset($filtros['ejercicio']) ? $filtros['ejercicio'] : '', true)
+                : '';
+
+            // Agrupar registros por (Línea de Acción, Tipo Indicador [, Periodo si fue seleccionado])
             $grupos = array();
             foreach ($registros as $item) {
                 $clave = (isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '')
-                    . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : '')
-                    . '|' . (isset($item->id_tab_lapso) ? $item->id_tab_lapso : '');
+                    . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : '');
+                if (!$esAcumulado) {
+                    $clave .= '|' . (isset($item->id_tab_lapso) ? $item->id_tab_lapso : '');
+                }
 
                 if (!isset($grupos[$clave])) {
                     $grupos[$clave] = array(
                         'linea_accion'   => $this->limpiarTexto(isset($item->linea_accion) ? $item->linea_accion : ''),
                         'tipo_indicador' => $this->limpiarTexto(isset($item->tipo_indicador) ? $item->tipo_indicador : ''),
-                        'periodo'        => $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
+                        'periodo'        => $esAcumulado
+                            ? $periodoAcumulado
+                            : $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
                         'total_cantidad' => 0.0,
                         'ejecutores'     => array(),
                         'items'          => array()
@@ -852,13 +909,21 @@ class acindicadorController extends Controller
             $pdf->SetAutoPageBreak(false, 0);
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-            // Agrupar registros por (Ejecutor, Línea de Acción, Tipo Indicador, Periodo)
+            // Si no se selecciona periodo/lapso, se acumulan todos los periodos cargados del ejercicio
+            $esAcumulado      = empty($filtros['id_tab_lapso']);
+            $periodoAcumulado = $esAcumulado
+                ? $this->obtenerEtiquetaPeriodoAcumulado(isset($filtros['ejercicio']) ? $filtros['ejercicio'] : '', true)
+                : '';
+
+            // Agrupar registros por (Ejecutor, Línea de Acción, Tipo Indicador [, Periodo si fue seleccionado])
             $grupos = array();
             foreach ($registros as $item) {
                 $clave = (isset($item->id_tab_ejecutores) ? $item->id_tab_ejecutores : '')
                     . '|' . (isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '')
-                    . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : '')
-                    . '|' . (isset($item->id_tab_lapso) ? $item->id_tab_lapso : '');
+                    . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : '');
+                if (!$esAcumulado) {
+                    $clave .= '|' . (isset($item->id_tab_lapso) ? $item->id_tab_lapso : '');
+                }
 
                 if (!isset($grupos[$clave])) {
                     $codEj = $this->limpiarTexto(isset($item->codigo_ejecutor) ? $item->codigo_ejecutor : '');
@@ -866,7 +931,9 @@ class acindicadorController extends Controller
                     $grupos[$clave] = array(
                         'ejecutor_titulo' => ($codEj !== '' ? $codEj . ' - ' : '') . $nomEj,
                         'tipo_indicador'  => $this->limpiarTexto(isset($item->tipo_indicador) ? $item->tipo_indicador : ''),
-                        'periodo'         => $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
+                        'periodo'         => $esAcumulado
+                            ? $periodoAcumulado
+                            : $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
                         'total_cantidad'  => 0.0,
                         'lineas_accion'   => array(),
                         'items'           => array()
@@ -1011,12 +1078,13 @@ class acindicadorController extends Controller
         $pdf->SetTextColor(20, 20, 20);
         $pdf->MultiCell(158, 13.5, $tipoIndicador, 0, 'C', false, 1, 5, 27, true, 0, false, true, 13.5, 'M', true);
 
-        // Píldora gris derecha: Periodo
+        // Píldora gris derecha: Periodo (soporta una línea o dos líneas en modo Acumulado)
         $pdf->SetFillColor(236, 236, 236);
         $pdf->RoundedRect(170, 26.5, 56, 14.5, 5, '1111', 'F');
 
         $txtPeriodo = 'Periodo: ' . $periodo;
-        $fontPer = (mb_strlen($txtPeriodo, 'UTF-8') > 28) ? 8.5 : 9.5;
+        $esMultilinea = (strpos($txtPeriodo, "\n") !== false);
+        $fontPer = $esMultilinea ? 7.5 : ((mb_strlen($txtPeriodo, 'UTF-8') > 28) ? 8.5 : 9.5);
         $pdf->SetFont('helvetica', 'B', $fontPer);
         $pdf->SetTextColor(20, 20, 20);
         $pdf->MultiCell(52, 13.5, $txtPeriodo, 0, 'C', false, 1, 172, 27, true, 0, false, true, 13.5, 'M', true);

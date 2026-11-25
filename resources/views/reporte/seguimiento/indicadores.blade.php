@@ -29,23 +29,28 @@ this.id_tab_lapso = new Ext.form.ComboBox({
 	forceSelection: true,
 	resizable: true,
 	triggerAction: 'all',
-	emptyText: 'Todos los Periodos del Ejercicio {{ $ejercicio }}',
+	emptyText: 'Acumulado (Todos los Periodos {{ $ejercicio }})',
 	selectOnFocus: true,
 	mode: 'local',
 	width: 340,
 	listeners: {
 		select: function() {
 			reporteIndicadoresAC.main.initialLapso = '';
+		},
+		blur: function(cmb) {
+			if (!cmb.getRawValue()) {
+				cmb.clearValue();
+				reporteIndicadoresAC.main.initialLapso = '';
+			}
 		}
 	}
 });
 this.storeLAPSO.load();
 if (this.OBJ.id_tab_lapso != '') {
-	paqueteComunJS.funcion.seleccionarComboByCo({
-		objCMB: this.id_tab_lapso,
-		value: this.OBJ.id_tab_lapso,
-		objStore: this.storeLAPSO
-	});
+	this.storeLAPSO.on('load', function() {
+		reporteIndicadoresAC.main.id_tab_lapso.setValue(reporteIndicadoresAC.main.OBJ.id_tab_lapso);
+		reporteIndicadoresAC.main.initialLapso = '';
+	}, this, {single: true});
 }
 
 this.id_tab_ejecutores = new Ext.form.ComboBox({
