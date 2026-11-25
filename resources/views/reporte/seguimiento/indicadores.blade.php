@@ -291,6 +291,12 @@ this.formpanel = new Ext.form.FormPanel({
 		},
 		'-',
 		{
+			text: 'PDF por Ejecutor',
+			iconCls: 'icon-pdf',
+			handler: this.onExportarPdfEjecutor
+		},
+		'-',
+		{
 			text: 'Excel por Línea de Acción',
 			iconCls: 'icon-excel',
 			handler: this.onExportarLinea
@@ -416,6 +422,13 @@ onExportarPdfLinea: function() {
 	var qs = reporteIndicadoresAC.main.construirQueryString();
 	bajar.load({
 		url: '{{ URL::to('reporte/ac/indicadores/pdf/linea') }}' + qs
+	});
+},
+
+onExportarPdfEjecutor: function() {
+	var qs = reporteIndicadoresAC.main.construirQueryString();
+	bajar.load({
+		url: '{{ URL::to('reporte/ac/indicadores/pdf/ejecutor') }}' + qs
 	});
 },
 
