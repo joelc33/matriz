@@ -45,13 +45,23 @@ this.id_tab_lapso = new Ext.form.ComboBox({
 		}
 	}
 });
-this.storeLAPSO.load();
-if (this.OBJ.id_tab_lapso != '') {
-	this.storeLAPSO.on('load', function() {
+this.storeLAPSO.on('load', function(store) {
+	var recAcum = new store.recordType({
+		id: '0',
+		id_tab_ejercicio_fiscal: '{{ $ejercicio }}',
+		de_lapso: 'ACUMULADO',
+		rango: 'ACUMULADO {{ $ejercicio }} (Todos los Periodos)'
+	});
+	store.insert(0, recAcum);
+
+	if (reporteIndicadoresAC.main.OBJ.id_tab_lapso != '') {
 		reporteIndicadoresAC.main.id_tab_lapso.setValue(reporteIndicadoresAC.main.OBJ.id_tab_lapso);
-		reporteIndicadoresAC.main.initialLapso = '';
-	}, this, {single: true});
-}
+	} else {
+		reporteIndicadoresAC.main.id_tab_lapso.setValue('0');
+	}
+	reporteIndicadoresAC.main.initialLapso = '';
+}, this, {single: true});
+this.storeLAPSO.load();
 
 this.id_tab_ejecutores = new Ext.form.ComboBox({
 	fieldLabel: 'UNIDAD EJECUTORA',
@@ -315,6 +325,10 @@ this.formpanel = new Ext.form.FormPanel({
 	]
 });
 
+this.lblResumenAcumulado = new Ext.Toolbar.TextItem({
+	text: '<b>Resumen:</b> Cargando...'
+});
+
 this.gridPanel_ = new Ext.grid.GridPanel({
 	title: 'Vista Previa de Indicadores de Gestión',
 	iconCls: 'icon-libro',
@@ -325,19 +339,23 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 	height: 360,
 	stripeRows: true,
 	autoScroll: true,
+	tbar: [
+		this.lblResumenAcumulado
+	],
 	columns: [
 		new Ext.grid.RowNumberer({width: 35}),
 		{header: 'Código Ejecutor',       width: 95,  sortable: true, dataIndex: 'codigo_ejecutor'},
-		{header: 'Ejecutor',              width: 220, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
-		{header: 'Línea de Acción',       width: 200, sortable: true, renderer: textoLargo, dataIndex: 'linea_accion'},
-		{header: 'Tipo Indicador',        width: 230, sortable: true, renderer: textoLargo, dataIndex: 'tipo_indicador'},
+		{header: 'Ejecutor',              width: 210, sortable: true, renderer: textoLargo, dataIndex: 'ejecutor'},
+		{header: 'Línea de Acción',       width: 195, sortable: true, renderer: textoLargo, dataIndex: 'linea_accion'},
+		{header: 'Tipo Indicador',        width: 220, sortable: true, renderer: textoLargo, dataIndex: 'tipo_indicador'},
 		{header: 'Periodo',               width: 130, sortable: true, dataIndex: 'periodo'},
-		{header: 'Unidad de Medida',      width: 130, sortable: true, renderer: textoLargo, dataIndex: 'unidad_medida'},
-		{header: 'Cantidad',              width: 85,  sortable: true, align: 'right', dataIndex: 'cantidad'},
-		{header: 'Descripción / Detalle', width: 280, sortable: true, renderer: textoLargo, dataIndex: 'descripcion'},
+		{header: 'Unidad de Medida',      width: 125, sortable: true, renderer: textoLargo, dataIndex: 'unidad_medida'},
+		{header: 'Cantidad',              width: 90,  sortable: true, align: 'right', renderer: reporteIndicadoresAC.main.formatoNumero, dataIndex: 'cantidad'},
+		{header: 'Acumulado',             width: 100, sortable: true, align: 'right', renderer: reporteIndicadoresAC.main.formatoAcumulado, dataIndex: 'acumulado'},
+		{header: 'Descripción / Detalle', width: 260, sortable: true, renderer: textoLargo, dataIndex: 'descripcion'},
 		{header: 'Municipios',            width: 130, sortable: true, renderer: textoLargo, dataIndex: 'municipio'},
 		{header: 'Parroquias',            width: 150, sortable: true, renderer: textoLargo, dataIndex: 'parroquia'},
-		{header: 'Comunas',               width: 180, sortable: true, renderer: textoLargo, dataIndex: 'comuna'}
+		{header: 'Comunas',               width: 170, sortable: true, renderer: textoLargo, dataIndex: 'comuna'}
 	],
 	bbar: new Ext.PagingToolbar({
 		pageSize: 25,
@@ -346,6 +364,21 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 		displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
 		emptyMsg: '<span style="color:black">No se encontraron indicadores para los filtros seleccionados</span>'
 	})
+});
+
+this.store_lista.on('load', function(store) {
+	var raw = store.reader.jsonData || {};
+	var totalReg = raw.total || 0;
+	var totalCant = reporteIndicadoresAC.main.formatoNumero(raw.total_cantidad || 0);
+	var perEtiq = raw.periodo_etiqueta || 'Acumulado {{ $ejercicio }}';
+	var badge = raw.es_acumulado
+		? '<span style="color:#1F4E78;font-weight:bold;">MODO ACUMULADO</span>'
+		: '<span style="color:#2F5597;font-weight:bold;">PERIODO</span>';
+	reporteIndicadoresAC.main.lblResumenAcumulado.setText(
+		badge + ': <b>' + perEtiq + '</b> &nbsp;|&nbsp; ' +
+		'<b>Registros:</b> ' + totalReg + ' &nbsp;|&nbsp; ' +
+		'<b>Total Acumulado (Cantidad):</b> <span style="color:#006400;font-weight:bold;">' + totalCant + '</span>'
+	);
 });
 
 this.panelContenedor = new Ext.Panel({
@@ -364,11 +397,30 @@ this.panelContenedor.render('contenedorReporteIndicadoresAC');
 this.onConsultar();
 },
 
+formatoNumero: function(val) {
+	var num = parseFloat(val);
+	if (isNaN(num)) {
+		return '0';
+	}
+	var esEntero = Math.abs(num - Math.round(num)) < 0.0001;
+	var fixed = esEntero ? Math.round(num).toString() : num.toFixed(2);
+	var partes = fixed.split('.');
+	partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+	return partes.length > 1 ? partes[0] + ',' + partes[1] : partes[0];
+},
+
+formatoAcumulado: function(val) {
+	return '<b style="color:#1F4E78;">' + reporteIndicadoresAC.main.formatoNumero(val) + '</b>';
+},
+
 obtenerParametros: function() {
 	var me = reporteIndicadoresAC.main;
 	var lapsoVal = me.id_tab_lapso.getValue();
 	if (!lapsoVal && me.initialLapso) {
 		lapsoVal = me.initialLapso;
+	}
+	if (lapsoVal === '0') {
+		lapsoVal = '';
 	}
 	return {
 		_token: '{{ csrf_token() }}',
@@ -406,7 +458,7 @@ onConsultar: function() {
 onLimpiar: function() {
 	var me = reporteIndicadoresAC.main;
 	me.initialLapso = '';
-	me.id_tab_lapso.clearValue();
+	me.id_tab_lapso.setValue('0');
 	me.id_tab_tipo_indicador.clearValue();
 	me.id_tab_sub_tipo_indicador.clearValue();
 	me.storeSUB_TIPO_INDICADOR.removeAll();
@@ -463,6 +515,7 @@ getStoreLISTA: function() {
 			{name: 'periodo'},
 			{name: 'unidad_medida'},
 			{name: 'cantidad'},
+			{name: 'acumulado'},
 			{name: 'descripcion'},
 			{name: 'municipio'},
 			{name: 'parroquia'},

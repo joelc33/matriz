@@ -71,19 +71,55 @@ class acindicadorController extends Controller
 
             $filtros = $this->extraerFiltros();
             $orden   = Input::get('orden', 'linea');
+            $esAcum  = $this->esModoAcumulado($filtros);
 
-            $query = $this->construirConsulta($filtros);
+            $query         = $this->construirConsulta($filtros);
+            $queryCount    = clone $query;
+            $total         = $queryCount->count();
+            $querySum      = clone $query;
+            $totalCantidad = (float) $querySum->sum('ac_seguimiento.tab_indicadores.nu_cantidad');
 
-            $total = $query->count();
+            // Totales acumulados por grupo (Línea de Acción + Tipo Indicador) en todo el universo filtrado
+            $totalesGrupo = array();
+            $agrupados = $this->construirConsultaBase($filtros)
+                ->select(
+                    'ac_seguimiento.tab_indicadores.id_tab_tipo_indicador',
+                    'ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador',
+                    DB::raw('coalesce(sum(ac_seguimiento.tab_indicadores.nu_cantidad), 0) as acumulado')
+                )
+                ->groupBy('ac_seguimiento.tab_indicadores.id_tab_tipo_indicador')
+                ->groupBy('ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador')
+                ->get();
+            foreach ($agrupados as $g) {
+                $k = $g->id_tab_tipo_indicador . '|' . $g->id_tab_sub_tipo_indicador;
+                $totalesGrupo[$k] = (float) $g->acumulado;
+            }
 
             $this->aplicarOrden($query, $orden);
-
             $rows = $query->skip($start)->take($limit)->get()->toArray();
 
+            foreach ($rows as $idx => $r) {
+                $k = (isset($r['id_tab_tipo_indicador']) ? $r['id_tab_tipo_indicador'] : '')
+                    . '|' . (isset($r['id_tab_sub_tipo_indicador']) ? $r['id_tab_sub_tipo_indicador'] : '');
+                $rows[$idx]['acumulado'] = isset($totalesGrupo[$k]) ? $totalesGrupo[$k] : 0;
+            }
+
+            if ($esAcum) {
+                $periodoEtiqueta = $this->obtenerEtiquetaPeriodoAcumulado($filtros['ejercicio'], false);
+            } else {
+                $lapso = tab_lapso::find((int) $filtros['id_tab_lapso']);
+                $periodoEtiqueta = $lapso
+                    ? ($this->limpiarTexto($lapso->de_lapso) . ' ' . $filtros['ejercicio'])
+                    : ('Ejercicio ' . $filtros['ejercicio']);
+            }
+
             return Response::json(array(
-                'success' => 'true',
-                'total'   => $total,
-                'data'    => $rows
+                'success'          => 'true',
+                'total'            => $total,
+                'total_cantidad'   => $totalCantidad,
+                'es_acumulado'     => $esAcum,
+                'periodo_etiqueta' => $periodoEtiqueta,
+                'data'             => $rows
             ), 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return Response::json(array(
@@ -194,9 +230,14 @@ class acindicadorController extends Controller
             $id_ejecutor       = Session::get('ejecutor');
         }
 
+        $rawLapso = trim((string) Input::get('id_tab_lapso', ''));
+        if ($rawLapso === '0' || strtoupper($rawLapso) === 'ACUMULADO') {
+            $rawLapso = '';
+        }
+
         return array(
             'ejercicio'                => Session::get('ejercicio'),
-            'id_tab_lapso'             => Input::get('id_tab_lapso'),
+            'id_tab_lapso'             => $rawLapso,
             'id_tab_ejecutores'        => $id_tab_ejecutores,
             'id_ejecutor'              => $id_ejecutor,
             'id_tab_tipo_indicador'    => Input::get('id_tab_tipo_indicador'),
@@ -209,38 +250,26 @@ class acindicadorController extends Controller
     }
 
     /**
-     * Construye la consulta base sobre ac_seguimiento.tab_indicadores y sus catálogos.
+     * Indica si el reporte opera en modo Acumulado (sin periodo/lapso específico).
      *
-     * Ruta relacional:
-     *   ac_seguimiento.tab_indicadores (id_tab_meta_fisica)
-     *     -> ac_seguimiento.tab_meta_fisica (id_tab_ac_ae)
-     *     -> ac_seguimiento.tab_ac_ae (id_tab_ejecutores, id_tab_ac)
-     *     -> ac_seguimiento.tab_ac (id_tab_lapso, id_tab_ejercicio_fiscal)
+     * @param array $filtros
+     * @return bool
+     */
+    protected function esModoAcumulado(array $filtros)
+    {
+        $lapso = isset($filtros['id_tab_lapso']) ? trim((string) $filtros['id_tab_lapso']) : '';
+        return ($lapso === '' || $lapso === '0' || strtoupper($lapso) === 'ACUMULADO');
+    }
+
+    /**
+     * Construye los joins y filtros base (sin cláusula SELECT) para reutilizar en consultas y agregaciones.
      *
      * @param array $filtros
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function construirConsulta(array $filtros)
+    protected function construirConsultaBase(array $filtros)
     {
-        $query = tab_indicadores::select(
-            'ac_seguimiento.tab_indicadores.id',
-            'ac_seguimiento.tab_indicadores.id_tab_tipo_indicador',
-            'ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador',
-            'ac.id_tab_lapso',
-            'ae.id_tab_ejecutores',
-            DB::raw("trim(coalesce(ti.de_tipo_indicador, '')) as linea_accion"),
-            DB::raw("trim(coalesce(sti.de_sub_tipo_indicador, '')) as tipo_indicador"),
-            DB::raw("trim(l.de_lapso) || ' ' || ac.id_tab_ejercicio_fiscal::text as periodo"),
-            DB::raw("trim(coalesce(um.de_unidad_medida, '')) as unidad_medida"),
-            'ac_seguimiento.tab_indicadores.nu_cantidad as cantidad',
-            DB::raw("trim(coalesce(ac_seguimiento.tab_indicadores.de_indicador, '')) as descripcion"),
-            DB::raw("trim(coalesce(mun.de_municipio, '')) as municipio"),
-            DB::raw("trim(coalesce(parr.de_parroquia, '')) as parroquia"),
-            DB::raw("trim(coalesce(com.de_comuna, '')) as comuna"),
-            DB::raw("trim(ej.id_ejecutor) as codigo_ejecutor"),
-            DB::raw("trim(coalesce(ej.tx_ejecutor, '')) as ejecutor")
-        )
-            ->join('ac_seguimiento.tab_meta_fisica as mf', 'mf.id', '=', 'ac_seguimiento.tab_indicadores.id_tab_meta_fisica')
+        $query = tab_indicadores::join('ac_seguimiento.tab_meta_fisica as mf', 'mf.id', '=', 'ac_seguimiento.tab_indicadores.id_tab_meta_fisica')
             ->join('ac_seguimiento.tab_ac_ae as ae', 'ae.id', '=', 'mf.id_tab_ac_ae')
             ->join('ac_seguimiento.tab_ac as ac', 'ac.id', '=', 'ae.id_tab_ac')
             ->join('mantenimiento.tab_lapso as l', 'l.id', '=', 'ac.id_tab_lapso')
@@ -258,7 +287,7 @@ class acindicadorController extends Controller
         if (!empty($filtros['ejercicio'])) {
             $query->where('ac.id_tab_ejercicio_fiscal', '=', $filtros['ejercicio']);
         }
-        if (!empty($filtros['id_tab_lapso'])) {
+        if (!$this->esModoAcumulado($filtros)) {
             $query->where('ac.id_tab_lapso', '=', (int) $filtros['id_tab_lapso']);
         }
         if (!empty($filtros['id_tab_ejecutores'])) {
@@ -293,6 +322,40 @@ class acindicadorController extends Controller
         }
 
         return $query;
+    }
+
+    /**
+     * Construye la consulta base sobre ac_seguimiento.tab_indicadores y sus catálogos.
+     *
+     * Ruta relacional:
+     *   ac_seguimiento.tab_indicadores (id_tab_meta_fisica)
+     *     -> ac_seguimiento.tab_meta_fisica (id_tab_ac_ae)
+     *     -> ac_seguimiento.tab_ac_ae (id_tab_ejecutores, id_tab_ac)
+     *     -> ac_seguimiento.tab_ac (id_tab_lapso, id_tab_ejercicio_fiscal)
+     *
+     * @param array $filtros
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function construirConsulta(array $filtros)
+    {
+        return $this->construirConsultaBase($filtros)->select(
+            'ac_seguimiento.tab_indicadores.id',
+            'ac_seguimiento.tab_indicadores.id_tab_tipo_indicador',
+            'ac_seguimiento.tab_indicadores.id_tab_sub_tipo_indicador',
+            'ac.id_tab_lapso',
+            'ae.id_tab_ejecutores',
+            DB::raw("trim(coalesce(ti.de_tipo_indicador, '')) as linea_accion"),
+            DB::raw("trim(coalesce(sti.de_sub_tipo_indicador, '')) as tipo_indicador"),
+            DB::raw("trim(l.de_lapso) || ' ' || ac.id_tab_ejercicio_fiscal::text as periodo"),
+            DB::raw("trim(coalesce(um.de_unidad_medida, '')) as unidad_medida"),
+            'ac_seguimiento.tab_indicadores.nu_cantidad as cantidad',
+            DB::raw("trim(coalesce(ac_seguimiento.tab_indicadores.de_indicador, '')) as descripcion"),
+            DB::raw("trim(coalesce(mun.de_municipio, '')) as municipio"),
+            DB::raw("trim(coalesce(parr.de_parroquia, '')) as parroquia"),
+            DB::raw("trim(coalesce(com.de_comuna, '')) as comuna"),
+            DB::raw("trim(ej.id_ejecutor) as codigo_ejecutor"),
+            DB::raw("trim(coalesce(ej.tx_ejecutor, '')) as ejecutor")
+        );
     }
 
     /**
@@ -431,15 +494,17 @@ class acindicadorController extends Controller
     }
 
     /**
-     * Construye el objeto PHPExcel con formato profesional para cualquiera de los dos reportes.
+     * Construye el objeto PHPExcel con formato profesional para cualquiera de los dos reportes,
+     * incluyendo la columna Acumulado en la hoja de detalle y una segunda hoja RESUMEN_ACUMULADO.
      *
      * @param string $tipo  'linea' | 'ejecutor'
      * @param \Illuminate\Support\Collection|array $registros
      * @param string $resumenFiltros
      * @param bool $esAcumulado
+     * @param string $periodoResumen
      * @return \PHPExcel
      */
-    public function construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado = false)
+    public function construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado = false, $periodoResumen = '')
     {
         $esEjecutor = ($tipo === 'ejecutor');
         $etiquetaAcum = $esAcumulado ? 'ACUMULADO ' : '';
@@ -456,30 +521,71 @@ class acindicadorController extends Controller
                 'D' => array('titulo' => 'Tipo Indicador',        'ancho' => 42),
                 'E' => array('titulo' => 'Periodo',               'ancho' => 22),
                 'F' => array('titulo' => 'Unidad de Medida',      'ancho' => 22),
-                'G' => array('titulo' => 'Cantidad',              'ancho' => 14),
-                'H' => array('titulo' => 'Descripción / Detalle', 'ancho' => 48),
-                'I' => array('titulo' => 'Municipios',            'ancho' => 20),
-                'J' => array('titulo' => 'Parroquias',            'ancho' => 24),
-                'K' => array('titulo' => 'Comunas',               'ancho' => 30)
+                'G' => array('titulo' => 'Cantidad',              'ancho' => 15),
+                'H' => array('titulo' => 'Acumulado',             'ancho' => 16),
+                'I' => array('titulo' => 'Descripción / Detalle', 'ancho' => 48),
+                'J' => array('titulo' => 'Municipios',            'ancho' => 20),
+                'K' => array('titulo' => 'Parroquias',            'ancho' => 24),
+                'L' => array('titulo' => 'Comunas',               'ancho' => 30)
             );
-            $colCantidad = 'G';
-            $colCodigo   = 'A';
+            $colCantidad  = 'G';
+            $colAcumulado = 'H';
+            $colCodigo    = 'A';
         } else {
             $encabezados = array(
                 'A' => array('titulo' => 'Línea de Acción',       'ancho' => 34),
                 'B' => array('titulo' => 'Tipo Indicador',        'ancho' => 42),
                 'C' => array('titulo' => 'Periodo',               'ancho' => 22),
                 'D' => array('titulo' => 'Unidad de Medida',      'ancho' => 22),
-                'E' => array('titulo' => 'Cantidad',              'ancho' => 14),
-                'F' => array('titulo' => 'Descripción / Detalle', 'ancho' => 48),
-                'G' => array('titulo' => 'Municipios',            'ancho' => 20),
-                'H' => array('titulo' => 'Parroquias',            'ancho' => 24),
-                'I' => array('titulo' => 'Comunas',               'ancho' => 30),
-                'J' => array('titulo' => 'Código Ejecutor',       'ancho' => 16),
-                'K' => array('titulo' => 'Ejecutor',              'ancho' => 38)
+                'E' => array('titulo' => 'Cantidad',              'ancho' => 15),
+                'F' => array('titulo' => 'Acumulado',             'ancho' => 16),
+                'G' => array('titulo' => 'Descripción / Detalle', 'ancho' => 48),
+                'H' => array('titulo' => 'Municipios',            'ancho' => 20),
+                'I' => array('titulo' => 'Parroquias',            'ancho' => 24),
+                'J' => array('titulo' => 'Comunas',               'ancho' => 30),
+                'K' => array('titulo' => 'Código Ejecutor',       'ancho' => 16),
+                'L' => array('titulo' => 'Ejecutor',              'ancho' => 38)
             );
-            $colCantidad = 'E';
-            $colCodigo   = 'J';
+            $colCantidad  = 'E';
+            $colAcumulado = 'F';
+            $colCodigo    = 'K';
+        }
+
+        // Precalcular acumulados por grupo para la columna Acumulado y para la hoja RESUMEN_ACUMULADO
+        $acumuladoPorGrupo = array();
+        $resumenGrupos     = array();
+        foreach ($registros as $item) {
+            $cant = (isset($item->cantidad) && $item->cantidad !== null && $item->cantidad !== '') ? (float) $item->cantidad : 0.0;
+            $kGrupo = $esEjecutor
+                ? ((isset($item->id_tab_ejecutores) ? $item->id_tab_ejecutores : '') . '|' . (isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '') . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : ''))
+                : ((isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '') . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : ''));
+
+            if (!isset($acumuladoPorGrupo[$kGrupo])) {
+                $acumuladoPorGrupo[$kGrupo] = 0.0;
+            }
+            $acumuladoPorGrupo[$kGrupo] += $cant;
+
+            $umTxt = $this->limpiarTexto(isset($item->unidad_medida) ? $item->unidad_medida : '');
+            $kRes  = $kGrupo . '|' . mb_strtolower($umTxt, 'UTF-8');
+            if (!isset($resumenGrupos[$kRes])) {
+                $resumenGrupos[$kRes] = array(
+                    'codigo_ejecutor' => isset($item->codigo_ejecutor) ? (string) $item->codigo_ejecutor : '',
+                    'ejecutor'        => $this->limpiarTexto(isset($item->ejecutor) ? $item->ejecutor : ''),
+                    'linea_accion'    => $this->limpiarTexto(isset($item->linea_accion) ? $item->linea_accion : ''),
+                    'tipo_indicador'  => $this->limpiarTexto(isset($item->tipo_indicador) ? $item->tipo_indicador : ''),
+                    'periodo'         => ($periodoResumen !== '') ? $periodoResumen : $this->limpiarTexto(isset($item->periodo) ? $item->periodo : ''),
+                    'unidad_medida'   => $umTxt,
+                    'registros'       => 0,
+                    'cantidad'        => 0.0,
+                    'ejecutores'      => array()
+                );
+            }
+            $resumenGrupos[$kRes]['registros']++;
+            $resumenGrupos[$kRes]['cantidad'] += $cant;
+            $ejLabel = trim((isset($item->codigo_ejecutor) ? $item->codigo_ejecutor : '') . ' - ' . $this->limpiarTexto(isset($item->ejecutor) ? $item->ejecutor : ''));
+            if ($ejLabel !== '-' && $ejLabel !== '' && !in_array($ejLabel, $resumenGrupos[$kRes]['ejecutores'], true)) {
+                $resumenGrupos[$kRes]['ejecutores'][] = $ejLabel;
+            }
         }
 
         $prevReporting = error_reporting(error_reporting() & ~E_DEPRECATED & ~E_STRICT);
@@ -501,10 +607,10 @@ class acindicadorController extends Controller
             }
 
             // Fila 1: Título principal
-            $sheet->mergeCells('A1:K1');
-            $sheet->setCellValue('A1', $titulo);
+            $sheet->mergeCells('A1:L1');
+            $sheet->setCellValueExplicit('A1', $titulo, PHPExcel_Cell_DataType::TYPE_STRING);
             $sheet->getRowDimension(1)->setRowHeight(28);
-            $sheet->getStyle('A1:K1')->applyFromArray(array(
+            $sheet->getStyle('A1:L1')->applyFromArray(array(
                 'font' => array(
                     'bold'  => true,
                     'size'  => 13,
@@ -521,10 +627,10 @@ class acindicadorController extends Controller
             ));
 
             // Fila 2: Resumen de filtros aplicados
-            $sheet->mergeCells('A2:K2');
-            $sheet->setCellValue('A2', $resumenFiltros);
+            $sheet->mergeCells('A2:L2');
+            $sheet->setCellValueExplicit('A2', $resumenFiltros, PHPExcel_Cell_DataType::TYPE_STRING);
             $sheet->getRowDimension(2)->setRowHeight(20);
-            $sheet->getStyle('A2:K2')->applyFromArray(array(
+            $sheet->getStyle('A2:L2')->applyFromArray(array(
                 'font' => array(
                     'italic' => true,
                     'size'   => 9,
@@ -543,9 +649,9 @@ class acindicadorController extends Controller
             // Fila 3: Encabezados de columnas
             $sheet->getRowDimension(3)->setRowHeight(26);
             foreach ($encabezados as $col => $cfg) {
-                $sheet->setCellValue($col . '3', $cfg['titulo']);
+                $sheet->setCellValueExplicit($col . '3', $cfg['titulo'], PHPExcel_Cell_DataType::TYPE_STRING);
             }
-            $sheet->getStyle('A3:K3')->applyFromArray(array(
+            $sheet->getStyle('A3:L3')->applyFromArray(array(
                 'font' => array(
                     'bold'  => true,
                     'size'  => 10,
@@ -585,6 +691,11 @@ class acindicadorController extends Controller
                 $ejecutor   = isset($item->ejecutor) ? (string) $item->ejecutor : '';
                 $totalCantidad += $cantidad;
 
+                $kGrupo = $esEjecutor
+                    ? ((isset($item->id_tab_ejecutores) ? $item->id_tab_ejecutores : '') . '|' . (isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '') . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : ''))
+                    : ((isset($item->id_tab_tipo_indicador) ? $item->id_tab_tipo_indicador : '') . '|' . (isset($item->id_tab_sub_tipo_indicador) ? $item->id_tab_sub_tipo_indicador : ''));
+                $acumGrupo = isset($acumuladoPorGrupo[$kGrupo]) ? $acumuladoPorGrupo[$kGrupo] : $cantidad;
+
                 if ($esEjecutor) {
                     $sheet->setCellValueExplicit('A' . $rowCount, $codEj, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('B' . $rowCount, $ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
@@ -593,26 +704,28 @@ class acindicadorController extends Controller
                     $sheet->setCellValueExplicit('E' . $rowCount, $periodo, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('F' . $rowCount, $um, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('G' . $rowCount, $cantidad, PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                    $sheet->setCellValueExplicit('H' . $rowCount, $detalle, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('I' . $rowCount, $municipio, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('J' . $rowCount, $parroquia, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('K' . $rowCount, $comuna, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('H' . $rowCount, $acumGrupo, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                    $sheet->setCellValueExplicit('I' . $rowCount, $detalle, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('J' . $rowCount, $municipio, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('K' . $rowCount, $parroquia, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('L' . $rowCount, $comuna, PHPExcel_Cell_DataType::TYPE_STRING);
                 } else {
                     $sheet->setCellValueExplicit('A' . $rowCount, $linea, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('B' . $rowCount, $subtipo, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('C' . $rowCount, $periodo, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('D' . $rowCount, $um, PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValueExplicit('E' . $rowCount, $cantidad, PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                    $sheet->setCellValueExplicit('F' . $rowCount, $detalle, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('G' . $rowCount, $municipio, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('H' . $rowCount, $parroquia, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('I' . $rowCount, $comuna, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('J' . $rowCount, $codEj, PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValueExplicit('K' . $rowCount, $ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('F' . $rowCount, $acumGrupo, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                    $sheet->setCellValueExplicit('G' . $rowCount, $detalle, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('H' . $rowCount, $municipio, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('I' . $rowCount, $parroquia, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('J' . $rowCount, $comuna, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('K' . $rowCount, $codEj, PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValueExplicit('L' . $rowCount, $ejecutor, PHPExcel_Cell_DataType::TYPE_STRING);
                 }
 
                 if ($rowCount % 2 === 1) {
-                    $sheet->getStyle('A' . $rowCount . ':K' . $rowCount)->applyFromArray(array(
+                    $sheet->getStyle('A' . $rowCount . ':L' . $rowCount)->applyFromArray(array(
                         'fill' => array(
                             'type'       => PHPExcel_Style_Fill::FILL_SOLID,
                             'startcolor' => array('argb' => 'FFF7F9FC')
@@ -625,7 +738,7 @@ class acindicadorController extends Controller
 
             $lastDataRow = $rowCount - 1;
             if ($lastDataRow >= 4) {
-                $sheet->getStyle('A4:K' . $lastDataRow)->applyFromArray(array(
+                $sheet->getStyle('A4:L' . $lastDataRow)->applyFromArray(array(
                     'borders' => array(
                         'allborders' => array(
                             'style' => PHPExcel_Style_Border::BORDER_THIN,
@@ -638,27 +751,35 @@ class acindicadorController extends Controller
                     )
                 ));
 
-                $sheet->getStyle($colCantidad . '4:' . $colCantidad . $lastDataRow)
-                    ->getNumberFormat()
-                    ->setFormatCode('#,##0.##');
-                $sheet->getStyle($colCantidad . '4:' . $colCantidad . $lastDataRow)
-                    ->getAlignment()
-                    ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                foreach (array($colCantidad, $colAcumulado) as $colNum) {
+                    $sheet->getStyle($colNum . '4:' . $colNum . $lastDataRow)
+                        ->getNumberFormat()
+                        ->setFormatCode('#,##0.##');
+                    $sheet->getStyle($colNum . '4:' . $colNum . $lastDataRow)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                }
+                $sheet->getStyle($colAcumulado . '4:' . $colAcumulado . $lastDataRow)
+                    ->getFont()
+                    ->setBold(true);
 
                 $sheet->getStyle($colCodigo . '4:' . $colCodigo . $lastDataRow)
                     ->getAlignment()
                     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-                // Fila de total de registros
+                // Fila de total general
                 $sheet->setCellValueExplicit('A' . $rowCount, 'TOTAL REGISTROS: ' . ($lastDataRow - 3), PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValueExplicit($colCantidad . $rowCount, $totalCantidad, PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->getStyle($colCantidad . $rowCount)
-                    ->getNumberFormat()
-                    ->setFormatCode('#,##0.##');
-                $sheet->getStyle($colCantidad . $rowCount)
-                    ->getAlignment()
-                    ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                $sheet->getStyle('A' . $rowCount . ':K' . $rowCount)->applyFromArray(array(
+                $sheet->setCellValueExplicit($colAcumulado . $rowCount, $totalCantidad, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                foreach (array($colCantidad, $colAcumulado) as $colNum) {
+                    $sheet->getStyle($colNum . $rowCount)
+                        ->getNumberFormat()
+                        ->setFormatCode('#,##0.##');
+                    $sheet->getStyle($colNum . $rowCount)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                }
+                $sheet->getStyle('A' . $rowCount . ':L' . $rowCount)->applyFromArray(array(
                     'font' => array('bold' => true),
                     'borders' => array(
                         'top' => array(
@@ -672,18 +793,160 @@ class acindicadorController extends Controller
                     )
                 ));
             } else {
-                $sheet->mergeCells('A4:K4');
-                $sheet->setCellValue('A4', 'No se encontraron registros de indicadores para los filtros seleccionados.');
-                $sheet->getStyle('A4:K4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $sheet->mergeCells('A4:L4');
+                $sheet->setCellValueExplicit('A4', 'No se encontraron registros de indicadores para los filtros seleccionados.', PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->getStyle('A4:L4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             }
 
             // Panel inmovilizado en encabezados
             $sheet->freezePane('A4');
 
+            // Hoja 2: RESUMEN_ACUMULADO (consolidado agrupado)
+            $this->agregarHojaResumenAcumulado($objPHPExcel, $esEjecutor, $resumenGrupos, $resumenFiltros);
+            $objPHPExcel->setActiveSheetIndex(0);
+
             return $objPHPExcel;
         } finally {
             error_reporting($prevReporting);
         }
+    }
+
+    /**
+     * Crea la segunda hoja RESUMEN_ACUMULADO con totales consolidados por grupo y unidad de medida.
+     */
+    protected function agregarHojaResumenAcumulado($objPHPExcel, $esEjecutor, array $resumenGrupos, $resumenFiltros)
+    {
+        $sheet = $objPHPExcel->createSheet(1);
+        $sheet->setTitle('RESUMEN_ACUMULADO');
+
+        $titulo = $esEjecutor
+            ? 'RESUMEN ACUMULADO DE INDICADORES POR EJECUTOR'
+            : 'RESUMEN ACUMULADO DE INDICADORES POR LÍNEA DE ACCIÓN';
+
+        if ($esEjecutor) {
+            $cols = array(
+                'A' => array('titulo' => 'Código Ejecutor',    'ancho' => 16),
+                'B' => array('titulo' => 'Ejecutor',           'ancho' => 40),
+                'C' => array('titulo' => 'Línea de Acción',    'ancho' => 36),
+                'D' => array('titulo' => 'Tipo Indicador',     'ancho' => 44),
+                'E' => array('titulo' => 'Periodo',            'ancho' => 32),
+                'F' => array('titulo' => 'Unidad de Medida',   'ancho' => 24),
+                'G' => array('titulo' => 'N° Indicadores',     'ancho' => 15),
+                'H' => array('titulo' => 'Cantidad Acumulada', 'ancho' => 20)
+            );
+            $lastCol = 'H';
+            $colCant = 'H';
+            $colReg  = 'G';
+        } else {
+            $cols = array(
+                'A' => array('titulo' => 'Línea de Acción',    'ancho' => 36),
+                'B' => array('titulo' => 'Tipo Indicador',     'ancho' => 44),
+                'C' => array('titulo' => 'Periodo',            'ancho' => 32),
+                'D' => array('titulo' => 'Unidad de Medida',   'ancho' => 24),
+                'E' => array('titulo' => 'N° Indicadores',     'ancho' => 15),
+                'F' => array('titulo' => 'Cantidad Acumulada', 'ancho' => 20),
+                'G' => array('titulo' => 'Órganos y Entes',    'ancho' => 46)
+            );
+            $lastCol = 'G';
+            $colCant = 'F';
+            $colReg  = 'E';
+        }
+
+        foreach ($cols as $c => $cfg) {
+            $sheet->getColumnDimension($c)->setWidth($cfg['ancho']);
+        }
+
+        $sheet->mergeCells('A1:' . $lastCol . '1');
+        $sheet->setCellValueExplicit('A1', $titulo, PHPExcel_Cell_DataType::TYPE_STRING);
+        $sheet->getRowDimension(1)->setRowHeight(28);
+        $sheet->getStyle('A1:' . $lastCol . '1')->applyFromArray(array(
+            'font'      => array('bold' => true, 'size' => 13, 'color' => array('argb' => 'FFFFFFFF')),
+            'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER),
+            'fill'      => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('argb' => 'FF1F4E78'))
+        ));
+
+        $sheet->mergeCells('A2:' . $lastCol . '2');
+        $sheet->setCellValueExplicit('A2', $resumenFiltros, PHPExcel_Cell_DataType::TYPE_STRING);
+        $sheet->getRowDimension(2)->setRowHeight(20);
+        $sheet->getStyle('A2:' . $lastCol . '2')->applyFromArray(array(
+            'font'      => array('italic' => true, 'size' => 9, 'color' => array('argb' => 'FF333333')),
+            'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT, 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER),
+            'fill'      => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('argb' => 'FFE9EDF4'))
+        ));
+
+        $sheet->getRowDimension(3)->setRowHeight(26);
+        foreach ($cols as $c => $cfg) {
+            $sheet->setCellValueExplicit($c . '3', $cfg['titulo'], PHPExcel_Cell_DataType::TYPE_STRING);
+        }
+        $sheet->getStyle('A3:' . $lastCol . '3')->applyFromArray(array(
+            'font'      => array('bold' => true, 'size' => 10, 'color' => array('argb' => 'FFFFFFFF')),
+            'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER, 'wrap' => true),
+            'borders'   => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FF000000'))),
+            'fill'      => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('argb' => 'FF2F5597'))
+        ));
+
+        $row = 4;
+        $totalReg  = 0;
+        $totalCant = 0.0;
+        foreach ($resumenGrupos as $g) {
+            $totalReg  += $g['registros'];
+            $totalCant += $g['cantidad'];
+
+            if ($esEjecutor) {
+                $sheet->setCellValueExplicit('A' . $row, $g['codigo_ejecutor'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('B' . $row, $g['ejecutor'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('C' . $row, $g['linea_accion'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('D' . $row, $g['tipo_indicador'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('E' . $row, $g['periodo'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('F' . $row, $g['unidad_medida'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('G' . $row, (int) $g['registros'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValueExplicit('H' . $row, (float) $g['cantidad'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            } else {
+                $sheet->setCellValueExplicit('A' . $row, $g['linea_accion'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('B' . $row, $g['tipo_indicador'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('C' . $row, $g['periodo'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('D' . $row, $g['unidad_medida'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValueExplicit('E' . $row, (int) $g['registros'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValueExplicit('F' . $row, (float) $g['cantidad'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValueExplicit('G' . $row, implode('; ', $g['ejecutores']), PHPExcel_Cell_DataType::TYPE_STRING);
+            }
+
+            if ($row % 2 === 1) {
+                $sheet->getStyle('A' . $row . ':' . $lastCol . $row)->applyFromArray(array(
+                    'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('argb' => 'FFF7F9FC'))
+                ));
+            }
+            $row++;
+        }
+
+        $lastData = $row - 1;
+        if ($lastData >= 4) {
+            $sheet->getStyle('A4:' . $lastCol . $lastData)->applyFromArray(array(
+                'borders'   => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array('argb' => 'FFBFBFBF'))),
+                'alignment' => array('vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP, 'wrap' => true)
+            ));
+            $sheet->getStyle($colReg . '4:' . $colReg . $lastData)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle($colCant . '4:' . $colCant . $lastData)->getNumberFormat()->setFormatCode('#,##0.##');
+            $sheet->getStyle($colCant . '4:' . $colCant . $lastData)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $sheet->getStyle($colCant . '4:' . $colCant . $lastData)->getFont()->setBold(true);
+            if ($esEjecutor) {
+                $sheet->getStyle('A4:A' . $lastData)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            }
+
+            $sheet->setCellValueExplicit('A' . $row, 'TOTAL GENERAL (' . ($lastData - 3) . ' grupos)', PHPExcel_Cell_DataType::TYPE_STRING);
+            $sheet->setCellValueExplicit($colReg . $row, (int) $totalReg, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit($colCant . $row, (float) $totalCant, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getStyle($colReg . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle($colCant . $row)->getNumberFormat()->setFormatCode('#,##0.##');
+            $sheet->getStyle($colCant . $row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $sheet->getStyle('A' . $row . ':' . $lastCol . $row)->applyFromArray(array(
+                'font'    => array('bold' => true),
+                'borders' => array('top' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM, 'color' => array('argb' => 'FF1F4E78'))),
+                'fill'    => array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('argb' => 'FFD9E1F2'))
+            ));
+        }
+
+        $sheet->freezePane('A4');
     }
 
     /**
@@ -700,9 +963,12 @@ class acindicadorController extends Controller
             $this->aplicarOrden($query, $tipo);
 
             $registros      = $query->get();
-            $esAcumulado    = empty($filtros['id_tab_lapso']);
+            $esAcumulado    = $this->esModoAcumulado($filtros);
             $resumenFiltros = $this->describirFiltros($filtros);
-            $objPHPExcel    = $this->construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado);
+            $periodoResumen = $esAcumulado
+                ? $this->obtenerEtiquetaPeriodoAcumulado($filtros['ejercicio'], false)
+                : '';
+            $objPHPExcel    = $this->construirExcel($tipo, $registros, $resumenFiltros, $esAcumulado, $periodoResumen);
 
             $etiquetaAcum = $esAcumulado ? 'acumulado_' : '';
             $prefijo  = ($tipo === 'ejecutor')
