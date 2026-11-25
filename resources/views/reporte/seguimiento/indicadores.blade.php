@@ -481,7 +481,7 @@ getStoreLAPSO: function() {
 			{
 				name: 'rango',
 				convert: function(v, r) {
-					return r.de_lapso + ' ' + r.id_tab_ejercicio_fiscal + ' (' + r.fe_inicio + ' - ' + r.fe_fin + ')';
+					return r.de_lapso + ' ' + r.id_tab_ejercicio_fiscal;
 				}
 			}
 		]
