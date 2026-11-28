@@ -376,7 +376,7 @@ this.gridCentralizadas_ = new Ext.grid.GridPanel({
 	stateful: true,
 	listeners: {
 		cellclick: function(grid, rowIndex, columnIndex, e ) {
-			
+			verCentralizadas.enable();
 			var sel = grid.getSelectionModel().getSelected();
 			sel.get('');
 			if ( sel.get('eliminar') ) {
