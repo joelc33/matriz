@@ -255,9 +255,6 @@ class acController extends Controller
                 $in_valido = 1;
             } else {
                 $in_valido = 0;
-                
-                var_dump($in_valido);
-                exit();
             }
 
             $mensajes = array(
@@ -288,11 +285,7 @@ class acController extends Controller
             if($validar_ae->mo_ac == $validar_ae->mo_partida) {
                 $in_valido = 1;
             } else {
-                $in_valido = 0;
-                
-                var_dump($in_valido);
-                exit();                
-                
+                $in_valido = 0;                        
             }
 
             $mensajes = array(
