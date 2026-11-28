@@ -5,6 +5,7 @@ namespace matriz\Http\Controllers\Ac;
 //*******agregar esta linea******//
 use matriz\Models\Ac\tab_ac;
 use matriz\Models\Ac\tab_ac_ae_partida;
+use matriz\Models\Ac\tab_ac_ae;
 use matriz\Models\Mantenimiento\tab_ejecutores;
 use View;
 use Validator;
@@ -243,10 +244,41 @@ class acController extends Controller
         DB::beginTransaction();
         try {
 
-            $validar_ae = tab_ac_ae_partida::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't54_ac_ae_partidas.id_accion_centralizada')
+            $validar_ae_partidas = tab_ac_ae_partida::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't54_ac_ae_partidas.id_accion_centralizada')
             ->select('id_accion_centralizada', DB::raw("t02.monto as mo_ac"), DB::raw("sum(t54_ac_ae_partidas.monto) as mo_partida"))
             ->where('id_accion_centralizada', '=', $request->id_accion_centralizada)
             ->where('t54_ac_ae_partidas.edo_reg', '=', true)
+            ->groupBy(DB::raw('1,2'))
+            ->first();
+
+            if($validar_ae_partidas->mo_ac == $validar_ae_partidas->mo_partida) {
+                $in_valido = 1;
+            } else {
+                $in_valido = 0;
+            }
+
+            $mensajes = array(
+              'valido.in'=>'El monto total Cargado de las partidas No Coincide con el monto de la AC. <br>Monto Accion Centralizada.: <span style="color:green"><b>'.number_format($validar_ae->mo_ac, 2, ',', '.').'</b></span>'.'<br>Monto Cargado Partidas: <span style="color:red"><b>'.number_format($validar_ae->mo_partida, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($validar_ae->mo_ac - $validar_ae->mo_partida), 2, ',', '.').'</b>'
+            );
+
+            $datos = array(
+              'id' => $request->id_accion_centralizada,
+              'valido' => $in_valido
+            );
+
+            $validador = Validator::make($datos, tab_ac::$cerrarAc, $mensajes);
+            
+            if ($validador->fails()) {
+                $data = json_encode(array('success' => false, 'msg' => $validador->getMessageBag()->toArray()));
+                $response = Response::make($data);
+                $response->header('Content-Type', 'text/html');
+                return $response;
+            }            
+
+            $validar_ae = tab_ac_ae::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't54_ac_ae_partidas.id_accion_centralizada')
+            ->select('id_accion_centralizada', DB::raw("t02.monto as mo_ac"), DB::raw("sum(t47_ac_accion_especifica.monto) as mo_partida"))
+            ->where('id_accion_centralizada', '=', $request->id_accion_centralizada)
+            ->where('t47_ac_accion_especifica.edo_reg', '=', true)
             ->groupBy(DB::raw('1,2'))
             ->first();
 
@@ -257,7 +289,7 @@ class acController extends Controller
             }
 
             $mensajes = array(
-              'valido.in'=>'El monto Cargado No Coincide con el monto de la AC. <br>Monto Accion Centralizada.: <span style="color:green"><b>'.number_format($validar_ae->mo_ac, 2, ',', '.').'</b></span>'.'<br>Monto Cargado Partidas: <span style="color:red"><b>'.number_format($validar_ae->mo_partida, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($validar_ae->mo_ac - $validar_ae->mo_partida), 2, ',', '.').'</b>'
+              'valido.in'=>'El monto total de la Acciones Especificas No Coincide con el monto de la AC. <br>Monto Accion Centralizada.: <span style="color:green"><b>'.number_format($validar_ae->mo_ac, 2, ',', '.').'</b></span>'.'<br>Monto Cargado Acciones Especificas: <span style="color:red"><b>'.number_format($validar_ae->mo_partida, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($validar_ae->mo_ac - $validar_ae->mo_partida), 2, ',', '.').'</b>'
             );
 
             $datos = array(
@@ -266,7 +298,14 @@ class acController extends Controller
             );
 
             $validador = Validator::make($datos, tab_ac::$cerrarAc, $mensajes);
-
+            
+            if ($validador->fails()) {
+                $data = json_encode(array('success' => false, 'msg' => $validador->getMessageBag()->toArray()));
+                $response = Response::make($data);
+                $response->header('Content-Type', 'text/html');
+                return $response;
+            }            
+            
             $tabla = tab_ac::find($request->id_accion_centralizada);
             $tabla->id_estatus = 3;
             $tabla->save();
