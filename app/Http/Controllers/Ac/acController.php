@@ -278,7 +278,7 @@ class acController extends Controller
                 return $response;
             }            
 
-            $validar_ae = tab_ac_ae::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't54_ac_ae_partidas.id_accion_centralizada')
+            $validar_ae = tab_ac_ae::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't47_ac_accion_especifica.id_accion_centralizada')
             ->select('id_accion_centralizada', DB::raw("t02.monto as mo_ac"), DB::raw("sum(t47_ac_accion_especifica.monto) as mo_partida"))
             ->where('id_accion_centralizada', '=', $request->id_accion_centralizada)
             ->where('t47_ac_accion_especifica.edo_reg', '=', true)
