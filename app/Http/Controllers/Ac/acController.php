@@ -255,6 +255,9 @@ class acController extends Controller
                 $in_valido = 1;
             } else {
                 $in_valido = 0;
+                
+                var_dump($in_valido);
+                exit();
             }
 
             $mensajes = array(
@@ -286,6 +289,10 @@ class acController extends Controller
                 $in_valido = 1;
             } else {
                 $in_valido = 0;
+                
+                var_dump($in_valido);
+                exit();                
+                
             }
 
             $mensajes = array(
