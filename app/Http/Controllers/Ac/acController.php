@@ -258,7 +258,7 @@ class acController extends Controller
             }
 
             $mensajes = array(
-              'valido.in'=>'El monto total Cargado de las partidas No Coincide con el monto de la AC. <br>Monto Accion Centralizada.: <span style="color:green"><b>'.number_format($validar_ae->mo_ac, 2, ',', '.').'</b></span>'.'<br>Monto Cargado Partidas: <span style="color:red"><b>'.number_format($validar_ae->mo_partida, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($validar_ae->mo_ac - $validar_ae->mo_partida), 2, ',', '.').'</b>'
+              'valido.in'=>'El monto total Cargado de las partidas No Coincide con el monto de la AC. <br>Monto Accion Centralizada.: <span style="color:green"><b>'.number_format($validar_ae_partidas->mo_ac, 2, ',', '.').'</b></span>'.'<br>Monto Cargado Partidas: <span style="color:red"><b>'.number_format($validar_ae_partidas->mo_partida, 2, ',', '.').'</b></span>'.'<br>Diferencia: <b>'.number_format(($validar_ae_partidas->mo_ac - $validar_ae_partidas->mo_partida), 2, ',', '.').'</b>'
             );
 
             $datos = array(
