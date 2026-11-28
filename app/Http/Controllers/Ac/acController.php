@@ -250,6 +250,8 @@ class acController extends Controller
             ->where('t54_ac_ae_partidas.edo_reg', '=', true)
             ->groupBy(DB::raw('1,2'))
             ->first();
+            
+            if($validar_ae_partidas){
 
             if($validar_ae_partidas->mo_ac == $validar_ae_partidas->mo_partida) {
                 $in_valido = 1;
@@ -274,7 +276,16 @@ class acController extends Controller
                 $response->header('Content-Type', 'text/html');
                 return $response;
             }            
+            
+            }else{
 
+                $data = json_encode(array('success' => false, 'msg' => 'Debe cargar las partidas de la Accion Centralizada'));
+                $response = Response::make($data);
+                $response->header('Content-Type', 'text/html');
+                return $response;
+                
+            }
+            
             $validar_ae = tab_ac_ae::join('t46_acciones_centralizadas as t02', 't02.id', '=', 't47_ac_accion_especifica.id_accion_centralizada')
             ->select('id_accion_centralizada', DB::raw("t02.monto as mo_ac"), DB::raw("sum(t47_ac_accion_especifica.monto) as mo_partida"))
             ->where('id_accion_centralizada', '=', $request->id_accion_centralizada)
