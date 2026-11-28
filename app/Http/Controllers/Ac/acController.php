@@ -278,11 +278,10 @@ class acController extends Controller
             }            
             
             }else{
-
-                $data = json_encode(array('success' => false, 'msg' => 'Debe cargar las partidas de la Accion Centralizada'));
-                $response = Response::make($data);
-                $response->header('Content-Type', 'text/html');
-                return $response;
+                
+            $response['success']  = 'false';
+            $response['msg']  = 'Debe cargar las partidas de la Accion Centralizada!';
+            return Response::json($response, 200);                
                 
             }
             
