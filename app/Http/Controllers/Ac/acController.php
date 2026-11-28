@@ -279,7 +279,7 @@ class acController extends Controller
             
             }else{
                 
-                $data = json_encode(array('success' => false, 'msg' => $validador->getMessageBag()->toArray()));
+            $data = json_encode(array('success' => false, 'msg' => array('invalido' => 'Debe Cargar las Partidas de la Accion Centralizada')));
                 $response = Response::make($data);
                 $response->header('Content-Type', 'text/html');
                 return $response;               
@@ -311,9 +311,7 @@ class acController extends Controller
             $validador = Validator::make($datos, tab_ac::$cerrarAc, $mensajes);
             
             if ($validador->fails()) {
-                
-                var_dump($validador->getMessageBag()->toArray());
-                exit();
+               
                 
                 $data = json_encode(array('success' => false, 'msg' => $validador->getMessageBag()->toArray()));
                 $response = Response::make($data);
